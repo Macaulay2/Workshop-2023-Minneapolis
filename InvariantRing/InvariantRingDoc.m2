@@ -43,7 +43,31 @@ document {
 		HREF{"https://msp.org/jsag/2013/5-1/p03.xhtml","Computing the invariant ring of a finite group"}, 
 	   	". JSAG, Vol. 5 (2013). pp 15-19. DOI: 10.2140/jsag.2013.5.15"
 		}
-            }
+            },
+	PARA {
+	    "Version history:"
+	    },
+	UL { 
+	    {BOLD "1.1.0: ", "the first version of this package was
+		developed by Thomas Hawes. It focused on
+		computing primary and secondary invariants of
+		finite groups. For more information, see: ",
+		"Hawes, T. ",
+		HREF{"https://msp.org/jsag/2013/5-1/p03.xhtml","Computing the invariant ring of a finite group"}, 
+	   	". JSAG, Vol. 5 (2013). pp 15-19. DOI: 10.2140/jsag.2013.5.15"},
+	    {BOLD "2.0: ", "this version was developed by L. Ferraro,
+		F. Galetto, F. Gandini, H. Huang, M. Mastroeni, and
+		X. Ni. It introduces types for different group
+		actions as well as rings of invariants.
+		It also contains new functionality for invariants
+		of finite groups, diagonal actions (tori/abelian
+		    groups), and linearly reductive groups.
+		The code from version 1.1.0 is preserved in the
+		auxiliary file Hawes.m2 (with documentation
+		    in the file HawesDoc.m2) and has been updated
+		to work with the new types."
+		}
+	    }
 	}
     
 document {
