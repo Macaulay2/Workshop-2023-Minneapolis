@@ -920,3 +920,16 @@ document {
 		},
 	    }
 
+document {
+	Key => {UseNormaliz, UsePolyhedra},
+	Headline => "option for diagonal invariants",
+	"This option is provided by the package ", TO InvariantRing,". ",
+	PARA {
+	    "The computation of diagonal invariants relies on
+	    finding integral points in a convex hull constructed
+	    from a weight matrix. This option selects the package
+	    used for finding integral points. See ",
+	    TO (invariants,DiagonalAction),
+	    " for usage."
+	    },
+	}
