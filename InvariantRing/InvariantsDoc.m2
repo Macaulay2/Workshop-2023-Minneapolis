@@ -680,6 +680,51 @@ document {
 	}
 
 document {
+	Key => {
+	    [invariants, DegreeLimit],
+	    [hilbertIdeal, DegreeLimit]
+	    },
+	Headline => "GB option for invariants",
+	PARA {
+	    "The computation of invariants of linearly reductive
+	    group actions requires the use of Gröbner bases.
+	    These options allow partial control over the computation
+	    performed by ", TO (invariants,LinearlyReductiveAction),
+	    " and ", TO (hilbertIdeal,LinearlyReductiveAction),
+	    ", allowing to terminate the computation after
+	    reaching a certain degree. For more information,
+	    see ", TO gb, "."
+	    },
+    	SeeAlso => {
+	    (invariants,LinearlyReductiveAction),
+	    (hilbertIdeal,LinearlyReductiveAction)
+	    }	
+	}
+
+document {
+	Key => {
+	    [invariants, SubringLimit],
+	    [hilbertIdeal, SubringLimit]
+	    },
+	Headline => "GB option for invariants",
+	PARA {
+	    "The computation of invariants of linearly reductive
+	    group actions requires the use of Gröbner bases.
+	    These options allow partial control over the computation
+	    performed by ", TO (invariants,LinearlyReductiveAction),
+	    " and ", TO (hilbertIdeal,LinearlyReductiveAction),
+	    ", allowing to terminate the computation after a
+	    certain number of invariants are obtained.
+	    For more information,
+	    see ", TO gb, "."
+	    },
+    	SeeAlso => {
+	    (invariants,LinearlyReductiveAction),
+	    (hilbertIdeal,LinearlyReductiveAction)
+	    }	
+	}
+
+document {
 	Key => {isInvariant, 
 	    (isInvariant, RingElement, FiniteGroupAction),
 	    (isInvariant, RingElement, DiagonalAction),
