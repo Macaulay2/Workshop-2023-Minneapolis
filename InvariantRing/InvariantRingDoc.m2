@@ -143,5 +143,15 @@ document {
 		},
 	    }
 
-
-
+document {
+	Key => {
+	    (net, RingOfInvariants),
+	    (net, DiagonalAction),
+	    (net, FiniteGroupAction),
+	    (net, LinearlyReductiveAction)
+	    },
+	Headline => "format for printing, as a net",
+	PARA {"Format objects of the package ",
+	    TO InvariantRing, " for printing. See ",
+	    TO net," for more information."},
+	    }
