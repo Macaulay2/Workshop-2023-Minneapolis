@@ -52,7 +52,7 @@ newPackage(
 	     "volume URI" => "http://j-sag.org/Volume5/"
 	     },
 	AuxiliaryFiles => true,
-        DebuggingMode => true
+        DebuggingMode => false
         )
 
 
