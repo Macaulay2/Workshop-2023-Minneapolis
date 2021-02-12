@@ -382,7 +382,11 @@ invariants(FiniteGroupAction, ZZ) := List => o -> (G,d) -> (
 
 isInvariant = method()
 
-isInvariant (RingElement, FiniteGroupAction) := Boolean => (f, G) -> reynoldsOperator(f, G) == f
+--checking invariants with reynolds operator can be slow for large groups
+--isInvariant (RingElement, FiniteGroupAction) := Boolean => (f, G) -> reynoldsOperator(f, G) == f
+--instead it is enough to check invariance under group generators
+isInvariant (RingElement, FiniteGroupAction) := Boolean => (f, G) ->
+    all(gens G, g -> sub(f, (vars ring G)*(transpose g) ) == f ) 
 
 isInvariant (RingElement, DiagonalAction) := Boolean => (f, D) -> (
     if not instance(f, ring D) then (
