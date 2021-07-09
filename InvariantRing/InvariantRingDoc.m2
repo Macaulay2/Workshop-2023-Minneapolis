@@ -67,6 +67,12 @@ document {
 		    in the file HawesDoc.m2) and has been updated
 		to work with the new types."
 		}
+	    {BOLD "2.1: ", "speeds up checking whether a polynomial
+		is invariant under a finite group action, and
+		fixes a warning that appeared when computing invariants
+		of finite groups (the authours thank N. Iammarino, T. Yu,
+		    and Q. Zhao for the fix)."
+		}
 	    }
 	}
     
