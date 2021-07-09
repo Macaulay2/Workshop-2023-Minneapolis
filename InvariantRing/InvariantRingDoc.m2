@@ -70,7 +70,7 @@ document {
 	    {BOLD "2.1: ", "speeds up checking whether a polynomial
 		is invariant under a finite group action, and
 		fixes a warning that appeared when computing invariants
-		of finite groups (the authours thank N. Iammarino, T. Yu,
+		of finite groups (the authors thank N. Iammarino, T. Yu,
 		    and Q. Zhao for the fix)."
 		}
 	    }
