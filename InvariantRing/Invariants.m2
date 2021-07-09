@@ -323,10 +323,11 @@ invariants FiniteGroupAction := List => o -> G -> (
     error "Only implemented for standard graded polynomial rings";
     if o.DegreeBound < b then b = o.DegreeBound;
     local M;
-    for d from 1 to b do (
+    for d from 1 to b+1 do (
     	Gb := gb(promote(ideal S,R),DegreeLimit=>d);
 	I := monomialIdeal leadTerm Gb;
 	M = reverse select(flatten entries (basis(d,R)%I),m->not zero m);
+	if d == b+1 then break;
 	if M === {} then break else (
 	    if o.UseLinearAlgebra then (
 		for f in invariants(G,d) do (
@@ -348,7 +349,7 @@ invariants FiniteGroupAction := List => o -> G -> (
 	    	);
     	    );
 	);
-    if M =!= {} then print"
+    if (M =!= {} and b < #(group G)) then print"
 Warning: stopping condition not met!
 Output may not generate the entire ring of invariants.
 Increase value of DegreeBound.
