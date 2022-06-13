@@ -162,7 +162,7 @@ permutationMatrix Array := Matrix => opts -> p -> (
     if opts.EntryMode == "cycle" then permutationMatrix(max p, p)
     else (
     	n := max p;
-    	if set (1..n) =!= set p then (
+    	if #p =!= n or set (1..n) =!= set p then (
 	    error "permutationMatrix: Expected a sequence of positive integers
 	    representing a permutation."
 	    );
