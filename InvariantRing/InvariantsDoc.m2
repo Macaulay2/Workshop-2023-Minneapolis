@@ -81,7 +81,6 @@ document {
 	Inputs => {
 	    	"G" => GroupAction,
 	    	"R" => PolynomialRing => {"on which the group acts"},
-		Strategy => {"the strategy used to compute the invariant ring"}
 		},
 	Outputs => {
 		RingOfInvariants => {"the ring of invariants of the given group action"}
@@ -137,7 +136,6 @@ document {
 	
 	Inputs => {  
 	    	"G" => GroupAction => {"a specific type of group action on a polynomial ring"},
-		Strategy => {"the strategy used to compute diagonal invariants, options are UsePolyhedra or UseNormaliz."}
 		},
 	Outputs => {
 		"L" => List => {"a minimal set of generating invariants for the group action"}
@@ -171,7 +169,7 @@ document {
 
 document {
 	Key => { 
-	    (invariants, DiagonalAction)
+	    (invariants, DiagonalAction) 
 	    },
 	
 	Headline => "computes the generating invariants of a group action",
@@ -180,7 +178,6 @@ document {
 	
 	Inputs => {  
 	    	"D" => DiagonalAction => {"a diagonal action on a polynomial ring"},
-		Strategy => {"the strategy used to compute diagonal invariants, options are UsePolyhedra or UseNormaliz."}
 		},
 	Outputs => {
 		"L" => List => {"a minimal set of generating invariants for the group action"}
@@ -289,6 +286,49 @@ document {
 	    isInvariant
 	    }	
 	}
+    
+document {
+    	Key => {
+	    [invariants, Strategy], [invariantRing, Strategy]
+	    },
+	Headline => "choose the strategy for computing invariants",
+	
+	PARA {
+	    "The default strategy for computing invariants of a finite
+	    group action uses the Reynolds operator, however
+	    this may be slow for large groups. Using the option ", 
+	    TT "Strategy => \"LinearAlgebra\"", " uses the linear algebra 
+	    method for computing invariants of a given degree by calling ",
+	    TO (invariants, FiniteGroupAction, ZZ), ". This may
+	    provide a speedup at lower degrees, especially if the
+	    user-provided generating set for the group is small."
+	    },
+	
+	PARA {
+	    "The following example computes the invariants of the
+	    symmetric group on 4 elements. Note that using
+	    different strategies may lead to different sets of 
+	    generating invariants."
+	    },
+	
+	EXAMPLE {
+	    "R = QQ[x_1..x_4]",
+	    "L = apply({[2, 1, 3, 4], [2, 3, 4, 1]}, permutationMatrix);",
+	    "S4 = finiteAction(L, R)",
+	    "elapsedTime invariants S4",
+	    "elapsedTime invariants(S4, Strategy => \"LinearAlgebra\")"
+	},
+    
+    	PARA {
+	    "For a diagonal action, the computation of invariants relies on
+	    finding integral points in a convex hull constructed
+	    from a weight matrix. By default, the package ",  TO Normaliz,
+	    " is used for finding integral points. It is also possible
+	    to use the package ", TO Polyhedra, " for finding integral points
+	    by using the option ", TT "Strategy => \"Polyhedra\"", "."
+	    },
+	
+    }
 
 document {
 	Key => {
@@ -298,7 +338,6 @@ document {
 	Usage => "invariants G",
 	Inputs => {
 	    "G" => FiniteGroupAction,
-	    Strategy => {"the strategy used to compute diagonal invariants, options are UsePolyhedra or UseNormaliz."}
 	    },
 	Outputs => {
 		"L" => List => {"a minimal set of generating invariants for the group action"}
@@ -321,11 +360,11 @@ document {
 	    "The following example computes the invariants of the
 	    alternating group on 4 elements."
 	    },
-    EXAMPLE {
-	"R = QQ[x_1..x_4]",
-	"L = apply({\"2314\",\"2143\"},permutationMatrix);",
-	"A4 = finiteAction(L,R)",
-	"netList invariants A4"
+    	EXAMPLE {
+	    "R = QQ[x_1..x_4]",
+	    "L = apply({[2, 3, 1, 4], [2, 1, 4, 3]}, permutationMatrix);",
+	    "A4 = finiteAction(L, R)",
+	    "netList invariants A4"
 	},
     
     	SeeAlso => {
@@ -364,10 +403,10 @@ document {
 	    },
     EXAMPLE {
 	"R = QQ[x_1..x_4]",
-	"L = apply({\"2134\",\"2341\"},permutationMatrix);",
-	"S4 = finiteAction(L,R)",
+	"L = apply({[2, 1, 3, 4], [2, 3, 4, 1]}, permutationMatrix);",
+	"S4 = finiteAction(L, R)",
 	"elapsedTime invariants S4",
-	"elapsedTime invariants(S4,DegreeBound=>4)"
+	"elapsedTime invariants(S4, DegreeBound => 4)"
 	},
     	Caveat => {
 	    "If the value provided for this option is too small,
@@ -438,55 +477,6 @@ document {
 
 document {
 	Key => {
-	    [invariants, UseLinearAlgebra], [invariantRing, UseLinearAlgebra], UseLinearAlgebra
-	    },
-	Headline => "strategy for computing invariants of finite groups",
-	Usage => "invariants G",
-	Inputs => {"G" => FiniteGroupAction},
-	Outputs => {
-		"L" => List => {"a minimal set of generating invariants for the group action"}
-		},
-	
-	PARA {
-	    "This function is provided by the package ", TO InvariantRing, "."
-	    },
-	
-	PARA {
-	    "This optional argument determines the strategy used to
-	    compute generating invariants of a finite group action.
-	    The default strategy uses the Reynolds operator, however
-	    this may be slow for large groups. Setting this argument
-	    to ", TO true, " uses the linear algebra method for
-	    computing invariants of a given degree by calling ",
-	    TO (invariants, FiniteGroupAction, ZZ), ". This may
-	    provide a speedup at lower degrees, especially if the
-	    user-provided generating set for the group is small."
-	    },
-	
-	PARA {
-	    "The following example computes the invariants of the
-	    symmetric group on 4 elements. Note that using
-	    different strategies may lead to different sets of 
-	    generating invariants."
-	    },
-	
-	EXAMPLE {
-	    "R = QQ[x_1..x_4]",
-	    "L = apply({\"2134\",\"2341\"},permutationMatrix);",
-	    "S4 = finiteAction(L,R)",
-	    "elapsedTime invariants S4",
-	    "elapsedTime invariants(S4,UseLinearAlgebra=>true)"
-	},
-    
-    	SeeAlso => {
-	    finiteAction,
-	    invariantRing, 
-	    isInvariant
-	    }	
-	}
-
-document {
-	Key => {
 	    (invariants, FiniteGroupAction, ZZ),
 	    (invariants, FiniteGroupAction, List),
 	    },
@@ -497,8 +487,7 @@ document {
 	
 	Inputs => {  
 	    	"G" => FiniteGroupAction,
-		"d" => ZZ => {"a degree or multidegree"},
-	    	Strategy => {"the strategy used to compute diagonal invariants, options are UsePolyhedra or UseNormaliz."}
+		"d" => ZZ => {"a degree or multidegree"}
 		},
 	Outputs => {
 		"L" => List => {"an additive basis for a graded component of the ring of invariants"}
@@ -559,8 +548,7 @@ document {
 	
 	Inputs => {  
 	    	"V" => LinearlyReductiveAction,
-		"d" => ZZ => {"a degree or multidegree"},
-	    	Strategy => {"the strategy used to compute diagonal invariants, options are UsePolyhedra or UseNormaliz."}
+		"d" => ZZ => {"a degree or multidegree"}
 		},
 	Outputs => {
 		"L" => List => {"an additive basis for a graded component of the ring of invariants"}
@@ -616,8 +604,7 @@ document {
 	Usage => "invariants V",
 	
 	Inputs => {  
-	    	"V" => LinearlyReductiveAction,
-	    	Strategy => {"the strategy used to compute diagonal invariants, options are UsePolyhedra or UseNormaliz."}
+	    	"V" => LinearlyReductiveAction
 		},
 	Outputs => {
 		"L" => List => {"of invariants generating the Hilbert ideal"}
@@ -842,7 +829,7 @@ document {
     	
 	EXAMPLE {
 	    "R = ZZ/3[x_0..x_6]",
-	    "P = permutationMatrix toString 2345671",
+	    "P = permutationMatrix [2, 3, 4, 5, 6, 7, 1]",
 	    "C7 = finiteAction(P, R)",
 	    "reynoldsOperator(x_0*x_1*x_2^2, C7)",
 		},
@@ -965,16 +952,3 @@ document {
 		},
 	    }
 
-document {
-	Key => {UseNormaliz, UsePolyhedra},
-	Headline => "option for diagonal invariants",
-	"This option is provided by the package ", TO InvariantRing,". ",
-	PARA {
-	    "The computation of diagonal invariants relies on
-	    finding integral points in a convex hull constructed
-	    from a weight matrix. This option selects the package
-	    used for finding integral points. See ",
-	    TO (invariants,DiagonalAction),
-	    " for usage."
-	    },
-	}

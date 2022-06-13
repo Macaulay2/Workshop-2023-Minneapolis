@@ -14,8 +14,7 @@
 RingOfInvariants = new Type of HashTable   
 
 invariantRing = method(Options => {
-	Strategy => UseNormaliz,
-	UseLinearAlgebra => false,
+	Strategy => "Default",
 	UseCoefficientRing => false,
 	DegreeBound => infinity
 	})
@@ -113,8 +112,7 @@ reynoldsOperator (RingElement, DiagonalAction) := RingElement => (f, D) -> sum s
 -------------------------------------------
 
 invariants = method(Options => {
-	Strategy => UseNormaliz,
-	UseLinearAlgebra => false,
+	Strategy => "Default",
 	UseCoefficientRing => false,
 	DegreeBound => infinity,
 	DegreeLimit => {},
@@ -179,11 +177,11 @@ invariants DiagonalAction := List => o -> D -> (
     if r == 0 then return apply(mons, m -> sub(m, ring D) );
     
     W1 = W1*(transpose matrix (mons/exponents/first));
-    if o.Strategy == UsePolyhedra then (
+    if o.Strategy == "Polyhedra" then (
 	if r == 1 then C = convexHull W1 else C = convexHull( 2*r*W1|(-2*r*W1) );
 	C = (latticePoints C)/vector;
 	)
-    else if o.Strategy == UseNormaliz then (
+    else (
 	if r == 1 then C = (normaliz(transpose W1, "polytope"))#"gen" 
 	else C = (normaliz(transpose (2*r*W1|(-2*r*W1)), "polytope"))#"gen";
 	C = transpose C_(apply(r, i -> i));
@@ -246,7 +244,7 @@ manualTrim (List) := List => L -> (
 -------------------------------------------
 -- Computes an *additive* basis for the degree d part of the
 -- invariant ring following Algorithm 4.5.1 of Derksen-Kemper.
-invariants (LinearlyReductiveAction, List) := List => o -> (V,d) -> (
+invariants (LinearlyReductiveAction, List) := List => o -> (V, d) -> (
     M := actionMatrix V;
     Q := ring V;
     A := groupIdeal V;
@@ -329,7 +327,7 @@ invariants FiniteGroupAction := List => o -> G -> (
 	M = reverse select(flatten entries (basis(d,R)%I),m->not zero m);
 	if d == b+1 then break;
 	if M === {} then break else (
-	    if o.UseLinearAlgebra then (
+	    if o.Strategy == "LinearAlgebra" then (
 		for f in invariants(G,d) do (
 	    	    g := f % Gb;
 	    	    if not zero g then (
@@ -337,7 +335,8 @@ invariants FiniteGroupAction := List => o -> G -> (
 		    	Gb = forceGB ( (gens Gb) | matrix{{g}} );
 	    	    	);
 		    );
-	    	) else (
+	    	) 
+	    else (
 	    	for m in M do (
 	    	    f := reynoldsOperator(m,G);
 	    	    g := f % Gb;
