@@ -328,6 +328,13 @@ document {
 	    by using the option ", TT "Strategy => \"Polyhedra\"", "."
 	    },
 	
+	SeeAlso => {
+	    diagonalAction,
+	    invariants,
+	    invariantRing,
+	    reynoldsOperator
+	    }	
+	
     }
 
 document {
