@@ -127,6 +127,8 @@ equivariantHilbertSeries DiagonalAction := op -> T -> (
 	)
     )
 
+-- computes equivariant hilbert series as rational function
+-- INPUT: T, DiagonalAction
 equivariantHilbertRational = T -> (
     n := dim T;
     W1 := first weights T;
@@ -143,6 +145,8 @@ equivariantHilbertRational = T -> (
     Divide{1,den}
 )
 
+-- computes equivariant hilbert series up to a given degree
+-- INPUT: T, DiagonalAction
 equivariantHilbertPartial = (T, d) -> (
     if not T.cache.?equivariantHilbert then (
 	T.cache.equivariantHilbert = 1_(degreesRing T);
