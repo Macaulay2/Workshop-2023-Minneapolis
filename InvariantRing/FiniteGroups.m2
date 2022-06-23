@@ -174,7 +174,7 @@ permutationMatrix (ZZ, Array) := Matrix => opts -> (n, c) -> (
     if n <= 0 then error "permutationMatrix: Expected a positive integer.";
     if #c == 0 then error "permutationMatrix: Expected a nonempty array,";
     if #(set c) =!= #c or not isSubset(set c, set(1..n)) then (
-	error "permutationMatrix: Expected the an array of distinct integers 
+	error "permutationMatrix: Expected an array of distinct integers 
 	between 1 and the first input."
 	 );
      permutationMatrix new Array from apply(n, i ->
