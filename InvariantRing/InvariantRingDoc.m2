@@ -72,6 +72,9 @@ document {
 		fixes a warning that appeared when computing invariants
 		of finite groups (the authors thank N. Iammarino, T. Yu,
 		    and Q. Zhao for the fix)."
+		},
+	    {BOLD "2.2: ", "changed input of ", TO permutationMatrix,
+		", minor documentation and internal code changes."
 		}
 	    }
 	}
