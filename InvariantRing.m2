@@ -9,8 +9,8 @@
 
 newPackage(
         "InvariantRing",
-        Version => "2.1", 
-        Date => "July 9, 2021",
+        Version => "2.2", 
+        Date => "July 8, 2022",
         Authors => {
 	    {Name => "Luigi Ferraro", 
 		 Email => "lferraro@ttu.edu", 
@@ -30,7 +30,7 @@ newPackage(
 		 },
 	     {Name => "Thomas Hawes", Email => "thomas.hawes@maths.ox.ac.uk"},
 	     {Name => "Matthew Mastroeni", 
-		 Email => "mmastro@okstate.edu", 
+		 Email => "mmastro@iastate.edu", 
 		 HomePage => "https://mnmastro.github.io/"
 		 },
              {Name => "Xianglong Ni", 
@@ -52,43 +52,54 @@ newPackage(
 	     "volume URI" => "http://j-sag.org/Volume5/"
 	     },
 	AuxiliaryFiles => true,
-        DebuggingMode => false
+        DebuggingMode => false,
+	PackageExports => {
+	    "Graphs"
+	    }
         )
 
 
 
 export {
-    "GroupAction",    	      	  
-    "finiteAction",    	       	  
-    "FiniteGroupAction",    	  
+    -- New Types
+    "GroupAction",
+    "FiniteGroupAction",
+    "DiagonalAction",
+    "LinearlyReductiveAction",
+    
+    --FiniteGroups.m2    	      	  
+    "finiteAction",    	       	      	  
     "group",	    	    	  
     "isAbelian",    	    	  
     "permutationMatrix",          
     "schreierGraph",	    	  
-    "words",    	       	  
-    "cyclicFactors",	    	  
-    "DiagonalAction",	     	  
+    "words",
+    
+    --AbelianGroups.m2    	       	  
+    "cyclicFactors",	    	  	     	  
     "diagonalAction",	     	  
     "equivariantHilbert",    	  
     "equivariantHilbertSeries",   
-    "weights",	      	      	  
+    "weights",
+    
+    --LinearlyReductiveGroups.m2	      	      	  
     "actionMatrix",    	       	  
     "groupIdeal",    	     	  
     "hilbertIdeal",    	       	  
-    "linearlyReductiveAction",	  
-    "LinearlyReductiveAction",	  
+    "linearlyReductiveAction",	  	
+    
+    --Invariants.m2  
     "action",	     	     	  
     "definingIdeal",              
     "DegreeBound",    	      	  
     "invariants",    	     	  
     "invariantRing",	    	  
     "isInvariant",    	      	  
-    "reynoldsOperator",	       	  
-    "UseLinearAlgebra",     	  
+    "reynoldsOperator",	       	     	  
     "RingOfInvariants",	       	  
-    "UseCoefficientRing",    	  
-    "UseNormaliz",    	      	  
-    "UsePolyhedra",    	      	  
+    "UseCoefficientRing",
+    
+    --Hawes.m2    	      	      	  
     "hironakaDecomposition",   	  
     "molienSeries",    	       	  
     "primaryInvariants",    	  
@@ -97,7 +108,6 @@ export {
     "DegreeVector",    	       	  
     "PrintDegreePolynomial"    	  
     }
-
 
 needsPackage("Elimination")
 needsPackage("Normaliz")

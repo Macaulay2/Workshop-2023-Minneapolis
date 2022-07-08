@@ -101,10 +101,10 @@ isInvariant((J.gens)_(0,0),L)
 restart
 needsPackage "InvariantRing"
 R = QQ[x_1..x_4]
-L = apply({"2134","2341"},permutationMatrix);
+L = apply({[2,1,3,4],[2,3,4,1]},permutationMatrix);
 S4 = finiteAction(L,R)
 elapsedTime invariants S4
-elapsedTime invariants(S4,UseLinearAlgebra=>true)
+elapsedTime invariants(S4,Strategy=>"LinearAlgebra")
 elapsedTime p=primaryInvariants S4
 elapsedTime secondaryInvariants(p,S4)
 elapsedTime hironakaDecomposition(S4)
@@ -159,3 +159,46 @@ M=transpose (
     )
 d=discriminant det M
 ideal d==ideal first inv
+
+
+-- 2x2 conjugation invariants
+restart
+needsPackage "InvariantRing"
+S = QQ[g_(1,1)..g_(2,2),t]
+I = ideal((det genericMatrix(S,2,2))*t-1)
+Q = S/I
+A = Q[y_(1,1)..y_(2,2)]
+Y = transpose genericMatrix(A,2,2)
+-- generic group element
+g = promote(genericMatrix(S,2,2),A)
+-- act by conjugation on a 2x2 generic matrix
+-- get corresponding action of 1x4 matrix of variables
+G = reshape(A^1,A^4,g*Y*inverse(g)) // (vars A)
+G = lift(map(A^4,A^4,G),S)
+
+R = QQ[x_(1,1)..x_(2,2)]
+L=linearlyReductiveAction(I,G,R)
+elapsedTime H=hilbertIdeal(L)
+elapsedTime invariants L
+
+
+-- 3x3 conjugation invariants
+restart
+needsPackage "InvariantRing"
+S = QQ[g_(1,1)..g_(3,3),t]
+I = ideal((det genericMatrix(S,3,3))*t-1)
+Q = S/I
+A = Q[y_(1,1)..y_(3,3)]
+Y = transpose genericMatrix(A,3,3)
+-- generic group element
+g = promote(genericMatrix(S,3,3),A)
+-- act by conjugation on a 2x2 generic matrix
+-- get corresponding action of 1x4 matrix of variables
+G = reshape(A^1,A^9,g*Y*inverse(g)) // (vars A)
+G = lift(map(A^9,A^9,G),S)
+R = QQ[x_(1,1)..x_(3,3)]
+L=linearlyReductiveAction(I,G,R)
+elapsedTime H=hilbertIdeal(L)
+elapsedTime invariants(L,1)
+elapsedTime invariants(L,2)
+elapsedTime invariants(L,3)
