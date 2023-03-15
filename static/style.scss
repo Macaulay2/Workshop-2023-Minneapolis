@@ -1,0 +1,223 @@
+---
+sitemap: false
+---
+
+$masthead-font: "Spectral SC";
+$heading-font: "Spectral";
+$navbar-font: "monospace";
+$main-font: "Libre Baskerville";
+$regular-font-size: 0.9em;
+
+$heading-color: #013220;
+$text-color: #454545;
+$link-color: #013220;
+$link-hover-color: #014000;
+
+//@import "theme";
+//@import "colors";
+//@import "syntax";
+@import "proof";
+
+/* Default css file for jemdoc. */
+
+body {
+    background: white;
+    font-family: $main-font;
+    text-align: justify;
+    font-size: $regular-font-size;
+}
+
+.wrapper {
+    display: flex;
+    max-width: 800px;
+    align-items: baseline;
+    align-content: stretch;
+    padding-bottom: 50px;
+    margin: 20px auto;
+}
+
+@media (max-width: 767px) {
+  .wrapper {
+    display: block;
+    margin: 5px 5px;
+  }
+}
+
+#content {
+    padding: 0 1em;
+}
+
+.navbar {
+    border: 1px solid #dddddd;
+    padding: 0.75em;
+    white-space: nowrap;
+    font-family: $navbar-font;
+}
+
+.navbar-collapse {
+    align-items: baseline;
+}
+
+.navbar-toggler {
+    align-self: flex-end;
+}
+
+.nav-category {
+    width: 100%;
+    font-weight: bold;
+    margin-top: 1em;
+    border-bottom: 1px gray solid;
+}
+
+.navbar-brand {
+    padding: 0px;
+    margin-left: 0.5em;
+    border-bottom: 1px #f8f9fa solid;
+}
+
+.navbar-brand.active {
+    padding: 0px;
+    margin-left: 0.5em;
+    border-bottom: 1px #f6f6f6 solid;
+}
+
+.navbar-brand:hover {
+    padding: 0px;
+    margin-left: 0.5em;
+    border-bottom: 1px gray dotted;
+}
+
+.nav-link {
+    width: 95%;
+    padding: 0px;
+    vertical-align: top;
+    margin-left: 0.5em;
+    border-bottom: 1px #f6f6f6 solid;
+}
+
+.nav-link.active {
+    border-bottom: 1px gray solid;
+}
+
+a {
+    color: $link-color;
+    text-decoration: none;
+}
+
+a:hover {
+    color: $link-hover-color;
+    border-bottom: 1px gray dotted;
+    text-decoration: none;
+}
+
+p > a {
+    font-weight: 600;
+}
+
+tt {
+    background: #ffffdd;
+}
+
+pre, tt {
+    font-size: 90%;
+    font-family: monaco, monospace;
+}
+
+em {
+    font-style: italic;
+}
+
+strong {
+    font-weight: bold;
+}
+
+h1, h2, h3 {
+    color: $link-color;
+    font-family: $heading-font;
+    font-weight: bold;
+    margin-top: 0.7em;
+    margin-bottom: 0.3em;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    line-height: 1.0;
+    border-bottom: 1px solid #aaaaaa;
+}
+
+h1 {
+    font-size: 1.4em;
+}
+h2 {
+    font-size: 1.25em;
+}
+h3 {
+    font-size: 1.1em;
+    border-bottom: none;
+}
+
+.masthead {
+    padding-bottom: 0.2em;
+    margin-bottom: 1em;
+    border-bottom: 3px double gray;
+}
+
+.masthead-title {
+    margin-top: 0.6em;
+    margin-bottom: 0.0em;
+    padding-bottom: 0.1em;
+    padding-top: 0;
+    border-bottom: none;
+    font-family: $masthead-font;
+    font-size: 1.6em;
+}
+@media (max-width: 767px) {
+  .masthead-title {
+      font-size: 3vw;
+      text-align: center;
+  }
+}
+@media (min-width: 768px) and (max-width: 800px) {
+  .masthead-title {
+      font-size: 3vw;
+  }
+}
+
+p {
+    font-family: $main-font;
+    font-size: 0.9em;
+    margin-top: 0.0em;
+    margin-bottom: 0.8em;
+    padding: 0 0 0 5px;
+    line-height: 1.5;
+}
+
+table {
+    width: 100%;
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 2px;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    text-align: center;
+    border: 1px solid gray;
+}
+
+// new stuff
+blockquote {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 40px;
+  margin-inline-end: 40px;
+}
+
+img + em {
+    display: block;
+//    text-align: center;
+}
+
+abbr[title] {
+    text-decoration-skip-ink: auto;
+}

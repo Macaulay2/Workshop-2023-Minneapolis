@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en-us">
+{% include head.html %}
+  <body class="language-Macaulay2">
+    <div class="reveal">
+      <div class="slides">
+        <section data-markdown data-separator="^\n<!-- slide -->\n$" data-separator-vertical="^\n<!-- pause -->\n$">
+          <script type="text/template">
+<!-- ########################################################################################### -->
+{{ content }}
+<!-- ########################################################################################### -->
+          </script>
+        </section>
+      </div>
+    </div>
+
+    <style>
+      .reveal { font-size: 24px; }
+      .reveal .slides { text-align:left; }
+      .reveal h1 { text-transform: none; font-size: 2em; }
+      .reveal h3 { text-transform: none; }
+      .reveal h4 { text-transform: none; }
+      .reveal pre { width: 100% ;}
+    </style>
+
+    <script src="{{ site.baseurl }}/static/reveal.js/dist/reveal.js"></script>
+    <script src="{{ site.baseurl }}/static/reveal.js/plugin/notes/notes.js"></script>
+    <script src="{{ site.baseurl }}/static/reveal.js/plugin/markdown/markdown.js"></script>
+    <script src="{{ site.baseurl }}/static/reveal.js/plugin/highlight/highlight.js"></script>
+    <script>
+    // More info about config & dependencies:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+	hash: true,
+	plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+    });
+    </script>
+  </body>
+</html>

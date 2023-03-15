@@ -1,0 +1,48 @@
+    <div class="masthead">
+      <h1 class="masthead-title">Macaulay2 Workshop &amp; Mini-school</h1>
+    </div>
+
+{% assign nodes="registration schedule local" | split: ' ' %}
+{% assign title="Registration Schedule Local" | split: ' ' %}
+
+    <nav class="navbar navbar-workshop navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand{% if page.url == "/" %} active{% endif %}" href="{{ site.baseurl }}/">Home</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	<span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	<ul class="navbar-nav mr-auto">
+	  {%- for i in (0..2) -%}
+	  <li class="nav-item">
+	    <a class="nav-link{% if page.url contains nodes[i] %} active{% endif %}"
+	       href="{{ site.baseurl }}/{{nodes[i]}}/">{{title[i]}}</a>
+	  </li>
+	  {%- endfor %}
+
+	  <li class="nav-item dropdown">
+	    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
+	       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	      Workshop
+	    </a>
+
+	    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+	      <a class="dropdown-item" href="https://github.com/Macaulay2/Workshop-2023-Minneapolis/wiki/Workshop-Projects">Project Descriptions</a>
+	      <a class="dropdown-item" href="https://github.com/Macaulay2/Workshop-2023-Minneapolis">GitHub Repository</a>
+	      <a class="dropdown-item" href="https://macaulay2-workshop-minneapolis.zulipchat.com">Zulip Chat</a>
+	    </div>
+	  </li>
+
+	  <li class="nav-item dropdown">
+	    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
+	       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	      Et Cetera
+	    </a>
+
+	    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+	      <a class="dropdown-item" href="http://www2.macaulay2.com/Macaulay2/Events">Other Macaulay2 events</a>
+	    </div>
+	  </li>
+	</ul>
+      </div>
+    </nav>

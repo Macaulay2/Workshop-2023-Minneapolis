@@ -1,0 +1,93 @@
+---
+sitemap: false
+---
+
+$masthead-font: "Spectral SC";
+$heading-font: "Spectral";
+$main-font: "Libre Baskerville";
+$regular-font-size: 0.95em;
+
+$link-color: #022b6d;
+$link-hover-color: #527bbd;
+
+body {
+    font-family: $main-font;
+    font-size: $regular-font-size;
+}
+
+.wrapper {
+    display: block;
+}
+
+@media (min-width: 768px) {
+  .wrapper {
+      max-width: 730px;
+  }
+}
+
+p {
+    font-size: 1.1em;
+    text-align: justify;
+    max-width: 95%;
+    margin: 0 auto;
+}
+
+li.flipper {
+    border: 1px solid #e8e8e8;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px 0 rgba(25,25,25,.16);
+    display:inline-block;
+    height:50px;
+    margin: 0px 5px 0px;
+    position:relative;
+    transition: border-color .1s linear, box-shadow .1s linear;
+    width:250px;
+    white-space: nowrap;
+}
+a.flipper {
+    color: $link-hover-color;
+    font-size:20px;
+    font-weight:bold;
+    height:48px;
+    width:248px;
+    align-items:center;
+    justify-content:center;
+    display:flex;
+    position:absolute;
+    background-color: white;
+    text-decoration-color:rgb(25, 25, 25);
+    transition: background-color .1s linear, color .1s linear!important;
+}
+
+li.flipper:hover {
+    border: 1px solid green;
+    box-shadow: 0 1px 2px 0 green;
+}
+
+a.flipper:hover {
+    background-color: green;
+    color: white;
+}
+
+body > .masthead {
+    font-size: 26px;
+    text-align: center;
+    margin-bottom: 0em;
+    border-bottom: none;
+    font-variant: small-caps;
+}
+@media (max-width: 768px) {
+  body > .masthead {
+      font-size: 4vw;
+      text-align: center;
+  }
+}
+
+.nav-link {
+    display: block;
+    border-bottom: 1px #f6f6f6 solid;
+}
+
+.navbar-workshop {
+    font-family: $masthead-font;
+}

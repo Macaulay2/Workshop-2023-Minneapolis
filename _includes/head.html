@@ -1,0 +1,90 @@
+  <head>
+    <!-- Basic meta elements -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type"    content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Canonical link to help search engines -->
+    <link rel="canonical"     href="{{ site.url }}{{ site.baseurl }}{{ page.url }}" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ site.baseurl }}/static/syzygy.jpg" />
+    <link rel="alternate"     type="application/rss+xml" title="RSS" href="{{ site.baseurl }}/atom.xml" />
+    <link rel="stylesheet"    href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,400i|Spectral:700|Spectral+SC:700&amp;display=swap" />
+    <link rel="stylesheet"    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+    <link rel="stylesheet"    href="{{ site.baseurl }}/static/style.css" />
+    <link rel="stylesheet"    href="{{ site.baseurl }}/static/workshop.css" />
+    {%- if page.layout == "slide" %}
+    <link rel="stylesheet"    href="{{ site.baseurl }}/static/reveal.js/dist/reset.css" />
+    <link rel="stylesheet"    href="{{ site.baseurl }}/static/reveal.js/dist/reveal.css" />
+    <link rel="stylesheet"    href="{{ site.baseurl }}/static/reveal.js/dist/theme/white.css" id="theme" />
+    <link rel="stylesheet"    href="{{ site.baseurl }}/static/reveal.js/plugin/highlight/monokai.css" id="highlight-theme" />
+    {%- endif %}
+
+    <title>{% case page.title -%}
+      {%- when "Home" -%}
+        {{ site.title }}
+      {%- else -%}
+        {{ page.title }}
+      {%- endcase %}</title>
+
+    {%- comment %}
+    <!-- Dublin Core metadata for Zotero -->
+    <meta name="DC.title"   content="{{ page.title }}" />
+    <meta name="DC.creator" content="{{ page.author }}" />
+    <meta name="DC.date"    content="{{ page.publication-date }}" />
+    <meta name="DC.source"  content="{{ site.title }}" />
+
+    <!-- Open Graph metadata -->
+    <meta property="og:type"           content="article" />
+    <meta property="og:title"          content="{{ page.title }}" />
+    <meta property="og:article:author" content="{{ page.author }}" />
+    <meta property="og:description"    content="{{ site.description }}" />
+    <meta property="og:url"            content="{{ site.url }}{{ site.baseurl }}{{ page.url }}" />
+    <meta property="og:image"          content="{{ site.url }}{{ site.baseurl }}/static/logo.png" />
+    <meta property="og:image:width"    content="200" />
+    <meta property="og:image:height"   content="200" />
+    {% endcomment %}
+
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
+      integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous" />
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"
+      integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+    <!-- KaTeX auto-render extention: https://katex.org/docs/autorender.html -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+      integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <script>
+      var macros = {
+          "\\P": "\\mathbb{P}"
+      }, delimiters = [
+          { left: "$$",  right: "$$",  display: true}, // Technically, this does not work. See below.
+          { left: "\\[", right: "\\]", display: true},
+          { left: "$",   right: "$",   display: false},
+          { left: "\\(", right: "\\)", display: false}
+      ];
+
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, { delimiters: delimiters, macros: macros });
+      });
+    </script>
+    <style>.katex { font-size: 1em; }</style>
+    <!-- KaTeX copy-tex extention: https://github.com/KaTeX/KaTeX/tree/master/contrib/copy-tex -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/copy-tex.min.js"
+      integrity="sha384-ww/583aHhxWkz5DEVn6OKtNiIaLi2iBRNZXfJRiY1Ai7tnJ9UXpEsyvOITVpTl4A" crossorigin="anonymous"></script>
+
+    <!-- Prism -->
+    <link href="{{ site.baseurl }}/static/prism.css" rel="stylesheet" type="text/css" />
+    <script src="{{ site.baseurl }}/static/prism.js"></script>
+    <script src="{{ site.baseurl }}/static/macaulay2.js"></script>
+
+    {%- if site.gtag %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.gtag }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '{{ site.gtag }}');
+    </script>
+    {%- endif %}
+  </head>

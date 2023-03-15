@@ -1,0 +1,23 @@
+title:   M2Week
+tagline: Macaulay2 Workshop & Graduate Mini-school 2023
+description: >-
+  The homepage for Macaulay2 Workshop &
+  Graduate Mini-school in Minneapolis, 2023
+email:   mahrud@umn.edu
+domain:  macaulay2.github.io
+url:     https://macaulay2.github.io
+baseurl: /Workshop-2023-Minneapolis
+
+# Permalinks
+permalink: pretty
+permalink: /:title/
+
+exclude:
+  - .jekyll-cache/
+  - .sass-cache/
+  - Gemfile
+  - Gemfile.lock
+  - Makefile
+  - gemfiles/
+  - node_modules/
+  - vendor/
