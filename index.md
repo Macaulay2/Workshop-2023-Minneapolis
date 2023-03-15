@@ -71,13 +71,14 @@ We are also grateful to the School of Mathematics at the University of Minnesota
 
 ## Questions?
 
-Please contact one the following organizers:
+For any questions, comments, or feedback please email [macaulay2@umn.edu](mailto:macaulay2@umn.edu).
 
-- [Ayah Almousa] (almou007@umn.edu)
+Organizers:
+- [Ayah Almousa]
 - [Christine Berkesch]
-- [Tim Duff] (timduff@uw.edu)
-- [Mike Perlman] (mperlman@umn.edu)
-- [Mahrud Sayrafi] (mahrud@umn.edu)
+- [Tim Duff]
+- [Mike Perlman]
+- [Mahrud Sayrafi]
 
 [Ayah Almousa]: https://sites.google.com/view/ayah-almousa
 [Christine Berkesch]: https://math.umn.edu/~cberkesc
