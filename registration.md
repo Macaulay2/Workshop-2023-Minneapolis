@@ -15,10 +15,18 @@ All are welcome to apply: experience or familiarity with Macaulay2 is not requir
 
 <br />
 
-<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeHbr4mgGu-uBoDIEK_20X3g_OQMGQckGA5wZT0fV-VpymWQg/viewform?embedded=true" width="100%" height="3200" frameborder="0" marginheight="0" marginwidth="0">
+<div style="padding: 0.1in 0; width: 100%; text-align: center;">
+  <li class="flipper">
+    <a href="https://forms.gle/Ujck8YCb7VcsUhPX8" class="flipper">Registration form</a>
+  </li>
+</div>
+
+{% comment %}
+<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeHbr4mgGu-uBoDIEK_20X3g_OQMGQckGA5wZT0fV-VpymWQg/viewform?embedded=true" width="100%" height="3500" frameborder="0" marginheight="0" marginwidth="0">
   <div style="padding: 0.1in 0; width: 100%; text-align: center;">
     <li class="flipper">
       <a href="https://forms.gle/Ujck8YCb7VcsUhPX8" class="flipper">Apply by April 10th!</a>
     </li>
   </div>
 </iframe>
+{% endcomment %}
