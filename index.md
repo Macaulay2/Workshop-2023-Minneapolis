@@ -18,10 +18,10 @@ The two-day mini-school consists of two lectures each day by leaders of a subset
 <br/>
 
 **Invited Speakers**
-- Michael Brown (Auburn): Differential modules and toric BGG
-- David Eisenbud (Berkeley): Structure of infinite resolutions *[To be confirmed]*
-- Francesca Gandini (St. Olaf): Invariant Rings *[To be confirmed]*
-- Patricia Klein (Texas A&M): Alternating Sign Matrix Varieties
+- Michael Brown (Auburn University): Differential modules and toric BGG
+- David Eisenbud (UC Berkeley): Structure of infinite resolutions *[To be confirmed]*
+- Francesca Gandini (University of Primorska and St. Olaf College): Invariant Rings
+- Patricia Klein (Texas A&M University): Alternating Sign Matrix Varieties
 
 ---
 
@@ -65,13 +65,11 @@ See the [schedule](schedule) for more details.
 
 ![](https://www.nsf.gov/images/logos/NSF_4-Color_bitmap_Logo_thumb.jpg){: style="margin-left: 20px; float: right"}
 
-This event is made possible thanks to funding from the National Science Foundation ([DMS-2302476](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2302476)).
-
-We are also grateful to the School of Mathematics at the University of Minnesota, Twin Cities and the [Institute for Mathematics and its Applications](https://ima.umn.edu).
+This event is made possible thanks to funding from the National Science Foundation ([DMS-2302476](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2302476)). We are also grateful to the School of Mathematics at the University of Minnesota, Twin Cities and the [Institute for Mathematics and its Applications](https://ima.umn.edu).
 
 ## Questions?
 
-For any questions, comments, or feedback please email [macaulay2@umn.edu](mailto:macaulay2@umn.edu).
+For any questions please email [macaulay2@umn.edu](mailto:macaulay2@umn.edu).
 
 Organizers:
 - [Ayah Almousa]
