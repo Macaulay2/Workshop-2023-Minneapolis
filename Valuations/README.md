@@ -1,0 +1,2 @@
+# Valuations.
+This project will be led by Michael Burr (Clemson). Several existing Macaulay2 development groups (SubalgebraBases, Tropical) are interested in adding support for valuations to their packages. The goal of this group is to design and begin implementation of a Macaulay2 package for valuations that would be flexible enough for use in other packages.
