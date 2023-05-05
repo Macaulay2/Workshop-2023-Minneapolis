@@ -1,0 +1,2 @@
+# Differential modules and toric BGG.
+This project will be led by Michael Brown (Auburn). The classical Bernstein--Gelfand--Gelfand correspondence is implemented in the Macaulay2 package BGG. The goal of this project is to implement a ``toric version" of the BGG correspondence: that is, a version of BGG involving multigraded polynomial and exterior algebras. Since the role of complexes of exterior modules is played by differential modules in this setting, an auxiliary goal will be to implement differential modules and their resolutions in Macaulay2.
