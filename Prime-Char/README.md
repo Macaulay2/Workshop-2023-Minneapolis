@@ -1,0 +1,2 @@
+# Calculations in prime characteristic.
+This project will be led by Mordechai Katzman (Sheffield). The goal of this project is to implement new and not-so-new algorithms in prime characteristic, e.g., calculations with $F$-finite $F$-modules, the calculation of Lyubeznik numbers, etc. The implementation of these modules would involve the extension of methods in the current package TestIdeals to perform calculations with submodules of free modules rather than ideals (e.g., the calculation of $(1/p)$-powers.)
