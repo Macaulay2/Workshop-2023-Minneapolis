@@ -164,6 +164,36 @@ burchIndex = I -> (
       
 beginDocumentation()
 
+doc ///
+Key
+ socle
+ (socle, Ring)
+ (socle, Module)
+Headline
+ Computes the socle of a ring or module
+Usage
+ I = socle R
+ N = socle M
+Inputs
+ R: Ring
+ M: Module
+Outputs
+ I: Ideal
+ N: Module
+Description
+  Text
+   The socle of a ring or module is
+   the sum of the minimal nonzero ideals or submodules
+  Example
+   S = ZZ/101[a,b]
+   I = (ideal(gens S))^2
+   R = S/I
+   socle R
+   M = coker random(R^2, R^{-1})
+   socle M
+   degree socle M
+///
+
 
 
 -* Test section *-
