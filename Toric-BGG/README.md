@@ -1,2 +1,27 @@
 # Differential modules and toric BGG.
-This project will be led by Michael Brown (Auburn). The classical Bernstein--Gelfand--Gelfand correspondence is implemented in the Macaulay2 package BGG. The goal of this project is to implement a ``toric version" of the BGG correspondence: that is, a version of BGG involving multigraded polynomial and exterior algebras. Since the role of complexes of exterior modules is played by differential modules in this setting, an auxiliary goal will be to implement differential modules and their resolutions in Macaulay2.
+
+Here is a sketch of our goals for the week. All the papers I'll reference are uploaded to our Github page.
+
+# Minimal free resolutions of differential modules
+
+The first goal will be to implement minimal free resolutions of differential modules, as introduced in the paper "Minimal free resolutions of differential modules" by Brown-Erman, which I'll abbreviate as BE1. We'll mainly focus on implementing
+
+(a) Construction 2.7 in BE1, which is an algorithm for building a (possibly non-minimal) free resolution of a differential module, and 
+
+(b) the proof of Proposition 4.1 in BE1, which is an algorithm for "minimizing" a non-minimal free differential module.
+
+For background on differential modules, I suggest skimming BE1, paying special attention to Construction 2.7 and the proof of Proposition 4.1. I don't think any of the other proofs will play a role in this project, but perhaps at least reading the statements of the rest of the results might help with getting a feel for the topic.
+
+# Toric BGG functors
+
+Our second goal is to implement the toric BGG functors, as discussed in "Tate resolutions on toric varieties" by Brown-Erman (BE2). 
+
+Specifically, we want to implement the functors L and R in Section 2.2 of BE2. Reading Section 2 of that paper up through Theorem 2.7 should give sufficient background. 
+
+This has already been done in the standard graded case: see the BGG package, which is based on Eisenbud-Floystad-Schreyer's paper "Sheaf cohomology and free resolutions over exterior algebras". The idea is to extend many aspects of that package to the multigraded setting.
+
+# Applications 
+
+(1) Implement a method for computing "strongly linear strands" of multigraded free resolutions, as in the paper "Linear strands of multigraded free resolutions" by Brown-Erman (BE3). This should be really easy, once the code for the BGG functors is in place: we will just use the formula for the strongly linear strand in Theorem 1.3(2) of BE3. For background on this topic, reading the intro to BE3 should suffice.
+
+(2) We will also implement Tate resolutions and sheaf cohomology computations over weighted projective stacks. This will require combining our minimal free resolutions of DM's code with the BGG code. The reference for this is Section 3 of BE2. But if you've never seen this material before, this reading may be heavy going, and so it may be best to just discuss this topic in person.
