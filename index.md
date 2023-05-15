@@ -9,7 +9,7 @@ order: 1
 We are organizing a two-day mini-school for graduate students, followed by a five-day software development workshop for Macaulay2.
 - **Location: University of Minnesota, Twin Cities.**
 
-[Application for travel and lodging support is open until April 10th.](registration)
+[Read our community agreement here.](community-agreement)
 {: style="background-color: #fef5c4; border-left: 8px solid #FADF98; padding: 10px 30px;"}
 
 ### Graduate Mini-school: June 3--4, 2023
@@ -19,7 +19,7 @@ The two-day mini-school consists of two lectures each day by leaders of a subset
 
 **Invited Speakers**
 - Michael Brown (Auburn University): Differential modules and toric BGG
-- David Eisenbud (UC Berkeley): Structure of infinite resolutions *[To be confirmed]*
+- David Eisenbud (UC Berkeley): Structure of infinite resolutions
 - Francesca Gandini (University of Primorska and St. Olaf College): Invariant Rings
 - Patricia Klein (Texas A&M University): Alternating Sign Matrix Varieties
 
