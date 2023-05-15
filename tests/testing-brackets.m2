@@ -1,5 +1,4 @@
-needsPackage("Brackets", FileName => "/home/macaulay/Brackets/Brackets.m2")
-
+needsPackage "Brackets"
 B = bracketRing(6, 3)
 T = [1 4 5]_B * [1 5 6]_B * [2 3 4]_B
 n = normalForm T 
@@ -13,7 +12,6 @@ C = (c * f)_G
 D = AB ^ C -- Output "2*[bde]*[acf]-2*[cdf]*[abe]" is consistent with the book's answer up to sorting and sign.
 assert(net D == "2*[bde]*[acf]-2*[cdf]*[abe]")
 
-G = gc(a..f,3)
 abLine = (a * b)_G
 deLine = (d * e)_G
 bcLine = (b * c)_G
