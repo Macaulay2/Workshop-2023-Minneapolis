@@ -14,7 +14,7 @@ We are committed to creating a workshop which is welcoming to all participants r
 
 <br />
 
-If a participant engages in any form of discriminatory or harassing behavior, workshop organizers may take any action that is deemed appropriate at the time. If you are being harassed, made to feel uncomfortable with the way you are being treated, notice someone else being harassed, or if you have any other concerns, please contact us by emailing [macaulay2@umn.edu](mailto:macaulay2@umn.edu).
+If a participant engages in any form of discriminatory or harassing behavior, workshop organizers may take any action that is deemed appropriate at the time. If you are being harassed, made to feel uncomfortable with the way you are being treated, notice someone else being harassed, or if you have any other concerns, please use this [anonymous form](https://forms.gle/sT66ds2XQmpkYFkr5).
 {: style="font-size: 1em;"}
 
 <br />
