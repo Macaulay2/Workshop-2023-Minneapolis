@@ -10,7 +10,7 @@ The first goal will be to implement minimal free resolutions of differential mod
 
 (b) the proof of Proposition 4.1 in BE1, which is an algorithm for "minimizing" a non-minimal free differential module.
 
-For background on differential modules, I suggest skimming BE1, paying special attention to Construction 2.7 and the proof of Proposition 4.1. I don't think any of the other proofs will play a role in this project, but perhaps at least reading the statements of the rest of the results might help with getting a feel for the topic.
+For background on differential modules, I suggest skimming BE1, paying special attention to Construction 2.7 and the proof of Proposition 4.1.
 
 # Toric BGG functors
 
