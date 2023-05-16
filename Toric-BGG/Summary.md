@@ -6,7 +6,9 @@ Here is a sketch of our goals for the week. All the papers I'll reference are up
 
 The first goal will be to implement minimal free resolutions of differential modules, as introduced in the paper "Minimal free resolutions of differential modules" by Brown-Erman, which I'll abbreviate as BE1. We'll mainly focus on implementing
 
-(a) Construction 2.7 in BE1, which is an algorithm for building a (possibly non-minimal) free resolution of a differential module, and 
+(a) Construction 2.7 in BE1, which is an algorithm for building a (possibly non-minimal) free resolution of a differential module
+
+(b) the ``degeneration" procedure in the proof of Theorem 3.2
 
 (b) the proof of Proposition 4.1 in BE1, which is an algorithm for "minimizing" a non-minimal free differential module.
 
