@@ -6,13 +6,15 @@ Here is a sketch of our goals for the week. All the papers I'll reference are up
 
 The first goal will be to implement minimal free resolutions of differential modules, as introduced in the paper "Minimal free resolutions of differential modules" by Brown-Erman, which I'll abbreviate as BE1. We'll mainly focus on implementing
 
-(a) Construction 2.7 in BE1, which is an algorithm for building a (possibly non-minimal) free resolution of a differential module
+(a) Construction 2.7 in BE1, which is an algorithm for building a (possibly non-minimal) free resolution of a differential module.
 
-(b) the ``degeneration" procedure in the proof of Theorem 3.2
+(b) Construction 2.8 in BE1, which gives an alternative (and simpler) algorithm than (a).
 
-(c) the proof of Proposition 4.1 in BE1, which is an algorithm for "minimizing" a non-minimal free differential module.
+(c) the ``degeneration" procedure in the proof of Theorem 3.2 in BE1.
 
-For background on differential modules, I suggest skimming BE1, paying special attention to Construction 2.7 and the proof of Proposition 4.1.
+(d) the proof of Proposition 4.1 in BE1, which is an algorithm for "minimizing" a non-minimal free differential module.
+
+In fact, we may only end up implementing (b) and (d). For background on differential modules, I suggest skimming BE1, paying special attention to Construction 2.7 and the proof of Proposition 4.1.
 
 # Toric BGG functors
 
