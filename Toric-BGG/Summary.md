@@ -10,7 +10,7 @@ The first goal will be to implement minimal free resolutions of differential mod
 
 (b) the ``degeneration" procedure in the proof of Theorem 3.2
 
-(b) the proof of Proposition 4.1 in BE1, which is an algorithm for "minimizing" a non-minimal free differential module.
+(c) the proof of Proposition 4.1 in BE1, which is an algorithm for "minimizing" a non-minimal free differential module.
 
 For background on differential modules, I suggest skimming BE1, paying special attention to Construction 2.7 and the proof of Proposition 4.1.
 
