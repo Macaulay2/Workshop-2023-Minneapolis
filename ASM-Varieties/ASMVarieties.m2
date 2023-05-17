@@ -145,6 +145,8 @@ essentialBoxes List := List => (w) -> (
 --OUTPUT: a list of boxes in the Rothe diagram for A
 --TODO: add check that list w is actually a permutation/that A is an ASM
 --TODO: add documentation
+--TODO: needs fixing
+--Sometimes this gives the essential set and sometimes this gives all boxes
 -----------------------
 rotheDiagram = method()
 --this version for general ASMs due to Yuyuan Luo
