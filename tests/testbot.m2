@@ -13,7 +13,7 @@
 -- Uncomment and edit the following line to add your project directories
 -- containing Macaulay2 source code files to the load path. Terminate each
 -- directory name with a "/".
-path = join( { currentDirectory() | "ASM-Varieties/" }, path )
+--path = join( { currentDirectory() | "src/singularities/", ... }, path )
 
 -- Uncomment and edit the following lines to preload and check your package or
 -- to run a series of examples with every push on GitHub.
@@ -21,10 +21,6 @@ path = join( { currentDirectory() | "ASM-Varieties/" }, path )
 --check LocalRings
 --load "tests/example.m2"
 --capture get "tests/example.m2"
-
-needsPackage "ASMVarieties"
-installPackage "ASMVarieties"
-elapsedTime check("ASMVarieties", Verbose => true)
 
 -- The following lines automatically run every file in the "tests" directory.
 -- If you wish, you can change testDir to any other directory.
