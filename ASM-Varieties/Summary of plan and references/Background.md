@@ -25,10 +25,12 @@ All ASM varieties are unions of matrix Schubert varieties; however, not every un
 13. Decide whether or not I is an ASM ideal: Take the antidiagonal initial ideal of I and verify that it is radical.  Assuming it is, read the set of permutations, Perm(I), from the components of the antidiagonal initial ideal of I.  (That is, apply the function written for 12.)  Ask whether the intersection of Schuberts indexed by Perm(I) is indeed I.
 
 The set of ASM ideals is closed under addition.  Typically it's not easy to see which ASM is the matrix corresponding to a given sum of ASM ideals.
+
 14. Given a set of ASMs, find the rank table for their sum by taking entrywise minima of the rank table of each of the given ASMs:  Find the ASM of the output rank table (using the function written for 3, rank table will be minimal).
 15. Given a non-minimal rank table, find its ASM: Exclude the vacuous rank conditions and assign the appropriate bigrassmannian to the others.  Apply the function from 14 on those bigrassmannians.
 
 Regularity:
+
 16. Compute regularity of any CM ASM (allow opt out of CM check, opt our automatically if given a permutation) as degree of K-polynomial minus height
 16. Decide if a permutation is vexillary.
 17. Decide if a permutation is 1432 avoiding.
@@ -36,6 +38,7 @@ Regularity:
 19. Compute Rajchgot index of a permutation and implement Theorem 1.1 of Pechenik-Speyer-Weigandt.
 
 While we're at it, if time: 
+
 20. Decide if a permutation is CDG (mild generalization of function from 16).
 21. Give the (unique) diagonal initial ideal of a CDG permutation.  See Klein, Conjecture 1.1 and paragraph before it.
 22. Decide if a permutation is Cartwright-Sturmfels (mild generalization of function from 16) and, if so, give its universal Gröbner basis.  See Conca-De Negri-Gorla Theorem 5.6.
