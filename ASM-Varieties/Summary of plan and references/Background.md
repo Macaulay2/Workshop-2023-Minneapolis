@@ -32,13 +32,13 @@ The set of ASM ideals is closed under addition.  Typically it's not easy to see 
 Regularity:
 
 16. Compute regularity of any CM ASM (allow opt out of CM check, opt our automatically if given a permutation) as degree of K-polynomial minus height
-16. Decide if a permutation is vexillary.
-17. Decide if a permutation is 1432 avoiding.
-18. Implement Theorems 1.1 and 1.5 of Rajchgot-Robichaux-Weigandt.
-19. Compute Rajchgot index of a permutation and implement Theorem 1.1 of Pechenik-Speyer-Weigandt.
+17. Decide if a permutation is vexillary.
+18. Decide if a permutation is 1432 avoiding.
+19. Implement Theorems 1.1 and 1.5 of Rajchgot-Robichaux-Weigandt.
+20. Compute Rajchgot index of a permutation and implement Theorem 1.1 of Pechenik-Speyer-Weigandt.
 
 While we're at it, if time: 
 
-20. Decide if a permutation is CDG (mild generalization of function from 16).
-21. Give the (unique) diagonal initial ideal of a CDG permutation.  See Klein, Conjecture 1.1 and paragraph before it.
-22. Decide if a permutation is Cartwright-Sturmfels (mild generalization of function from 16) and, if so, give its universal Gröbner basis.  See Conca-De Negri-Gorla Theorem 5.6.
+21. Decide if a permutation is CDG (mild generalization of function from 16).
+22. Give the (unique) diagonal initial ideal of a CDG permutation.  See Klein, Conjecture 1.1 and paragraph before it.
+23. Decide if a permutation is Cartwright-Sturmfels (mild generalization of function from 16) and, if so, give its universal Gröbner basis.  See Conca-De Negri-Gorla Theorem 5.6.
