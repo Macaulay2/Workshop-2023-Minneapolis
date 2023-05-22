@@ -4,7 +4,10 @@ event: M2Week
 title: ""
 ---
 
-Graduate students who would like to give a 20-minute talk or present a poster at the meeting should indicate so in the [registration form](../registration) by April 1st. Check again closer to the workshop for talk abstract.
+<iframe style="width: 2150px; height: 870px; margin-left: -100px; overflow: hidden" frameborder=0 allowfullscreen src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSiN_FJvdHSy172p8ekYiBvIeU8jfrr6ZtMk806NhIO9UQjFiLNjHJJ7QGG1dwi0olLrFYCSeNWDsRQ/pubhtml?gid=1727032120&amp;single=true&amp;widget=true&amp;headers=false">
+	<a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSiN_FJvdHSy172p8ekYiBvIeU8jfrr6ZtMk806NhIO9UQjFiLNjHJJ7QGG1dwi0olLrFYCSeNWDsRQ/pubhtml?gid=1727032120&single=true">Click here if the schedule isn't loading.</a>
+</iframe>
+
 
 {% comment %}
 - All talks will be in **[Vincent Hall](https://campusmaps.umn.edu/vincent-hall) 16** (enter via the south entrance).
@@ -12,7 +15,8 @@ Graduate students who would like to give a 20-minute talk or present a poster at
 - ADA accessible entrance to Vincent hall is located on the south side.
 - Please note that **face masks are required in classrooms** by university policy.
 {: style="background-color: #fef5c4; border-left: 8px solid #FADF98; padding: 10px 30px;"}
-{% endcomment %}
+
+Graduate students who would like to give a 20-minute talk or present a poster at the meeting should indicate so in the [registration form](../registration) by April 1st. Check again closer to the workshop for talk abstract.
 
 ### Friday, June 2nd (for early arrivals)
 - 7:30pm - 9:00pm: Dessert social in **Vincent 120**
@@ -73,6 +77,8 @@ Graduate students who would like to give a 20-minute talk or present a poster at
   - 9:00am - 11:00am: Projects
   - 11:00am - 1:00pm: Demos
 - 1:00pm - 3:00pm: Lunch
+
+{% endcomment %}
 
 {% comment %}
 
