@@ -24,7 +24,7 @@ export{
     "isASM",
     "fultonGens",
     "schubertDetIdeal",
-    "diagInit",
+    "lexInit",
     "antiDiagInit",
     "rankMatrix",
     "essentialBoxes",
@@ -114,31 +114,16 @@ rankMatrix Matrix := Matrix => (A) -> (
         rankA=append(rankA, temp));
     matrix rankA
     )
+
 rankMatrix List := Matrix => (w) -> (
     A := permToMatrix w;
     rankMatrix A
     )
 
- 
--*
---Ayah's version deprecated in favor of Yuyuan's more general version
---kept for reference, we can delete later
-essentialBoxes List := List => (w) -> (
-    Zentries := set flatten table(#w, #w, (i,j)->(i+1,j+1)); --table of all boxes
-    ones := apply(w, i->(i,position(w,j -> j==i)+1)); --locations of 1's in perm matrix
-    L := new MutableList;
-    for i from 0 to #w-1 do(
-        for j from ones_i_0 to (#w) do (
-            L#(#L) = (j, ones_i_1); --deathrays going down
-            );
-        for l from ones_i_1+1 to (#w) do (
-            L#(#L) = (ones_i_0,l); --deathrays to the right
-            );
-        );
-    toList (Zentries - set unique toList L) --determine survivors of death rays
-    )
-*-
-
+rankMatrix Sequence := Matrix => (s) -> (
+    A := permToMatrix toList s;
+    rankMatrix A
+    ) 
 -----------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
     	--OR an alternating sign matrix A
@@ -149,59 +134,35 @@ essentialBoxes List := List => (w) -> (
 --Sometimes this gives the essential set and sometimes this gives all boxes
 -----------------------
 rotheDiagram = method()
---this version for general ASMs due to Yuyuan Luo
-rotheDiagram Matrix := List => (ASM) -> (
-    n := numrows ASM;
-    essL := {};
-    seen := {};
-    for i from 0 to n-1 do (
-        x := toList(n:0);
-        seen = append(seen,x);
+--this is a tidied version of code by Yuyuan Luo
+rotheDiagram Matrix := List => (A) -> (
+    n := numrows A;
+    listEntries := flatten table(n,n, (i,j)->(i,j));
+    ones := select(listEntries, i-> A_i == 1);
+    seen := new MutableList;
+    for one in ones do(
+	for i from one_0 to n-1 do(
+	    if (A_(i,one_1)==-1) then break;
+	    seen#(#seen) = (i,one_1);
+	    );
+	for i from one_1 to n-1 do(
+	    if A_(one_0,i)==-1 then break;
+	    seen#(#seen) = (one_0,i);
+	    );
 	);
-
-    for i from 0 to n-1 do (
-        for j from 0 to n-1 do (
-            if (ASM_(i,j) == -1) then (essL = append(essL,{i,j}); continue;);
-            if (ASM_(i,j) == 1) then (
-                seenc := seen_{i}#0;
-                seenc = replace(j, 1, seenc);
-                seen = replace (i, seenc, seen);
-                
-                if (i < n-1) then (
-                    for k from i+1 to n-1 do (
-                        if (ASM_(k,j) == 1 or ASM_(k,j) == -1) then break;
-                        seenc := seen_{k}#0;
-                        seenc = replace(j,1,seenc);
-                        seen = replace(k,seenc,seen);
-                    );
-                );
-                if (j < n-1) then (
-                    for k from j+1 to n-1 do (
-                        if (ASM_(i,k) == 1 or ASM_(i,k) == -1) then break;
-                        seenc := seen_{i}#0;
-                        seenc = replace(k,1,seenc);
-                        seen = replace(i,seenc,seen);
-                    );
-                );
-                    
-            );
-        
-        );
-    );
-
-    for i from 0 to n-1 do (
-        for j from 0 to n-1 do (
-            if ((seen_{i}#0#(j)) == 0) then essL = append(essL,{i,j});
-        );
-    );
-sort unique apply(essL, i-> {i_0+1,i_1+1})
-)
+    seen = set unique toList seen;
+    sort apply(toList((set listEntries) - seen), i-> (i_0+1,i_1+1))
+    )
 
 rotheDiagram List := List => (w) -> (
     A := permToMatrix w;
-    essentialBoxes(A)
+    rotheDiagram(A)
     )
 
+rotheDiagram Sequence := List => (s) -> (
+    A := permToMatrix toList s;
+    rotheDiagram(A)
+    )
 
 -----------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
@@ -213,14 +174,16 @@ rotheDiagram List := List => (w) -> (
 essentialBoxes = method()
 essentialBoxes Matrix := List => (A) -> (
     boxes := rotheDiagram(A);
-    badBoxes := apply(boxes, i->(positions(boxes,j->(j=={i_0,i_1+1}))|positions(boxes,j->(j=={i_0,i_1+1}))));
+    badBoxes := apply(boxes, i->(positions(boxes,j->(j==(i_0,i_1+1)))|positions(boxes,j->(j==(i_0,i_1+1)))));
     essBoxes := positions(badBoxes, i-> i=={});
     boxes_essBoxes
     )
 essentialBoxes List := List => (w) -> (
     essentialBoxes permToMatrix w
     )
-
+essentialBoxes Sequence := List => (s) -> (
+    essentialBoxes permToMatrix toList s
+    )
 
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
@@ -246,6 +209,11 @@ fultonGens List := List => (w) -> (
     A := permToMatrix w;
     fultonGens A
     )
+
+fultonGens Sequence := List => (s) -> (
+    A := permToMatrix toList s;
+    fultonGens A
+    )
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: Schubert determinantal ideal for w
@@ -259,6 +227,9 @@ schubertDetIdeal Matrix := Ideal => (A) -> (
     )
 schubertDetIdeal List := Ideal => (w) -> (
     ideal fultonGens w
+    );
+schubertDetIdeal Sequence := Ideal => (s) -> (
+    ideal fultonGens toList s
     );
 
 ----------------------------
@@ -280,6 +251,12 @@ grothendieckPoly(List) := (w) -> (
     Q := newRing(ring I, DegreeRank=> #w);
     numerator reduceHilbert hilbertSeries sub(I,Q)
     )
+grothendieckPoly(Sequence) := (s) -> (
+    I := schubertDetIdeal toList s;
+    Q := newRing(ring I, DegreeRank=> #s);
+    numerator reduceHilbert hilbertSeries sub(I,Q)
+    )
+
 
 --TODO: add tests
 --TODO: double grothendieck. Problem: can't rename variables
@@ -298,7 +275,9 @@ antiDiagInit Matrix := monomialIdeal => (A) -> (
 antiDiagInit List := monomialIdeal => (w) -> (
     monomialIdeal leadTerm schubertDetIdeal w
     );
-
+antiDiagInit Sequence := monomialIdeal => (s) -> (
+    monomialIdeal leadTerm schubertDetIdeal toList s
+    );
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: diagonal initial ideal of Schubert determinantal ideal for w
@@ -306,14 +285,19 @@ antiDiagInit List := monomialIdeal => (w) -> (
 --TODO: add check that list w is actually a permutation
 --WARNING: This method does not like the identity permutation
 ----------------------------------------
-diagInit = method()
-diagInit Matrix := monomialIdeal => (A) -> (
+lexInit = method()
+lexInit Matrix := monomialIdeal => (A) -> (
     I:= schubertDetIdeal A;
     R:= newRing(ring I, MonomialOrder=>Lex); --making new ring with diagonal term order (lex suffices)
     monomialIdeal leadTerm sub(I,R)
     )
-diagInit List := monomialIdeal => (w) -> (
+lexInit List := monomialIdeal => (w) -> (
     I:= schubertDetIdeal w;
+    R:= newRing(ring I, MonomialOrder=>Lex); --making new ring with diagonal term order (lex suffices)
+    monomialIdeal leadTerm sub(I,R)
+    )
+lexInit Sequence := monomialIdeal => (s) -> (
+    I:= schubertDetIdeal toList s;
     R:= newRing(ring I, MonomialOrder=>Lex); --making new ring with diagonal term order (lex suffices)
     monomialIdeal leadTerm sub(I,R)
     )
@@ -330,6 +314,10 @@ subwordComplex Matrix := simplicialComplex => (A) -> (
 
 subwordComplex List := simplicialComplex => (w) -> (
     simplicialComplex antiDiagInit w
+    );
+
+subwordComplex List := simplicialComplex => (s) -> (
+    simplicialComplex antiDiagInit toList s
     );
 
 ----------------------------------------
@@ -363,7 +351,7 @@ doc ///
        	   This package also contains functions for studying homological properties of ASM varieties.
       Example
       	  grothendieckPoly w
-      	  betti res diagInit w
+      	  betti res lexInit w
 	  betti res antiDiagInit w	   
 ///
 
@@ -439,7 +427,7 @@ L = {
     matrix{{0,0,1,0,0,0,0,0},{1,0,-1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}},
     matrix{{0,0,0,0,1,0,0,0},{0,0,1,0,-1,1,0,0},{0,0,0,1,0,0,0,0},{1,0,0,-1,1,-1,1,0},{0,1,-1,1,-1,1,0,0},{0,0,0,0,1,0,0,0},{0,0,1,0,0,0,0,0},{0,0,0,0,0,0,0,1}}
     };
-assert(apply(L,isASM) == toList (12:true))
+assert(apply(L,isASM) == toList (#L:true))
 
 
 
@@ -462,14 +450,14 @@ T = {
     matrix{{0,-1,0,1,1},{1,-1,1,-1,1},{0,1,1,0,-1},{1,1,-1,1,-1},{-1,1,0,0,1}},
     matrix{{0,0,1,0,0,0,0,0},{1,0,1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}}
     };
-assert( apply(T, isASM) == toList (17:false))
+assert( apply(T, isASM) == toList (#T:false))
 ///
 
 TEST ///
 --Example 2.1 in Weigandt "Prism Tableaux for ASMs"
 A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}};
 assert(isASM A)
-assert(sort essentialBoxes(A) == {{1,3},{2,1},{3,2}})
+assert(sort essentialBoxes(A) == {(1,3),(2,1),(3,2)})
 
 ///
 -*
@@ -496,11 +484,11 @@ end---------------------------------------------------------------
 restart
 debug needsPackage "ASMVarieties"
 
-M = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}},
-M = {1,4,3,5,2}
+M = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
+w = {3,2,5,1,4}
 isASM M
-rotheDiagram M
-essentialBoxes M
+rotheDiagram w
+essentialBoxes w
 grothendieckPoly M
 netList fultonGens M
 subwordComplex M
