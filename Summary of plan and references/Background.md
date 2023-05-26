@@ -4,13 +4,13 @@ Two very important results underly a great deal of computation in this package. 
 
 The basic functions in this package will (listed by goal, not by individual function name) 
 
-1. Take a permutation (as a list or as a matrix) or ASM or rank table and produce the associated ASM ideal (via Fulton generators) or antidiagonal initial ideal (via initial terms of Fulton generators).  ✅ [requires documentation]
-2. Take a permutation (as a list or as a matrix) or ASM and produce its (minimal) rank table.
+1. ✔ Take a permutation (as a list or as a matrix) or ASM or rank table and produce the associated ASM ideal (via Fulton generators) or antidiagonal initial ideal (via initial terms of Fulton generators). **[requires tests and documentation]**
+2. ✔ Take a permutation (as a list or as a matrix) or ASM and produce its (minimal) rank table. **[requires tests and documentation]**
 3. Take a minimal rank table and produce its ASM.  See Weigandt, Lemma 3.2.
-4. Take a permutation (as a list or as a matrix) or ASM or rank table and produce its Rothe diagram (meaning set of ordered pairs, not visualization).
+4. ✔ Take a permutation (as a list or as a matrix) or ASM or rank table and produce its Rothe diagram (meaning set of ordered pairs, not visualization). **[requires tests and documentation]**
 5. Give the height of an Schubert determinantal ideal by taking the length of the permutation/counting the size of its diagram. (Caution: this is only guaranteed to give the correct height for Schuberts, not all ASMs.)
 6. Give the height, depth, and regularity of an arbitrary ASM ideal by taking the same of its antidiagonal initial ideal.
-7. Take a permutation (as a list or as a matrix) or ASM or rank table and produce its essential set.
+7. ✔ Take a permutation (as a list or as a matrix) or ASM or rank table and produce its essential set. **[requires tests and documentation]**
 8. Take a permutation (as a list or as a matrix) and produce its single or double Schubert polynomial and single or double Grothendieck polynomial using divided differences.
 9. Convert a permutation among its list, permutation matrix, and bijection forms.
 10. Multiply permutations (compose them in their bijection form).
