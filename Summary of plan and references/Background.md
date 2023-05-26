@@ -4,7 +4,7 @@ Two very important results underly a great deal of computation in this package. 
 
 The basic functions in this package will (listed by goal, not by individual function name) 
 
-1. Take a permutation (as a list or as a matrix) or ASM or rank table and produce the associated ASM ideal (via Fulton generators) or antidiagonal initial ideal (via initial terms of Fulton generators).  
+1. Take a permutation (as a list or as a matrix) or ASM or rank table and produce the associated ASM ideal (via Fulton generators) or antidiagonal initial ideal (via initial terms of Fulton generators).  ✅ [requires documentation]
 2. Take a permutation (as a list or as a matrix) or ASM and produce its (minimal) rank table.
 3. Take a minimal rank table and produce its ASM.  See Weigandt, Lemma 3.2.
 4. Take a permutation (as a list or as a matrix) or ASM or rank table and produce its Rothe diagram (meaning set of ordered pairs, not visualization).
