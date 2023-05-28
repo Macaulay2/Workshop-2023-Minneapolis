@@ -21,16 +21,17 @@ newPackage(
         )
 
 export{
-    "isASM",
+    "isPartialASM",
     "fultonGens",
     "schubertDetIdeal",
-    "lexInit",
+    "diagLexInit",
     "antiDiagInit",
     "rankMatrix",
     "essentialBoxes",
     "subwordComplex",
     "grothendieckPoly",
-    "rotheDiagram"
+    "rotheDiagram",
+    "permToMatrix"
     }
 
 -- Utility routines --
@@ -60,15 +61,26 @@ genMat := (n,m) -> (
 --INPUT: a list w, which is a permutation in 1-line notation
 --OUTPUT: a permutation matrix A corresponding to to w
 --TODO: add check that w is indeed a permutation
+--TODO: add documentation
 -----------------------------------
-permToMatrix := (w) -> (
+permToMatrix = method()
+permToMatrix List := Matrix => (w) -> (
     n := #w;
-    (id_(ZZ^n))_(apply(w, i-> i-1))
+    transpose (id_(ZZ^n))_(apply(w, i-> i-1))
     )
 
 -*
 findIndices(List, List) := (L, Bs) -> (for ell in L list position(Bs, b -> (b == ell)))
 *-
+
+
+-----------------------------------------------
+-----------------------------------------------
+--**Useful functions for permutations**
+-----------------------------------------------
+-----------------------------------------------
+
+
 --------------------------------------------
 --------------------------------------------
 --**Part 1. Constructing ASM Varieties**--
@@ -76,18 +88,25 @@ findIndices(List, List) := (L, Bs) -> (for ell in L list position(Bs, b -> (b ==
 --------------------------------------------
 
 -------------------------------------
---checks if a given matrix is an ASM
+--checks if a given matrix is a partial ASM
 --INPUT: matrix A
---OUTPUT: true if A is an ASM, false otherwise
+--OUTPUT: true if A is a partial ASM, false otherwise
 -------------------------------------
-isASM = method()
-isASM Matrix := Boolean => (A) -> (
+isPartialASM = method()
+isPartialASM Matrix := Boolean => (A) -> (
     n := numrows A;
-    AAt :=  A |(transpose matrix{toList(n:-1)})| (transpose A) | (transpose matrix{toList(n:-1)});
-    L0 := flatten entries AAt;
-    L := delete(0, L0);
-    partialSums := for i from 0 to length L-1 list(sum L_{0..i});
-    (unique partialSums) == {1,0}
+    m := numcols A;
+    rowCheck := new MutableList;
+    colCheck := new MutableList;
+    for i from 0 to n-1 do(
+	partialSums := for i from 0 to m-1 list(sum(delete(0, flatten entries A^{i})));
+	rowCheck#(#rowCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
+	);
+    for i from 0 to m-1 do(
+	partialSums := for i from 0 to n-1 list(sum(delete(0, flatten entries A_{i})));
+	rowCheck#(#colCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
+	);
+    (toList rowCheck == toList(#rowCheck:true)) and (toList colCheck == toList(#colCheck:true))
 )
 
 ----------------------------------------
@@ -190,7 +209,7 @@ essentialBoxes Sequence := List => (s) -> (
 --OUTPUT: list of fulton generators for matrix determinantal ideal w
 --TODO: extend to work for inputting a permutation matrix, a string w, or an ASM
 --TODO: add check that list w is actually a permutation
-----------------------------------------
+---------------------------------------
 fultonGens = method()
 fultonGens Matrix := List => (A) -> (
     zMatrix := genMat(numrows A, numcols A); --generic matrix
@@ -283,20 +302,21 @@ antiDiagInit Sequence := monomialIdeal => (s) -> (
 --OUTPUT: diagonal initial ideal of Schubert determinantal ideal for w
 --TODO: extend to work for inputting a permutation matrix, a string w, or an ASM
 --TODO: add check that list w is actually a permutation
+--TODO: make diagRevlexInit function (potentially faster for tests)
 --WARNING: This method does not like the identity permutation
 ----------------------------------------
-lexInit = method()
-lexInit Matrix := monomialIdeal => (A) -> (
+diagLexInit = method()
+diagLexInit Matrix := monomialIdeal => (A) -> (
     I:= schubertDetIdeal A;
     R:= newRing(ring I, MonomialOrder=>Lex); --making new ring with diagonal term order (lex suffices)
     monomialIdeal leadTerm sub(I,R)
     )
-lexInit List := monomialIdeal => (w) -> (
+diagLexInit List := monomialIdeal => (w) -> (
     I:= schubertDetIdeal w;
     R:= newRing(ring I, MonomialOrder=>Lex); --making new ring with diagonal term order (lex suffices)
     monomialIdeal leadTerm sub(I,R)
     )
-lexInit Sequence := monomialIdeal => (s) -> (
+diagLexInit Sequence := monomialIdeal => (s) -> (
     I:= schubertDetIdeal toList s;
     R:= newRing(ring I, MonomialOrder=>Lex); --making new ring with diagonal term order (lex suffices)
     monomialIdeal leadTerm sub(I,R)
@@ -351,28 +371,34 @@ doc ///
        	   This package also contains functions for studying homological properties of ASM varieties.
       Example
       	  grothendieckPoly w
-      	  betti res lexInit w
 	  betti res antiDiagInit w	   
 ///
 
 doc ///
     Key
-    	isASM
-	(isASM, Matrix)
+    	isPartialASM
+	(isPartialASM, Matrix)
     Headline
-    	Checks if a matrix is an alternating sign matrix.
+    	Checks if a matrix is a partial alternating sign matrix.
     Usage
     	isASM(M)
     Inputs
     	M:Matrix
     Description
     	Text
-	 Given an integer matrix, checks that the matrix is an ASM.
+	 Given an integer matrix, checks that the matrix is a partial alternating sign matrix.
+	 A partial alternating sign matrix is a matrix with entries in $\{-1,0,1\}$ such that:
+	 
+	     - The nonzero entries in each row and column alternate in sign,
+	     
+	     - Each row and column sums to $0$ or $1$, and
+	     
+	     - The first nonzero entry of any row or column is $1$.
 	Example
     	    M = matrix{{0,0,1,0,0,0,0,0},{1,0,1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}}
-	    isASM M
+	    isPartialASM M
 	    N = matrix{{0,-1,0,1,1},{1,-1,1,-1,1},{0,1,1,0,-1},{1,1,-1,1,-1},{-1,1,0,0,1}}
-	    isASM N
+	    isPartialASM N
 
 	    
 ///
@@ -425,38 +451,33 @@ L = {
     matrix{{0,0,1,0},{1,0,-1,1},{0,1,0,0},{0,0,1,0}},
     matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}},
     matrix{{0,0,1,0,0,0,0,0},{1,0,-1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}},
-    matrix{{0,0,0,0,1,0,0,0},{0,0,1,0,-1,1,0,0},{0,0,0,1,0,0,0,0},{1,0,0,-1,1,-1,1,0},{0,1,-1,1,-1,1,0,0},{0,0,0,0,1,0,0,0},{0,0,1,0,0,0,0,0},{0,0,0,0,0,0,0,1}}
+    matrix{{0,0,0,0,1,0,0,0},{0,0,1,0,-1,1,0,0},{0,0,0,1,0,0,0,0},{1,0,0,-1,1,-1,1,0},{0,1,-1,1,-1,1,0,0},{0,0,0,0,1,0,0,0},{0,0,1,0,0,0,0,0},{0,0,0,0,0,0,0,1}},
+    matrix{{0,0,0},{0,1,0},{1,-1,0}},
+    matrix{{0,0,0},{0,0,0}},
+    matrix{{1,0,0},{0,0,0}},
+    matrix{{1,0,0},{0,0,1}},
+    matrix{{0,1,0},{1,-1,0}},
+    matrix{{0,1,0},{1,-1,0}},
+    matrix{{0,0,1},{1,0,-1}},
+    matrix{{0,0,1,0,0},{0,0,0,0,1},{0,0,0,0,0},{0,1,0,0,0}},
+    matrix{{1,0,0,0},{0,0,1,0},{-1,1,0,0},{1,0,-1,1}}
     };
-assert(apply(L,isASM) == toList (#L:true))
+assert(apply(L,isPartialASM) == toList (#L:true))
 
 
 
 T = {
-    matrix{{0}},
     matrix{{-1}},
-    matrix{{1,0},{0,0}},
-    matrix{{0,0},{0,1}},
-    matrix{{-1,1},{1,0}},
-    matrix{{0,1},{1,-1}},
-    matrix{{0,0,0},{0,0,0},{0,0,0}},
     matrix{{0,1,0},{1,0,1},{0,1,0}},
-    matrix{{-1,1,1},{1,-1,1},{1,1,-1}},
-    matrix{{0,0,1},{1,0,0},{0,1,-1}},
-    matrix{{0,1,0,0},{0,0,0,1},{1,0,0,0},{0,0,1,-1}},
-    matrix{{0,0,1,0},{0,0,1,0},{1,0,-1,1},{0,1,0,0}},
-    matrix{{0,0,0,1},{1,0,0,0},{-1,1,1,0},{1,0,0,0}},
-    matrix{{1,0,1,0,-1},{0,1,0,0,0},{0,0,0,0,1},{0,0,0,1,0},{0,0,0,0,1}},
-    matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,1,-1,0},{0,0,-1,1,1}},
-    matrix{{0,-1,0,1,1},{1,-1,1,-1,1},{0,1,1,0,-1},{1,1,-1,1,-1},{-1,1,0,0,1}},
     matrix{{0,0,1,0,0,0,0,0},{1,0,1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}}
     };
-assert( apply(T, isASM) == toList (#T:false))
+assert( apply(T, isPartialASM) == toList (#T:false))
 ///
 
 TEST ///
 --Example 2.1 in Weigandt "Prism Tableaux for ASMs"
 A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}};
-assert(isASM A)
+assert(isPartialASM A)
 assert(sort essentialBoxes(A) == {(1,3),(2,1),(3,2)})
 
 ///
@@ -486,7 +507,7 @@ debug needsPackage "ASMVarieties"
 
 M = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
 w = {3,2,5,1,4}
-isASM M
+isPartialASM M
 rotheDiagram w
 essentialBoxes w
 grothendieckPoly M
@@ -494,6 +515,24 @@ netList fultonGens M
 subwordComplex M
 betti res diagInit M
 betti res antiDiagInit M
+
+isPartialASM = method()
+isPartialASM Matrix := Boolean => (A) -> (
+    n = numrows A
+    m = numcols A
+    rowCheck = new MutableList;
+    colCheck = new MutableList;
+    for i from 0 to n-1 do(
+	partialSums = for i from 0 to m-1 list(sum(delete(0, flatten entries A^{i})));
+	rowCheck#(#rowCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
+	);
+    for i from 0 to m-1 do(
+	partialSums = for i from 0 to n-1 list(sum(delete(0, flatten entries A_{i})));
+	rowCheck#(#colCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
+	);
+    (toList rowCheck == toList(#rowCheck:true)) and (toList colCheck == toList(#colCheck:true))
+)
+
 ------------------------------------
 --Development Section
 ------------------------------------
