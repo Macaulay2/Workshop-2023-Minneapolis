@@ -27,7 +27,7 @@ All reports will be handled in confidentiality and will be taken seriously.
 Here are some further advice to keep in mind.
 {: style="font-size: 1em;"}
 
-### **Move up, move up:**
+### **Move up, move back:**
   - If you usually don’t share much, challenge yourself to share more;
   - If you find yourself sharing more than others, challenge yourself to listen more.
 
