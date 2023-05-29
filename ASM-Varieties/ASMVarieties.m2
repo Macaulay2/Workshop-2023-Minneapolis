@@ -8,7 +8,10 @@ newPackage(
                 HomePage => "http://sites.google.com/view/ayah-almousa"},
             {Name => "Patricia Klein", 
                 Email => "pjklein@tamu.edu", 
-                HomePage => " "}
+                HomePage => " "},
+	    {Name => "Yuyuan Luo",
+		Email => "",
+		HomePage=> ""}
         },
         Headline => "functions for investigating ASM and matrix Schubert varieties",
         PackageExports => {
@@ -31,7 +34,9 @@ export{
     "subwordComplex",
     "grothendieckPoly",
     "rotheDiagram",
-    "permToMatrix"
+    "permToMatrix",
+    "composePerms",
+    "isPerm"
     }
 
 -- Utility routines --
@@ -56,15 +61,25 @@ genMat := (n,m) -> (
     matrix Mmut
 )
 
+--INPUT: A list w
+--OUTPUT: TRUE if w is a permutation; else FALSE
+
+isPerm = method()
+isPerm List := Boolean => (w) -> (
+    n := #w;
+    (sort w) == toList(1..n)
+    )
+
 --------------------------------
 --auxiliary function for making a permutation matrix out of a perm in 1-line notation
 --INPUT: a list w, which is a permutation in 1-line notation
 --OUTPUT: a permutation matrix A corresponding to to w
---TODO: add check that w is indeed a permutation
+--NOTE: this might be the transpose of what some would want
 --TODO: add documentation
 -----------------------------------
 permToMatrix = method()
 permToMatrix List := Matrix => (w) -> (
+    if not(isPerm w) then error("The input must be a permutation.");
     n := #w;
     transpose (id_(ZZ^n))_(apply(w, i-> i-1))
     )
@@ -80,6 +95,19 @@ findIndices(List, List) := (L, Bs) -> (for ell in L list position(Bs, b -> (b ==
 -----------------------------------------------
 -----------------------------------------------
 
+
+------------------------------------
+--INPUT: Two permutations in one-line notation
+--OUTPUT: the composition of the two permutations w = vu
+------------------------------------
+composePerms = method()
+composePerms (List, List) := List => (u,v) -> (
+    if not (isPerm u) then error("The first argument is not a permutation.");
+    if not (isPerm v) then error("the second argument is not a permutation.");
+    u0 := apply(u, i->i-1);
+    v0 := apply(v, i->i-1);
+    apply(u0_v0, i-> i+1)
+    )
 
 --------------------------------------------
 --------------------------------------------
@@ -99,11 +127,11 @@ isPartialASM Matrix := Boolean => (A) -> (
     rowCheck := new MutableList;
     colCheck := new MutableList;
     for i from 0 to n-1 do(
-	partialSums := for i from 0 to m-1 list(sum(delete(0, flatten entries A^{i})));
+	partialSums := for i from 0 to m-1 list(sum(delete(0, flatten entries A_{i})));
 	rowCheck#(#rowCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
 	);
     for i from 0 to m-1 do(
-	partialSums := for i from 0 to n-1 list(sum(delete(0, flatten entries A_{i})));
+	partialSums := for i from 0 to n-1 list(sum(delete(0, flatten entries A^{i})));
 	rowCheck#(#colCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
 	);
     (toList rowCheck == toList(#rowCheck:true)) and (toList colCheck == toList(#colCheck:true))
@@ -114,12 +142,12 @@ isPartialASM Matrix := Boolean => (A) -> (
 --INPUT: an (n x n)- alternating sign matrix A OR a 1-line perm w
 --OUTPUT: an (n x n) integer matrix of ranks of each entry
 --Author: Yuyuan Luo
---TODO: add error check that A is an ASM using isASM
 --TODO: add tests and documentation for this function
 ----------------------------------------
 
 rankMatrix = method()
 rankMatrix Matrix := Matrix => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     n := numrows A;
     rankA := {};
     for i from 0 to n-1 do (
@@ -135,26 +163,20 @@ rankMatrix Matrix := Matrix => (A) -> (
     )
 
 rankMatrix List := Matrix => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     A := permToMatrix w;
     rankMatrix A
     )
-
-rankMatrix Sequence := Matrix => (s) -> (
-    A := permToMatrix toList s;
-    rankMatrix A
-    ) 
------------------------
+-------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
     	--OR an alternating sign matrix A
 --OUTPUT: a list of boxes in the Rothe diagram for A
---TODO: add check that list w is actually a permutation/that A is an ASM
 --TODO: add documentation
---TODO: needs fixing
---Sometimes this gives the essential set and sometimes this gives all boxes
 -----------------------
 rotheDiagram = method()
 --this is a tidied version of code by Yuyuan Luo
 rotheDiagram Matrix := List => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     n := numrows A;
     listEntries := flatten table(n,n, (i,j)->(i,j));
     ones := select(listEntries, i-> A_i == 1);
@@ -174,12 +196,8 @@ rotheDiagram Matrix := List => (A) -> (
     )
 
 rotheDiagram List := List => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     A := permToMatrix w;
-    rotheDiagram(A)
-    )
-
-rotheDiagram Sequence := List => (s) -> (
-    A := permToMatrix toList s;
     rotheDiagram(A)
     )
 
@@ -187,31 +205,27 @@ rotheDiagram Sequence := List => (s) -> (
 --INPUT: a list w corresponding to a permutation in 1-line notation
     	--OR an alternating sign matrix A
 --OUTPUT: a list of essential boxes in the Rothe diagram for A
---TODO: add check that list w is actually a permutation/that A is an ASM
 --TODO: add documentation
 -----------------------
 essentialBoxes = method()
 essentialBoxes Matrix := List => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     boxes := rotheDiagram(A);
     badBoxes := apply(boxes, i->(positions(boxes,j->(j==(i_0,i_1+1)))|positions(boxes,j->(j==(i_0,i_1+1)))));
     essBoxes := positions(badBoxes, i-> i=={});
     boxes_essBoxes
     )
 essentialBoxes List := List => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     essentialBoxes permToMatrix w
     )
-essentialBoxes Sequence := List => (s) -> (
-    essentialBoxes permToMatrix toList s
-    )
-
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: list of fulton generators for matrix determinantal ideal w
---TODO: extend to work for inputting a permutation matrix, a string w, or an ASM
---TODO: add check that list w is actually a permutation
 ---------------------------------------
 fultonGens = method()
 fultonGens Matrix := List => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     zMatrix := genMat(numrows A, numcols A); --generic matrix
     rankMat := rankMatrix A; --rank matrix for A
     essBoxes := essentialBoxes A;
@@ -225,103 +239,80 @@ fultonGens Matrix := List => (A) -> (
     unique flatten toList fultonGens
     );
 fultonGens List := List => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     A := permToMatrix w;
-    fultonGens A
-    )
-
-fultonGens Sequence := List => (s) -> (
-    A := permToMatrix toList s;
     fultonGens A
     )
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: Schubert determinantal ideal for w
---TODO: extend to work for inputting a permutation matrix, a string w, or an ASM
---TODO: add check that list w is actually a permutation
 --WARNING: if you use the identity permutation your ring will be ZZ instead of Q and idk how to fix this
 ----------------------------------------
 schubertDetIdeal = method()
 schubertDetIdeal Matrix := Ideal => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     ideal fultonGens A
     )
 schubertDetIdeal List := Ideal => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");    
     ideal fultonGens w
     );
-schubertDetIdeal Sequence := Ideal => (s) -> (
-    ideal fultonGens toList s
-    );
-
 ----------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
---OUTPUT: single-
---TODO: extend to work for inputting a permutation matrix, a string w, or an ASM
---TODO: add check that list w is actually a permutation
+--OUTPUT: single Grothendieck polynomials
 --TODO: rename variables?
 --WARNING: if you use the identity permutation your ring will be ZZ instead of Q and idk how to fix this
 ----------------------------
 grothendieckPoly = method()
 grothendieckPoly(Matrix):= (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     I := schubertDetIdeal A;
     Q := newRing(ring I, DegreeRank=> numcols A);
     numerator reduceHilbert hilbertSeries sub(I,Q)
     )
 grothendieckPoly(List) := (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     I := schubertDetIdeal w;
     Q := newRing(ring I, DegreeRank=> #w);
     numerator reduceHilbert hilbertSeries sub(I,Q)
     )
-grothendieckPoly(Sequence) := (s) -> (
-    I := schubertDetIdeal toList s;
-    Q := newRing(ring I, DegreeRank=> #s);
-    numerator reduceHilbert hilbertSeries sub(I,Q)
-    )
-
 
 --TODO: add tests
---TODO: double grothendieck. Problem: can't rename variables
+--TODO: double grothendieck. Problem: can't rename variables. use divided differences instead
 
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: ANTIdiagonal initial ideal of Schubert determinantal ideal for w
---TODO: extend to work for inputting a permutation matrix, a string w, or an ASM
---TODO: add check that list w is actually a permutation
 --WARNING: This method does not like the identity permutation
 ----------------------------------------
 antiDiagInit = method()
 antiDiagInit Matrix := monomialIdeal => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     monomialIdeal leadTerm schubertDetIdeal A
     );
 antiDiagInit List := monomialIdeal => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     monomialIdeal leadTerm schubertDetIdeal w
-    );
-antiDiagInit Sequence := monomialIdeal => (s) -> (
-    monomialIdeal leadTerm schubertDetIdeal toList s
     );
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: diagonal initial ideal of Schubert determinantal ideal for w
---TODO: extend to work for inputting a permutation matrix, a string w, or an ASM
---TODO: add check that list w is actually a permutation
 --TODO: make diagRevlexInit function (potentially faster for tests)
 --WARNING: This method does not like the identity permutation
 ----------------------------------------
 diagLexInit = method()
 diagLexInit Matrix := monomialIdeal => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     I:= schubertDetIdeal A;
     R:= newRing(ring I, MonomialOrder=>Lex); --making new ring with diagonal term order (lex suffices)
     monomialIdeal leadTerm sub(I,R)
     )
 diagLexInit List := monomialIdeal => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     I:= schubertDetIdeal w;
     R:= newRing(ring I, MonomialOrder=>Lex); --making new ring with diagonal term order (lex suffices)
     monomialIdeal leadTerm sub(I,R)
     )
-diagLexInit Sequence := monomialIdeal => (s) -> (
-    I:= schubertDetIdeal toList s;
-    R:= newRing(ring I, MonomialOrder=>Lex); --making new ring with diagonal term order (lex suffices)
-    monomialIdeal leadTerm sub(I,R)
-    )
-
 -------------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: subword complex associated to w (i.e. SR-ideal of antiDiagInit)
@@ -329,15 +320,13 @@ diagLexInit Sequence := monomialIdeal => (s) -> (
 -------------------------------------------
 subwordComplex = method()
 subwordComplex Matrix := simplicialComplex => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     simplicialComplex antiDiagInit A
     );
 
 subwordComplex List := simplicialComplex => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     simplicialComplex antiDiagInit w
-    );
-
-subwordComplex List := simplicialComplex => (s) -> (
-    simplicialComplex antiDiagInit toList s
     );
 
 ----------------------------------------
@@ -453,7 +442,6 @@ L = {
     matrix{{0,0,1,0,0,0,0,0},{1,0,-1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}},
     matrix{{0,0,0,0,1,0,0,0},{0,0,1,0,-1,1,0,0},{0,0,0,1,0,0,0,0},{1,0,0,-1,1,-1,1,0},{0,1,-1,1,-1,1,0,0},{0,0,0,0,1,0,0,0},{0,0,1,0,0,0,0,0},{0,0,0,0,0,0,0,1}},
     matrix{{0,0,0},{0,1,0},{1,-1,0}},
-    matrix{{0,0,0},{0,0,0}},
     matrix{{1,0,0},{0,0,0}},
     matrix{{1,0,0},{0,0,1}},
     matrix{{0,1,0},{1,-1,0}},
