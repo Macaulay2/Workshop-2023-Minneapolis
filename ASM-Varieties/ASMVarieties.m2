@@ -504,23 +504,6 @@ subwordComplex M
 betti res diagInit M
 betti res antiDiagInit M
 
-isPartialASM = method()
-isPartialASM Matrix := Boolean => (A) -> (
-    n = numrows A
-    m = numcols A
-    rowCheck = new MutableList;
-    colCheck = new MutableList;
-    for i from 0 to n-1 do(
-	partialSums = for i from 0 to m-1 list(sum(delete(0, flatten entries A^{i})));
-	rowCheck#(#rowCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
-	);
-    for i from 0 to m-1 do(
-	partialSums = for i from 0 to n-1 list(sum(delete(0, flatten entries A_{i})));
-	rowCheck#(#colCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
-	);
-    (toList rowCheck == toList(#rowCheck:true)) and (toList colCheck == toList(#colCheck:true))
-)
-
 ------------------------------------
 --Development Section
 ------------------------------------
