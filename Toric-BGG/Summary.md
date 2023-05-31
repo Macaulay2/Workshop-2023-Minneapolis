@@ -14,7 +14,7 @@ The first goal will be to implement minimal free resolutions of differential mod
 
 (d) the proof of Proposition 4.1 in BE1, which is an algorithm for "minimizing" a non-minimal free differential module.
 
-Each of these may be close to finished--see DifferentialModules.m2. But they need to be tested, cleaned up, and probably debugged. Good sources for examples to test may be BE1 and "Differential modules with complete intersection homology" by Banks-VandeBogert.
+Each of these may be close to finished--see DifferentialModules.m2. But the code needs to be tested, cleaned up, and probably debugged. Good sources for examples to test may be BE1 and "Differential modules with complete intersection homology" by Banks-VandeBogert.
 
 # Toric BGG functors
 
