@@ -14,7 +14,7 @@ The first goal will be to implement minimal free resolutions of differential mod
 
 (d) the proof of Proposition 4.1 in BE1, which is an algorithm for "minimizing" a non-minimal free differential module.
 
-In fact, we may only end up implementing (b) and (d). For background on differential modules, I suggest skimming BE1, paying special attention to (a) - (d).
+Each of these may be close to finished--see DifferentialModules.m2. But they need to be tested and probably debugged.
 
 # Toric BGG functors
 
@@ -23,6 +23,8 @@ Our second goal is to implement the toric BGG functors, as discussed in "Tate re
 Specifically, we want to implement the functors L and R in Section 2.2 of BE2. Reading Section 2 of that paper up through Theorem 2.7 should give sufficient background. 
 
 This has already been done in the standard graded case: see the BGG package, which is based on Eisenbud-Floystad-Schreyer's paper "Sheaf cohomology and free resolutions over exterior algebras". The idea is to extend many aspects of that package to the multigraded setting.
+
+This code has been started in MultigradedBGG.m2. I believe the functor R is implemented correctly, but L needs work. 
 
 # Applications 
 
