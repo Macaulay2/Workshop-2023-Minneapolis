@@ -24,7 +24,7 @@ Specifically, we want to implement the functors L and R in Section 2.2 of BE2. R
 
 This has already been done in the standard graded case: see the BGG package, which is based on Eisenbud-Floystad-Schreyer's paper "Sheaf cohomology and free resolutions over exterior algebras". The idea is to extend many aspects of that package to the multigraded setting.
 
-This code has been started in MultigradedBGG.m2. I believe the functor R is implemented correctly, but L needs work. 
+This code has been started in MultigradedBGG.m2. I believe the functor R is implemented correctly, but L needs significant work.
 
 # Applications 
 
