@@ -11,7 +11,6 @@ newPackage("DifferentialModules",
 	{Name => "Prashanth Sridhar",	     Email => "pzs0094@auburn.ed",     HomePage => "https://sites.google.com/view/prashanthsridhar/home" }
 	{Name => "Andrew Tawfeek",   	     Email => "atawfeek@uw.edu",       HomePage => "https://www.atawfeek.com/" }
 	{Name => "Eduardo Torres Davila",    Email => "torre680@umn.edu",      HomePage => "https://etdavila10.github.io/" }
-	{Name => "Jay Yang",         	     Email => "jayy@wustl.edu",        HomePage => "https://www.math.wustl.edu/~jayy/" }
 	{Name => "Sasha	Zotine",    	     Email => "18az45@qiueensu.ca",    HomePage => "Fill in" }
 	    },
   DebuggingMode => true
