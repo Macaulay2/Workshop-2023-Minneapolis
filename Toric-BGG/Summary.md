@@ -16,6 +16,10 @@ The first goal will be to implement minimal free resolutions of differential mod
 
 Each of these may be close to finished--see DifferentialModules.m2. But the code needs to be tested, cleaned up, and probably debugged. Good sources for examples to test may be BE1 and "Differential modules with complete intersection homology" by Banks-VandeBogert.
 
+Also add a function that tensors a differential module with a chain complex: see the end of "KellerCode". 
+
+Another wrinkle: we need to write this package using "Complex" objects, rather than "ChainComplex" objects. This will hopefully be easy to fix.
+
 # Toric BGG functors
 
 Our second goal is to implement the toric BGG functors, as discussed in "Tate resolutions on toric varieties" by Brown-Erman (BE2). 
