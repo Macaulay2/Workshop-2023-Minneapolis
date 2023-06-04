@@ -95,7 +95,7 @@ dualRingToric(PolynomialRing) := opts -> (S) ->(
     kk := coefficientRing S;
     degs := null;
     if isSkewCommutative S == false then(
-    	degs = apply(degrees S,d-> (-d)|{1});
+    	degs = apply(degrees S,d-> (-d)|{-1});
 	e := opts.SkewVariable;
     	ee := apply(#gens S, i-> e_i);
     	return kk[ee,Degrees=>degs,SkewCommutative=>true]
@@ -106,7 +106,7 @@ dualRingToric(PolynomialRing) := opts -> (S) ->(
     	yy := apply(#gens S, i-> y_i);
     	return kk[yy,Degrees=>degs,SkewCommutative=>false]
 	);       
-    );
+    )
 
 TEST ///
 restart
@@ -134,8 +134,8 @@ toricRR(Module,List) := (M,LL) ->(
     f0 := gens image basis(LL_0,M);
     scan(#LL-1,i-> f0 = f0 | gens image basis(LL_(i+1),M));
     df0 := apply(degrees source f0,i-> (-1)*i|{0});
-    df1 := apply(degrees source f0,i-> (-1)*i|{-1});
-    dfneg1 := apply(degrees source f0,i-> (-1)*i|{1});
+    df1 := apply(degrees source f0,i-> (-1)*i|{1});
+    dfneg1 := apply(degrees source f0,i-> (-1)*i|{-1});
     SE := S**E;
     --the line below is better for degrees,it overwrites S somehow...
     --SE := coefficientRing(S)[gens S|gens E, Degrees => apply(degrees S,d->d|{0}) | degrees E, SkewCommutative => gens E];
