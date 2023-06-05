@@ -36,7 +36,8 @@ export{
     "rotheDiagram",
     "permToMatrix",
     "composePerms",
-    "isPerm"
+    "isPerm",
+    "permLength"
     }
 
 -- Utility routines --
@@ -109,6 +110,22 @@ composePerms (List, List) := List => (u,v) -> (
     apply(u0_v0, i-> i+1)
     )
 
+------------------------------------
+-- INPUT: A permutation in one-line notation
+-- OUTPUT: The length of the permutation (number of inversions)
+------------------------------------
+
+permLength = method()
+permLength List := ZZ => w -> (
+    if not (isPerm w) then error("the argument is not a permutation");
+    k := 0;
+    for i from 0 to #w - 2 do (
+        for j from i + 1 to #w - 1 do (
+            if w_i > w_j then k = k +1;
+        ); 
+    );
+    k
+)
 --------------------------------------------
 --------------------------------------------
 --**Part 1. Constructing ASM Varieties**--
