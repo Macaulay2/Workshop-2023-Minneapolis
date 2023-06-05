@@ -14,7 +14,7 @@ newPackage(
 	 Email=>"frenly@sas.upenn.edu",
 	 HomePage=>""},
          {Name=>"Tom Hagedorn",
-	 Email=>"",
+	 Email=>"hagedorn@tcnj.edu",
 	 HomePage=>""},
         {Name=>"Zhaobo Han",
 	 Email=>"",
