@@ -30,3 +30,15 @@ I = ideal G#bracketRing
 
 normForm = q' % I
 normForm_(bracketRing ring q) -- this is what we want automatically
+
+
+
+
+--thomas trying math
+B = bracketRing G
+X = matrix B
+
+C = fold(apply(0..5,i->basis(2,ring X,Variables => (entries X)#i)),(a,b)->a||b)
+D = det C
+I = B#ideal
+D % I --looks pretty
