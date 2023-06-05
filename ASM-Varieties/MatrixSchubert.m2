@@ -520,7 +520,7 @@ doc ///
 	(isPartialASM, Matrix)
     	isPartialASM
     Headline
-    	whether a matrix is a partial alternating sign matrix.
+    	determines whether a matrix is a partial alternating sign matrix.
     Usage
     	isPartialASM(M)
     Inputs
@@ -548,18 +548,20 @@ doc ///
     Key
     	schubertDetIdeal
 	(schubertDetIdeal, List)
+	(schubertDetIdeal, Matrix)
     Headline
-    	Computes Schubert determinantal ideal for a given permutation.
+    	Computes the Schubert determinantal ideal of a given permutation in 1-line notation or the alternating sign matrix ideal of any (partial) 
+	alternating sign matrix.
     Usage
+    	schubertDetIdeal(w)
     	schubertDetIdeal(M)
-	schubertDetIdeal(L)
     Inputs
+    	w:List
     	M:Matrix
-	L:List
     Description
     	Text
-	 Given an alternating sign matrix or a permutation in 1-line notation, 
-	 outputs the Schubert determinantal ideal associated to that matrix.
+	 Given a permutation in 1-line notation or (partial) alternating sign matrix, 
+	 outputs the associated alternating sign matrix or Schubert determinantal ideal.
 	Example
 	 schubertDetIdeal({1,3,2})
 	 schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
@@ -568,6 +570,7 @@ doc ///
 
 doc ///
     Key
+<<<<<<< Updated upstream
         (composePerms, List, List)
         composePerms
     Headline
@@ -593,6 +596,27 @@ doc ///
             u = {3,5,2,1,4}
             v = {1,2,3,4,5}
             composePerms(u,v)
+=======
+        antiDiagInit
+	(antiDiagInit, List)
+	(antiDiagInit, Matrix)
+    Headline
+    	Computes the (unique) antidigaonal initial ideal of a Schubert determinantal ideal or, more generally, alternating sign matrix ideal.
+    Usage
+    	schubertDetIdeal(w)
+	schubertDetIdeal(M)
+    Inputs
+    	M:Matrix
+	L:List
+    Description
+    	Text
+	 Theorem B of Knutson and Miller's [put in citation] ensures that there is exactly one antidiagonal initial ideal of each Schubert determinantal ideal.  
+	 [other citations] extend this result to alternating sign matrix ideals. 
+	Example
+	 antiDiagInit({2,1,4,3})
+	 antiDiagInit(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+
+>>>>>>> Stashed changes
 ///
 
 doc ///
