@@ -36,7 +36,8 @@ export{
     "rotheDiagram",
     "permToMatrix",
     "composePerms",
-    "isPerm"
+    "isPerm",
+    "schubertPoly"
     }
 
 -- Utility routines --
@@ -70,6 +71,31 @@ isPerm List := Boolean => (w) -> (
     (sort w) == toList(1..n)
     )
 
+isIdentity = method()
+isIdentity List := Boolean => (w) -> (
+    n := #w;
+    w == toList(1..n)
+    )
+
+lastDescent = method()
+lastDescent List := Boolean => (w) -> (
+    if not (isPerm w) then error ("Expecting a permutation.");
+    if isIdentity(w) then error ("Expecting a non-identity permutation.");
+    n := #w;
+   
+    ans := -1;
+    scan (reverse (0..n-2), i-> if w_i > w_(i+1) then (ans = i+1; break));
+    ans
+    )
+
+permLength = method()
+permLength List:= ZZ => (p) -> (l := 0;
+     scan(#p, i->scan(i..#p-1, j ->(if p#i>p#j then l=l+1)));
+     l)
+ 
+swap = (L,i,j) -> (apply(#L, k-> if k!=i and k!=j then L_k
+	                         else if k == i then L_j
+				 else L_i))
 --------------------------------
 --auxiliary function for making a permutation matrix out of a perm in 1-line notation
 --INPUT: a list w, which is a permutation in 1-line notation
@@ -275,6 +301,34 @@ grothendieckPoly(List) := (w) -> (
     I := schubertDetIdeal w;
     Q := newRing(ring I, DegreeRank=> #w);
     numerator reduceHilbert hilbertSeries sub(I,Q)
+    )
+
+
+
+schubertPolyHelper = method()
+schubertPolyHelper(List, Ring) := (w, Q) -> (
+    n := #w;
+    if not (isPerm w) then error ("The input must be a permutation matrix.");
+   -- Q := QQ[x_1..x_n];
+    if (isIdentity w) then return 1;
+    r := lastDescent(w) - 1;
+    --print(r);
+    --print(reverse(r+1..n-1));
+    s := -1;
+    scan(reverse(r+1..n-1), i-> if w_i < w_r then (s = i; break));
+    --print({r,s});
+    v := swap(w,r,s);
+    previnds := select(0..r-1, q-> permLength(swap(v,q,r))==permLength(v)+1);
+    us := apply(previnds, i-> swap(v,i,r));
+    sum(toList(apply(us, u->schubertPolyHelper(u,Q))))+ Q_r * schubertPolyHelper(v,Q)
+    )
+
+schubertPoly = method()
+schubertPoly(List) := (w) -> (
+    n := #w;
+    x := local x;
+    Q := QQ[x_1..x_n];
+    schubertPolyHelper(w, Q)
     )
 
 --TODO: add tests
