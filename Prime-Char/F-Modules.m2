@@ -95,6 +95,8 @@ stdMap Morphism := Morphism => ( cacheValue symbol stdMap )( f ->
 
 FF = method()
 
+-- TODO: need to check if ring is a polynomial ring (or regular) 
+
 FF ( ZZ, ModuleClass ) := ModuleClass => ( e, C ) -> 
 (
     if isFreeModule C then return C; 
