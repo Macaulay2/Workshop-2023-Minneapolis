@@ -303,8 +303,8 @@ minimizeDiff(Matrix) := A ->(
 
 --  Input:  A (finite, free) differential module
 --  Output: A minimization of that DM.
-minimize = method();
-minimize(DifferentialModule) := r ->(
+minimizeDM = method();
+minimizeDM(DifferentialModule) := r ->(
     R := ring r;
     d := degree r;
     A := minimizeDiff(r.dd_1);
