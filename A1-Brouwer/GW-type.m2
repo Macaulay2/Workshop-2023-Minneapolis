@@ -1,3 +1,45 @@
+-- Basic functions for manipulating matrices we may want to use
+
+-- Check if a matrix is square
+isSquare = method()
+isSquare (Matrix) := Boolean => M -> (
+    numRows(M) == numColumns(M)
+)
+
+-- Check if a matrix is square and symmetric
+isSquareAndSymmetric = method()
+isSquareAndSymmetric (Matrix) := Boolean => M -> (
+    transpose(M) == M
+)
+
+-- Check if a square matrix is upper left triangular
+isUpperLeftTriangular = method()
+isUpperLeftTriangular (Matrix) := Boolean => M -> (
+
+    if not isSquare(M) then error "Error: matrix isn't square";
+
+    n := numRows(M);
+    
+    for i from 0 to n-1 do(
+	for j from 0 to n-1 do(
+	    
+	    -- Search in the matrix entries that lie below the main antidiagonal
+	    if i + j >= n then(
+		
+		-- If any entry in this range is nonzero then the matrix isn't upper left triangular
+		if not M_(i,j) == 0 then(
+		    return false
+		    );
+		);
+        );
+    );
+true
+)
+
+------------
+-- Types
+------------
+
 -- We define GrothendieckWittClass to be a new type,
 --    meant to represent the isomorphism class of a symmetric bilinear form
 --    over a base field.
@@ -75,3 +117,36 @@ gwMultiply(GrothendieckWittClass, GrothendieckWittClass) := GrothendieckWittClas
     
     return gwClass(b**g)
     )
+
+
+
+-- Method for diagonalizing a square matrix
+diagonalize = method()
+
+diagonalize (MutableMatrix) := (MutableMatrix) => (A) -> (
+    
+    -- TODO return error if not square
+    n=numRows(A);
+    for col from 0 to (n-1) do (
+        if A_(col,col) == 0 then (
+            for row from col+1 to n-1 do (
+                if A_(row,col) != 0 then (
+                    --we have found non-zero entry
+                    rowAdd(A,col,1,row);
+                    columnAdd(A,col,1,row);
+                    break;
+                );
+            );
+            if A_(col,col)==0 then (print "Error: Matrix A was singular"; return A;);
+        );
+        --entry in A_(col,col) is non-zero at this point
+         for row from (col+1) to (n-1) do (
+            temp=A_(row,col);
+            rowAdd(A,row,-temp/A_(col,col),col);
+            columnAdd(A,row,-temp/A_(col,col),col);
+        );
+
+    );
+    return A
+)
+
