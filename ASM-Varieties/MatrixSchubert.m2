@@ -37,7 +37,9 @@ export{
     "permToMatrix",
     "composePerms",
     "isPerm",
+    "minimalRankTable",
     "permLength",
+    "augmentedRotheDiagram",
     "isPatternAvoiding",
     "isVexillary"
     }
@@ -115,6 +117,7 @@ composePerms (List, List) := List => (u,v) -> (
 ------------------------------------
 -- INPUT: A permutation in one-line notation
 -- OUTPUT: The length of the permutation (number of inversions)
+-- TODO: Add documentations + examples
 ------------------------------------
 
 permLength = method()
@@ -253,6 +256,25 @@ rotheDiagram List := List => (w) -> (
     )
 
 -----------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation 
+    	--OR an alternating sign matrix A
+--OUTPUT: A list of boxes in the Rothe diagram for A, with their corresponding rank values 
+--TODO: add documentation + examples
+-----------------------
+
+augmentedRotheDiagram = method()
+augmentedRotheDiagram List := List => w -> (
+    L := rotheDiagram(w);
+    R := rankMatrix(w);
+    apply(L, (i,j) -> ((i,j), R_(i-1,j-1)))
+)
+augmentedRotheDiagram Matrix := List => w -> (
+    L := rotheDiagram(w);
+    R := rankMatrix(w);
+    apply(L, (i,j) -> ((i,j), R_(i-1,j-1)))
+)
+
+-----------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
     	--OR an alternating sign matrix A
 --OUTPUT: a list of essential boxes in the Rothe diagram for A
@@ -270,7 +292,51 @@ essentialBoxes List := List => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     essentialBoxes permToMatrix w
     )
+--------------------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation
+--OUTPUT: Schubert determinantal ideal for w
+--------------------------------------------
+schubertDetIdeal = method()
+schubertDetIdeal Matrix := Ideal => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    zMatrix := genMat(numrows A, numcols A); --generic matrix
+    rankMat := rankMatrix A; --rank matrix for A
+    essBoxes := essentialBoxes A;
+    if essBoxes == {} then (
+	R := ring zMatrix;
+	return ideal(0_R)
+	);
+    zBoxes := apply(essBoxes, i-> flatten table(i_0,i_1, (j,k)->(j+1,k+1))); --smaller matrix indices for each essential box
+    ranks := apply(essBoxes, i-> rankMat_(i_0-1,i_1-1)); --ranks for each essential box
+    fultonGens := new MutableList;
+    for box in essBoxes do (
+    	pos := position(essBoxes, i-> i==box);
+        fultonGens#(#fultonGens) = (minors(ranks_pos+1, zMatrix^{0..(box_0-1)}_{0..(box_1-1)}))_*;
+        );
+    return ideal(unique flatten toList fultonGens)
+    );
+schubertDetIdeal List := Ideal => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");    
+    A := permToMatrix w;
+    schubertDetIdeal A
+    );
+
 ----------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation
+--OUTPUT: list of fulton generators for matrix determinantal ideal w
+---------------------------------------
+fultonGens = method()
+fultonGens Matrix := List => (A) -> (
+    (schubertDetIdeal A)_*
+    );
+
+fultonGens List := List => (w) -> (
+    (schubertDetIdeal w)_*
+    );
+
+-*
+----------------------------------------
+--OLD CODE
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: list of fulton generators for matrix determinantal ideal w
 ---------------------------------------
@@ -295,6 +361,7 @@ fultonGens List := List => (w) -> (
     fultonGens A
     )
 ----------------------------------------
+--OLD CODE
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: Schubert determinantal ideal for w
 --WARNING: if you use the identity permutation your ring will be ZZ instead of Q and idk how to fix this
@@ -308,6 +375,8 @@ schubertDetIdeal List := Ideal => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");    
     ideal fultonGens w
     );
+*-
+
 ----------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: single Grothendieck polynomials
@@ -380,6 +449,41 @@ subwordComplex List := simplicialComplex => (w) -> (
     simplicialComplex antiDiagInit w
     );
 
+------------------------------------------
+--INPUT: a nonempty list of equidimensional ASMs, presented as matrices
+--OUTPUT: the minimal rank table, presented as a matrix
+--TODO: tests, documentation
+------------------------------------------
+
+minimalRankTable = method()
+minimalRankTable List := Matrix => (L) -> (
+        if (#L == 0) then error("The input must be a nonempty list.");
+        n := #(entries L#0);
+        minimalRankMtx := mutableMatrix(ZZ,n,n);
+
+        -- initialize the minimalRankMtx to something with big entries everywhere
+        for i from 0 to n-1 do (
+            for j from 0 to n-1 do (
+                minimalRankMtx_(i,j) = n+1;
+            );
+        );
+
+        -- comb through the list to get the minimal entrys
+        for M in L do (
+            listRankM := entries rankMatrix(M);
+            if (#listRankM != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
+            if not(isPartialASM(M)) then error("The input must be a list containing partial alternating sign matrices.");
+
+            for i from 0 to n-1 do (
+                for j from 0 to n-1 do (
+                    minimalRankMtx_(i,j) = min {minimalRankMtx_(i,j), listRankM#i#j};
+                );
+            );
+        );
+
+        minimalRankMtx
+    );
+
 ----------------------------------------
 -- Part 2. Invariants of ASM Varieties
 ----------------------------------------
@@ -421,7 +525,7 @@ doc ///
     Headline
     	whether a matrix is a partial alternating sign matrix.
     Usage
-    	isASM(M)
+    	isPartialASM(M)
     Inputs
     	M:Matrix
     Description
@@ -433,7 +537,7 @@ doc ///
 	     
 	     - Each row and column sums to $0$ or $1$, and
 	     
-	     - The first nonzero entry of any row or column is $1$.
+	     - The first nonzero entry of any row or column (if there is one) is $1$.
 	Example
     	    M = matrix{{0,0,1,0,0,0,0,0},{1,0,1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}}
 	    isPartialASM M
@@ -549,7 +653,7 @@ doc ///
 -------------------------
 -------------------------
 
---detailed test for isASM function
+--detailed test for isPartialASM function
 TEST ///
 -*
   restart
@@ -643,7 +747,15 @@ restart
 debug needsPackage "MatrixSchubert"
 
 M = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
+fultonGens M
+schubertDetIdeal M
+
 w = {3,2,5,1,4}
+schubertDetIdeal w
+
+schubertDetIdeal {1,2,3}
+
+
 permToMatrix w
 isPartialASM M
 rotheDiagram M
