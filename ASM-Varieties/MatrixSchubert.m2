@@ -37,7 +37,9 @@ export{
     "permToMatrix",
     "composePerms",
     "isPerm",
+    "minimalRankTable",
     "permLength",
+    "augmentedRotheDiagram",
     "isPatternAvoiding",
     "isVexillary"
     }
@@ -115,6 +117,7 @@ composePerms (List, List) := List => (u,v) -> (
 ------------------------------------
 -- INPUT: A permutation in one-line notation
 -- OUTPUT: The length of the permutation (number of inversions)
+-- TODO: Add documentations + examples
 ------------------------------------
 
 permLength = method()
@@ -253,6 +256,22 @@ rotheDiagram List := List => (w) -> (
     )
 
 -----------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation 
+    	--OR an alternating sign matrix A
+--OUTPUT: A list of boxes in the Rothe diagram for A, with their corresponding rank values 
+--TODO: add documentation + examples
+-----------------------
+
+augmentedRotheDiagram = method()
+aRD := w -> (
+    L := rotheDiagram(w);
+    R := rankMatrix(w);
+    apply(L, (i,j) -> ((i,j), R_(i-1,j-1)))
+)
+augmentedRotheDiagram List := List => aRD
+augmentedRotheDiagram Matrix := List => aRD
+
+-----------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
     	--OR an alternating sign matrix A
 --OUTPUT: a list of essential boxes in the Rothe diagram for A
@@ -383,7 +402,43 @@ subwordComplex List := simplicialComplex => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     simplicialComplex antiDiagInit w
     );
-----------------------------------------
+
+------------------------------------------
+--INPUT: a nonempty list of equidimensional ASMs, presented as matrices
+--OUTPUT: the minimal rank table, presented as a matrix
+--TODO: tests, documentation
+------------------------------------------
+
+minimalRankTable = method()
+minimalRankTable List := Matrix => (L) -> (
+        if (#L == 0) then error("The input must be a nonempty list.");
+        n := #(entries L#0);
+        minimalRankMtx := mutableMatrix(ZZ,n,n);
+
+        -- initialize the minimalRankMtx to something with big entries everywhere
+        for i from 0 to n-1 do (
+            for j from 0 to n-1 do (
+                minimalRankMtx_(i,j) = n+1;
+            );
+        );
+
+        -- comb through the list to get the minimal entrys
+        for M in L do (
+            listRankM := entries rankMatrix(M);
+            if (#listRankM != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
+            if not(isPartialASM(M)) then error("The input must be a list containing partial alternating sign matrices.");
+
+            for i from 0 to n-1 do (
+                for j from 0 to n-1 do (
+                    minimalRankMtx_(i,j) = min {minimalRankMtx_(i,j), listRankM#i#j};
+                );
+            );
+        );
+
+        minimalRankMtx
+    );
+
+>>>>>>> refs/remotes/origin/asm
 ----------------------------------------
 -- Part 2. Invariants of ASM Varieties
 ----------------------------------------
@@ -443,7 +498,7 @@ doc ///
 	(isPartialASM, Matrix)
     	isPartialASM
     Headline
-    	whether a matrix is a partial alternating sign matrix.
+    	determines whether a matrix is a partial alternating sign matrix.
     Usage
     	isPartialASM(M)
     Inputs
@@ -471,22 +526,75 @@ doc ///
     Key
     	schubertDetIdeal
 	(schubertDetIdeal, List)
+	(schubertDetIdeal, Matrix)
     Headline
-    	Computes Schubert determinantal ideal for a given permutation.
+    	Computes the Schubert determinantal ideal of a given permutation in 1-line notation or the alternating sign matrix ideal of any (partial) 
+	alternating sign matrix.
     Usage
+    	schubertDetIdeal(w)
     	schubertDetIdeal(M)
-	schubertDetIdeal(L)
+    Inputs
+    	w:List
+    	M:Matrix
+    Description
+    	Text
+	 Given a permutation in 1-line notation or (partial) alternating sign matrix, 
+	 outputs the associated alternating sign matrix or Schubert determinantal ideal.
+	Example
+	 schubertDetIdeal({1,3,2})
+	 schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+
+///
+
+doc ///
+    Key
+<<<<<<< Updated upstream
+        (composePerms, List, List)
+        composePerms
+    Headline
+        computes the composition of two permutations
+    Usage
+        composePerms(u,v)
+    Inputs
+        u:List
+        v:List
+    Description
+        Text
+            Computes the composition of two permutations, u and v, as u*v.
+            Note that the permutations must be written as a list in one-line notation.
+        Example
+            u = {2,3,4,1}
+            v = {4,3,2,1}
+            composePerms(u,v)
+
+            u = {1,2,3,4,5}
+            v = {3,5,2,1,4}
+            composePerms(u,v)
+
+            u = {3,5,2,1,4}
+            v = {1,2,3,4,5}
+            composePerms(u,v)
+=======
+        antiDiagInit
+	(antiDiagInit, List)
+	(antiDiagInit, Matrix)
+    Headline
+    	Computes the (unique) antidigaonal initial ideal of a Schubert determinantal ideal or, more generally, alternating sign matrix ideal.
+    Usage
+    	schubertDetIdeal(w)
+	schubertDetIdeal(M)
     Inputs
     	M:Matrix
 	L:List
     Description
     	Text
-	 Given an alternating sign matrix or a permutation in 1-line notation, 
-	 outputs the Schubert determinantal ideal associated to that matrix.
+	 Theorem B of Knutson and Miller's [put in citation] ensures that there is exactly one antidiagonal initial ideal of each Schubert determinantal ideal.  
+	 [other citations] extend this result to alternating sign matrix ideals. 
 	Example
-	 schubertDetIdeal({1,3,2})
-	 schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+	 antiDiagInit({2,1,4,3})
+	 antiDiagInit(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 
+>>>>>>> Stashed changes
 ///
 
 doc ///
@@ -509,7 +617,7 @@ doc ///
             w = {7,2,5,8,1,3,6,4}
             pattern2143 = {2,1,4,3}
             isPatternAvoiding(w, pattern2143)
-            
+
             v = {2,3,7,1,5,8,4,6}
             pattern1432 = {1,4,3,2}
             isPatternAvoiding(v, pattern1432)
@@ -544,7 +652,7 @@ doc ///
 -------------------------
 -------------------------
 
---detailed test for isASM function
+--detailed test for isPartialASM function
 TEST ///
 -*
   restart
@@ -605,6 +713,14 @@ assert(schubertDetIdeal({3,2,1}) == ideal{z_(1,1),z_(1,2),z_(2,1)});
 assert(schubertDetIdeal({1,3,2}) == ideal(z_(1,1)*z_(2,2)-z_(1,2)*z_(2,1)));
 ///
 *-
+
+TEST ///
+--composePerms
+assert(composePerms({2,3,4,1}, {4,3,2,1}) == {1,4,3,2})
+assert(composePerms({4,3,2,1}, {4,3,2,1}) == {1,2,3,4})
+assert(composePerms({1,2,3,4,5}, {3,5,2,1,4}) == {3,5,2,1,4})
+assert(composePerms({3,5,2,1,4}, {1,2,3,4,5}) == {3,5,2,1,4})
+///
 
 TEST ///
 --isPatternAvoiding
