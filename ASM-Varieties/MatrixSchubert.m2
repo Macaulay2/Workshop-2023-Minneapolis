@@ -36,7 +36,8 @@ export{
     "rotheDiagram",
     "permToMatrix",
     "composePerms",
-    "isPerm"
+    "isPerm",
+    "minimalRankTable"
     }
 
 -- Utility routines --
@@ -327,6 +328,41 @@ subwordComplex Matrix := simplicialComplex => (A) -> (
 subwordComplex List := simplicialComplex => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     simplicialComplex antiDiagInit w
+    );
+
+------------------------------------------
+--INPUT: a nonempty list of equidimensional ASMs, presented as matrices
+--OUTPUT: the minimal rank table, presented as a matrix
+--TODO: tests, documentation
+------------------------------------------
+
+minimalRankTable = method()
+minimalRankTable List := Matrix => (L) -> (
+        if (#L == 0) then error("The input must be a nonempty list.");
+        n := #(entries L#0);
+        minimalRankMtx := mutableMatrix(ZZ,n,n);
+
+        -- initialize the minimalRankMtx to something with big entries everywhere
+        for i from 0 to n-1 do (
+            for j from 0 to n-1 do (
+                minimalRankMtx_(i,j) = n+1;
+            );
+        );
+
+        -- comb through the list to get the minimal entrys
+        for M in L do (
+            listRankM := entries rankMatrix(M);
+            if (#listRankM != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
+            if not(isPartialASM(M)) then error("The input must be a list containing partial alternating sign matrices.");
+
+            for i from 0 to n-1 do (
+                for j from 0 to n-1 do (
+                    minimalRankMtx_(i,j) = min {minimalRankMtx_(i,j), listRankM#i#j};
+                );
+            );
+        );
+
+        minimalRankMtx
     );
 
 ----------------------------------------
