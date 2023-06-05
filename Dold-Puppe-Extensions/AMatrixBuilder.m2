@@ -1,3 +1,5 @@
+load "Compositions.m2"
+
 entryCalculator = (mu,j) -> (
     u=0;
     for i from 0 to #mu-1 do (
@@ -11,4 +13,13 @@ entryCalculator = (mu,j) -> (
 	);
     0
 )
+
+ABuilder = (n,k) -> (
+    L = posComps(n+1,k+1);
+    matrix (
+    for mu in L list
+    	for j to n list
+    	    entryCalculator(mu,j)
+    )
+)	
 	
