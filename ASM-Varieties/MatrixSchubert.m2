@@ -38,6 +38,9 @@ export{
     "composePerms",
     "isPerm",
     "minimalRankTable"
+    "permLength",
+    "isPatternAvoiding",
+    "isVexillary"
     }
 
 -- Utility routines --
@@ -109,6 +112,54 @@ composePerms (List, List) := List => (u,v) -> (
     v0 := apply(v, i->i-1);
     apply(u0_v0, i-> i+1)
     )
+
+------------------------------------
+-- INPUT: A permutation in one-line notation
+-- OUTPUT: The length of the permutation (number of inversions)
+------------------------------------
+
+permLength = method()
+permLength List := ZZ => w -> (
+    if not (isPerm w) then error("the argument is not a permutation");
+    k := 0;
+    for i from 0 to #w - 2 do (
+        for j from i + 1 to #w - 1 do (
+            if w_i > w_j then k = k +1;
+        ); 
+    );
+    k
+)
+
+--------------------------------
+--checks if a permutation is pattern-avoiding
+--INPUT: a permutation (in one-line notation), written as a list
+--OUTPUT: whether the permutation avoid the pattern
+--TODO: add documentation and tests
+--------------------------------
+isPatternAvoiding = method()
+isPatternAvoiding (List,List) := Boolean => (perm, pattern) -> (
+    -- Checks if the given permutation avoids the given pattern.
+    -- Assume permutation is pattern-avoiding, break if not true
+    isAvoiding := true;
+    for idx in subsets(0..#perm-1, #pattern) do {
+        sortedIdx := sort(idx);
+        pairwiseComparison := apply(pattern_{0..#pattern-2}, pattern_{1..#pattern-1}, (i,j) -> perm#(sortedIdx#(i-1)) < perm#(sortedIdx#(j-1))); -- pairwise comparison of permutation according to pattern
+        isAvoiding = not all(pairwiseComparison, i -> i == true); -- true if there was one inequality that failed, else all inequalities are true and so not pattern-avoiding
+        if not isAvoiding then break;
+    };
+    isAvoiding
+)
+
+--------------------------------
+--checks if a permutation is vexillary, i.e. 2143-avoiding
+--INPUT: a permutation (one-line notation), written as a list
+--OUTPUT: whether the permutation is vexillary
+--TODO: add documentation and tests
+--------------------------------
+isVexillary = method()
+isVexillary List := Boolean => (perm) -> (
+    isPatternAvoiding(perm, {2,1,4,3})
+)
 
 --------------------------------------------
 --------------------------------------------
@@ -220,7 +271,51 @@ essentialBoxes List := List => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     essentialBoxes permToMatrix w
     )
+--------------------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation
+--OUTPUT: Schubert determinantal ideal for w
+--------------------------------------------
+schubertDetIdeal = method()
+schubertDetIdeal Matrix := Ideal => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    zMatrix := genMat(numrows A, numcols A); --generic matrix
+    rankMat := rankMatrix A; --rank matrix for A
+    essBoxes := essentialBoxes A;
+    if essBoxes == {} then (
+	R := ring zMatrix;
+	return ideal(0_R)
+	);
+    zBoxes := apply(essBoxes, i-> flatten table(i_0,i_1, (j,k)->(j+1,k+1))); --smaller matrix indices for each essential box
+    ranks := apply(essBoxes, i-> rankMat_(i_0-1,i_1-1)); --ranks for each essential box
+    fultonGens := new MutableList;
+    for box in essBoxes do (
+    	pos := position(essBoxes, i-> i==box);
+        fultonGens#(#fultonGens) = (minors(ranks_pos+1, zMatrix^{0..(box_0-1)}_{0..(box_1-1)}))_*;
+        );
+    return ideal(unique flatten toList fultonGens)
+    );
+schubertDetIdeal List := Ideal => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");    
+    A := permToMatrix w;
+    schubertDetIdeal A
+    );
+
 ----------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation
+--OUTPUT: list of fulton generators for matrix determinantal ideal w
+---------------------------------------
+fultonGens = method()
+fultonGens Matrix := List => (A) -> (
+    (schubertDetIdeal A)_*
+    );
+
+fultonGens List := List => (w) -> (
+    (schubertDetIdeal w)_*
+    );
+
+-*
+----------------------------------------
+--OLD CODE
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: list of fulton generators for matrix determinantal ideal w
 ---------------------------------------
@@ -245,6 +340,7 @@ fultonGens List := List => (w) -> (
     fultonGens A
     )
 ----------------------------------------
+--OLD CODE
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: Schubert determinantal ideal for w
 --WARNING: if you use the identity permutation your ring will be ZZ instead of Q and idk how to fix this
@@ -258,6 +354,8 @@ schubertDetIdeal List := Ideal => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");    
     ideal fultonGens w
     );
+*-
+
 ----------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: single Grothendieck polynomials
@@ -406,7 +504,7 @@ doc ///
     Headline
     	whether a matrix is a partial alternating sign matrix.
     Usage
-    	isASM(M)
+    	isPartialASM(M)
     Inputs
     	M:Matrix
     Description
@@ -418,7 +516,7 @@ doc ///
 	     
 	     - Each row and column sums to $0$ or $1$, and
 	     
-	     - The first nonzero entry of any row or column is $1$.
+	     - The first nonzero entry of any row or column (if there is one) is $1$.
 	Example
     	    M = matrix{{0,0,1,0,0,0,0,0},{1,0,1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}}
 	    isPartialASM M
@@ -427,7 +525,6 @@ doc ///
 
 	    
 ///
-
 
 doc ///
     Key
@@ -450,6 +547,56 @@ doc ///
 	 schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 
 ///
+
+doc ///
+    Key
+        (isPatternAvoiding, List, List)
+        isPatternAvoiding
+    Headline
+        whether a permutation is pattern-avoiding, e.g. 2143-avoiding or 1432-avoiding
+    Usage
+        isPatternAvoiding(perm, pattern)
+    Inputs
+        perm:List
+        pattern:List
+    Description
+        Text
+            Given a permutation, checks if the permutation is pattern-avoiding, e.g. 2143-avoiding or 1432-avoiding.
+            For example, a permutation w is 2143-avoiding if there does not exist indices i < j < k < l
+            such that w_j < w_i < w_l < w_k.
+        Example
+            w = {7,2,5,8,1,3,6,4}
+            pattern2143 = {2,1,4,3}
+            isPatternAvoiding(w, pattern2143)
+            
+            v = {2,3,7,1,5,8,4,6}
+            pattern1432 = {1,4,3,2}
+            isPatternAvoiding(v, pattern1432)
+///
+
+doc ///
+    Key
+        (isVexillary, List)
+        isVexillary
+    Headline
+        whether a permutation is vexillary, i.e. 2143-avoiding
+    Usage
+        isVexillary(perm)
+    Inputs
+        perm:List
+    Description
+        Text
+            Given a permutation, checks if the permutation is vexillary, i.e. 2143-avoiding.
+            A permutation w is 2143-avoiding if there do not exist indices i < j < k < l
+            such that w_j < w_i < w_l < w_k.
+        Example
+            w = {7,2,5,8,1,3,6,4}
+            isVexillary(w)
+
+            v = {1,6,9,2,4,7,3,5,8}
+            isVexillary(v)
+///
+
 -------------------------
 -------------------------
 --**TESTS SECTIONS**--
@@ -503,7 +650,6 @@ TEST ///
 A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}};
 assert(isPartialASM A)
 assert(sort essentialBoxes(A) == {(1,3),(2,1),(3,2)})
-
 ///
 -*
 --test for schubertDetIdeal
@@ -519,6 +665,19 @@ assert(schubertDetIdeal({1,3,2}) == ideal(z_(1,1)*z_(2,2)-z_(1,2)*z_(2,1)));
 ///
 *-
 
+TEST ///
+--isPatternAvoiding
+assert(not isPatternAvoiding({2,3,7,1,5,8,4,6}, {1,4,3,2}));
+assert(isPatternAvoiding({1,4,6,2,3,7,5}, {1,4,3,2}));
+
+assert(not isPatternAvoiding({7,2,5,8,1,3,6,4}, {2,1,4,3}));
+assert(isPatternAvoiding({1,6,9,2,4,7,3,5,8}, {2,1,4,3}));
+
+--isVexillary
+assert(not isVexillary({7,2,5,8,1,3,6,4}));
+assert(isVexillary({1,6,9,2,4,7,3,5,8}));
+///
+
 end---------------------------------------------------------------
 
 
@@ -530,7 +689,15 @@ restart
 debug needsPackage "MatrixSchubert"
 
 M = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
+fultonGens M
+schubertDetIdeal M
+
 w = {3,2,5,1,4}
+schubertDetIdeal w
+
+schubertDetIdeal {1,2,3}
+
+
 permToMatrix w
 isPartialASM M
 rotheDiagram M
@@ -541,6 +708,22 @@ subwordComplex M
 betti res diagLexInit M
 betti res antiDiagInit M
 
+
+A = matrix{{0,-1,0,1,1},{1,-1,1,-1,1},{0,1,1,0,-1},{1,1,-1,1,-1},{-1,1,0,0,1}}
+n = numrows A
+m = numcols A
+rowCheck = new MutableList
+colCheck = new MutableList
+for i from 0 to n-1 do(
+    partialSums = for i from 0 to m-1 list(sum(delete(0, flatten entries A_{i})));
+    rowCheck#(#rowCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
+    );
+for i from 0 to m-1 do(
+    partialSums = for i from 0 to n-1 list(sum(delete(0, flatten entries A^{i})));
+    rowCheck#(#colCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
+    );
+(toList rowCheck == toList(#rowCheck:true)) and (toList colCheck == toList(#colCheck:true))
+)
 ------------------------------------
 --Development Section
 ------------------------------------
