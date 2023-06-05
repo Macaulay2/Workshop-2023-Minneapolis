@@ -402,29 +402,29 @@ ZZdFactorization ** Ring := ZZdFactorization => (C,R) -> (
     )
 Ring ** ZZdFactorization := ZZdFactorization => (R,C) -> C ** R
 
-RingMap Complex := Complex => (phi,C) -> (
-    (lo,hi) := concentration C;
+RingMap ZZdFactorization := ZZdFactorization => (phi,C) -> (
+    (lo,hi) := (0,C.period);
     moduleHash := hashTable for i from lo to hi list i => phi C_i;
     if lo === hi then 
-        return complex(moduleHash#lo, Base=>lo);
+        return ZZdfactorization(moduleHash#lo, Base=>lo);
     mapHash := hashTable for i from lo+1 to hi list i => 
         map(moduleHash#(i-1), moduleHash#i, phi dd^C_i);
-    complex mapHash
+    ZZdfactorization mapHash
     )
 
-tensor(RingMap, Complex) := Complex => {} >> opts -> (phi, C) -> (
+tensor(RingMap, ZZdFactorization) := ZZdFactorization => {} >> opts -> (phi, C) -> (
     if source phi =!= ring C then error "expected the source of the ring map to be the ring of the complex";
-    (lo,hi) := concentration C;
+    (lo,hi) := (0,C.period);
     modules := hashTable for i from lo to hi list i => tensor(phi, C_i);
     if lo === hi then 
-        return complex(modules#lo, Base=>lo);
+        return ZZdfactorization(modules#lo, Base=>lo);
     maps := hashTable for i from lo+1 to hi list i => 
         map(modules#(i-1), modules#i, tensor(phi, matrix dd^C_i));
-    complex maps
+    ZZdfactorization maps
     )
-tensor(Complex, RingMap) := Complex => {} >> opts -> (C, phi) -> tensor(phi, C)
+tensor(ZZdFactorization, RingMap) := ZZdFactorization => {} >> opts -> (C, phi) -> tensor(phi, C)
 
-RingMap ** Complex := Complex => (phi, C) -> tensor(phi, C)
-Complex ** RingMap := Complex => (C, phi) -> tensor(phi, C)
+RingMap ** ZZdFactorization := ZZdFactorization => (phi, C) -> tensor(phi, C)
+ZZdFactorization ** RingMap := ZZdFactorization => (C, phi) -> tensor(phi, C)
 
 
