@@ -467,6 +467,35 @@ doc ///
 
 doc ///
     Key
+        (composePerms, List, List)
+        composePerms
+    Headline
+        computes the composition of two permutations
+    Usage
+        composePerms(u,v)
+    Inputs
+        u:List
+        v:List
+    Description
+        Text
+            Computes the composition of two permutations, u and v, as u*v.
+            Note that the permutations must be written as a list in one-line notation.
+        Example
+            u = {2,3,4,1}
+            v = {4,3,2,1}
+            composePerms(u,v)
+
+            u = {1,2,3,4,5}
+            v = {3,5,2,1,4}
+            composePerms(u,v)
+
+            u = {3,5,2,1,4}
+            v = {1,2,3,4,5}
+            composePerms(u,v)
+///
+
+doc ///
+    Key
         (isPatternAvoiding, List, List)
         isPatternAvoiding
     Headline
@@ -485,7 +514,7 @@ doc ///
             w = {7,2,5,8,1,3,6,4}
             pattern2143 = {2,1,4,3}
             isPatternAvoiding(w, pattern2143)
-            
+
             v = {2,3,7,1,5,8,4,6}
             pattern1432 = {1,4,3,2}
             isPatternAvoiding(v, pattern1432)
@@ -581,6 +610,14 @@ assert(schubertDetIdeal({3,2,1}) == ideal{z_(1,1),z_(1,2),z_(2,1)});
 assert(schubertDetIdeal({1,3,2}) == ideal(z_(1,1)*z_(2,2)-z_(1,2)*z_(2,1)));
 ///
 *-
+
+TEST ///
+--composePerms
+assert(composePerms({2,3,4,1}, {4,3,2,1}) == {1,4,3,2})
+assert(composePerms({4,3,2,1}, {4,3,2,1}) == {1,2,3,4})
+assert(composePerms({1,2,3,4,5}, {3,5,2,1,4}) == {3,5,2,1,4})
+assert(composePerms({3,5,2,1,4}, {1,2,3,4,5}) == {3,5,2,1,4})
+///
 
 TEST ///
 --isPatternAvoiding
