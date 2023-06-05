@@ -263,16 +263,13 @@ rotheDiagram List := List => (w) -> (
 -----------------------
 
 augmentedRotheDiagram = method()
-augmentedRotheDiagram List := List => w -> (
+aRD := w -> (
     L := rotheDiagram(w);
     R := rankMatrix(w);
     apply(L, (i,j) -> ((i,j), R_(i-1,j-1)))
 )
-augmentedRotheDiagram Matrix := List => w -> (
-    L := rotheDiagram(w);
-    R := rankMatrix(w);
-    apply(L, (i,j) -> ((i,j), R_(i-1,j-1)))
-)
+augmentedRotheDiagram List := List => aRD
+augmentedRotheDiagram Matrix := List => aRD
 
 -----------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
