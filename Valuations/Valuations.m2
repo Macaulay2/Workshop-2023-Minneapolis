@@ -18,7 +18,8 @@ newPackage("Valuations",
 export{"function",
        "valuation",
        "trivialValuation",
-       "padicValution"
+       "padicValution",
+       "leadTermValuation"
        }
 
 Valuation = new Type of HashTable
@@ -49,6 +50,7 @@ getExponent = (p, x) -> (
     numFactors
     )
 
+
 padicValution = method()
 padicValution ZZ := p -> (
     assert isPrime p;
@@ -58,3 +60,6 @@ padicValution ZZ := p -> (
         );
     valuation func
     )
+
+--leading term valuation (max convention)
+leadTermValuation = valuation (x -> if x == 0 then infinity else leadMonomial x)
