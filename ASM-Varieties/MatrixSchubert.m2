@@ -387,7 +387,7 @@ doc ///
     Headline
     	whether a matrix is a partial alternating sign matrix.
     Usage
-    	isASM(M)
+    	isPartialASM(M)
     Inputs
     	M:Matrix
     Description
@@ -399,7 +399,7 @@ doc ///
 	     
 	     - Each row and column sums to $0$ or $1$, and
 	     
-	     - The first nonzero entry of any row or column is $1$.
+	     - The first nonzero entry of any row or column (if there is one) is $1$.
 	Example
     	    M = matrix{{0,0,1,0,0,0,0,0},{1,0,1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}}
 	    isPartialASM M
