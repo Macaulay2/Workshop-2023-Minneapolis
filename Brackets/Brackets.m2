@@ -29,14 +29,14 @@ sgn = sigma -> ( -- sign of a permutation
 -- AbstractGCRing is a parent class for BracketRing and GCAlgebra
 AbstractGCRing = new Type of HashTable
 net AbstractGCRing := G -> error "not implemented"
-bracketRing = method(Options => {Strategy => GroebnerBasis})
-bracketRing AbstractGCRing := G -> error "not implemented"
 ring AbstractGCRing := G -> G#ring
 use AbstractGCRing := G -> use ring G
 
 -- class declaration for BracketRing
 BracketRing = new Type of AbstractGCRing
 -- constructor
+bracketRing = method(Options => {Strategy => GroebnerBasis})
+bracketRing AbstractGCRing := G -> error "not implemented"
 bracketRing (List, ZZ) := o -> (vectorSymbols, d) -> (
     n := length vectorSymbols;
     if not (n >= d) then error("The first argument n in bracketRing(n, d) (representing the number of rows) is assumed to be at least the second argument d (representing the number of columns)");
@@ -48,7 +48,7 @@ bracketRing (List, ZZ) := o -> (vectorSymbols, d) -> (
     minorsX := apply(n'choose'd'Indices, R -> det X^R);
     y := symbol y; 
     bracketVariables := apply(n'choose'd, S -> y_("["|fold(S, (a, b) -> toString(a)|toString(b))|"]"));
-    S := QQ[gens R, bracketVariables, MonomialOrder => {Eliminate(numgens R), GRevLex}]; -- important for "Tableux order"
+    S := QQ[gens R, bracketVariables, MonomialOrder => {Eliminate(numgens R), GRevLex}]; -- important for "Tableaux order"
     lookupTable := new HashTable from apply(binomial(n, d), i -> increment n'choose'd'Indices#i => (gens S)#(numgens R+i));
     I := ideal apply(minorsX, bracketVariables, (m, b) -> sub(m, S) - b_S);
     ret := new BracketRing from {numrows => n, numcols => d, ring => S, ideal => I, table => lookupTable, cache => new CacheTable from {}};
@@ -60,12 +60,14 @@ bracketRing (List, ZZ) := o -> (vectorSymbols, d) -> (
 	ret.cache#syz = selectInSubring(1, G);
 	) 
     else if o#Strategy === Grassmannian then (
+	-- use the function "Grassmannian" to simplify construction of R, I, etc, above
 	error "not implemented";
 	)
     else if o#Strategy === "vanDerWaerden" then (
 	error "not implemented";
 	)
     else if o#Strategy === sagbi then (
+	-- use SubalgebraBases package
 	error "not implemented";
 	)
     else error "Strategy option not recognized";
