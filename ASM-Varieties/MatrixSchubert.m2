@@ -37,8 +37,9 @@ export{
     "permToMatrix",
     "composePerms",
     "isPerm",
-    "minimalRankTable"
+    "minimalRankTable",
     "permLength",
+    "augmentedRotheDiagram",
     "isPatternAvoiding",
     "isVexillary"
     }
@@ -116,6 +117,7 @@ composePerms (List, List) := List => (u,v) -> (
 ------------------------------------
 -- INPUT: A permutation in one-line notation
 -- OUTPUT: The length of the permutation (number of inversions)
+-- TODO: Add documentations + examples
 ------------------------------------
 
 permLength = method()
@@ -252,6 +254,25 @@ rotheDiagram List := List => (w) -> (
     A := permToMatrix w;
     rotheDiagram(A)
     )
+
+-----------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation 
+    	--OR an alternating sign matrix A
+--OUTPUT: A list of boxes in the Rothe diagram for A, with their corresponding rank values 
+--TODO: add documentation + examples
+-----------------------
+
+augmentedRotheDiagram = method()
+augmentedRotheDiagram List := List => w -> (
+    L := rotheDiagram(w);
+    R := rankMatrix(w);
+    apply(L, (i,j) -> ((i,j), R_(i-1,j-1)))
+)
+augmentedRotheDiagram Matrix := List => w -> (
+    L := rotheDiagram(w);
+    R := rankMatrix(w);
+    apply(L, (i,j) -> ((i,j), R_(i-1,j-1)))
+)
 
 -----------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
@@ -603,7 +624,7 @@ doc ///
 -------------------------
 -------------------------
 
---detailed test for isASM function
+--detailed test for isPartialASM function
 TEST ///
 -*
   restart
