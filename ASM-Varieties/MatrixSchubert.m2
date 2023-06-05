@@ -312,49 +312,6 @@ fultonGens List := List => (w) -> (
     (schubertDetIdeal w)_*
     );
 
--*
-----------------------------------------
---OLD CODE
---INPUT: a list w corresponding to a permutation in 1-line notation
---OUTPUT: list of fulton generators for matrix determinantal ideal w
----------------------------------------
-fultonGens = method()
-fultonGens Matrix := List => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    zMatrix := genMat(numrows A, numcols A); --generic matrix
-    rankMat := rankMatrix A; --rank matrix for A
-    essBoxes := essentialBoxes A;
-    zBoxes := apply(essBoxes, i-> flatten table(i_0,i_1, (j,k)->(j+1,k+1))); --smaller matrix indices for each essential box
-    ranks := apply(essBoxes, i-> rankMat_(i_0-1,i_1-1)); --ranks for each essential box
-    fultonGens := new MutableList;
-    for box in essBoxes do (
-        pos := position(essBoxes, i-> i==box);
-        fultonGens#(#fultonGens) = (minors(ranks_pos+1, zMatrix^{0..(box_0-1)}_{0..(box_1-1)}))_*;
-        );
-    unique flatten toList fultonGens
-    );
-fultonGens List := List => (w) -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    A := permToMatrix w;
-    fultonGens A
-    )
-----------------------------------------
---OLD CODE
---INPUT: a list w corresponding to a permutation in 1-line notation
---OUTPUT: Schubert determinantal ideal for w
---WARNING: if you use the identity permutation your ring will be ZZ instead of Q and idk how to fix this
-----------------------------------------
-schubertDetIdeal = method()
-schubertDetIdeal Matrix := Ideal => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    ideal fultonGens A
-    )
-schubertDetIdeal List := Ideal => (w) -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");    
-    ideal fultonGens w
-    );
-*-
-
 ----------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: single Grothendieck polynomials
@@ -426,12 +383,32 @@ subwordComplex List := simplicialComplex => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     simplicialComplex antiDiagInit w
     );
-
+----------------------------------------
 ----------------------------------------
 -- Part 2. Invariants of ASM Varieties
 ----------------------------------------
+----------------------------------------
 
 
+----------------------
+--INPUT: An alternating sign matrix A
+--OUTPUT: the regularity of the ASM variety for A using antidiag initial ideal
+----------------------
+
+matrixSchubertReg = method()
+matrixSchubertReg Matrix := ZZ => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    regularity antiDiagInit A
+    );
+
+-*
+matrixSchubertReg(List) := o -> (w) -> (
+    if o#Strategy === "viaInitialIdeal" then (
+	return (regularity antiDiagInit w)
+	);
+    if o#Strategy === "
+    );
+*-
 ---------------------------------
 ---------------------------------
 -- **DOCUMENTATION SECTION** --
