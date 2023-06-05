@@ -189,4 +189,14 @@ FModule == ZZ := ( M, n ) ->
     generatingRoot( M ) == 0
 )
 
+cohomDim = I ->
+(
+    R:=ring I;
+    n:=#(trim I)_*;
+    while localCohomology(n,I,R)==0 do (n=n-1);
+    n
+)
+
+
+
     
