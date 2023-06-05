@@ -17,30 +17,30 @@ The basic functions in this package will (listed by goal, not by individual func
 
 More complicated general purpose functions:
 
-11. ⭐ Take an arbitrary ASM and produce its multidegree for the usual N^n or N^{2n} grading via its antidiagonal initial ideal using degeneration and additivity of multidegrees.
-12. ⭐ Take an ASM ideal and find its prime decomposition via its antidiagonal initial ideal: Each component of the antidiagonal initial ideal indexes a (not-necessarily-distinct) Schubert determinantal ideal in the decomposition of the ASM ideal itself.  The generators each such component are variables whose indices give a reduced word for one such permutation (Knutson-Miller).
+10. ⭐ Take an arbitrary ASM and produce its multidegree for the usual N^n or N^{2n} grading via its antidiagonal initial ideal using degeneration and additivity of multidegrees.
+11. ⭐ Take an ASM ideal and find its prime decomposition via its antidiagonal initial ideal: Each component of the antidiagonal initial ideal indexes a (not-necessarily-distinct) Schubert determinantal ideal in the decomposition of the ASM ideal itself.  The generators each such component are variables whose indices give a reduced word for one such permutation (Knutson-Miller).
 
 All ASM varieties are unions of matrix Schubert varieties; however, not every union of matrix Schubert variety is an ASM variety.  For this reason, it comes up with some frequency that we have an ideal in hand and want to know if it is an ASM ideal.
 
-13. ⭐ Decide whether or not I is an intersection of Schubert determinantal ideals: Take the antidiagonal initial ideal of I and verify that it is radical.  Assuming it is, read the set of permutations, Perm(I), from the components of the antidiagonal initial ideal of I.  (That is, apply the function written for 12.)  Ask whether the intersection of Schuberts indexed by Perm(I) is indeed I.
+12. ⭐ Decide whether or not I is an intersection of Schubert determinantal ideals: Take the antidiagonal initial ideal of I and verify that it is radical.  Assuming it is, read the set of permutations, Perm(I), from the components of the antidiagonal initial ideal of I.  (That is, apply the function written for 12.)  Ask whether the intersection of Schuberts indexed by Perm(I) is indeed I.
 
-13.5. Suppose we know by 13 that I is an intersection of Schubert determinantal ideals.  Take mins of rank tables of the Schuberts involved, build the ASM ideal J of that rank table and then check if I=J.
+12.5. Suppose we know by 13 that I is an intersection of Schubert determinantal ideals.  Take mins of rank tables of the Schuberts involved, build the ASM ideal J of that rank table and then check if I=J.
 
 The set of ASM ideals is closed under addition.  Typically it's not easy to see which ASM is the matrix corresponding to a given sum of ASM ideals.
 
-14. ⭐ Given a set of ASMs, find the rank table for their sum by taking entrywise minima of the rank table of each of the given ASMs:  Find the ASM of the output rank table (using the function written for 3, rank table will be minimal).
-15. Given a non-minimal rank table, find its ASM: Exclude the vacuous rank conditions and assign the appropriate bigrassmannian to the others.  Apply the function from 14 on those bigrassmannians.
+13. ⭐ Given a set of ASMs, find the rank table for their sum by taking entrywise minima of the rank table of each of the given ASMs:  Find the ASM of the output rank table (using the function written for 3, rank table will be minimal).
+14. Given a non-minimal rank table, find its ASM: Exclude the vacuous rank conditions and assign the appropriate bigrassmannian to the others.  Apply the function from 14 on those bigrassmannians.
 
 Regularity:
 
-16. Compute regularity of any CM ASM (allow opt out of CM check, opt our automatically if given a permutation) as degree of K-polynomial minus height
-17. Decide if a permutation is vexillary.
-18. Decide if a permutation is 1432 avoiding.
-19. Implement Theorems 1.1 and 1.5 of Rajchgot-Robichaux-Weigandt.
-20. ⭐ Compute Rajchgot index of a permutation and implement Theorem 1.1 of Pechenik-Speyer-Weigandt.
+15. Compute regularity of any CM ASM (allow opt out of CM check, opt our automatically if given a permutation) as degree of K-polynomial minus height
+16. Decide if a permutation is vexillary.
+17. Decide if a permutation is 1432 avoiding.
+18. Implement Theorems 1.1 and 1.5 of Rajchgot-Robichaux-Weigandt.
+19. ⭐ Compute Rajchgot index of a permutation and implement Theorem 1.1 of Pechenik-Speyer-Weigandt.
 
 While we're at it, if time: 
 
-21. Decide if a permutation is CDG (mild generalization of function from 16).
-22. Give the (unique) diagonal initial ideal of a CDG permutation.  See Klein, Conjecture 1.1 and paragraph before it.
-23. Decide if a permutation is Cartwright-Sturmfels (mild generalization of function from 16) and, if so, give its universal Gröbner basis.  See Conca-De Negri-Gorla Theorem 5.6.
+20. Decide if a permutation is CDG (mild generalization of function from 16).
+21. Give the (unique) diagonal initial ideal of a CDG permutation.  See Klein, Conjecture 1.1 and paragraph before it.
+22. Decide if a permutation is Cartwright-Sturmfels (mild generalization of function from 16) and, if so, give its universal Gröbner basis.  See Conca-De Negri-Gorla Theorem 5.6.
