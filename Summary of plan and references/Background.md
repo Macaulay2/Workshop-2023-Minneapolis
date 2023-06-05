@@ -14,7 +14,7 @@ The basic functions in this package will (listed by goal, not by individual func
 7. ✔ Take a permutation (as a list or as a matrix) or ASM or rank table and produce its essential set. **[requires tests and documentation]**
 8. ⭐ [beginner] Take a permutation (as a list or as a matrix) and produce its single or double Schubert polynomial and single or double Grothendieck polynomial using divided differences.
 9. Convert a permutation among its list, permutation matrix, and bijection forms.
-10.⭐[beginner] Multiply permutations (compose them in their bijection form).
+11.⭐[beginner] Multiply permutations (compose them in their bijection form).
 
 More complicated general purpose functions:
 
@@ -25,7 +25,7 @@ All ASM varieties are unions of matrix Schubert varieties; however, not every un
 
 13. ⭐ Decide whether or not I is an intersection of Schubert determinantal ideals: Take the antidiagonal initial ideal of I and verify that it is radical.  Assuming it is, read the set of permutations, Perm(I), from the components of the antidiagonal initial ideal of I.  (That is, apply the function written for 12.)  Ask whether the intersection of Schuberts indexed by Perm(I) is indeed I.
 
-13.5. Suppose we know by 13 that I is an intersection of Schubert determinantal ideals.  Rake mins of rank tables of the Schuberts involved, build the ASM ideal J of that rank table and then check if I=J.
+13.5. Suppose we know by 13 that I is an intersection of Schubert determinantal ideals.  Take mins of rank tables of the Schuberts involved, build the ASM ideal J of that rank table and then check if I=J.
 
 The set of ASM ideals is closed under addition.  Typically it's not easy to see which ASM is the matrix corresponding to a given sum of ASM ideals.
 
