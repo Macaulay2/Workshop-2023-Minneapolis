@@ -426,4 +426,4 @@ tensor(ZZdFactorization, RingMap) := ZZdFactorization => {} >> opts -> (C, phi) 
 
 RingMap ** ZZdFactorization := ZZdFactorization => (phi, C) -> tensor(phi, C)
 ZZdFactorization ** RingMap := ZZdFactorization => (C, phi) -> tensor(phi, C)
-
+-- Hello from juan
