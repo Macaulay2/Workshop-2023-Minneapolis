@@ -14,7 +14,7 @@ The basic functions in this package will (listed by goal, not by individual func
 7. ✔ Take a permutation (as a list or as a matrix) or ASM or rank table and produce its essential set. **[requires tests and documentation]**
 8. ⭐ [beginner] Take a permutation (as a list or as a matrix) and produce its single or double Schubert polynomial and single or double Grothendieck polynomial using divided differences.
 9. Convert a permutation among its list, permutation matrix, and bijection forms.
-11.⭐[beginner] Multiply permutations (compose them in their bijection form).
+10.⭐[beginner] Multiply permutations (compose them in their bijection form).
 
 More complicated general purpose functions:
 
