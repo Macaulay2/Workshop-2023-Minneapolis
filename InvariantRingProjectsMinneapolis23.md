@@ -1,6 +1,6 @@
 # Invariant Ring Project Ideas (Minneapolis 23)
 
-Link to the Google Drive mentioned a few times below https://drive.google.com/drive/folders/1gM51_N0cPXioITHwCrcEc0SCtwTsNQgt?usp=sharing 
+Link to the Google Drive mentioned a few times below https://drive.google.com/drive/folders/1HvltRLSA588_vF6ELm0muBBKowxnRkPF?usp=sharing
 
 There is also an Invariants project on M2 GitHub Wiki which Federico wrote some time ago and has some overlap here but also mentions other things which you can contact Federico about (via Zulip or email f.galetto@csuohio.edu) 
 https://github.com/Macaulay2/M2/wiki/Project%3A-Invariants 
