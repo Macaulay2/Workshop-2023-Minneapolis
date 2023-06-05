@@ -1,0 +1,37 @@
+--A1BrouwerDegrees.m2
+newPackage(
+    "A1BrouwerDegrees",
+    Version=>"0.1",
+    Date=>"June 5, 2023",
+    Authors=>{
+        {Name=>"Nikita Borisov",
+	 Email=>"",
+	 HomePage=>""},
+        {Name=>"Thomas Brazelton",
+	 Email=>"",
+	 HomePage=>""},
+        {Name=>"Frenly Espino",
+	 Email=>"",
+	 HomePage=>""},
+         {Name=>"Tom Hagedorn",
+	 Email=>"",
+	 HomePage=>""},
+        {Name=>"Zhaobo Han",
+	 Email=>"",
+	 HomePage=>""},
+     	{Name=>"Jordy Lopez",
+	 Email=>"",
+	 HomePage=>""},
+        {Name=>"Joel Louwsma",
+	 Email=>"",
+	 HomePage=>""},
+        {Name=>"Gabriel Ong",
+	 Email=>"",
+	 HomePage=>""},
+	},
+    Headline=>"",
+    PackageImports=>{},
+    PackageExports=>{},
+    DebuggingMode=>true
+    )
+
