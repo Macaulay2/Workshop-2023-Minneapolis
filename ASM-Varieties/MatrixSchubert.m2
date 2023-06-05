@@ -37,7 +37,9 @@ export{
     "permToMatrix",
     "composePerms",
     "isPerm",
-    "permLength"
+    "permLength",
+    "isPatternAvoiding",
+    "isVexillary"
     }
 
 -- Utility routines --
@@ -126,6 +128,38 @@ permLength List := ZZ => w -> (
     );
     k
 )
+
+--------------------------------
+--checks if a permutation is pattern-avoiding
+--INPUT: a permutation (in one-line notation), written as a list
+--OUTPUT: whether the permutation avoid the pattern
+--TODO: add documentation and tests
+--------------------------------
+isPatternAvoiding = method()
+isPatternAvoiding (List,List) := Boolean => (perm, pattern) -> (
+    -- Checks if the given permutation avoids the given pattern.
+    -- Assume permutation is pattern-avoiding, break if not true
+    isAvoiding := true;
+    for idx in subsets(0..#perm-1, #pattern) do {
+        sortedIdx := sort(idx);
+        pairwiseComparison := apply(pattern_{0..#pattern-2}, pattern_{1..#pattern-1}, (i,j) -> perm#(sortedIdx#(i-1)) < perm#(sortedIdx#(j-1))); -- pairwise comparison of permutation according to pattern
+        isAvoiding = not all(pairwiseComparison, i -> i == true); -- true if there was one inequality that failed, else all inequalities are true and so not pattern-avoiding
+        if not isAvoiding then break;
+    };
+    isAvoiding
+)
+
+--------------------------------
+--checks if a permutation is vexillary, i.e. 2143-avoiding
+--INPUT: a permutation (one-line notation), written as a list
+--OUTPUT: whether the permutation is vexillary
+--TODO: add documentation and tests
+--------------------------------
+isVexillary = method()
+isVexillary List := Boolean => (perm) -> (
+    isPatternAvoiding(perm, {2,1,4,3})
+)
+
 --------------------------------------------
 --------------------------------------------
 --**Part 1. Constructing ASM Varieties**--
@@ -409,7 +443,6 @@ doc ///
 	    
 ///
 
-
 doc ///
     Key
     	schubertDetIdeal
@@ -431,6 +464,56 @@ doc ///
 	 schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 
 ///
+
+doc ///
+    Key
+        (isPatternAvoiding, List, List)
+        isPatternAvoiding
+    Headline
+        whether a permutation is pattern-avoiding, e.g. 2143-avoiding or 1432-avoiding
+    Usage
+        isPatternAvoiding(perm, pattern)
+    Inputs
+        perm:List
+        pattern:List
+    Description
+        Text
+            Given a permutation, checks if the permutation is pattern-avoiding, e.g. 2143-avoiding or 1432-avoiding.
+            For example, a permutation w is 2143-avoiding if there does not exist indices i < j < k < l
+            such that w_j < w_i < w_l < w_k.
+        Example
+            w = {7,2,5,8,1,3,6,4}
+            pattern2143 = {2,1,4,3}
+            isPatternAvoiding(w, pattern2143)
+            
+            v = {2,3,7,1,5,8,4,6}
+            pattern1432 = {1,4,3,2}
+            isPatternAvoiding(v, pattern1432)
+///
+
+doc ///
+    Key
+        (isVexillary, List)
+        isVexillary
+    Headline
+        whether a permutation is vexillary, i.e. 2143-avoiding
+    Usage
+        isVexillary(perm)
+    Inputs
+        perm:List
+    Description
+        Text
+            Given a permutation, checks if the permutation is vexillary, i.e. 2143-avoiding.
+            A permutation w is 2143-avoiding if there do not exist indices i < j < k < l
+            such that w_j < w_i < w_l < w_k.
+        Example
+            w = {7,2,5,8,1,3,6,4}
+            isVexillary(w)
+
+            v = {1,6,9,2,4,7,3,5,8}
+            isVexillary(v)
+///
+
 -------------------------
 -------------------------
 --**TESTS SECTIONS**--
@@ -484,7 +567,6 @@ TEST ///
 A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}};
 assert(isPartialASM A)
 assert(sort essentialBoxes(A) == {(1,3),(2,1),(3,2)})
-
 ///
 -*
 --test for schubertDetIdeal
@@ -499,6 +581,19 @@ assert(schubertDetIdeal({3,2,1}) == ideal{z_(1,1),z_(1,2),z_(2,1)});
 assert(schubertDetIdeal({1,3,2}) == ideal(z_(1,1)*z_(2,2)-z_(1,2)*z_(2,1)));
 ///
 *-
+
+TEST ///
+--isPatternAvoiding
+assert(not isPatternAvoiding({2,3,7,1,5,8,4,6}, {1,4,3,2}));
+assert(isPatternAvoiding({1,4,6,2,3,7,5}, {1,4,3,2}));
+
+assert(not isPatternAvoiding({7,2,5,8,1,3,6,4}, {2,1,4,3}));
+assert(isPatternAvoiding({1,6,9,2,4,7,3,5,8}, {2,1,4,3}));
+
+--isVexillary
+assert(not isVexillary({7,2,5,8,1,3,6,4}));
+assert(isVexillary({1,6,9,2,4,7,3,5,8}));
+///
 
 end---------------------------------------------------------------
 
@@ -522,6 +617,22 @@ subwordComplex M
 betti res diagLexInit M
 betti res antiDiagInit M
 
+
+A = matrix{{0,-1,0,1,1},{1,-1,1,-1,1},{0,1,1,0,-1},{1,1,-1,1,-1},{-1,1,0,0,1}}
+n = numrows A
+m = numcols A
+rowCheck = new MutableList
+colCheck = new MutableList
+for i from 0 to n-1 do(
+    partialSums = for i from 0 to m-1 list(sum(delete(0, flatten entries A_{i})));
+    rowCheck#(#rowCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
+    );
+for i from 0 to m-1 do(
+    partialSums = for i from 0 to n-1 list(sum(delete(0, flatten entries A^{i})));
+    rowCheck#(#colCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
+    );
+(toList rowCheck == toList(#rowCheck:true)) and (toList colCheck == toList(#colCheck:true))
+)
 ------------------------------------
 --Development Section
 ------------------------------------
