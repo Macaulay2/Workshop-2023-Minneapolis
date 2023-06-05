@@ -41,7 +41,8 @@ export{
     "permLength",
     "augmentedRotheDiagram",
     "isPatternAvoiding",
-    "isVexillary"
+    "isVexillary",
+    "isRankTable"
     }
 
 -- Utility routines --
@@ -484,6 +485,52 @@ minimalRankTable List := Matrix => (L) -> (
         minimalRankMtx
     );
 
+------------------------------------------
+--INPUT: a square matrix M
+--OUTPUT: whether M is a valid rank table.
+--TODO: documentation, tests
+------------------------------------------
+isRankTable = method()
+isRankTable Matrix := Boolean => (A) -> (
+    AList := entries A;
+
+    a := #AList;
+    b := #(AList#0);
+    if not(a == b) then return false;
+
+    for i from 0 to a-1 do (    
+        for j from 0 to a-1 do (
+            if (i==0 and j==0 and not(AList#i#j == 0 or AList#i#j == 1)) then return false
+            else if (i == 0 and j != 0 and (not(AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1) or not(AList#i#j == 0 or AList#i#j == 1))) then return false
+            else if (i != 0 and j == 0 and (not(AList#i#j-AList#(i-1)#j == 0 or AList#i#j-AList#(i-1)#j == 1) or not(AList#i#j == 0 or AList#i#j == 1))) then return false
+            else if (i != 0 and j != 0 and (not((AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1) or not(AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1)))) then return false;
+        );
+    );
+
+    true
+);
+
+-*
+------------------------------------------
+--INPUT: a rank table, presented as a matrix
+--OUTPUT: an ASM corresponding to the rank table, presented as a matrix
+------------------------------------------
+rankTableToASM = method()
+rankTableToASM Matrix := Matrix => (A) -> (
+    n := #A;
+    ASM :=  mutableMatrix(ZZ,n,n);
+
+    -- find where all the ones are by checking whether it is larger than the entries above and to the left
+    for i from 0 to n-1 do (
+        for j from 0 to n-1 do (
+            if (i == 0) then do (
+
+            );
+        );
+    );
+);*-
+
+
 ----------------------------------------
 -- Part 2. Invariants of ASM Varieties
 ----------------------------------------
@@ -794,3 +841,4 @@ restart
 needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
+
