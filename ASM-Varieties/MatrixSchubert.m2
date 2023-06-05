@@ -236,7 +236,51 @@ essentialBoxes List := List => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     essentialBoxes permToMatrix w
     )
+--------------------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation
+--OUTPUT: Schubert determinantal ideal for w
+--------------------------------------------
+schubertDetIdeal = method()
+schubertDetIdeal Matrix := Ideal => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    zMatrix := genMat(numrows A, numcols A); --generic matrix
+    rankMat := rankMatrix A; --rank matrix for A
+    essBoxes := essentialBoxes A;
+    if essBoxes == {} then (
+	R := ring zMatrix;
+	return ideal(0_R)
+	);
+    zBoxes := apply(essBoxes, i-> flatten table(i_0,i_1, (j,k)->(j+1,k+1))); --smaller matrix indices for each essential box
+    ranks := apply(essBoxes, i-> rankMat_(i_0-1,i_1-1)); --ranks for each essential box
+    fultonGens := new MutableList;
+    for box in essBoxes do (
+    	pos := position(essBoxes, i-> i==box);
+        fultonGens#(#fultonGens) = (minors(ranks_pos+1, zMatrix^{0..(box_0-1)}_{0..(box_1-1)}))_*;
+        );
+    return ideal(unique flatten toList fultonGens)
+    );
+schubertDetIdeal List := Ideal => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");    
+    A := permToMatrix w;
+    schubertDetIdeal A
+    );
+
 ----------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation
+--OUTPUT: list of fulton generators for matrix determinantal ideal w
+---------------------------------------
+fultonGens = method()
+fultonGens Matrix := List => (A) -> (
+    (schubertDetIdeal A)_*
+    );
+
+fultonGens List := List => (w) -> (
+    (schubertDetIdeal w)_*
+    );
+
+-*
+----------------------------------------
+--OLD CODE
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: list of fulton generators for matrix determinantal ideal w
 ---------------------------------------
@@ -261,6 +305,7 @@ fultonGens List := List => (w) -> (
     fultonGens A
     )
 ----------------------------------------
+--OLD CODE
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: Schubert determinantal ideal for w
 --WARNING: if you use the identity permutation your ring will be ZZ instead of Q and idk how to fix this
@@ -274,6 +319,8 @@ schubertDetIdeal List := Ideal => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");    
     ideal fultonGens w
     );
+*-
+
 ----------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: single Grothendieck polynomials
@@ -511,7 +558,15 @@ restart
 debug needsPackage "MatrixSchubert"
 
 M = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
+fultonGens M
+schubertDetIdeal M
+
 w = {3,2,5,1,4}
+schubertDetIdeal w
+
+schubertDetIdeal {1,2,3}
+
+
 permToMatrix w
 isPartialASM M
 rotheDiagram M
