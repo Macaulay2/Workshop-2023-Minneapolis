@@ -29,3 +29,5 @@ valuation Function := v -> (
 	cache => new CacheTable
 	}
     )
+
+Valuation Thing := (v,t) -> (v.function t)
