@@ -357,49 +357,6 @@ fultonGens List := List => (w) -> (
     (schubertDetIdeal w)_*
     );
 
--*
-----------------------------------------
---OLD CODE
---INPUT: a list w corresponding to a permutation in 1-line notation
---OUTPUT: list of fulton generators for matrix determinantal ideal w
----------------------------------------
-fultonGens = method()
-fultonGens Matrix := List => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    zMatrix := genMat(numrows A, numcols A); --generic matrix
-    rankMat := rankMatrix A; --rank matrix for A
-    essBoxes := essentialBoxes A;
-    zBoxes := apply(essBoxes, i-> flatten table(i_0,i_1, (j,k)->(j+1,k+1))); --smaller matrix indices for each essential box
-    ranks := apply(essBoxes, i-> rankMat_(i_0-1,i_1-1)); --ranks for each essential box
-    fultonGens := new MutableList;
-    for box in essBoxes do (
-        pos := position(essBoxes, i-> i==box);
-        fultonGens#(#fultonGens) = (minors(ranks_pos+1, zMatrix^{0..(box_0-1)}_{0..(box_1-1)}))_*;
-        );
-    unique flatten toList fultonGens
-    );
-fultonGens List := List => (w) -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    A := permToMatrix w;
-    fultonGens A
-    )
-----------------------------------------
---OLD CODE
---INPUT: a list w corresponding to a permutation in 1-line notation
---OUTPUT: Schubert determinantal ideal for w
---WARNING: if you use the identity permutation your ring will be ZZ instead of Q and idk how to fix this
-----------------------------------------
-schubertDetIdeal = method()
-schubertDetIdeal Matrix := Ideal => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    ideal fultonGens A
-    )
-schubertDetIdeal List := Ideal => (w) -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");    
-    ideal fultonGens w
-    );
-*-
-
 ----------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: single Grothendieck polynomials
@@ -535,11 +492,32 @@ minimalRankTable List := Matrix => (L) -> (
         minimalRankMtx
     );
 
+>>>>>>> refs/remotes/origin/asm
 ----------------------------------------
 -- Part 2. Invariants of ASM Varieties
 ----------------------------------------
+----------------------------------------
 
 
+----------------------
+--INPUT: An alternating sign matrix A
+--OUTPUT: the regularity of the ASM variety for A using antidiag initial ideal
+----------------------
+
+matrixSchubertReg = method()
+matrixSchubertReg Matrix := ZZ => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    regularity antiDiagInit A
+    );
+
+-*
+matrixSchubertReg(List) := o -> (w) -> (
+    if o#Strategy === "viaInitialIdeal" then (
+	return (regularity antiDiagInit w)
+	);
+    if o#Strategy === "
+    );
+*-
 ---------------------------------
 ---------------------------------
 -- **DOCUMENTATION SECTION** --
@@ -574,7 +552,7 @@ doc ///
 	(isPartialASM, Matrix)
     	isPartialASM
     Headline
-    	whether a matrix is a partial alternating sign matrix.
+    	determines whether a matrix is a partial alternating sign matrix.
     Usage
     	isPartialASM(M)
     Inputs
@@ -602,18 +580,20 @@ doc ///
     Key
     	schubertDetIdeal
 	(schubertDetIdeal, List)
+	(schubertDetIdeal, Matrix)
     Headline
-    	Computes Schubert determinantal ideal for a given permutation.
+    	Computes the Schubert determinantal ideal of a given permutation in 1-line notation or the alternating sign matrix ideal of any (partial) 
+	alternating sign matrix.
     Usage
+    	schubertDetIdeal(w)
     	schubertDetIdeal(M)
-	schubertDetIdeal(L)
     Inputs
+    	w:List
     	M:Matrix
-	L:List
     Description
     	Text
-	 Given an alternating sign matrix or a permutation in 1-line notation, 
-	 outputs the Schubert determinantal ideal associated to that matrix.
+	 Given a permutation in 1-line notation or (partial) alternating sign matrix, 
+	 outputs the associated alternating sign matrix or Schubert determinantal ideal.
 	Example
 	 schubertDetIdeal({1,3,2})
 	 schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
@@ -622,6 +602,7 @@ doc ///
 
 doc ///
     Key
+<<<<<<< Updated upstream
         (composePerms, List, List)
         composePerms
     Headline
@@ -647,6 +628,27 @@ doc ///
             u = {3,5,2,1,4}
             v = {1,2,3,4,5}
             composePerms(u,v)
+=======
+        antiDiagInit
+	(antiDiagInit, List)
+	(antiDiagInit, Matrix)
+    Headline
+    	Computes the (unique) antidigaonal initial ideal of a Schubert determinantal ideal or, more generally, alternating sign matrix ideal.
+    Usage
+    	schubertDetIdeal(w)
+	schubertDetIdeal(M)
+    Inputs
+    	M:Matrix
+	L:List
+    Description
+    	Text
+	 Theorem B of Knutson and Miller's [put in citation] ensures that there is exactly one antidiagonal initial ideal of each Schubert determinantal ideal.  
+	 [other citations] extend this result to alternating sign matrix ideals. 
+	Example
+	 antiDiagInit({2,1,4,3})
+	 antiDiagInit(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+
+>>>>>>> Stashed changes
 ///
 
 doc ///
