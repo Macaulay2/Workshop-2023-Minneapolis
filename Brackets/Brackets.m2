@@ -224,7 +224,7 @@ shuffleProduct = (A, B) -> (
 
 GCExpression _ BracketRing := (b, B) -> (
     assert(B === bracketRing b);
-    bBracket := if (isTopDegree b) then (extensorToBracket b)^(ring B) else if (isBottomDegree b) then b#RingElement^(ring B) else error "must be an extensor of step 0 or d";
+    bBracket := if (isTopDegree b) then lift(extensorToBracket b, ring B) else if (isBottomDegree b) then lift(b#RingElement, ring B) else error "must be an extensor of step 0 or d";
     bBracket_B
     )
 
