@@ -15,7 +15,7 @@ newPackage(
 	 HomePage=>""},
          {Name=>"Tom Hagedorn",
 	 Email=>"hagedorn@tcnj.edu",
-	 HomePage=>""},
+	 HomePage=>"https://hagedorn.pages.tcnj.edu/"},
         {Name=>"Zhaobo Han",
 	 Email=>"zbtomhan@sas.upenn.edu",
 	 HomePage=>"https://www.linkedin.com/in/zhaobo-han-77b1301a2/"},
