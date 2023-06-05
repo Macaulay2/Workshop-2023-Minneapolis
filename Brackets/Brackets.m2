@@ -80,7 +80,7 @@ numcols BracketRing := B -> B#numcols
 ideal BracketRing := B -> B#ideal
 bracketRing BracketRing := o -> B -> B
 
-matrix BracketRing := o-> B-> transpose genericMatrix(ring B,3,6)
+matrix BracketRing := o-> B -> transpose genericMatrix(ring B,3,6)
 
 
 -- class declaration for GCAlgebra
