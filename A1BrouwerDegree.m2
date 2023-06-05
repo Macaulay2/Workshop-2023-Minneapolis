@@ -11,7 +11,7 @@ newPackage(
 	 Email=>"tbraz@math.upenn.edu",
 	 HomePage=>"https://www2.math.upenn.edu/~tbraz/"},
         {Name=>"Frenly Espino",
-	 Email=>"",
+	 Email=>"frenly@sas.upenn.edu",
 	 HomePage=>""},
          {Name=>"Tom Hagedorn",
 	 Email=>"",
