@@ -5,7 +5,7 @@ newPackage(
     Date=>"June 5, 2023",
     Authors=>{
         {Name=>"Nikita Borisov",
-	 Email=>"",
+	 Email=>"nborisov@sas.upenn.edu",
 	 HomePage=>""},
         {Name=>"Thomas Brazelton",
 	 Email=>"tbraz@math.upenn.edu",
