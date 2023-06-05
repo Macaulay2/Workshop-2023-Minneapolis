@@ -6,7 +6,8 @@ newPackage("Valuations",
             {Name => "Michael Burr", Email => "burr2@clemson.edu", HomePage => "https://cecas.clemson.edu/~burr2/"},
             {Name => "Colin Alstad", Email => "calstad@clemson.edu"},
             {Name => "Michael Byrd", Email => "mbyrd6@clemson.edu", HomePage => "https://michael-byrd.github.io"},
-	    {Name => "Shelby Cox", Email => "spcox@umich.edu"}}
+	    {Name => "Shelby Cox", Email => "spcox@umich.edu"},
+{Name => "Courtney George", Email => "courtney.george@uky.edu"}
         DebuggingMode => false,
         HomePage => "https://github.com/Macaulay2/Workshop-2023-Minneapolis/tree/valuations",
         Configuration => {}
