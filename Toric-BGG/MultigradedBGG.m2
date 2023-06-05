@@ -101,7 +101,7 @@ dualRingToric(PolynomialRing) := opts -> (S) ->(
     	return kk[ee,Degrees=>degs,SkewCommutative=>true]
 	); 
     if isSkewCommutative S == true then(
-    	degs = apply(degrees S,d-> remove(-d,-1));
+    	degs = apply(degrees S, d-> drop(-d,-1));
 	y := opts.Variable;
     	yy := apply(#gens S, i-> y_i);
     	return kk[yy,Degrees=>degs,SkewCommutative=>false]
@@ -111,6 +111,7 @@ dualRingToric(PolynomialRing) := opts -> (S) ->(
 TEST ///
 restart
 needsPackage "NormalToricVarieties"
+load "MultigradedBGG.m2"
 S = ring(hirzebruchSurface(2, Variable => y));
 E = dualRingToric(S,SkewVariable => f);
 SY = dualRingToric(E);
@@ -183,7 +184,7 @@ toricLL(Module) := (N) ->(
     inds := new HashTable from apply(homDegs, i-> i=> select(#b, j-> last(b#j) == i));
     sBasis := new HashTable from apply(homDegs, i-> i => (bb)_(inds#i));
     FF := new HashTable from apply(homDegs, i ->(
-	    i => S^(apply((degrees sBasis#i)_1, j-> remove(j,-1)))
+	    i => S^(apply((degrees sBasis#i)_1, j-> drop(j,-1)))
 	    )
 	);
     relationsN := presentation N;
@@ -199,7 +200,9 @@ toricLL(Module) := (N) ->(
     g' := sub(newg,S);
     --Now we have to pick up pieces of g' and put them in the right homological degree.
     --Note:  perhaps we want everything transposed??
-    dual(chainComplex apply(remove(homDegs,-1), i-> map(FF#i,FF#(i+1),transpose g'_(inds#i)^(inds#(i+1))))[-homDegs#0])
+    if #homDegs == 1 then chainComplex map(S^0,FF#0,0) else (
+    	dual(chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1),transpose g'_(inds#i)^(inds#(i+1))))[-homDegs#0])
+    	)
     )
 
 
@@ -293,7 +296,7 @@ truncatedKoszul(Ring,List) := (S,d)->(
 --   Output:  the inducted map on truncated Koszul complexes.
 truncatedKoszulMap = method();
 truncatedKoszulMap(Ring,List,List,RingElement) := (S,d1,d2,f)->(
-    if -remove(degree f,-1) != d2-d1 then error "Wrong degree for such a map";
+    if -drop(degree f,-1) != d2-d1 then error "Wrong degree for such a map";
     N1 := ptrunc(E^1,d1);
     N2 := ptrunc(E^1,d2);
     phi := map(N1**E^{d1|{0}},N2**E^{d2|{-last degree f}},matrix{{f}});
@@ -327,7 +330,7 @@ oneStepCorner(List,DifferentialModule) := (cDeg,F) -> (
     G = chainComplex newSyz;
     newSpots = {};
     D := degrees G_1;
-    D1 := apply(D,i-> remove(i,-1));
+    D1 := apply(D,i-> drop(i,-1));
 --  keep nontrivial new syzygies which are "below" the corner
     scan(#D1, i->(if greaterEqual(cDeg,D1#i,S) and D1#i != cDeg and submatrix(newSyz,{i}) != 0 
 	    then(newSpots = newSpots|{i};)));
@@ -376,7 +379,7 @@ oneStepRows = (topDeg,F,rows,aut) -> (
     G = chainComplex newSyz;
     newSpots = {};
     D := degrees G_1;
-    D1 := apply(D,i-> remove(i,-1));
+    D1 := apply(D,i-> drop(i,-1));
 --  We keep the syzygies which are:
 --    "below" a specified degree topDeg (to avoid boundary effects)
 --    in the specified rows, and
@@ -426,7 +429,7 @@ oneStepVert = (botLeft,topRight,F,rows) -> (
     G = chainComplex newSyz;
     newSpots = {};
     D := degrees G_1;
-    D1 := apply(D,i-> remove(i,-1));
+    D1 := apply(D,i-> drop(i,-1));
 --    We keep the syzygies which are:
 --    in the triangle (directions spanned by degrees of e_1,e_3)
 --    in the specified rows, and are nontrivial.
@@ -484,13 +487,13 @@ hirzResolve = (M,L,n1,n2)->(
 --Input:  the list of degrees computed in a Tate resolution.
 --Output:  the vertices of the corresponding polytope.
 corners = L->(
-    LL := apply(L,l-> remove(l,-1));
+    LL := apply(L,l-> drop(l,-1));
     P := convexHull transpose matrix LL;
     vertices P
     )
 
 matrixCorners = L->(
-    LL := apply(L,l-> remove(l,-1));
+    LL := apply(L,l-> drop(l,-1));
     min1 := min apply(L,l-> l_1);
     max1 := max apply(L,l-> l_1);
     min0 := min apply(L,l-> l_0);
@@ -523,7 +526,7 @@ E = dualRingToric S
 toricLL(E^1)
 N = coker vars E
 toricLL(N)
-
+toricLL(N++N)
 
 
 
