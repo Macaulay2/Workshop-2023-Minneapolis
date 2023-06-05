@@ -47,3 +47,31 @@ isWellDefined GrothendieckWittClass := Boolean => beta -> (
 	);
     
     true);
+
+-- Method for taking a direct sum of two Grothendieck-Witt classes
+gwAdd = method()
+
+gwAdd(GrothendieckWittClass, GrothendieckWittClass) := GrothendieckWittClass => (beta, gamma) -> (
+    
+    -- Returns an error if the underlying fields of the two inputted symmetric bilinear forms are different
+    if not ring beta.matrix === ring gamma.matrix then error "Error: these classes have different underlying fields";
+
+    b := beta.matrix;
+    g := gamma.matrix;
+    
+    return gwClass(b++g)
+    )
+
+-- Method for taking a tensor product of two Grothendieck-Witt classes
+gwMultiply = method()
+
+gwMultiply(GrothendieckWittClass, GrothendieckWittClass) := GrothendieckWittClass => (beta, gamma) -> (
+
+    -- Returns an error if the underlying fields of the two inputted symmetric bilinear forms are different
+    if not ring beta.matrix === ring gamma.matrix then error "Error: these classes have different underlying fields";
+
+    b := beta.matrix;
+    g := gamma.matrix;
+    
+    return gwClass(b**g)
+    )
