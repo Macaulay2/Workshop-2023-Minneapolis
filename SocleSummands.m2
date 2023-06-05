@@ -1957,37 +1957,6 @@ doc ///
     
 ///
 
-doc ///
-	Key
-		kSi
-		(kSi, QuotientRing)
-		(kSi, QuotientRing, ZZ)
-	Headline
-		A boolean list of when k is a direct summand of its syzygy
-	Usage
-		kSi R
-		kSi(R, n)
-	Inputs
-		R:QuotientRing
-			An Atrin local ring
-		n:ZZ
-			maximum index of syzygy module considered
-	Outputs
-		:List
-			List of booleans when k is a direct summand of its
-			syzygy
-	Description
-		Text
-			Takes in an Artin local ring, R, and computes a free
-			resolution of its residue field, k, and determines when
-			k is a direct summand of its ith syzygy. Outputs a list
-			of boolean values for when it is.
-		Example
-			S = ZZ/1993[a,b,c]
-			I = ideal("a4,b4,c4,ab3,a2c2")
-			R = S/I
-			kSi(R,6)
-///
 
 
 doc ///
@@ -2023,68 +1992,8 @@ doc ///
 ///
 
 
-doc ///
-	Key
-		kSI
-		(kSI, QuotientRing, ZZ)
-	Headline
-		The (kS) index of R
-	Usage
-		kSI(R, n)
-	Inputs
-		R:QuotientRing
-			An Atrin local ring
-		n:ZZ
-			maximum index of syzygy module considered
-	Outputs
-		:ZZ
-			the infimum of indexes i for which R is (kSi) for i > 0
-	Description
-		Text
-			Takes in an Artin local ring, R, and integer n and
-			computes a free resolution of its residue field, k, up
-			to index n and determines when k is a direct summand of
-			its ith syzygy. If any positive index results in (kSi)
-			being true then this will return the minimum of these
-			indexes. Otherwise this method returns infinity.
-		Example
-			S = ZZ/1993[a,b,c]
-			I = ideal("a4,b4,c4,ab3,a2c2")
-			R = S/I
-			kSI(R,7)
-///
 
 
-doc ///
-	Key
-		MSi
-		(MSi, Module, ZZ)
-	Headline
-		A boolean list of when k is a direct summand of the syzygies of M
-	Usage
-		MSi(M, n)
-	Inputs
-		M:Module
-			A module over an Atrin local ring, R
-		n:ZZ
-			maximum index of syzygy module considered
-	Outputs
-		:List
-			List of booleans when k is a direct summand of the
-			syzygies of M
-	Description
-		Text
-			Takes in a module over an Artin local ring, R, and
-			computes a free resolution of its residue field, k, and
-			determines when k is a direct summand of its ith
-			syzygy. Outputs a list of boolean values for when it is.
-		Example
-			S = ZZ/1993[a,b,c]
-			I = ideal("a4,b4,c4,ab3")
-			R = S/I
-			M = coker matrix {{a*b,b*c},{c,a*b*c}}
-			MSi(M, 6)
-///
 
 doc ///
 	Key
@@ -2350,7 +2259,7 @@ loadPackage("SocleSummands", Reload=> true)
 uninstallPackage "SocleSummands"
 restart
 installPackage "SocleSummands"
---check "SocleSummands"
+check "SocleSummands"
 
 
 
@@ -3350,8 +3259,8 @@ I = ideal"x3, x2y2, y5"
 R=S/I
 kSS(R,8)
 M = coker random(R^2,R^{4:-2})
-MSi(M,8)
-F = res coker vars R
+    
+    F = res coker vars R
 hasSocleSummand1 image F.dd_3
 b = 15
 F = res(coker vars R, LengthLimit=>b)
