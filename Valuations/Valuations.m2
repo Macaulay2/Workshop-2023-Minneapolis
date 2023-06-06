@@ -233,35 +233,39 @@ doc ///
      SeeAlso
          MethodFunction
      ///
-     doc ///
-          Key
-          	 valuation
-          Headline
-          	 Constructs a user defined valuation object
-          Usage
-          	 v = valuation(f)
+     
+doc ///
+     Key
+         valuation
+	 (valuation, Function)
+         (valuation, Function, Ring, Ring)
+
+     Headline
+         Constructs a user defined valuation object
+     Usage
+         v = valuation(f)
      	 v = valuation(f, S, T)
-          Inputs
-          	 f:Function
+     Inputs
+         f:Function
      	 S:Ring
      	 S:LocalRing
      	 S:Subring
      	 T:Ring
      	 T:LocalRing
      	 T:Subring
-          Outputs
-          	 v:Valuation
+     Outputs
+         v:Valuation
      	    user defined valuation function
-          Description
-            Text
-            	   A function to construct a user defined valuation function.
-            Example
-            	   v = valuation(x -> if x == 0 then infinity else 0)
-     	   v = valuation(x -> if x == 0 then infinity else 0, ZZ, ZZ)
-          SeeAlso
-          	 MethodFunction, trivialValuation, padicValuation, leadTermValuation, lowestTermValuation
-          ///
-
+     Description
+         Text
+             A function to construct a user defined valuation function.
+         Example
+             v = valuation(x -> if x == 0 then infinity else 0)
+     	     v = valuation(x -> if x == 0 then infinity else 0, ZZ, ZZ)
+     SeeAlso
+          MethodFunction		 
+///
+	  
      TEST ///
          assert(trivialValuation 5 == 0)
          ///
