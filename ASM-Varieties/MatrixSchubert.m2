@@ -45,7 +45,7 @@ export{
     "isVexillary",
     "schubertDecomposition",
     "isIntersectionSchubIdeals",
-    "isRankTable"
+    "isRankTable",
     }
 
 -- Utility routines --
@@ -132,6 +132,21 @@ toOneLineNotation (Sequence, ZZ) := List => (perm, maxIdx) -> (
 )
 toOneLineNotation (List, ZZ) := List => (perm, maxIdx) -> (
     switch(perm_0-1, perm_1-1, toList(1..maxIdx))
+)
+
+------------------------------------
+--INPUT: An index (i,j)
+--OUTPUT: the corresponding transposition according to antidiagonal term order
+--TODO: docs and tests
+------------------------------------
+toAntiDiagTrans = method()
+toAntiDiagTrans (Sequence, ZZ) := List => (idx, maxIdx) -> (
+    transposition := (sum(toList idx)-1, sum(toList idx));
+    toOneLineNotation(transposition, maxIdx)
+)
+toAntiDiagTrans (List, ZZ) := List => (idx, maxIdx) -> (
+    transposition := {sum(toList idx)-1, sum(toList idx)};
+    toOneLineNotation(transposition, maxIdx)
 )
 
 ------------------------------------
@@ -481,18 +496,17 @@ minimalRankTable List := Matrix => (L) -> (
 -------------------------------------------
 schubertDecomposition = method()
 schubertDecomposition Ideal := List => (I) -> (
-    primDecomp := decompose ideal leadTerm I;
+    primeDecomp := decompose ideal leadTerm I;
     maxIdx := max((flatten entries vars ring I) / variableIndex // max);
+    -- varWeights := (monoid ring I).Options.MonomialOrder#1#1;
     cycleDecomp := {};
-    for primeComp in primDecomp do {
-        mons := primeComp_*;
-        perms := apply(mons / variableIndex, perm -> toOneLineNotation(perm, maxIdx));
-        cycleDecomp = append(cycleDecomp, fold(composePerms, reverse perms));
+    for primeComp in primeDecomp do {
+        mons := sort(primeComp_*, mon -> ((variableIndex mon)_0+1)*maxIdx - (variableIndex mon)_1); --bad because variableIndex; need decorated sort paradigm
+        perms := apply(mons / variableIndex, perm -> toAntiDiagTrans(perm, maxIdx));
+        cycleDecomp = append(cycleDecomp, fold(composePerms, perms));
     };
     unique cycleDecomp
 )
-R = QQ[x_(1,1)..x_(4,4), MonomialOrder=>GRevLex]
-gens R
 
 
 -------------------------------------------
@@ -902,7 +916,6 @@ restart
 installPackage "MatrixSchubert"
 restart
 needsPackage "MatrixSchubert"
-I = schubertDetIdeal {2,1,6,3,5,4}
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
 
