@@ -153,6 +153,7 @@ isBurch = I -> (
     mm := ideal gens R;
     mm != (mm*I):(I:mm)
     )
+
 burchIndex = I -> (
     R := ring I;
     mm := ideal gens R;
@@ -163,6 +164,7 @@ burchIndex = I -> (
       -* Documentation section *-
       
 beginDocumentation()
+
 
 doc ///
 Key
@@ -219,7 +221,7 @@ needsPackage "RandomIdeals"
 
 setRandomSeed 0
 
-mixedIdeal = (S, BList, MList) -> (randomPureBinomialIdeal(BList, S)+randomMonomialIdeal(MList,S))   
+
 
 for i from 1 to 4 do(
 <<(I = Examples#i)<<" "<<socleSummandsSemigroup(I, 7)<<endl;
