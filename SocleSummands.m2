@@ -148,7 +148,8 @@ socleSummandsSemigroup(Ideal, ZZ) := (I,n) -> (
     socleSummandsSemigroup F
     )
 
-isBurch = I -> (
+isBurch = method()
+isBurch Ideal := I -> (
     R := ring I;
     mm := ideal gens R;
     mm != (mm*I):(I:mm)
@@ -225,7 +226,30 @@ Description
    burchIndex(I)
 ///
 
-
+doc ///
+Key
+ isBurch
+ (isBurch, Ideal)
+Headline
+ Determines whether an ideal is a Burch ideal
+Usage
+ isBur = isBurch(I)
+Inputs
+ I: Ideal
+Outputs
+ isBur: Boolean
+Description
+  Text
+   An ideal is Burch if the ideal $(Im):(I:m)$
+   is strictly contained in $m$ where $m$ is
+   the maximal ideal of the ring of $I$.
+  Example
+   S = ZZ/101[a,b]
+   I = (ideal(gens S))^2
+   isBurch(I)
+   J = ideal(a^2,b^2)
+   isBurch(J)
+///
 
 -* Test section *-
 TEST///
