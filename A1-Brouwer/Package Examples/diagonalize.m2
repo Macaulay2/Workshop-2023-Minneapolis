@@ -15,7 +15,7 @@ diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
                     break;
                 );
             );
-            if A_(col,col)==0 then (print "Error: Matrix A was singular"; return A;);
+            if A_(col,col)==0 then (print "Error: Matrix was singular"; return A;);
         );
         --entry in A_(col,col) is non-zero at this point
          for row from (col+1) to (n-1) do (
@@ -39,42 +39,46 @@ print diagonalize(C)
 print diagonalize(D)
 
 print "------------------------------------------------------------";
---wittDecompFromList method & wiitDecompFromMatrix method
-wittDecompFromList =method()
-wittDecompFromMatrix =method()
+--wittDecomp
 
-wittDecompFromMatrix (Matrix,Ring) := (ZZ,List) => (A,k) -> (
-    D:= diagonalize(A);
-    return wittDecompFromList((for i from 0 to numRows(A)-1 list (D_(i,i))),k);
-)
-
-wittDecompFromList (List,Ring) := (ZZ,List) => (vals,k) -> (
-    n:=#vals;
+wittDecomp =method()
+wittDecomp (Matrix,Ring) := (ZZ,Matrix) => (A,k) -> (
+    n:=numRows(A);
     R:=k[x_0..x_(n-1)];
-    f:=sum (for i from 0 to n-1 list (vals_i*x_i^2));
+    f:=sum (
+        for i from 0 to n-1 list (
+            sum (for j from 0 to n-1 list (A_(i,j)*x_i*x_j))
+            )
+        );
     use k;
-    soln:=new MutableList;
     solnPt:=new MutableList;
+    solnFound = false;
     for bound from 1 to 10 do (
-        soln:= new MutableList from rationalPoints(ideal(f),Bound=>bound);
-        if (#soln >1) then(
-            if soln#0 == toList(n:0) then (solnPt=soln#1) else (solnPt=soln#0);
+        solns:= new MutableList from rationalPoints(ideal(f),Bound=>bound);
+        if (#solns >1) then(
+            if solns#0 == toList(n:0) then (solnPt=solns#1) else (solnPt=solns#0);
+            solnFound =true;
             break;
         );
     );
-    y:= new MutableList from toList(n:0);
-    if solnPt#0==0 
-        then (y#0=1;) 
-        else (y#0=-solnPt#1; y#1=solnPt#0);
-    --solnPt and y span a copy of |H in A
-    --now turn solnPt and y into row matrices
-    v1:=matrix{toList solnPt};
-    v2:=matrix{toList y};
-    print v2;
-    return 0;
-);
+    --if no solutions found we assume the form is anisotropic
+    if ( not solnFound) then (return (0,A));
 
-print wittDecompFromMatrix(B,QQ);
+    --find y not orthogonal (wrt bilinear form) to x
+    x:=matrix{toList solnPt}; --x as a row matrix
+    xA:=x*matrix(A); --x*A
+    y :=new MutableMatrix from matrix{toList(n:(0/1))};
+    for i from 0 to (n-1) do (
+        if (xA_(0,i) != 0) then (y_(0,i)=1; break;);
+    );
+    --now x and y span a copy of |H in the bilinear form
+    --we need to find a basis of vectors orthogonal (wrt bilinear form) to x and y
+    R = reducedRowEchelonForm (x||matrix(y));
+    for i from 
+    return 0;
+)
+
+print wittDecomp(B,QQ);
 
 
 
