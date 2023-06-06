@@ -27,6 +27,3 @@ diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
     );
     return matrix A
 )
-
-
-
