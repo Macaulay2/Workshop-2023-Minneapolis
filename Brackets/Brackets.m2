@@ -9,7 +9,7 @@ newPackage(
           DebuggingMode => false
           )
 
-export {"bracketRing", "BracketRing", "GCAlgebra", "normalForm", "gc"}
+export {"AbstractGCRing", "bracketRing", "BracketRing", "GCAlgebra", "normalForm", "gc"}
 
 -* Code section *-
 
@@ -31,6 +31,11 @@ AbstractGCRing = new Type of HashTable
 net AbstractGCRing := G -> error "not implemented"
 ring AbstractGCRing := G -> G#ring
 use AbstractGCRing := G -> use ring G
+AbstractGCRing Array := (G, A) -> (
+    R := ring G;
+    new AbstractGCRing from {ring => R A, cache => new CacheTable from {}}
+    )
+
 
 -- class declaration for BracketRing
 BracketRing = new Type of AbstractGCRing
@@ -81,9 +86,8 @@ numrows BracketRing := B -> B#numrows
 numcols BracketRing := B -> B#numcols 
 ideal BracketRing := B -> B#ideal
 bracketRing BracketRing := o -> B -> B
-
-matrix BracketRing := o-> B -> transpose genericMatrix(ring B,3,6)
-
+ZZ _ AbstractGCRing := (k, G) -> sub(k, ring G)
+    
 
 -- class declaration for GCAlgebra
 GCAlgebra = new Type of AbstractGCRing
@@ -126,12 +130,14 @@ net GCExpression := b -> (
 Array _ AbstractGCRing := (A, R) -> (
     assert(#A == 1); -- For now, this function assumes the first argument A is a single-element, doubly-nested array of the form [[i1 i2 ... id]]
     A0 := A#0;
-    A1 := sort toList A0;
     B := bracketRing R;
+    if not(B#numcols == #A0) then error "not enough symbols in bracket";
+    A1 := sort toList A0;
     assert(
 	-- checking that the input is valid
+	-- TODO: include better error messages
 	(instance(R, GCAlgebra) and all(A1, x -> instance(x, ambient ring R))) or 
-	all(A1, i -> (instance(i, ZZ) and i >= 1 and i <= B#numrows and #A1 == B#numcols))
+	all(A1, i -> (instance(i, ZZ) and i >= 1 and i <= B#numrows))
 	);
     rowSet := first select(1, keys B#table, k -> toList A1 == k);
     new Bracket from {RingElement => (sgn A0) * B#table#rowSet, ring => R}
@@ -140,6 +146,7 @@ Array _ AbstractGCRing := (A, R) -> (
 
 bracketRing GCExpression := o -> b -> bracketRing ring b
 commonRing (GCExpression, GCExpression) := (b1, b2) -> (
+    -- returns: either GCAlgebra or BracketRing in which b1 & b2 both make s
     (G1, G2) := (ring b1, ring b2);
     if (G1 === G2 or G2 === bracketRing G1) then G1 else if G1 === bracketRing G2 then G2 error "Common abstract GC ring not found"
     )
@@ -200,7 +207,7 @@ extensorToBracket GCExpression := A -> (
     Bnd := bracketRing A;
     local ret;
     if elemA == 0 then ret = 0 else (
-	assert(first degree elemA == numcols bracketRing A);
+	assert(first degree elemA == numcols bracketRing A); -- isTopDegree?
 	S := extensorSupportIndices A;
 	ret = (leadCoefficient elemA) * sub(Bnd#table#S, ring elemA)
 	);
@@ -262,6 +269,7 @@ factor GCExpression := o -> g -> (
     apply(toList F, fi -> (fi#0^(fi#1))_G)
     )
 
+matrix (AbstractGCRing, List) := o -> (G, L) -> error "not implemented"
 
 -* Documentation section *-
 beginDocumentation()
@@ -273,14 +281,92 @@ Headline
   Brackets, Grassmann-Cayley Algebra, and Projective Geometry
 Description
   Text
-    Todo: add a description!
-  Example
-    1+1
+      Fix integers $n \ge d \ge 1,$ and let $X = (x_{i j})$ be an $n\times d$ matrix of distinct variables in the polynomial ring $k [x_{i j}]$ over a fixed field $k.$    
+      Think of each row of $X$ is a point in the projective space $\mathbb{P}^{d-1}$ of dimension $(d-1)$ over $k,$ so that $X$ as represents a configuration of $n$ points in this projective space.
+      Many interesting geometric properties of this point configuration can be expressed in terms of the maximal minors of $X.$
+      For notational convenience, it is common to write these minors in bracket notation.
+      A bracket is an expression $[\lambda_1 \lambda_2 \ldots \lambda_d]$ representing the minor of $X$ whose rows are given by indices $1\le \lambda_1 < \lambda_2 < \ldots < \lambda_d \le n.$
+    
+      Formally, we may consider the map of polynomial rings
+      $$\psi_{n,d} : k \left[ [\lambda_{i_1} \cdots \lambda_{i_d}] \mid 1 \le i_1 < \ldots < i_d \le n \right] \to k [X],$$
+      $$ [\lambda_{i_1} \cdots \lambda_{i_d}] \mapsto \det \begin{pmatrix} x_{i_1, 1} & \cdots & x_{i_1, d} \\ \vdots & & \vdots & \\ x_{i_d 1} & \cdots & x_{i_d d}\end{pmatrix}. $$
+      
+      The classical bracket ring $B_{n,d}$ is the image of this map.
+      This is the homogeneous coordinate ring of the Grassmannian of $(n-1)$-dimensional planes in $\mathbb{P}^{d-1}$ under its Pl&#252cker embedding.
 Acknowledgement
   We thank all project contributors, the organizers of the 2023 Macaulay2 workshop in Minneapolis, IMA staff, and acknowledge support from the National Science Foundation grant DMS 2302476.
 References
   Sturmfels, Bernd. <i>Algorithms in invariant theory</i>. Springer Science & Business Media, 2008.
 ///
+
+doc ///
+Key
+  BracketRing
+Description
+  Text
+    An object of class BracketRing represents the bracket ring $B_{n,d}$.
+    For example, let $n=6, d=2,$ so that
+      $$X=\begin{pmatrix}
+        x_{1,1}&x_{1,2}\\
+        x_{2,1}&x_{2,2}\\
+        x_{3,1}&x_{3,2}\\
+        x_{4,1}&x_{4,2}\\
+        x_{5,1}&x_{5,2}\\
+        x_{6,1}&x_{6,2}
+        \end{pmatrix}.$$
+      There are $6=\binom{4}{2}$ brackets, and the matrix $X$ represents a configuration of $6$ points on the projective line $\mathbb{P}^1.$
+      These brackets are not algebraically independent, as they satisfy the quadratic Pl\"{u}cker relation,
+      $$
+      [1 2] [3 4] - [1 3] [2 4] + [1 4] [2 3] = 0.
+      $$
+      Some basic syntax for working with objects of class BracketRing is illustrated below.
+///
+
+-*
+doc ///
+  Key
+     bracketRing
+     (bracketRing, BracketRing)
+     (bracketRing, GCAlgebra)
+     (bracketRing, List, ZZ)
+     (bracketRing, ZZ, ZZ)
+  Headline
+    Constructors for the bracket rings
+  Usage
+    B = bracketRing(n,d)
+  Inputs
+    n:ZZ         -- positive
+    M:Matrix     -- which is square
+    Limit => ZZ  -- as an @TO Option@
+     multiline descriptions
+     are sometimes useful
+  Outputs
+    x:Matrix
+      A block diagonal matrix with {\tt n}
+      copies of {\tt M} along the diagonal
+  Description
+   Text
+     Each paragraph of text begins with "Text".  The following
+     line starts a sequence of Macaulay2 example input lines.
+
+     The output in the following example was automatically generated at the time
+     of package installation.
+   Example
+     B = bracketRing(6, 3)
+     T = [1 4 5]_B * [1 5 6]_B * [2 3 4]_B
+
+   Example
+     M = matrix"1,2;3,4";
+     simpleDocFrob(3,M)
+   Text
+     @SUBSECTION "A new section"@
+     See @ TO "docExample" @ for the code used to create this documentation.
+     SeeAlso
+       matrix
+       "Macaulay2Doc :: directSum(List)"
+   ///
+
+*-
 
 -* Test section *-
 TEST /// -* Sturmfels Example 3.1.10 *-
@@ -335,6 +421,16 @@ check "Brackets"
 
 uninstallPackage "Brackets"
 restart
-installPackage "Brackets"
+installPackage("Brackets", RemakeAllDocumentation => true)
+needsPackage "Brackets"
 viewHelp "Brackets"
 
+restart
+needsPackage "Brackets"
+B = bracketRing(6,3)
+r = [1 2 3]_B
+s = 2 * r
+end
+
+G = gc(a..f,3)
+Glu = G [l, u]
