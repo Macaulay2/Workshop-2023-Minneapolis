@@ -54,7 +54,8 @@ export{
     "Double",
     "rankTableToASM",
     "schubertReg",
-    "rankTableFromMatrix"
+    "rankTableFromMatrix",
+    "schubertCodim"
     }
 
 -- Utility routines --
@@ -511,6 +512,16 @@ schubertReg List := ZZ => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
      regularity(antiDiagInit w)
     );
+
+schubertCodim = method() 
+schubertCodim Matrix := ZZ => A -> (
+    if not (isPartialASM A) then error("The input must be a partial alternating sign matrix");
+    codim antiDiagInit A
+)
+schubertCodim List := ZZ => (w) -> (
+    if not (isPerm w) then error("The input must be a permutation in one line notation");
+    permLength w
+)
 
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
@@ -1133,7 +1144,26 @@ doc ///
 
 ///
 
-
+doc ///
+    Key
+        schubertCodim
+        (schubertCodim, Matrix)
+        (schubertCodim, List)
+    Headline
+        Computes the codimension of a schubert determinantal ideal
+    Usage
+        schubertCodim(M)
+        schubertCodim(w)
+    Inputs
+        w:List
+	        or {\tt M} is a @TO Matrix@
+    Description
+        Text
+            Given a partial alternating sign matrix or a permutation in 1-line notation, outputs the codimension of the corresponding schubert determinantal ideal.
+        Example
+            schubertCodim(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+            schubertCodim({1,3,2})
+///
 
 
 -------------------------
@@ -1251,6 +1281,17 @@ assert(essentialBoxes({2,1,6,3,5,4 })== {(1, 1), (3, 5), (5, 4)})
 assert(essentialBoxes matrix {{0,1,0,0,0,0},{1,0,0,0,0,0},{0,0,0,0,0,1},{0,0,1,0,0,0},{0,0,0,0,1,0},{0,0,0,1,0,0}} == {(1, 1), (3, 5), (5, 4)})
 ///
 
+
+TEST ///
+-- schubertCodim
+L = {
+    {1},
+    {2,1},
+    matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}},
+    matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
+}
+assert all (L, i -> schubertCodim i == codim schubertDetIdeal i)
+///
 
 end---------------------------------------------------------------
 
