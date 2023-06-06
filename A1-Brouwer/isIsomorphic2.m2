@@ -10,10 +10,6 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
     B=beta.matrix;
     k1=baseField(alpha);
     k2=baseField(beta);
-    --base fields must be the same
-    if not k1 === k2 then (
-        error "Base fields are not the same";
-        );
     --matrix must be square
     if numRows(A) != numColumns(A) then (
 	error "Matrix is not square";
@@ -38,7 +34,7 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
     if B != transpose(B) then (
         error "Matrix is not symmetric";
 	);
-    if (k1 === CC or instance(k1,ComplexField)) then (
+    if (k1 === CC or instance(k1,ComplexField)) and (k2 === CC or instance(k2,ComplexField)) then (
         if numRows(A) == numRows(B) then (
             return true;
             );
@@ -46,7 +42,7 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
             return false;
            );
         )
-    else if (k1 === RR or instance(k1,RealField)) then (
+    else if ((k1 === RR or instance(k1,RealField)) and (k2 === RR or instance(k2,RealField))) then (
         diagA := diagonalize(A);
         diagB := diagonalize(B);
         posEntriesA := 0;
@@ -68,5 +64,5 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
             return false;
             );
         )
-    else print "Not implemented for fields other than RR or CC.";
+    else print "Only implemented if both base fields are RR or both base fields are CC";
     )
