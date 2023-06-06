@@ -18,7 +18,8 @@ newPackage(
             "Depth",
 	    "SimplicialComplexes",
 	    "SimplicialDecomposability",
-	    "Posets"
+	    "Posets",
+        "MinimalPrimes"
             },
         DebuggingMode => true
         )
@@ -42,7 +43,8 @@ export{
     "augmentedRotheDiagram",
     "isPatternAvoiding",
     "isVexillary",
-    "SchubertDecomposition",
+    "schubertDecomposition",
+    "isASMIdeal"
     }
 
 -- Utility routines --
@@ -525,11 +527,10 @@ minimalRankTable List := Matrix => (L) -> (
 --
 -- output w_1..w_k
 -------------------------------------------
-SchubertDecomposition = method()
-SchubertDecomposition Ideal := List => (I) -> (
+schubertDecomposition = method()
+schubertDecomposition Ideal := List => (I) -> (
     primDecomp := decompose ideal leadTerm I;
     maxIdx := max((flatten entries vars ring I) / variableIndex // max);
-    print("This is the max index: " | toString maxIdx);
     cycleDecomp := {};
     for primeComp in primDecomp do {
         mons := primeComp_*;
@@ -537,6 +538,29 @@ SchubertDecomposition Ideal := List => (I) -> (
         cycleDecomp = append(cycleDecomp, fold(composePerms, reverse perms));
     };
     cycleDecomp
+)
+
+
+
+-------------------------------------------
+--INPUT: an ideal
+--OUTPUT: whether the ideal is an ASM ideal
+--WARNING: Might not be right depending on if {2,1,6,3,5,4} is ASM.
+--         If it is, then buggy; else, we are good.
+--TODO: docs and tests
+--TODO: input validation/type checking
+-------------------------------------------
+isASMIdeal = method()
+isASMIdeal Ideal := List => (I) -> (
+    isASM := true;
+    if (I == radical(I)) then {
+        schubDecomp := schubertDecomposition I;
+        isASM = I == intersect apply(schubDecomp/schubertDetIdeal, J -> sub(J, vars ring I));
+    }
+    else {
+        isASM = false;
+    };
+    isASM
 )
 
 
@@ -705,18 +729,34 @@ doc ///
 
 doc ///
     Key
-        (ASMPrimaryDecomposition, Ideal)
-        ASMPrimaryDecomposition
+        (schubertDecomposition, Ideal)
+        schubertDecomposition
     Headline
-        finds the primary decomposition of an ASM ideal
+        finds the decomposition of an ASM ideal into Schubert ideals
     Usage
-        ASMPrimaryDecomposition(I)
+        schubertDecomposition(I)
     Inputs
         I:Ideal
     Description
         Text
             Each element is the permutation associated to a prime component in 
             the primary decomposition of the antidiagonal initial ideal of I.
+///
+
+doc ///
+    Key
+        (isASMIdeal, Ideal)
+        isASMIdeal
+    Headline
+        whether an ideal is ASM
+    Usage
+        isASMIdeal(I)
+    Inputs
+        I:Ideal
+    Description
+        Text
+            An ideal I is ASM if I is radical and I = I_{w_1} \cap ... \cap I_{w_k},
+            where I_{w_i} are Schubert ideals. 
 ///
 
 -------------------------
@@ -864,7 +904,5 @@ restart
 installPackage "MatrixSchubert"
 restart
 needsPackage "MatrixSchubert"
-schubertDetIdeal {2,1,6,3,5,4}
-SchubertDecomposition oo
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
