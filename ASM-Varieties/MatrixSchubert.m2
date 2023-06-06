@@ -55,7 +55,8 @@ export{
     "rankTableToASM",
     "schubertReg",
     "rankTableFromMatrix",
-    "schubertCodim"
+    "schubertCodim",
+    "isASMIdeal"
     }
 
 -- Utility routines --
@@ -141,14 +142,11 @@ findIndices(List, List) := (L, Bs) -> (for ell in L list position(Bs, b -> (b ==
 --TODO: add docs and tests
 -----------------------------------
 variableIndex = method()
-variableIndex IndexedVariable := Sequence => (elem) -> (
-    --convert to string, parse, and select index, convert back
-    value replace(".*_+", "", toString elem)
-)
 variableIndex RingElement := Sequence => (elem) -> (
     --convert to string, parse, and select index, convert back
     value replace(".*_+", "", toString elem)
 )
+-- indexOfVariable = v -> ( i:= index v; last toList R.generatorSymbols#i )  -- need `debug Core` to use `R.generatorSymbols`
 
 -----------------------------------------------
 -----------------------------------------------
@@ -275,7 +273,7 @@ for i from 0 to m-1 do (
     if (not(isSubset(sort unique colPartialSum, {0,1}))) then return false;
     );
 return true
-); 
+)
 
 ----------------------------------------
 --Computes rank matrix of an ASM
@@ -641,9 +639,7 @@ schubertDecomposition Ideal := List => (I) -> (
 
 -------------------------------------------
 --INPUT: an ideal
---OUTPUT: whether the ideal is an ASM ideal
---WARNING: Might not be right depending on if {2,1,6,3,5,4} is ASM.
---         If it is, then buggy; else, we are good.
+--OUTPUT: whether the ideal is an intersection of Schubert determinantal ideals
 --TODO: docs and tests
 --TODO: input validation/type checking
 -------------------------------------------
@@ -659,6 +655,35 @@ isIntersectionSchubIdeals Ideal := List => (I) -> (
     };
     isIntersection
 )
+
+-------------------------------------------
+--INPUT: an ideal
+--OUTPUT: whether the ideal is an ASM ideal
+--TODO: docs and tests
+--TODO: input validation/type checking
+-------------------------------------------
+isASMIdeal = method()
+isASMIdeal Ideal := List => (I) -> (
+    isASM := true;
+    if (I == radical(I)) then {
+        schubDecomp := schubertDecomposition I;
+        if (isASM = I == intersect apply(schubDecomp/schubertDetIdeal, J -> sub(J, vars ring I))) then {
+            permMatrices := (schubDecomp / permToMatrix);
+            rankTable := rankTableFromMatrix matrix entrywiseMaxRankTable permMatrices;
+            ASM := rankTableToASM matrix rankTable;
+            ASMIdeal := schubertDetIdeal matrix ASM;
+            isASM = I == sub(ASMIdeal, vars ring I);
+        }
+        else {
+            isASM = false;
+        }
+    }
+    else {
+        isASM = false;
+    };
+    isASM
+)
+
 ------------------------------------------
 --INPUT: a square matrix M
 --OUTPUT: whether M is a valid rank table.
