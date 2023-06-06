@@ -50,3 +50,14 @@ easyIsomorphicGW(c1,c2,HeightBound=>2)
 
 M = matrix(QQ,{{0,0,1},{0,-2,0},{1,0,0}})
 wittDecomp(M)
+
+
+
+M = matrix(CC,{{0,0,1},{0,-2,0},{1,0,0}})
+N = matrix(RR,{{0,1},{1,0}})
+
+Mclass = gwClass(M)
+Nclass = gwClass(N)
+diagonalForm(Mclass)
+diagonalForm(Nclass)
+
