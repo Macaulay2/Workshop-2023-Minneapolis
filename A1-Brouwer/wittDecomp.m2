@@ -1,4 +1,3 @@
-
 load "./GW-type.m2"
 load "./matrixBooleans.m2"
 load "./squarefreePart.m2"
@@ -7,7 +6,12 @@ load "./diagonalize.m2"
 
 
 wittDecomp =method()
-wittDecomp (Matrix,Ring) := (ZZ,Matrix) => (A,k) -> (
+wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
+    k:= ring A;
+    
+    -- Add error in case the base field is RR or CC
+    if instance(k,InexactFieldFamily) then error "Error: base field is inexact, use wittDecompInexact() instead";
+    
     n:=numRows(A); --rank of matrix
     R:=k[x_0..x_(n-1)];
     f:=sum (
@@ -58,8 +62,13 @@ wittDecomp (Matrix,Ring) := (ZZ,Matrix) => (A,k) -> (
 
 wittDecompInexact=method()
 
-wittDecompInexact (Matrix,InexactFieldFamily) := (ZZ,Matrix) => (A,k) -> (
+wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
+    k := ring A;
+    
+    if not instance(k,InexactFieldFamily) then error "Error: base field is not RR or CC";
+    
     n:=numRows(A); --rank of matrix
+    
     --if k is the complex numbers, witt decomposition depends only on rank
     if (k===CC) then (
         if (n%2==0) then(return (n//2,{})) --if rank is even, then matrix decomposes into n/2 hyberbolic forms with no anisotropic parts
@@ -70,20 +79,22 @@ wittDecompInexact (Matrix,InexactFieldFamily) := (ZZ,Matrix) => (A,k) -> (
     if (k===RR) then (
         diagA := diagonalize(A);
         posEntries := 0; --for loop counts the number of positive diagonal entries of diagA
-         for i from 0 to (n-1) do(
+        negEntries := 0; --for loop counts the number of negative diagonal entries
+	for i from 0 to (n-1) do(
             if diagA_(i,i)>0 then(
                 posEntries=posEntries+1;
             );
+	    if diagA_(i,i)<0 then(
+                negEntries=negEntries+1;
+            );
         );
 
-        negEntries := n-posEntries;
+        if (posEntries + negEntries > n) then print"A is singular";
         wittIndex := min(posEntries,negEntries); -- witt index is given by how many positive-negative diagonal entry pairs exist
         signature := posEntries-negEntries; 
         if signature == 0 then (return (wittIndex,{}))
         else if signature > 0 then ( return (wittIndex, id_(k^(signature)))) --signature characterizes anisotropic part
         else return (wittIndex, -id_(k^(-signature)));
         );
-
-
-
 );
+
