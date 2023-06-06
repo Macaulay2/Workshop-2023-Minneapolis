@@ -50,7 +50,9 @@ export{
     "isRankTable",
     "rajCode",
     "rajIndex",
-    "Double"
+    "isMinRankTable",
+    "Double",
+    "rankTableToASM"
     }
 
 -- Utility routines --
@@ -594,8 +596,8 @@ isASMIdeal Ideal := List => (I) -> (
 --OUTPUT: whether M is a valid rank table.
 --TODO: documentation, tests
 ------------------------------------------
-isRankTable = method()
-isRankTable Matrix := Boolean => (A) -> (
+isMinRankTable = method()
+isMinRankTable Matrix := Boolean => (A) -> (
     AList := entries A;
 
     a := #AList;
@@ -614,25 +616,38 @@ isRankTable Matrix := Boolean => (A) -> (
     true
 );
 
--*
+
 ------------------------------------------
 --INPUT: a rank table, presented as a matrix
 --OUTPUT: an ASM corresponding to the rank table, presented as a matrix
+--TODO: documentation and tests
 ------------------------------------------
 rankTableToASM = method()
 rankTableToASM Matrix := Matrix => (A) -> (
-    n := #A;
-    ASM :=  mutableMatrix(ZZ,n,n);
-
-    -- find where all the ones are by checking whether it is larger than the entries above and to the left
+    if not(isMinRankTable(A)) then error("The inputted matrix is not a valid minimal rank table.");
+    AList := entries A;
+    n := #AList;
+    ASMret :=  mutableMatrix(ZZ,n,n);
     for i from 0 to n-1 do (
         for j from 0 to n-1 do (
-            if (i == 0) then do (
-
+            if (i == 0 and j == 0) then (
+                if (AList#0#0 == 1) then (A_(0,0) = 1;);
+            )
+            else if (i == 0) then (
+                if (AList#i#j == 1 and AList#i#(j-1)==0) then (ASMret_(i,j) = 1;);
+            )
+            else if (j == 0) then (
+                if (AList#i#j == 1 and AList#(i-1)#j==0) then (ASMret_(i,j) = 1;);
+            )
+            else (
+                if (AList#i#j - AList#i#(j-1) == 1 and AList#i#j - AList#(i-1)#j == 1 and AList#(i-1)#j == AList#(i-1)#(j-1)) then (ASMret_(i,j) = 1;)
+                else if (AList#i#j == AList#i#(j-1) and AList#i#j == AList#(i-1)#j and AList#i#j > AList#(i-1)#(j-1)) then (ASMret_(i,j) = -1;);
             );
         );
     );
-);*-
+
+    ASMret
+);
 
 
 ----------------------------------------
