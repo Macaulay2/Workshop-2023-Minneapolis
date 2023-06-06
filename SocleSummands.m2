@@ -9,7 +9,7 @@ newPackage(
 	PackageExports => {"DGAlgebras", "MonomialOrbits","RandomMonomialIdeals"},
 	DebuggingMode => true)
 export {
-    "Examples",
+    "summandExamples",
     "socle",
     "socleSummands",
     "socleSummandsSemigroup",
@@ -21,7 +21,7 @@ export {
     
 
 
- Examples = (S = ZZ/101[a,b,c];
+ summandExamples = (S = ZZ/101[a,b,c];
     hashTable{(1, ideal"a4,b4,c4,ab3"),
     (2,ideal"a4,b4,c4,ab3,cb3"),
     (3, ideal"a4,b4,c4,ab3,bc3"),
@@ -169,6 +169,22 @@ beginDocumentation()
 
 doc ///
 Key
+ "summandExamples"
+Headline
+ Creates hashtable of monomial ideal examples
+Usage
+ H = summandExamples ()
+Outputs
+ H: HashTable
+Description
+  Text
+    Produces a hashTable of monomial ideals in ZZ/101[a,b,c]
+  Example
+    summandExamples
+///
+
+doc ///
+Key
  socle
  (socle, Ring)
  (socle, Module)
@@ -226,7 +242,7 @@ Description
 -* Test section *-
 TEST///
 L = for i from 1 to 4 list(
-I = Examples#i;
+I = summandExamples#i;
 socleSummandsSemigroup(I,7)
 )
 assert (L == {{0}, {0,2,3}, {0,3,4,5}, {0,4,5,6,7}})
@@ -249,11 +265,11 @@ setRandomSeed 0
 
 
 for i from 1 to 4 do(
-<<(I = Examples#i)<<" "<<socleSummandsSemigroup(I, 7)<<endl;
+<<(I = summandExamples#i)<<" "<<socleSummandsSemigroup(I, 7)<<endl;
 )
 koszul vars ring I
 socleSummands oo
-I = Examples#1
+I = summandExamples#1
 socleSummandsSemigroup(I,7)
 F = res(coker vars (ring I/I), LengthLimit => 7)
 socleSummandsSemigroup F
