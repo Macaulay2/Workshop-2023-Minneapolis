@@ -239,20 +239,18 @@ isVexillary List := Boolean => (perm) -> (
 -------------------------------------
 isPartialASM = method()
 isPartialASM Matrix := Boolean => (A) -> (
-    n := numrows A;
-    m := numcols A;
-    rowCheck := new MutableList;
-    colCheck := new MutableList;
-    for i from 0 to n-1 do(
-	partialSums := for i from 0 to m-1 list(sum(delete(0, flatten entries A_{i})));
-	rowCheck#(#rowCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
-	);
-    for i from 0 to m-1 do(
-	partialSums := for i from 0 to n-1 list(sum(delete(0, flatten entries A^{i})));
-	rowCheck#(#colCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
-	);
-    (toList rowCheck == toList(#rowCheck:true)) and (toList colCheck == toList(#colCheck:true))
-)
+    n:=numrows(A);
+    m:=numcols(A);
+for i from 0 to n-1 do (
+    rowPartialSum := accumulate(plus,flatten entries(A^{i}));
+    if (not(((sort unique rowPartialSum) == {0,1}))) then return false;
+    );
+for i from 0 to m-1 do (
+    colPartialSum := accumulate(plus,flatten entries(A^{i}));
+    if (not(((sort unique colPartialSum) == {0,1}))) then return false;
+    );
+return true
+); 
 
 ----------------------------------------
 --Computes rank matrix of an ASM
@@ -1035,21 +1033,7 @@ betti res diagLexInit M
 betti res antiDiagInit M
 
 
-A = matrix{{0,-1,0,1,1},{1,-1,1,-1,1},{0,1,1,0,-1},{1,1,-1,1,-1},{-1,1,0,0,1}}
-n = numrows A
-m = numcols A
-rowCheck = new MutableList
-colCheck = new MutableList
-for i from 0 to n-1 do(
-    partialSums = for i from 0 to m-1 list(sum(delete(0, flatten entries A_{i})));
-    rowCheck#(#rowCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
-    );
-for i from 0 to m-1 do(
-    partialSums = for i from 0 to n-1 list(sum(delete(0, flatten entries A^{i})));
-    rowCheck#(#colCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
-    );
-(toList rowCheck == toList(#rowCheck:true)) and (toList colCheck == toList(#colCheck:true))
-)
+
 ------------------------------------
 --Development Section
 ------------------------------------
