@@ -23,19 +23,46 @@ export{"function",
        "lowestTermValuation"
        }
 
+importFrom_LocalRings {"LocalRing"}
+importFrom_SubalgebraBases {"Subring"}
+
+
 Valuation = new Type of HashTable
 
 valuation = method()
+
 valuation Function := v -> (
+    internalValuation(v, null, null)
+    )
+
+ourRings := {Ring,Subring,LocalRing}
+
+for i in ourRings do (
+    for j in ourRings do (
+	valuation (Function, i, j) := (v, S, T) -> (
+    	    internalValuation(v, S, T)
+    	    )
+	)
+    )
+
+-- parameter class was Type, but the null
+-- input is not a "Type", but a "Thing"
+internalValuation = method()
+internalValuation (Function, Thing, Thing) := (v, S, T) -> (
     new Valuation from{
         function => v,
-        source => null,
-        target => null,
+        source => S,
+        target => T,
         cache => new CacheTable
         }
     )
 
-Valuation Thing := (v,t) -> (v.function t)
+Valuation Thing := (v,t) -> (
+    if v.source != null
+    -- Concerns with comparing things like ZZ and QQ
+    then if (ring t) === v.source
+    v.function t
+    )
 
 -- Trivial Valuation
 trivialValuation = valuation (x -> if x == 0 then infinity else 0)
@@ -54,7 +81,8 @@ getExponent = (p, x) -> (
 
 padicValuation = method()
 padicValuation ZZ := p -> (
-    assert isPrime p;
+    if not isPrime p
+    then error "expected a prime integer";
     func := x -> (
         if x == 0 then infinity
         else getExponent(p, numerator x_QQ) - getExponent(p, denominator x_QQ)
