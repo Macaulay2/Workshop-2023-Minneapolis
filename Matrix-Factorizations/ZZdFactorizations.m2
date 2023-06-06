@@ -63,9 +63,10 @@ ZZdfactorization HashTable := ZZdFactorization => opts -> maps -> (
 ZZdfactorization List := ZZdFactorization => opts -> L -> (
     -- L is a list of matrices or a list of modules
     if not instance(opts.Base, ZZ) then
-      error "expected Base to be an integer";
+      error "expected Base to be an integer"; 
     if all(L, ell -> instance(ell,Matrix)) then (
-        mapHash := hashTable for i from 0 to #L-1 list opts.Base+i+1 => L#i;
+        trg := target L#0;
+	mapHash := hashTable for i from 0 to #L-1 list opts.Base+i+1 => map(trg, trg, L#i);
         return ZZdfactorization(mapHash, opts)
         );
     if all(L, ell -> instance(ell,Module)) then (
