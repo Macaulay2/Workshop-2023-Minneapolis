@@ -38,7 +38,7 @@ NeuralCode.synonym = "neural code"
 
 neuralCode=method(List):= codeList -> (
     d := #(codeList#0);
-    x := getSymbol x;
+    x := symbol x;
     X:=new NeuralCode from {
 	symbol codes => codeList,
 	symbol dimension => d,
@@ -236,32 +236,70 @@ document{
   Caveat => "In progress"
   }
 
---document{
---  Key => {neuralCode},
---  Headline => "The type neuralCode",
---  TEX "Turns a list of binary strings of the same length into a NeuralCode type.",
---  Usage => "neuralCode(code)",
---  Inputs => {"Binary strings of the same length"},
---  Outputs => {"The neural code consisting of the given codes."},
---  TEX "We demonstrate how to enter a neural code as a list of binary strings of the same length.",
---  EXAMPLE lines ///
---  neuralCode("000","001","101")
---  ///
---  }
+document{
+  Key => {neuralCode},
+  Headline => "The type neuralCode",
+  TEX "Turns a list of binary strings of the same length into a NeuralCode type.",
+  Usage => "neuralCode(code)",
+  Inputs => {"Binary strings of the same length like 000"},
+  Outputs => {"The neural code consisting of the given codes."},
+  TEX "We demonstrate how to enter a neural code as a list of binary strings of the same length.",
+  EXAMPLE lines ///
+  neuralCode("000","001","101")
+  ///
+  }
 
---document{
---  Key => {neuralIdeal(NeuralCode)},
---  Headline => "Neural ideal.",
---  TEX "A method which computes the neural ideal for a given neural code.",
---  Usage => "neuralIdeal(neuralCode(code))",
---  Inputs => {"neuralCode"},
---  Outputs => {"The neural ideal corresponding to the given neural code"},
---  TEX "We compute an example",
---  EXAMPLE lines ///
---  C=neuralCode("000","001");
---  neuralIdeal(C)
---  ///,
---}
+document{
+  Key => {neuralIdeal, (neuralIdeal,NeuralCode)},
+  Headline => "Neural ideal.",
+  TEX "A method which computes the neural ideal for a given neural code.",
+  Usage => "neuralIdeal(neuralCode(code))",
+  Inputs => {"neuralCode"},
+  Outputs => {"The neural ideal corresponding to the given neural code"},
+  TEX "We compute an example",
+  EXAMPLE lines ///
+  C=neuralCode("000","001");
+  neuralIdeal(C)
+  ///,
+}
+
+document{
+  Key => {canonicalForm, (canonicalForm,Ideal),(canonicalForm,NeuralCode)},
+  Headline => "Canonical Form",
+  TEX "A method which computes the canonical form of a given squarfree pseudomonomial ideal or neural code.",
+  Usage => "canonicalForm(Ideal) or canonicalForm(NeuralCode)",
+  Inputs => {"Squarefree pseudomonomial ideal or NeuralCode"},
+  Outputs => {"The canonical form"},
+  TEX "We compute an example",
+  EXAMPLE lines ///
+  C=neuralCode("000","001");
+  canonicalForm(C)
+  ///,
+  EXAMPLE lines ///
+  R=ZZ/2[x_1..x_3];
+  I=ideal(x_1*x_3,x_2*(1-x_1));
+  canonicalForm(I)
+  ///,
+}
+
+document{
+  Key => {factoredCanonicalForm, (factoredCanonicalForm,Ideal),(factoredCanonicalForm,NeuralCode)},
+  Headline => "Factored Canonical Form",
+  TEX "A method which computes the canonical form of a given squarfree pseudomonomial ideal or neural code.",
+  Usage => "canonicalForm(Ideal) or canonicalForm(NeuralCode)",
+  Inputs => {"Squarefree pseudomonomial ideal or NeuralCode"},
+  Outputs => {"The canonical form"},
+  TEX "We compute an example",
+  EXAMPLE lines ///
+  C=neuralCode("000","001");
+  canonicalForm(C)
+  ///,
+  EXAMPLE lines ///
+  R=ZZ/2[x_1..x_3];
+  I=ideal(x_1*x_3,x_2*(1-x_1));
+  canonicalForm(I)
+  ///,
+}
 
 
 -- **TEST0**
