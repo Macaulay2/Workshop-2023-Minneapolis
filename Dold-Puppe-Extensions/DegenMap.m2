@@ -1,6 +1,9 @@
 load "ABuilder.m2"
+listBuilder = n -> for i to n list
+    (new List from i:0) | {1} | (new List from (n-i):0)
+
 DegenMapHelper = (n, k, i) -> (
-    curList = entries id_(ZZ^(binomial(n-1,k)));
+    curList = listBuilder(binomial(n-1,k));
     zeroes = new List from (binomial(n-1,k)) : 0;
     A = ABuilder(n,k);
     sig = {};
@@ -13,6 +16,5 @@ DegenMapHelper = (n, k, i) -> (
 	    ); 
 	sig = append(sig, zeroes);
 	);
-    sigout = matrix(sig);
-    sigout
+    sig
     )
