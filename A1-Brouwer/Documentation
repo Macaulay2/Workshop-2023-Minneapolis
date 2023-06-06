@@ -1,0 +1,15 @@
+
+
+
+--Functions
+    (1). Basic Matrix Properties Check
+        (a). isSquare (Matrix)-> (Boolean)
+        (b). isSquareAndSymmetric (Matrix) -> (Boolean)
+        (c). isUpperLeftTriangular (Matrix) -> (Boolean)
+        (d). isDiagonal  (Matrix) -> (Boolean)
+    (2). diagonalize (Matrix) -> (Matrix)
+            Input a matrix, returns the diagonalized form of the matrix.
+    (2). wittDecomp (Matrix, Ring (field) ) -> (ZZ, Matrix)
+            (V, q) quadratic space over a field F, quadratic form represented by matrix M.
+            Witt decomposition: (V_t, q_t)\perp (V_h, q_h)\perp (V_a, q_a)   (resp, totally isotropic, hyperbolic, anisotropic)
+            Input a (M, F), returns the Witt Index of q and the matrix representing q_a on V_a.
