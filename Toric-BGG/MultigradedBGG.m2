@@ -62,6 +62,7 @@ exports {
 
 needsPackage "Polyhedra";
 load "DifferentialModules.m2";
+needsPackage "Complexes";
 ---
 ---
 ---
@@ -146,7 +147,7 @@ toricRR(Module,List) := (M,LL) ->(
     newf0 = newf0 % relationsMinSE;
     newg := matrixContract(transpose sub(f0,SE),newf0);
     g' := sub(newg,E);
-    differentialModule(chainComplex{map(E^dfneg1,E^df0, g'),map(E^df0,E^df1, g')}[1])
+    differentialModule(chainComplex{map(E^dfneg1,E^df0, -g'),map(E^df0,E^df1, -g')}[1])
     )
 
 
@@ -173,12 +174,13 @@ toricLL = method();
 --Input: N a (multi)-graded E-module.
 --Caveat: Assumes N is finitely generated.
 --Caveat 2:  arrows of toricLL(N) correspond to exterior multiplication (not contraction)
-toricLL(Module) := (N) ->(
-    E := ring(N);
+toricLL Module := M ->(
+    N := coker presentation M;
+    E := ring N;
     if not isSkewCommutative E then error "ring N is not skew commutative";
     if not E.?symmetric then E.symmetric = dualRingToric(E);
     S := E.symmetric;
-    bb := basis(N);
+    bb := basis N;
     b := (degrees source bb);
     homDegs := sort unique apply(b, i-> last i);
     inds := new HashTable from apply(homDegs, i-> i=> select(#b, j-> last(b#j) == i));
@@ -192,10 +194,10 @@ toricLL(Module) := (N) ->(
     --SE := coefficientRing(S)[gens S|gens E, Degrees => apply(degrees S,d->d|{0}) | degrees E, SkewCommutative => gens E];
     --why is this overwriting the definition of e_i?
     tr := sum(dim S, i-> SE_i*SE_(dim S+i));
-    f0 := gens image basis(N);
+    f0 := gens image basis N;
     newf0 := sub(f0,SE)*tr;
-    relationsMinSE := sub(relationsN,SE);
-    newf0 = newf0 % relationsMinSE;
+    relationsNinSE := sub(relationsN,SE);
+    newf0 = newf0 % relationsNinSE;
     newg := matrixContract(transpose sub(f0,SE),newf0);
     g' := sub(newg,S);
     --Now we have to pick up pieces of g' and put them in the right homological degree.
@@ -515,11 +517,30 @@ makeConvex = L->(
 
 end;
 
-
+stronglyLinearStrand = method();
+stronglyLinearStrand Module := M -> (
+    S := ring M;
+    h := heft S;
+    if h === null then error("--ring M does not have heft vector");
+    if not same degrees M then error("--M needs to be generated in same degree");
+    degM := first degrees M;
+    degrange := unique prepend(degM, apply(degrees S, d -> d - degM));
+    RM := toricRR(M,degrange);
+    mat := RM.dd_0;
+    cols := positions(degrees source mat, x -> drop(x,-1) == degM)
+    N := ker mat_cols
+    toricLL ker mat_cols
+    
+    )
 --TESTS
 restart
 load "MultigradedBGG.m2"
 loadPackage "NormalToricVarieties"
+X = hirzebruchSurface 3;
+S = ring X;
+M = S^1/(ideal x_0)
+
+
 X = weightedProjectiveSpace {1,1,1}
 S = ring X
 E = dualRingToric S
