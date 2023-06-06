@@ -186,7 +186,6 @@ GCExpression * Number := (b, c) -> new GCExpression from {RingElement => c * b#R
 isExtensor = method()
 isExtensor GCExpression := A -> (
     assert(instance(ring A, GCAlgebra));
-    print someTerms(A#RingElement, 0, 2);
     1 == length terms someTerms(A#RingElement, 0, 2)
     )
 isTopDegree = method()
@@ -275,7 +274,9 @@ factor GCExpression := o -> g -> (
     apply(toList F, fi -> (fi#0^(fi#1))_G)
     )
 
-matrix (AbstractGCRing, List) := o -> (G, L) -> error "not implemented"
+matrix (AbstractGCRing, List) := o -> (G, L) -> (
+    listM := for i from 0 to (#L-1) list(apply(L#i, t-> t#RingElement));
+    matrix listM)
 
 -* Documentation section *-
 beginDocumentation()
