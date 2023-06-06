@@ -375,8 +375,7 @@ Description
    S = ZZ/101[a,b,c]
    I = ideal "a4,a3b,b3,a2c2,c5"
    R = S/I
-   M = cokernel random(R^1,R^{-1}) 
-   F
+   F = cokernel random(R^1,R^{-1}) 
    socleSummandsSemigroup(F)
   Example
    S = ZZ/101[a,b,c] 
