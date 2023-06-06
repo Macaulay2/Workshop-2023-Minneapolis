@@ -26,7 +26,8 @@ export{--types
     "neuralCode",
     "neuralIdeal",
     "canonicalForm",
-    "iterCanonicalForm"}
+    "iterCanonicalForm",
+    "factoredCanonicalForm"}
 
 protect codes
 protect dimension
@@ -158,7 +159,13 @@ canonicalForm(Ideal) := I -> (
 
 canonicalForm(NeuralCode) := C -> (canonicalForm(neuralIdeal(C)))
 
+factoredCanonicalForm = method()
 
+factoredCanonicalForm(Ideal):= I -> (
+    apply(canonicalForm(I),factor)
+    )
+
+factoredCanonicalForm(NeuralCode) := C -> (apply(canonicalForm(neuralIdeal(C)),factor))
 
 
 
