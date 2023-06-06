@@ -1,4 +1,4 @@
---takes in symmetric matrix over QQ, removes squares from entries and splits off obvious hyperbolics
+--takes in symmetric matrix over QQ and diagonalizes, removes squares from entries, and splits off hyperbolic forms that immediately appear as <a> + <-a>
 
 load "diagonalize.m2"
 load "matrixBooleans.m2"
@@ -20,11 +20,13 @@ rationalSimplify (Matrix) := (ZZ,Matrix) => (A) -> (
     if A != transpose(A) then (
         error "Matrix is not symmetric";
 	);
+    --diagonalize the matrix
     B = mutableMatrix(diagonalize(A));
+    --replace entry with smallest magnitude integer in square class
     for i from 0 to (numRows(B)-1) do (
         B_(i,i) = squarefreePart(B_(i,i));
         );
     C = matrix B;
-    print(B);
+    --split off hyperbolic forms <a> + <-a>
     return(splitOffObviousHyperbolics(C))
     )
