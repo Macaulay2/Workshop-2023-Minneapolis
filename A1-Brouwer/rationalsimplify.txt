@@ -1,0 +1,30 @@
+--takes in symmetric matrix over QQ, removes squares from entries and splits off obvious hyperbolics
+
+load "diagonalize.m2"
+load "matrixBooleans.m2"
+load "squarefreepart.m2"
+load "splitoffobvioushyperbolics.m2"
+
+rationalSimplify = method()
+
+rationalSimplify (Matrix) := (ZZ,Matrix) => (A) -> (
+    --matrix must be square
+    if numRows(A) != numColumns(A) then (
+	error "Matrix is not square.";
+	);
+    --matrix must be nonsingular
+    if det(A) == 0 then (
+	error "Matrix is singular.";
+	);
+    --matrix must be symmetric
+    if A != transpose(A) then (
+        error "Matrix is not symmetric";
+	);
+    B = mutableMatrix(diagonalize(A));
+    for i from 0 to (numRows(B)-1) do (
+        B_(i,i) = squarefreePart(B_(i,i));
+        );
+    C = matrix B;
+    print(B);
+    return(splitOffObviousHyperbolics(C))
+    )
