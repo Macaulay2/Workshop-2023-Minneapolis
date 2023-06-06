@@ -48,7 +48,6 @@ export{
     "isVexillary",
     "schubertDecomposition",
     "isIntersectionSchubIdeals",
-    "isRankTable",
     "rajCode",
     "rajIndex",
     "isMinRankTable",
