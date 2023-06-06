@@ -267,12 +267,12 @@ isPartialASM Matrix := Boolean => (A) -> (
     n:=numrows(A);
     m:=numcols(A);
 for i from 0 to n-1 do (
-    rowPartialSum := accumulate(plus,flatten entries(A^{i}));
-    if (not(((sort unique rowPartialSum) == {0,1}))) then return false;
+    rowPartialSum := accumulate(plus,{0}|(flatten entries(A^{i})));
+    if (not(isSubset(sort unique rowPartialSum,{0,1}))) then return false;
     );
 for i from 0 to m-1 do (
-    colPartialSum := accumulate(plus,flatten entries(A^{i}));
-    if (not(((sort unique colPartialSum) == {0,1}))) then return false;
+    colPartialSum := accumulate(plus,{0}|(flatten entries(A_{i})));
+    if (not(isSubset(sort unique colPartialSum, {0,1}))) then return false;
     );
 return true
 ); 
@@ -1199,8 +1199,7 @@ L = {
     matrix{{0,1,0},{1,-1,0}},
     matrix{{0,1,0},{1,-1,0}},
     matrix{{0,0,1},{1,0,-1}},
-    matrix{{0,0,1,0,0},{0,0,0,0,1},{0,0,0,0,0},{0,1,0,0,0}},
-    matrix{{1,0,0,0},{0,0,1,0},{-1,1,0,0},{1,0,-1,1}}
+    matrix{{0,0,1,0,0},{0,0,0,0,1},{0,0,0,0,0},{0,1,0,0,0}}
     };
 assert(apply(L,isPartialASM) == toList (#L:true))
 
@@ -1209,7 +1208,8 @@ assert(apply(L,isPartialASM) == toList (#L:true))
 T = {
     matrix{{-1}},
     matrix{{0,1,0},{1,0,1},{0,1,0}},
-    matrix{{0,0,1,0,0,0,0,0},{1,0,1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}}
+    matrix{{0,0,1,0,0,0,0,0},{1,0,1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}},
+    matrix{{1,0,0,0},{0,0,1,0},{-1,1,0,0},{1,0,-1,1}}
     };
 assert( apply(T, isPartialASM) == toList (#T:false))
 ///
