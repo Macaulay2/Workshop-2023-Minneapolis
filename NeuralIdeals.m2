@@ -216,6 +216,16 @@ iterCanonicalForm(NeuralCode) := C -> (
     canonical
     )
 
+codeSupport = method();
+codeSupport(NeuralCode) := C -> (
+    fullSupport := {};
+    for c in C.codes do (
+	cSupport = for i to #c-1 when c#i == 1 list i;
+	fullSupport = append(fullSupport, cSupport);
+	);
+    fullSupport
+    )
+
 
 beginDocumentation()
 
