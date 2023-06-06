@@ -1,3 +1,5 @@
+needsPackage "RationalPoints2"
+
 load "./GW-type.m2"
 load "./matrixBooleans.m2"
 load "./squarefreePart.m2"
@@ -5,18 +7,18 @@ load "./easyUpperLeftTriangular.m2"
 load "./diagonalize.m2"
 
 
-wittDecomp =method()
+wittDecomp = method()
 wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     k:= ring A;
     
     -- Add error in case the base field is RR or CC
-    if instance(k,InexactFieldFamily) then error "Error: base field is inexact, use wittDecompInexact() instead";
+    if (instance(k,InexactFieldFamily) or instance(k,RealField) or instance(k,ComplexField)) then error "Error: base field is inexact, use wittDecompInexact() instead";
     
     n:=numRows(A); --rank of matrix
     R:=k[x_0..x_(n-1)];
     f:=sum (
-        for i from 0 to n-1 list (
-            sum (for j from 0 to n-1 list (A_(i,j)*x_i*x_j))
+        for i from 0 to (n-1) list (
+            sum (for j from 0 to (n-1) list (A_(i,j)*x_i*x_j))
             )
         );
     use k;
@@ -53,7 +55,7 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     );
     --now recursively apply wittDecomp to W*A*W^T a (n-2)-by-(n-2) Gram matrix
     Wmat := matrix(W);
-    subComputation := wittDecomp(Wmat*A*transpose(Wmat),k);
+    subComputation := wittDecomp(Wmat*A*transpose(Wmat));
     return (1+subComputation_0, subComputation_1);
 )
 
@@ -65,18 +67,18 @@ wittDecompInexact=method()
 wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
     k := ring A;
     
-    if not instance(k,InexactFieldFamily) then error "Error: base field is not RR or CC";
+    if not (instance(k,RealField) or instance(k,ComplexField) or instance(k,InexactFieldFamily)) then error "Error: base field is not RR or CC";
     
     n:=numRows(A); --rank of matrix
     
     --if k is the complex numbers, witt decomposition depends only on rank
-    if (k===CC) then (
+    if (k===CC or instance(k,ComplexField)) then (
         if (n%2==0) then(return (n//2,{})) --if rank is even, then matrix decomposes into n/2 hyberbolic forms with no anisotropic parts
         else return (n//2,id_(k^1)); --if rank is odd, matrix decomposes into (n-1)/2 hyperbolic forms with 1-by-1 anisotropic part
 
         );
     --if k is the real numbers, witt decomposition depends on rank and signature
-    if (k===RR) then (
+    if (k===RR or instance(k,RealField)) then (
         diagA := diagonalize(A);
         posEntries := 0; --for loop counts the number of positive diagonal entries of diagA
         negEntries := 0; --for loop counts the number of negative diagonal entries
@@ -97,4 +99,3 @@ wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
         else return (wittIndex, -id_(k^(-signature)));
         );
 );
-

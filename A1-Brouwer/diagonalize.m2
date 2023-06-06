@@ -30,11 +30,3 @@ diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
     );
     return matrix A
 )
-
-diagonalizeGW = method()
-
-diagonalizeGW (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
-    A := beta.matrix;
-    D := diagonalize(A);
-    return gwClass(D)
-    )

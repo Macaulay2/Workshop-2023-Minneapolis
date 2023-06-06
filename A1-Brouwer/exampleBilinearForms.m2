@@ -29,9 +29,7 @@ print diagonalize(D)
 
 b1 = matrix(QQ,{{5,6,1},{6,2,0},{1,0,0}});
 g = matrix(QQ,{{5,6,7},{6,0,1},{7,1,0}});
-
-
-
+M = matrix(RR,{{0,0,1},{0,-2,0},{1,0,0}})
 cong1 = matrix(QQ,{{0,0,1},{0,1,0},{1,0,0}});
 cong2 = matrix(QQ,{{1,0,0},{0,-1,0},{0,0,1}});
 
@@ -47,3 +45,8 @@ easyIsomorphicGW(beta,gamma2,HeightBound=>3)
 
 
 easyIsomorphicGW(c1,c2,HeightBound=>2)
+
+
+
+M = matrix(QQ,{{0,0,1},{0,-2,0},{1,0,0}})
+wittDecomp(M)
