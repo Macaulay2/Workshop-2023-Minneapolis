@@ -25,7 +25,7 @@ The other links may also be useful:
 
 :small_orange_diamond: `wittDecomp` algorithm for detecting the Witt class of a symmetric bilinear form
 
-:small_orange_diamond: Refined algorithms for quickly diagonalizing sparse matrices (see `easyUpperTriangular`)
+:small_orange_diamond: Refined algorithms for quickly diagonalizing sparse matrices (see `easyUpperLeftTriangular`)
 
 # Still to do
 
