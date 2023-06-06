@@ -19,7 +19,7 @@ newPackage(
 	    "SimplicialComplexes",
 	    "SimplicialDecomposability",
 	    "Posets",
-        "MinimalPrimes"
+            "MinimalPrimes"
             },
         DebuggingMode => true
         )
@@ -40,15 +40,21 @@ export{
     "isPerm",
     "schubertPoly",
     "doubleSchubertPoly",
-    "minimalRankTable",
+    "entrywiseMinRankTable",
+    "entrywiseMaxRankTable",
     "permLength",
     "augmentedRotheDiagram",
     "isPatternAvoiding",
     "isVexillary",
     "schubertDecomposition",
-    "isASMIdeal",
-    "isRankTable",
-    "Double"
+    "isIntersectionSchubIdeals",
+    "rajCode",
+    "rajIndex",
+    "isMinRankTable",
+    "Double",
+    "rankTableToASM",
+    "schubertReg",
+    "rankTableFromMatrix"
     }
 
 -- Utility routines --
@@ -165,6 +171,21 @@ toOneLineNotation (List, ZZ) := List => (perm, maxIdx) -> (
 )
 
 ------------------------------------
+--INPUT: An index (i,j)
+--OUTPUT: the corresponding transposition according to antidiagonal term order
+--TODO: docs and tests
+------------------------------------
+toAntiDiagTrans = method()
+toAntiDiagTrans (Sequence, ZZ) := List => (idx, maxIdx) -> (
+    transposition := (sum(toList idx)-1, sum(toList idx));
+    toOneLineNotation(transposition, maxIdx)
+)
+toAntiDiagTrans (List, ZZ) := List => (idx, maxIdx) -> (
+    transposition := {sum(toList idx)-1, sum(toList idx)};
+    toOneLineNotation(transposition, maxIdx)
+)
+
+------------------------------------
 --INPUT: Two permutations in one-line notation
 --OUTPUT: the composition of the two permutations w = vu
 ------------------------------------
@@ -203,8 +224,9 @@ composePerms (List, List) := List => (u,v) -> (
 --------------------------------
 isPatternAvoiding = method()
 isPatternAvoiding (List,List) := Boolean => (perm, pattern) -> (
-    -- Checks if the given permutation avoids the given pattern.
-    -- Assume permutation is pattern-avoiding, break if not true
+    --input validation
+    if not (isPerm perm) then error(toString perm | " is not a permutation.");
+    --assume permutation is pattern-avoiding, break if not true
     isAvoiding := true;
     for idx in subsets(0..#perm-1, #pattern) do {
         sortedIdx := sort(idx);
@@ -223,6 +245,8 @@ isPatternAvoiding (List,List) := Boolean => (perm, pattern) -> (
 --------------------------------
 isVexillary = method()
 isVexillary List := Boolean => (perm) -> (
+    --input validation
+    if not (isPerm perm) then error(toString perm | " is not a permutation.");
     isPatternAvoiding(perm, {2,1,4,3})
 )
 
@@ -257,7 +281,7 @@ return true
 --INPUT: an (n x n)- alternating sign matrix A OR a 1-line perm w
 --OUTPUT: an (n x n) integer matrix of ranks of each entry
 --Author: Yuyuan Luo
---TODO: add tests and documentation for this function
+--TODO: add tests for this function
 ----------------------------------------
 
 rankMatrix = method()
@@ -339,7 +363,7 @@ augmentedRotheDiagram Matrix := List => w -> (
 --INPUT: a list w corresponding to a permutation in 1-line notation
     	--OR an alternating sign matrix A
 --OUTPUT: a list of essential boxes in the Rothe diagram for A
---TODO: add documentation
+--TODO:
 -----------------------
 essentialBoxes = method()
 essentialBoxes Matrix := List => (A) -> (
@@ -473,6 +497,21 @@ antiDiagInit List := monomialIdeal => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     monomialIdeal leadTerm schubertDetIdeal w
     );
+
+----------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation or a partial ASM
+--OUTPUT: the Castlenuovo-Mumford regularity of I_A or I_w
+----------------------------------------
+schubertReg = method()
+schubertReg Matrix := ZZ => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    regularity(antiDiagInit A)
+    );
+schubertReg List := ZZ => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
+     regularity(antiDiagInit w)
+    );
+
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: diagonal initial ideal of Schubert determinantal ideal for w
@@ -510,8 +549,8 @@ subwordComplex List := simplicialComplex => (w) -> (
 --TODO: tests, documentation
 ------------------------------------------
 
-minimalRankTable = method()
-minimalRankTable List := Matrix => (L) -> (
+entrywiseMinRankTable = method()
+entrywiseMinRankTable List := Matrix => (L) -> (
         if (#L == 0) then error("The input must be a nonempty list.");
         n := #(entries L#0);
         minimalRankMtx := mutableMatrix(ZZ,n,n);
@@ -523,7 +562,7 @@ minimalRankTable List := Matrix => (L) -> (
             );
         );
 
-        -- comb through the list to get the minimal entrys
+        -- comb through the list to get the minimal entries
         for M in L do (
             listRankM := entries rankMatrix(M);
             if (#listRankM != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
@@ -539,30 +578,54 @@ minimalRankTable List := Matrix => (L) -> (
         minimalRankMtx
     );
 
+    ------------------------------------------
+--INPUT: a nonempty list of equidimensional ASMs, presented as matrices
+--OUTPUT: the maximal rank table, presented as a matrix
+--TODO: tests, documentation
+------------------------------------------
+
+entrywiseMaxRankTable = method()
+entrywiseMaxRankTable List := Matrix => (L) -> (
+        if (#L == 0) then error("The input must be a nonempty list.");
+        n := #(entries L#0);
+        maximalRankMtx := mutableMatrix(ZZ,n,n);
+
+
+        -- comb through the list to get the maximal entries
+        for M in L do (
+            listRankM := entries rankMatrix(M);
+            if (#listRankM != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
+            if not(isPartialASM(M)) then error("The input must be a list containing partial alternating sign matrices.");
+
+            for i from 0 to n-1 do (
+                for j from 0 to n-1 do (
+                    maximalRankMtx_(i,j) = max {maximalRankMtx_(i,j), listRankM#i#j};
+                );
+            );
+        );
+
+        maximalRankMtx
+    );
+
 -------------------------------------------
 --INPUT: an ASM ideal
 --OUTPUT: the primary decomposition of the ASM ideal
 --TODO: docs and tests
 --TODO: input validation/type checking
---
--- if lt(I) is not radical, then fuss
--- if lt(I) radical, then 
---
--- output w_1..w_k
 -------------------------------------------
 schubertDecomposition = method()
 schubertDecomposition Ideal := List => (I) -> (
-    primDecomp := decompose ideal leadTerm I;
+    primeDecomp := decompose ideal leadTerm I;
     maxIdx := max((flatten entries vars ring I) / variableIndex // max);
+    -- varWeights := (monoid ring I).Options.MonomialOrder#1#1;
     cycleDecomp := {};
-    for primeComp in primDecomp do {
-        mons := primeComp_*;
-        perms := apply(mons / variableIndex, perm -> toOneLineNotation(perm, maxIdx));
-        cycleDecomp = append(cycleDecomp, fold(composePerms, reverse perms));
+    for primeComp in primeDecomp do {
+        mons := sort(primeComp_*, mon -> ((variableIndex mon)_0+1)*maxIdx - (variableIndex mon)_1); --bad because variableIndex called twice; need decorated sort paradigm
+        perms := apply(mons / variableIndex, perm -> toAntiDiagTrans(perm, maxIdx));
+        cycleDecomp = append(cycleDecomp, fold(composePerms, perms));
     };
-    cycleDecomp
+    unique cycleDecomp
 )
-
 
 
 -------------------------------------------
@@ -573,25 +636,25 @@ schubertDecomposition Ideal := List => (I) -> (
 --TODO: docs and tests
 --TODO: input validation/type checking
 -------------------------------------------
-isASMIdeal = method()
-isASMIdeal Ideal := List => (I) -> (
-    isASM := true;
+isIntersectionSchubIdeals = method()
+isIntersectionSchubIdeals Ideal := List => (I) -> (
+    isIntersection := true;
     if (I == radical(I)) then {
         schubDecomp := schubertDecomposition I;
-        isASM = I == intersect apply(schubDecomp/schubertDetIdeal, J -> sub(J, vars ring I));
+        isIntersection = I == intersect apply(schubDecomp/schubertDetIdeal, J -> sub(J, vars ring I));
     }
     else {
-        isASM = false;
+        isIntersection = false;
     };
-    isASM
+    isIntersection
 )
 ------------------------------------------
 --INPUT: a square matrix M
 --OUTPUT: whether M is a valid rank table.
 --TODO: documentation, tests
 ------------------------------------------
-isRankTable = method()
-isRankTable Matrix := Boolean => (A) -> (
+isMinRankTable = method()
+isMinRankTable Matrix := Boolean => (A) -> (
     AList := entries A;
 
     a := #AList;
@@ -610,30 +673,155 @@ isRankTable Matrix := Boolean => (A) -> (
     true
 );
 
--*
+
 ------------------------------------------
 --INPUT: a rank table, presented as a matrix
 --OUTPUT: an ASM corresponding to the rank table, presented as a matrix
+--TODO: documentation and tests
 ------------------------------------------
 rankTableToASM = method()
 rankTableToASM Matrix := Matrix => (A) -> (
-    n := #A;
-    ASM :=  mutableMatrix(ZZ,n,n);
-
-    -- find where all the ones are by checking whether it is larger than the entries above and to the left
+    if not(isMinRankTable(A)) then error("The inputted matrix is not a valid minimal rank table.");
+    AList := entries A;
+    n := #AList;
+    ASMret :=  mutableMatrix(ZZ,n,n);
     for i from 0 to n-1 do (
         for j from 0 to n-1 do (
-            if (i == 0) then do (
-
+            if (i == 0 and j == 0) then (
+                if (AList#0#0 == 1) then (A_(0,0) = 1;);
+            )
+            else if (i == 0) then (
+                if (AList#i#j == 1 and AList#i#(j-1)==0) then (ASMret_(i,j) = 1;);
+            )
+            else if (j == 0) then (
+                if (AList#i#j == 1 and AList#(i-1)#j==0) then (ASMret_(i,j) = 1;);
+            )
+            else (
+                if (AList#i#j - AList#i#(j-1) == 1 and AList#i#j - AList#(i-1)#j == 1 and AList#(i-1)#j == AList#(i-1)#(j-1)) then (ASMret_(i,j) = 1;)
+                else if (AList#i#j == AList#i#(j-1) and AList#i#j == AList#(i-1)#j and AList#i#j > AList#(i-1)#(j-1)) then (ASMret_(i,j) = -1;);
             );
         );
     );
-);*-
+
+    ASMret
+);
+
+--------------------------------------------
+-- INPUT: an integer matrix M where the entries are at least 0
+-- OUTPUT: the minimal rank table associated to M representing an ASM 
+-- TODO: tests and documentation
+--------------------------------------------
+rankTableFromMatrix = method()
+rankTableFromMatrix Matrix := Matrix => (A) -> (
+    AList := entries A;
+    n := #AList;
+    rankTable := mutableMatrix(ZZ,n,n);
+    if not(#(AList#0) == n) then error("Must be a square matrix.");
+
+    for i from 0 to n-1 do (
+        for j from 0 to n-1 do(
+            if not(ring(AList#i#j) === ZZ) then error("Must be an integer matrix.");
+            if (AList#i#j < 0) then error("Must be a matrix with nonnegative entries.");
+            if (i == 0 and j == 0) then (
+                rankTable_(n-1,n-1) = min(n,AList#(n-1)#(n-1));
+            )
+            else if (i == 0) then (
+                rankTable_(n-1-i,n-1-j) = min(n-i,n-j,AList#(n-1-i)#(n-1-j),rankTable_(n-1-i,n-j));
+            )
+            else if (j == 0) then (
+                rankTable_(n-1-i,n-1-j) = min(n-i,n-j,AList#(n-1-i)#(n-1-j),rankTable_(n-i,n-j-1));
+            )
+            else (
+                rankTable_(n-1-i,n-1-j) = min(n-i,n-j,AList#(n-1-i)#(n-1-j),rankTable_(n-1-i,n-j),rankTable_(n-i,n-j-1));
+            );
+        );
+    );
+
+    for i from 0 to n-1 do (
+        for j from 0 to n-1 do(
+            if (i == 0 and j == 0) then (
+                rankTable_(i,j) = min(1,rankTable_(i,j));
+            )
+            else if (i == 0) then (
+                rankTable_(i,j) = min(rankTable_(i,j), rankTable_(i,j-1)+1);
+            )
+            else if (j == 0) then (
+                rankTable_(i,j) = min(rankTable_(i,j), rankTable_(i-1,j)+1);
+            )
+            else (
+                rankTable_(i,j) = min(rankTable_(i,j), rankTable_(i,j-1)+1, rankTable_(i-1,j)+1);
+            );
+        );
+    );
+
+    rankTable
+);
 
 
 ----------------------------------------
 -- Part 2. Invariants of ASM Varieties
 ----------------------------------------
+
+------------------------------------------
+--INPUT: lengthIncrSeq, takes a permutation in one line notation
+--OUTPUT: returns the length of the longest consecutive permutation
+--        which starts at the beginning of the permutation
+--TO DO: Thoroughly test and document
+------------------------------------------
+
+lengthIncrSubset = (w) -> (
+   
+   if (w == {}) then return 0;
+   
+   preVal := w_0;
+   for i from 1 to #w-1 do (
+       if (preVal > w_i) then return i;
+       preVal = w_i;
+   );
+   return #w;
+);
+
+
+------------------------------------------
+--INPUT: rajCode, takes a permutation in one line notation
+--OUTPUT: returns the rajCode of the permutation
+------------------------------------------
+
+rajCode = method()
+rajCode List := ZZ => (w) -> (
+
+    if not (isPerm w) then error ("Expecting a permutation.");
+   
+    rajCodeVec := {};
+    for k from 0 to #w-2 do (
+	maxLengthIncr := 1;
+	fVal := w_k;
+	subPerm := w_{k+1..#w-1};
+	
+	for l in delete({},subsets(subPerm)) do (
+	    testPerm := {fVal} | l;
+	    maxLengthIncr = max(maxLengthIncr,lengthIncrSubset(testPerm));
+	);
+    	
+	rajCodeVec := rajCodeVec | {#subPerm+1 - maxLengthIncr};
+    );
+    return rajCodeVec;
+);
+
+
+------------------------------------------
+--INPUT: rajIndex, takes a permutation in one line notation
+--OUTPUT: returns the rajIndex of the permutation
+------------------------------------------
+rajIndex = method()
+rajIndex List := ZZ => (w) -> (
+  
+    if not (isPerm w) then error ("Expecting a permutation.");
+    
+    return sum rajCode w;
+    
+);
+
 
 
 ---------------------------------
@@ -869,32 +1057,84 @@ doc ///
         (schubertDecomposition, Ideal)
         schubertDecomposition
     Headline
-        finds the decomposition of an ASM ideal into Schubert ideals
+        finds the decomposition of an ASM ideal into Schubert determinantal ideals
     Usage
         schubertDecomposition(I)
     Inputs
         I:Ideal
     Description
         Text
-            Each element is the permutation associated to a prime component in 
-            the primary decomposition of the antidiagonal initial ideal of I.
+            Given an ASM ideal, it can be decomposed into Schubert determinantal ideals
+            as I = I_{w_1} \cap ... \cap I_{w_k}, where the w_i are permutations.
+            As output, each element in the list is the permutation associated 
+            to a prime component in the Schubert decomposition of the antidiagonal 
+            initial ideal of I.
 ///
 
 doc ///
     Key
-        (isASMIdeal, Ideal)
-        isASMIdeal
+        (isIntersectionSchubIdeals, Ideal)
+        isIntersectionSchubIdeals
     Headline
         whether an ideal is ASM
     Usage
-        isASMIdeal(I)
+        isIntersectionSchubIdeals(I)
     Inputs
         I:Ideal
     Description
         Text
             An ideal I is ASM if I is radical and I = I_{w_1} \cap ... \cap I_{w_k},
-            where I_{w_i} are Schubert ideals. 
+            where the I_{w_i} are Schubert determinantal ideals.
 ///
+
+doc ///
+    Key
+    	rankMatrix
+	(rankMatrix, Matrix)
+	(rankMatrix, List)
+    Headline
+    	Computes a matrix of rank conditions that determines a Schubert determinantal ideal or, more generally, an alternating sign matrix ideal.
+    Usage
+    	rankMatrix(M)
+	rankMatrix(w)
+    Inputs
+    	M:Matrix
+	w:List
+    Description
+    	Text
+	 Given an alternating sign matrix or a permutation in 1-line notation, 
+	 outputs the matrix of rank condition associated to that alternating sign matrix or permutation.
+	Example
+	 rankMatrix({1,3,2})
+	 rankMatrix(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+
+///
+
+doc ///
+    Key
+    	essentialBoxes
+	(essentialBoxes, Matrix)
+	(essentialBoxes, List)
+    Headline
+    	Computes a list of the essential boxes in the Rothe Diagram for an alternating sign matrix M or a permutation in 1-line notation.
+    Usage
+    	essentialBoxes(M)
+	essentialBoxes(w)
+    Inputs
+    	M:Matrix
+	w:List
+    Description
+    	Text
+	 Given an alternating sign matrix or a permutation in 1-line notation, 
+	 outputs a list of the essential boxes in the Rothe diagram for that matrix. 
+	Example
+	 essentialBoxes({1,3,2})
+	 essentialBoxes(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+
+///
+
+
+
 
 -------------------------
 -------------------------
@@ -1002,6 +1242,16 @@ assert(sort augmentedRotheDiagram {2,1,5,4,3} == sort {((1,1),0), ((3,3),2),((3,
 assert(sort augmentedRotheDiagram matrix{{0,1,0},{1,-1,1},{0,1,0}} == sort{((1,1),0), ((2,2),1)})
 assert (sort augmentedRotheDiagram matrix {{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}} == sort {((1,1),0),((1,2),0),((4,3),2),((3,3),2)})
 ///
+
+
+TEST ///
+-- essentialBoxes 
+
+assert(essentialBoxes({2,1,6,3,5,4 })== {(1, 1), (3, 5), (5, 4)})
+assert(essentialBoxes matrix {{0,1,0,0,0,0},{1,0,0,0,0,0},{0,0,0,0,0,1},{0,0,1,0,0,0},{0,0,0,0,1,0},{0,0,0,1,0,0}} == {(1, 1), (3, 5), (5, 4)})
+///
+
+
 end---------------------------------------------------------------
 
 
