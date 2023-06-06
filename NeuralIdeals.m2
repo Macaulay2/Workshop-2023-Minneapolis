@@ -6,7 +6,7 @@ Authors => {{Name => "Hugh Geller"},{Name => "Rebecca R.G."}},
 Headline => "neural ideals",
 Keywords => {"Commutative Algebra"},
 DebuggingMode => false,
-PackageImports => {"PseudomonomialPrimaryDecomposition"},
+PackageImports => {"PrimaryDecomposition"},
 Reload => false
 )
 
@@ -194,7 +194,7 @@ iterCanonicalForm(NeuralCode) := C -> (
     initCode := C.codes#0;
     canonical := {};
     for i to d-1 do (
-	canonical = append(canonical,x_(i+1) - value(initCode#i))
+	canonical = append(canonical,R_i - value(initCode#i))
 	);
     for i from 1 to #C.codes - 1 do (
 	current := C.codes#i;
