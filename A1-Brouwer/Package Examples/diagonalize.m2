@@ -38,35 +38,4 @@ print diagonalize(B)
 print diagonalize(C)
 print diagonalize(D)
 
-print "------------------------------------------------------------";
---wittIndex method
-wittIndex =method()
-
-wittIndex (Matrix,Ring) := ZZ => (A,k) -> (
-    D := diagonalize(A);
-    n:=numRows(A);
-    R:=k[x_0..x_(n-1)];
-    Dvals := (for i from 0 to n-1 list (D_(i,i)));
-    f:=sum (for i from 0 to n-1 list (Dvals_i*x_i^2));
-    use k;
-    soln:=new MutableList;
-    solnPt:=new MutableList;
-    for bound from 1 to 10 do (
-        soln:= new MutableList from rationalPoints(ideal(f),Bound=>bound);
-        if (#soln >1) then(
-            if soln#0 == toList(n:0) then (solnPt=soln#1) else (solnPt=soln#0);
-            break;
-        );
-    );
-    y:= new MutableList from toList(n:0);
-    if solnPt#0==0 
-        then (y#0=1;) 
-        else (y#0=-solnPt#1; y#1=solnPt#0);
-    --solnPt and y span a copy of |H in A
-    return 0;
-);
-
-print wittIndex(B,QQ);
-
-
 
