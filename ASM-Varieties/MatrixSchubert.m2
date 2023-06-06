@@ -19,7 +19,7 @@ newPackage(
 	    "SimplicialComplexes",
 	    "SimplicialDecomposability",
 	    "Posets",
-        "MinimalPrimes"
+            "MinimalPrimes"
             },
         DebuggingMode => true
         )
@@ -39,6 +39,7 @@ export{
     "composePerms",
     "isPerm",
     "schubertPoly",
+    "doubleSchubertPoly",
     "minimalRankTable",
     "permLength",
     "augmentedRotheDiagram",
@@ -46,7 +47,12 @@ export{
     "isVexillary",
     "schubertDecomposition",
     "isASMIdeal",
-    "isRankTable"
+    "isRankTable",
+    "rajCode",
+    "rajIndex",
+    "isMinRankTable",
+    "Double",
+    "rankTableToASM"
     }
 
 -- Utility routines --
@@ -417,8 +423,9 @@ grothendieckPoly(List) := (w) -> (
 
 
 
-schubertPolyHelper = method()
-schubertPolyHelper(List, Ring) := (w, Q) -> (
+schubertPolyHelper = method(Options=>{Double=>false})
+schubertPolyHelper(List, Ring) := opts->(w, Q) -> (
+    isDouble := opts.Double;
     n := #w;
     if not (isPerm w) then error ("The input must be a permutation matrix.");
    -- Q := QQ[x_1..x_n];
@@ -432,7 +439,10 @@ schubertPolyHelper(List, Ring) := (w, Q) -> (
     v := swap(w,r,s);
     previnds := select(0..r-1, q-> permLength(swap(v,q,r))==permLength(v)+1);
     us := apply(previnds, i-> swap(v,i,r));
-    sum(toList(apply(us, u->schubertPolyHelper(u,Q))))+ Q_r * schubertPolyHelper(v,Q)
+    if not isDouble then
+        sum(toList(apply(us, u->schubertPolyHelper(u,Q,Double=>isDouble))))+ Q_r * schubertPolyHelper(v,Q,Double=>isDouble)
+    else 
+        sum(toList(apply(us, u->schubertPolyHelper(u,Q,Double=>isDouble))))+ (Q_r-Q_(n-1+v_r)) * schubertPolyHelper(v,Q,Double=>isDouble)
     )
 
 schubertPoly = method()
@@ -440,7 +450,16 @@ schubertPoly(List) := (w) -> (
     n := #w;
     x := local x;
     Q := QQ[x_1..x_n];
-    schubertPolyHelper(w, Q)
+    schubertPolyHelper(w, Q, Double=>false)
+    )
+
+doubleSchubertPoly = method()
+doubleSchubertPoly(List) := (w) -> (
+    n := #w;
+    x := local x;
+    y := local y;
+    Q := QQ[x_1..x_n,y_1..y_n];
+    schubertPolyHelper(w, Q, Double=>true)
     )
 
 --TODO: add tests
@@ -577,8 +596,8 @@ isASMIdeal Ideal := List => (I) -> (
 --OUTPUT: whether M is a valid rank table.
 --TODO: documentation, tests
 ------------------------------------------
-isRankTable = method()
-isRankTable Matrix := Boolean => (A) -> (
+isMinRankTable = method()
+isMinRankTable Matrix := Boolean => (A) -> (
     AList := entries A;
 
     a := #AList;
@@ -597,30 +616,104 @@ isRankTable Matrix := Boolean => (A) -> (
     true
 );
 
--*
+
 ------------------------------------------
 --INPUT: a rank table, presented as a matrix
 --OUTPUT: an ASM corresponding to the rank table, presented as a matrix
+--TODO: documentation and tests
 ------------------------------------------
 rankTableToASM = method()
 rankTableToASM Matrix := Matrix => (A) -> (
-    n := #A;
-    ASM :=  mutableMatrix(ZZ,n,n);
-
-    -- find where all the ones are by checking whether it is larger than the entries above and to the left
+    if not(isMinRankTable(A)) then error("The inputted matrix is not a valid minimal rank table.");
+    AList := entries A;
+    n := #AList;
+    ASMret :=  mutableMatrix(ZZ,n,n);
     for i from 0 to n-1 do (
         for j from 0 to n-1 do (
-            if (i == 0) then do (
-
+            if (i == 0 and j == 0) then (
+                if (AList#0#0 == 1) then (A_(0,0) = 1;);
+            )
+            else if (i == 0) then (
+                if (AList#i#j == 1 and AList#i#(j-1)==0) then (ASMret_(i,j) = 1;);
+            )
+            else if (j == 0) then (
+                if (AList#i#j == 1 and AList#(i-1)#j==0) then (ASMret_(i,j) = 1;);
+            )
+            else (
+                if (AList#i#j - AList#i#(j-1) == 1 and AList#i#j - AList#(i-1)#j == 1 and AList#(i-1)#j == AList#(i-1)#(j-1)) then (ASMret_(i,j) = 1;)
+                else if (AList#i#j == AList#i#(j-1) and AList#i#j == AList#(i-1)#j and AList#i#j > AList#(i-1)#(j-1)) then (ASMret_(i,j) = -1;);
             );
         );
     );
-);*-
+
+    ASMret
+);
 
 
 ----------------------------------------
 -- Part 2. Invariants of ASM Varieties
 ----------------------------------------
+
+------------------------------------------
+--INPUT: lengthIncrSeq, takes a permutation in one line notation
+--OUTPUT: returns the length of the longest consecutive permutation
+--        which starts at the beginning of the permutation
+--TO DO: Thoroughly test and document
+------------------------------------------
+
+lengthIncrSubset = (w) -> (
+   
+   if (w == {}) then return 0;
+   
+   preVal := w_0;
+   for i from 1 to #w-1 do (
+       if (preVal > w_i) then return i;
+       preVal = w_i;
+   );
+   return #w;
+);
+
+
+------------------------------------------
+--INPUT: rajCode, takes a permutation in one line notation
+--OUTPUT: returns the rajCode of the permutation
+------------------------------------------
+
+rajCode = method()
+rajCode List := ZZ => (w) -> (
+
+    if not (isPerm w) then error ("Expecting a permutation.");
+   
+    rajCodeVec := {};
+    for k from 0 to #w-2 do (
+	maxLengthIncr := 1;
+	fVal := w_k;
+	subPerm := w_{k+1..#w-1};
+	
+	for l in delete({},subsets(subPerm)) do (
+	    testPerm := {fVal} | l;
+	    maxLengthIncr = max(maxLengthIncr,lengthIncrSubset(testPerm));
+	);
+    	
+	rajCodeVec := rajCodeVec | {#subPerm+1 - maxLengthIncr};
+    );
+    return rajCodeVec;
+);
+
+
+------------------------------------------
+--INPUT: rajIndex, takes a permutation in one line notation
+--OUTPUT: returns the rajIndex of the permutation
+------------------------------------------
+rajIndex = method()
+rajIndex List := ZZ => (w) -> (
+  
+    if not (isPerm w) then error ("Expecting a permutation.");
+    
+    return sum rajCode w;
+    
+);
+
 
 
 ---------------------------------
@@ -651,6 +744,78 @@ doc ///
       	  grothendieckPoly w
 	  betti res antiDiagInit w	   
 ///
+
+
+doc ///
+    Key
+	(permLength, List)
+        permLength
+    Headline
+    	to find the length of a permutation in 1-line notation.
+    Usage
+        permLength(w)
+    Inputs
+    	w:List
+    Description
+    	Text
+	 Given a permutation in 1-line notation returns the Coxeter length of the permutation.
+	Example
+    	    w = {2,5,4,1,3}
+	    permLength(w)
+
+	    
+///
+
+doc ///
+    Key
+        (rotheDiagram, List)
+	(rotheDiagram, Matrix)
+    	rotheDiagram
+    Headline
+    	to find the Rothe diagram of a partial alternating sign matrix
+    Usage
+    	rotheDiagram(w)
+	rotheDiagram(M)
+    Inputs
+    	w:List
+	    or {\tt M} is a @TO Matrix@
+    Description
+    	Text
+	 Given a permutation in 1-line notation or a partial alternating sign matrix returns the Rothe diagram.
+	Example
+    	    w = {2,5,4,1,3}
+	    rotheDiagram(w)
+	    M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+	    rotheDiagram(M)
+
+	    
+///
+
+doc ///
+    Key
+        (augmentedRotheDiagram, List)
+	(augmentedRotheDiagram, Matrix)
+    	augmentedRotheDiagram
+    Headline
+    	to find the Rothe diagram of a partial alternating sign matrix together with the rank conditions determining the alternating sign matrix variety
+    Usage
+    	augmentedRotheDiagram(w)
+	augmentedRotheDiagram(M)
+    Inputs
+    	w:List
+	    or {\tt M} is a @TO Matrix@
+    Description
+    	Text
+	 Given a permutation in 1-line notation or a partial alternating sign matrix returns list of entries of Rothe diagram with the ranks of each entry.
+	Example
+    	    w = {2,5,4,1,3}
+	    augmentedRotheDiagram(w)
+	    M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+	    augmentedRotheDiagram(M)
+
+	    
+///
+
 
 doc ///
     Key
@@ -932,6 +1097,13 @@ assert(permLength {2,1,3} == 1)
 assert(permLength {8,7,6,5,4,3,2,1} == 28)
 ///
 
+TEST ///
+-- augmentedRotheDiagram 
+
+assert(sort augmentedRotheDiagram {2,1,5,4,3} == sort {((1,1),0), ((3,3),2),((3,4),2), ((4,3),2)})
+assert(sort augmentedRotheDiagram matrix{{0,1,0},{1,-1,1},{0,1,0}} == sort{((1,1),0), ((2,2),1)})
+assert (sort augmentedRotheDiagram matrix {{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}} == sort {((1,1),0),((1,2),0),((4,3),2),((3,3),2)})
+///
 end---------------------------------------------------------------
 
 
@@ -990,4 +1162,3 @@ restart
 needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
-
