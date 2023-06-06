@@ -41,10 +41,11 @@ valuation Function := v -> (
 --    internalValuation(v, null, null)
     )
 
-ourRings := {Ring,Subring,LocalRing}
+ourSources := {Ring,Subring,LocalRing}
+ourTargets := {Ring,Subring,LocalRing}
 
-for i in ourRings do (
-    for j in ourRings do (
+for i in ourSources do (
+    for j in ourTargets do (
         valuation (Function, i, j) := (v, S, T) -> (
             internalValuation(v, S, T)
             )
@@ -227,6 +228,38 @@ doc ///
      SeeAlso
          MethodFunction
      ///
+
+doc ///
+     Key
+         valuation
+	 (valuation, Function)
+         (valuation, Function, Ring, Ring)
+
+     Headline
+         Constructs a user defined valuation object
+     Usage
+         v = valuation(f)
+     	 v = valuation(f, S, T)
+     Inputs
+         f:Function
+     	 S:Ring
+     	 S:LocalRing
+     	 S:Subring
+     	 T:Ring
+     	 T:LocalRing
+     	 T:Subring
+     Outputs
+         v:Valuation
+     	    user defined valuation function
+     Description
+         Text
+             A function to construct a user defined valuation function.
+         Example
+             v = valuation(x -> if x == 0 then infinity else 0)
+     	     v = valuation(x -> if x == 0 then infinity else 0, ZZ, ZZ)
+     SeeAlso
+          MethodFunction
+///
 
      TEST ///
          assert(trivialValuation 5 == 0)
