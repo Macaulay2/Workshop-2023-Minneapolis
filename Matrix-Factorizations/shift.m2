@@ -53,3 +53,13 @@ cone(ZZdFactorizationMap) := ZZdFactorization => f -> (
 dual(ZZdFactorization) := ZZdFactorization => {} >> o -> X -> (
     ZZdfactorization{-dual((dd^X)_2), dual((dd^X)_1)}
     )
+
+
+--hom
+Hom(ZZdFactorization, ZZdFactorization) := ZZdFactorization => (X,Y) -> (
+    tensorMF(dual X, Y)
+    )
+
+
+end--
+
