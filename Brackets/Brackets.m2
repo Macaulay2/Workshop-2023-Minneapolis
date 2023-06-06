@@ -9,7 +9,7 @@ newPackage(
           DebuggingMode => true
           )
 
-export {"AbstractGCRing", "bracketRing", "BracketRing", "GCAlgebra", "normalForm", "gc"}
+export {"AbstractGCRing", "bracketRing", "BracketRing", "GCAlgebra", "normalForm", "gc", "toBracketPolynomial"}
 
 -* Code section *-
 
