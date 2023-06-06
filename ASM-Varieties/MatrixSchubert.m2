@@ -98,8 +98,10 @@ lastDescent List := Boolean => (w) -> (
     )
 
 permLength = method()
-permLength List:= ZZ => (p) -> (l := 0;
-     scan(#p, i->scan(i..#p-1, j ->(if p#i>p#j then l=l+1)));
+permLength List:= ZZ => (p) -> (
+    if not(isPerm p) then error("The input must be a permutation.");
+    l := 0;
+    scan(#p, i->scan(i..#p-1, j ->(if p#i>p#j then l=l+1)));
      l)
  
 swap = (L,i,j) -> (apply(#L, k-> if k!=i and k!=j then L_k
@@ -173,23 +175,23 @@ composePerms (List, List) := List => (u,v) -> (
     apply(u0_v0, i-> i+1)
     )
 
-------------------------------------
--- INPUT: A permutation in one-line notation
--- OUTPUT: The length of the permutation (number of inversions)
--- TODO: Add documentations + examples
-------------------------------------
+-- ------------------------------------
+-- -- INPUT: A permutation in one-line notation
+-- -- OUTPUT: The length of the permutation (number of inversions)
+-- -- TODO: Add documentations + examples
+-- ------------------------------------
 
-permLength = method()
-permLength List := ZZ => w -> (
-    if not (isPerm w) then error("the argument is not a permutation");
-    k := 0;
-    for i from 0 to #w - 2 do (
-        for j from i + 1 to #w - 1 do (
-            if w_i > w_j then k = k +1;
-        ); 
-    );
-    k
-)
+-- permLength = method()
+-- permLength List := ZZ => w -> (
+--     if not (isPerm w) then error("the argument is not a permutation");
+--     k := 0;
+--     for i from 0 to #w - 2 do (
+--         for j from i + 1 to #w - 1 do (
+--             if w_i > w_j then k = k +1;
+--         ); 
+--     );
+--     k
+-- )
 
 --------------------------------
 --checks if a permutation is pattern-avoiding
