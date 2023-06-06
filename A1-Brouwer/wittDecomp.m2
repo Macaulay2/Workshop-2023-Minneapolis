@@ -1,13 +1,19 @@
-{*
-    wittDecomp method performs the Witt decomposition for Gram matrix A over field k
-    inputs:
-        Matrix A
-        Ring k
 
-    outputs:
-        ZZ: Witt index (number of copies of |H in A)
-        Matrix: The remaining anisotrpic part of A 
-*}
+--    wittDecomp method performs the Witt decomposition for Gram matrix A over field k
+--    inputs:
+--        Matrix A
+--        Ring k
+
+--    outputs:
+--        ZZ: Witt index (number of copies of |H in A)
+--        Matrix: The remaining anisotrpic part of A 
+
+
+load "./GW-type.m2"
+load "./matrixBooleans.m2"
+load "./squarefreePart.m2"
+load "./easyUpperLeftTriangular.m2"
+load "./diagonalize.m2"
 
 
 wittDecomp =method()
@@ -57,4 +63,5 @@ wittDecomp (Matrix,Ring) := (ZZ,Matrix) => (A,k) -> (
     return (1+subComputation_0, subComputation_1);
 )
 
+D=matrix{{-1/1,-1,1,1},{-1,1,1,0},{1,1,0,0},{1,0,0,0}};
 print wittDecomp(D,QQ);
