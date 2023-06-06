@@ -190,6 +190,7 @@ canonicalForm(NeuralCode) := C -> (canonicalForm(neuralIdeal(C)))
 iterCanonicalForm = method();
 iterCanonicalForm(NeuralCode) := C -> (
     d := dim C;
+    R := ring C;
     initCode := C.codes#0;
     canonical := {};
     for i to d-1 do (
@@ -203,8 +204,8 @@ iterCanonicalForm(NeuralCode) := C -> (
 	for j to #current - 1 do (
 	    c :=  value(current#j);
 	    codeCoordinate = append(codeCoordinate,c);
-	    factors = append(factors,x_(j+1) - c);
-	    subs = append(subs,x_(j+1) => c);
+	    factors = append(factors,R_j  - c);
+	    subs = append(subs,R_j => c);
 	    );
 	currentGens := canonical;
 	M := {};
