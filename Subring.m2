@@ -5,8 +5,9 @@ newPackage(
     Date => "June 6, 2023",
     Authors => {
 	{Name => "Casey Hill", Email => "caseybhill2@gmail.com"},
+        {Name => "Trevor K. Karn", Email => "karnx018@umn.edu"},
         {Name => "Miranda Moore", Email => "moor2340@umn.edu"},
-        {Name => "Trevor K. Karn", Email => "karnx018@umn.edu"}},
+        {Name => "Christopher O'Neill", Email => "cdoneill@sdsu.edu"}},
     Headline => "an example Macaulay2 package",
     Keywords => {"Documentation"},
     DebuggingMode => false
