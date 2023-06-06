@@ -44,7 +44,7 @@ export{
     "isPatternAvoiding",
     "isVexillary",
     "schubertDecomposition",
-    "isASMIdeal",
+    "isIntersectionSchubIdeals",
     "isRankTable"
     }
 
@@ -173,8 +173,9 @@ permLength List := ZZ => w -> (
 --------------------------------
 isPatternAvoiding = method()
 isPatternAvoiding (List,List) := Boolean => (perm, pattern) -> (
-    -- Checks if the given permutation avoids the given pattern.
-    -- Assume permutation is pattern-avoiding, break if not true
+    --input validation
+    if not (isPerm perm) then error(toString perm | " is not a permutation.");
+    --assume permutation is pattern-avoiding, break if not true
     isAvoiding := true;
     for idx in subsets(0..#perm-1, #pattern) do {
         sortedIdx := sort(idx);
@@ -193,6 +194,8 @@ isPatternAvoiding (List,List) := Boolean => (perm, pattern) -> (
 --------------------------------
 isVexillary = method()
 isVexillary List := Boolean => (perm) -> (
+    --input validation
+    if not (isPerm perm) then error(toString perm | " is not a permutation.");
     isPatternAvoiding(perm, {2,1,4,3})
 )
 
@@ -475,11 +478,6 @@ minimalRankTable List := Matrix => (L) -> (
 --OUTPUT: the primary decomposition of the ASM ideal
 --TODO: docs and tests
 --TODO: input validation/type checking
---
--- if lt(I) is not radical, then fuss
--- if lt(I) radical, then 
---
--- output w_1..w_k
 -------------------------------------------
 schubertDecomposition = method()
 schubertDecomposition Ideal := List => (I) -> (
@@ -491,9 +489,10 @@ schubertDecomposition Ideal := List => (I) -> (
         perms := apply(mons / variableIndex, perm -> toOneLineNotation(perm, maxIdx));
         cycleDecomp = append(cycleDecomp, fold(composePerms, reverse perms));
     };
-    cycleDecomp
+    unique cycleDecomp
 )
-
+R = QQ[x_(1,1)..x_(4,4), MonomialOrder=>GRevLex]
+gens R
 
 
 -------------------------------------------
@@ -504,8 +503,8 @@ schubertDecomposition Ideal := List => (I) -> (
 --TODO: docs and tests
 --TODO: input validation/type checking
 -------------------------------------------
-isASMIdeal = method()
-isASMIdeal Ideal := List => (I) -> (
+isIntersectionSchubIdeals = method()
+isIntersectionSchubIdeals Ideal := List => (I) -> (
     isASM := true;
     if (I == radical(I)) then {
         schubDecomp := schubertDecomposition I;
@@ -744,12 +743,12 @@ doc ///
 
 doc ///
     Key
-        (isASMIdeal, Ideal)
-        isASMIdeal
+        (isIntersectionSchubIdeals, Ideal)
+        isIntersectionSchubIdeals
     Headline
         whether an ideal is ASM
     Usage
-        isASMIdeal(I)
+        isIntersectionSchubIdeals(I)
     Inputs
         I:Ideal
     Description
@@ -903,6 +902,7 @@ restart
 installPackage "MatrixSchubert"
 restart
 needsPackage "MatrixSchubert"
+I = schubertDetIdeal {2,1,6,3,5,4}
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
 
