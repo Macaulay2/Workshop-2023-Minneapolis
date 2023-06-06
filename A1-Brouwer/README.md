@@ -10,3 +10,21 @@ Our goals for the workshop:
 The other links may also be useful:
 - [Diagonalizing symmetric bilinear forms](https://www2.math.upenn.edu/~tbraz/notes/diagonalizing-forms.pdf), we could potentially use this to exploit sparsity in Gram matrices to more quickly diagonalize forms. The Gram matrices attached to A1-degrees often have this sort of structure, so it would be highly useful.
 - [Localization as quotients](https://machineappreciation.wordpress.com/2022/04/15/localizations-as-quotients/), a blog post about normal bases and saturation.
+
+
+# Completed
+:white_check_mark: Made `GrothendieckWittClass` type with a constructor out of a matrix over a field, with `isWellDefined` boolean asking whether it defines a symmetric bilinear form over a field of characteristic not equal to 2.
+
+:white_check_mark: Made `gwAdd` and `gwMultiply` methods for adding and multiplying classes in GW
+
+:white_check_mark: Made `diagonalize` method for diagonalizing symmetric bilinear forms
+
+# In progress
+
+:small_orange_diamond: `wittDecomp` algorithm for detecting the Witt class of a symmetric bilinear form
+
+:small_orange_diamond: Refined algorithms for quickly diagonalizing sparse matrices (see `easyUpperTriangular`)
+
+# Still to do
+
+:small_red_triangle: Implement A1-Brouwer degrees into Macaulay2
