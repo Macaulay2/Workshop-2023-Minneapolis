@@ -1,4 +1,3 @@
-
 load "./GW-type.m2"
 load "./matrixBooleans.m2"
 load "./squarefreePart.m2"
@@ -7,7 +6,12 @@ load "./diagonalize.m2"
 
 
 wittDecomp =method()
-wittDecomp (Matrix,Ring) := (ZZ,Matrix) => (A,k) -> (
+wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
+    k:= ring A;
+    
+    -- Add error in case the base field is RR or CC
+    if instance(k,InexactFieldFamily) then error "Error: base field is inexact, use wittDecompInexact() instead";
+    
     n:=numRows(A); --rank of matrix
     R:=k[x_0..x_(n-1)];
     f:=sum (
@@ -58,7 +62,11 @@ wittDecomp (Matrix,Ring) := (ZZ,Matrix) => (A,k) -> (
 
 wittDecompInexact=method()
 
-wittDecompInexact (Matrix,InexactFieldFamily) := (ZZ,Matrix) => (A,k) -> (
+wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
+    k := ring A;
+    
+    if not instance(k,InexactFieldFamily) then error "Error: base field is not RR or CC";
+    
     n:=numRows(A); --rank of matrix
     --if k is the complex numbers, witt decomposition depends only on rank
     if (k===CC) then (
@@ -83,7 +91,5 @@ wittDecompInexact (Matrix,InexactFieldFamily) := (ZZ,Matrix) => (A,k) -> (
         else if signature > 0 then ( return (wittIndex, id_(k^(signature)))) --signature characterizes anisotropic part
         else return (wittIndex, -id_(k^(-signature)));
         );
-
-
-
 );
+
