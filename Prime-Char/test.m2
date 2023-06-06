@@ -36,10 +36,11 @@ cohomDim J == n*d - 1
 -------------------
 -- Result mentioned intro of in E.E. Witt / Advances in Mathematics 231 (2012) 1998–2012 
 
-p = 2
-r = 3
-s = 6
+p = 2;
+r = 3;
+s = 6;
 R = ZZ/p[x_(1,1)..x_(r,s)]
 X = matrix toList apply(1..r, i -> toList apply(1..s, j -> x_(i,j) ) );
 I = minors( min(r,s), X );
 cohomDim I == s - r + 1 and all( 0..(s-r), i -> localCohomology( i, I, R ) == 0 )
+
