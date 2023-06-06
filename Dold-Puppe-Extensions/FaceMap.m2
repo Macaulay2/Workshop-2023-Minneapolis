@@ -5,7 +5,7 @@ FaceHelperMap = (n1,k1,i) ->(
     curList = listBuilder(#A1);
 --    zeroes = new List from (binomial(n-1,k)) : 0;
     sig = {};
-    zeroes = new List from (#A1) : 0;
+    zeroes = new List from (#A1) : 0;	 
     remains = {};
     l = 0;
     sig2 = {};
@@ -19,7 +19,6 @@ FaceHelperMap = (n1,k1,i) ->(
 	    );
 	);
     for j to #sig-1 do(
-	print j;
 	 if (A2_j_(i-1) > 0 and l < #remains) then (
 	    sig2 = append(sig2, remains_l);
 	    l = l+1;
