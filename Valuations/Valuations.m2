@@ -12,7 +12,8 @@ newPackage("Valuations",
             {Name => "Oliver Clarke", Email => "oliver.clarke@ed.ac.uk", HomePage => "oliverclarkemath.com"}},
         DebuggingMode => false,
         HomePage => "https://github.com/Macaulay2/Workshop-2023-Minneapolis/tree/valuations",
-        Configuration => {}
+        Configuration => {},
+	PackageExports => {"LocalRings", "SubalgebraBases"}  
         )
 
 export{"function",
@@ -22,9 +23,6 @@ export{"function",
        "leadTermValuation",
        "lowestTermValuation"
        }
-
-importFrom_LocalRings {"LocalRing"}
-importFrom_SubalgebraBases {"Subring"}
 
 
 Valuation = new Type of HashTable
