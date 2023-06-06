@@ -35,7 +35,7 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     --if no solutions found we assume the form is anisotropic
     if ( not solnFound) then (return (0,A));
     --if solution found for rank 2 form, then the form is purely isotropy
-    if (n==2) then (return (1,{}));
+    if (n==2) then (return (1,matrix(k,{{}})));
 
     --find y not orthogonal (wrt bilinear form) to x
     x:=matrix{toList solnPt}; --x as a row matrix
@@ -73,7 +73,7 @@ wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
     
     --if k is the complex numbers, witt decomposition depends only on rank
     if (k===CC or instance(k,ComplexField)) then (
-        if (n%2==0) then(return (n//2,{})) --if rank is even, then matrix decomposes into n/2 hyberbolic forms with no anisotropic parts
+        if (n%2==0) then(return (n//2,matrix(CC,{{}}))) --if rank is even, then matrix decomposes into n/2 hyberbolic forms with no anisotropic parts
         else return (n//2,id_(k^1)); --if rank is odd, matrix decomposes into (n-1)/2 hyperbolic forms with 1-by-1 anisotropic part
 
         );
@@ -94,8 +94,12 @@ wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
         if (posEntries + negEntries > n) then print"A is singular";
         wittIndex := min(posEntries,negEntries); -- witt index is given by how many positive-negative diagonal entry pairs exist
         signature := posEntries-negEntries; 
-        if signature == 0 then (return (wittIndex,{}))
+        if signature == 0 then (return (wittIndex,matrix(RR,{{}})))
         else if signature > 0 then ( return (wittIndex, id_(k^(signature)))) --signature characterizes anisotropic part
         else return (wittIndex, -id_(k^(-signature)));
         );
 );
+
+
+M = matrix(RR,{{0,1},{1,0}})
+wittDecompInexact(M)
