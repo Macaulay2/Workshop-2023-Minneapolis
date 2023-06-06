@@ -18,7 +18,7 @@ newPackage("Valuations",
 export{"function",
        "valuation",
        "trivialValuation",
-       "padicValution",
+       "padicValuation",
        "leadTermValuation"
        }
 
@@ -51,8 +51,8 @@ getExponent = (p, x) -> (
     )
 
 
-padicValution = method()
-padicValution ZZ := p -> (
+padicValuation = method()
+padicValuation ZZ := p -> (
     assert isPrime p;
     func := x -> (
         if x == 0 then infinity
