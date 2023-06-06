@@ -266,7 +266,7 @@ document{
 document{
   Key => {canonicalForm, (canonicalForm,Ideal),(canonicalForm,NeuralCode)},
   Headline => "Canonical Form",
-  TEX "A method which computes the canonical form of a given squarfree pseudomonomial ideal or neural code.",
+  TEX "A method which computes the canonical form of a given squarefree pseudomonomial ideal or neural code.",
   Usage => "canonicalForm(Ideal) or canonicalForm(NeuralCode)",
   Inputs => {"Squarefree pseudomonomial ideal or NeuralCode"},
   Outputs => {"The canonical form"},
@@ -285,19 +285,19 @@ document{
 document{
   Key => {factoredCanonicalForm, (factoredCanonicalForm,Ideal),(factoredCanonicalForm,NeuralCode)},
   Headline => "Factored Canonical Form",
-  TEX "A method which computes the canonical form of a given squarfree pseudomonomial ideal or neural code.",
-  Usage => "canonicalForm(Ideal) or canonicalForm(NeuralCode)",
+  TEX "A method which computes the canonical form of a given squarefree pseudomonomial ideal or neural code and presents a factored list of generators.",
+  Usage => "factoredCanonicalForm(Ideal) or factoredCanonicalForm(NeuralCode)",
   Inputs => {"Squarefree pseudomonomial ideal or NeuralCode"},
-  Outputs => {"The canonical form"},
+  Outputs => {"The canonical form with all generators factored"},
   TEX "We compute an example",
   EXAMPLE lines ///
   C=neuralCode("000","001");
-  canonicalForm(C)
+  factoredCanonicalForm(C)
   ///,
   EXAMPLE lines ///
   R=ZZ/2[x_1..x_3];
   I=ideal(x_1*x_3,x_2*(1-x_1));
-  canonicalForm(I)
+  factoredCanonicalForm(I)
   ///,
 }
 
@@ -314,6 +314,15 @@ TEST ///
     C=neuralCode{"00","10"};
     I=neuralIdeal(C);
     assert(I==ideal((1-x_1)*x_2,x_1*x_2))
+    
+-- **TEST2**
+TEST ///
+    C=neuralCode{"00","10"};
+    I=neuralIdeal(C);
+    R=ring I;
+    cI=canonicalForm(I);
+    cC=canonicalForm(C);
+    assert(cI==cC) --issue: want to compare both to {x_2}, but it's in a different ring
 
 -- **TEST1**  This makes a pinch point.  We check that it has one minimal prime, that it has 3 variables, and that the singular locus is dimension 1 while the ambient object is dimension 2.  We also check that the ring we construct is a subring of A.
 --TEST ///
