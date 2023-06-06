@@ -63,3 +63,33 @@ padicValuation ZZ := p -> (
 
 --leading term valuation (max convention)
 leadTermValuation = valuation (x -> if x == 0 then infinity else leadMonomial x)
+
+---Documentation
+beginDocumentation()
+
+doc ///
+     Key
+     	 padicValuation
+	 (padicValuation, ZZ)
+     Headline
+     	 Construct a p-adic valuation
+     Usage
+     	 v = padicValuation(p)
+     Inputs
+     	 p:ZZ 
+	     a prime
+     Outputs
+     	 v:Valuation
+	     p-adic valuation using prime p
+     Description
+       Text
+       	   Stuff goes here
+       Example
+       	   v = padicValuation 7;
+	   v 98
+	   v (2/7)
+	   v 0
+	   v (-42)
+     SeeAlso
+     	 MethodFunction
+     ///
