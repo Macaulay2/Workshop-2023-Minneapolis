@@ -153,7 +153,9 @@ isBurch = I -> (
     mm := ideal gens R;
     mm != (mm*I):(I:mm)
     )
-burchIndex = I -> (
+
+burchIndex = method()
+burchIndex Ideal := I -> (
     R := ring I;
     mm := ideal gens R;
     degree(mm/((mm*I):(I:mm)))
@@ -192,6 +194,30 @@ Description
    M = coker random(R^2, R^{-1})
    socle M
    degree socle M
+///
+
+doc ///
+Key
+ burchIndex
+ (burchIndex, Ideal)
+Headline
+ Computes the Burch index of an ideal
+Usage
+ bi = burchIndex(I)
+Inputs
+ I: Ideal
+Outputs
+ bi: ZZ
+Description
+  Text
+   The Burch index of an ideal is
+   the dimension of the vector space
+   $m/(Im:(I:m))$, where $m$ is the maximal
+   ideal of the ring of $I$.
+  Example
+   S = ZZ/101[a,b]
+   I = (ideal(gens S))^2
+   burchIndex(I)
 ///
 
 
