@@ -367,49 +367,6 @@ fultonGens List := List => (w) -> (
     (schubertDetIdeal w)_*
     );
 
--*
-----------------------------------------
---OLD CODE
---INPUT: a list w corresponding to a permutation in 1-line notation
---OUTPUT: list of fulton generators for matrix determinantal ideal w
----------------------------------------
-fultonGens = method()
-fultonGens Matrix := List => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    zMatrix := genMat(numrows A, numcols A); --generic matrix
-    rankMat := rankMatrix A; --rank matrix for A
-    essBoxes := essentialBoxes A;
-    zBoxes := apply(essBoxes, i-> flatten table(i_0,i_1, (j,k)->(j+1,k+1))); --smaller matrix indices for each essential box
-    ranks := apply(essBoxes, i-> rankMat_(i_0-1,i_1-1)); --ranks for each essential box
-    fultonGens := new MutableList;
-    for box in essBoxes do (
-        pos := position(essBoxes, i-> i==box);
-        fultonGens#(#fultonGens) = (minors(ranks_pos+1, zMatrix^{0..(box_0-1)}_{0..(box_1-1)}))_*;
-        );
-    unique flatten toList fultonGens
-    );
-fultonGens List := List => (w) -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    A := permToMatrix w;
-    fultonGens A
-    )
-----------------------------------------
---OLD CODE
---INPUT: a list w corresponding to a permutation in 1-line notation
---OUTPUT: Schubert determinantal ideal for w
---WARNING: if you use the identity permutation your ring will be ZZ instead of Q and idk how to fix this
-----------------------------------------
-schubertDetIdeal = method()
-schubertDetIdeal Matrix := Ideal => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    ideal fultonGens A
-    )
-schubertDetIdeal List := Ideal => (w) -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");    
-    ideal fultonGens w
-    );
-*-
-
 ----------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: single Grothendieck polynomials
@@ -472,13 +429,9 @@ diagLexInit List := monomialIdeal => (w) -> (
 --TODO: extend to more general subword complexes from Coxeter groups, not just these?
 -------------------------------------------
 subwordComplex = method()
-subwordComplex Matrix := simplicialComplex => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    simplicialComplex antiDiagInit A
-    );
 
 subwordComplex List := simplicialComplex => (w) -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
+    if not(isPerm w) then error("The input must be a permutation.");
     simplicialComplex antiDiagInit w
     );
 
@@ -674,16 +627,14 @@ doc ///
 
 doc ///
     Key
+    	(schubertDetIdeal, Matrix)
     	schubertDetIdeal
-	(schubertDetIdeal, List)
     Headline
     	Computes Schubert determinantal ideal for a given permutation.
     Usage
     	schubertDetIdeal(M)
-	schubertDetIdeal(L)
     Inputs
     	M:Matrix
-	L:List
     Description
     	Text
 	 Given an alternating sign matrix or a permutation in 1-line notation, 
