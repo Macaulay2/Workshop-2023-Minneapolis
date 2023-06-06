@@ -154,8 +154,12 @@ isBurch = I -> (
     mm != (mm*I):(I:mm)
     )
 
+<<<<<<< HEAD
 burchIndex = method()
 burchIndex Ideal := I -> (
+=======
+burchIndex = I -> (
+>>>>>>> dcd6872f3d4ed0bfb8f6b26241664681eac30d96
     R := ring I;
     mm := ideal gens R;
     degree(mm/((mm*I):(I:mm)))
@@ -165,6 +169,7 @@ burchIndex Ideal := I -> (
       -* Documentation section *-
       
 beginDocumentation()
+
 
 doc ///
 Key
@@ -245,7 +250,7 @@ needsPackage "RandomIdeals"
 
 setRandomSeed 0
 
-mixedIdeal = (S, BList, MList) -> (randomPureBinomialIdeal(BList, S)+randomMonomialIdeal(MList,S))   
+
 
 for i from 1 to 4 do(
 <<(I = Examples#i)<<" "<<socleSummandsSemigroup(I, 7)<<endl;
