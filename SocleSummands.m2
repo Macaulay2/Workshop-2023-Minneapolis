@@ -383,7 +383,6 @@ Description
    I = ideal "a4,a3b,b3,a2c2,c5"
    R = S/I
    F = koszul(matrix{{a,b,c}})
-   socleSummands(F, Boundaries => false)
    socleSummandsSemigroup(F, Boundaries => false)
 
 ///
