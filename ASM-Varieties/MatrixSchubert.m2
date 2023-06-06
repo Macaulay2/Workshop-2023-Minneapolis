@@ -39,6 +39,7 @@ export{
     "composePerms",
     "isPerm",
     "schubertPoly",
+    "doubleSchubertPoly",
     "minimalRankTable",
     "permLength",
     "augmentedRotheDiagram",
@@ -46,7 +47,8 @@ export{
     "isVexillary",
     "schubertDecomposition",
     "isASMIdeal",
-    "isRankTable"
+    "isRankTable",
+    "Double"
     }
 
 -- Utility routines --
@@ -415,8 +417,9 @@ grothendieckPoly(List) := (w) -> (
 
 
 
-schubertPolyHelper = method()
-schubertPolyHelper(List, Ring) := (w, Q) -> (
+schubertPolyHelper = method(Options=>{Double=>false})
+schubertPolyHelper(List, Ring) := opts->(w, Q) -> (
+    isDouble := opts.Double;
     n := #w;
     if not (isPerm w) then error ("The input must be a permutation matrix.");
    -- Q := QQ[x_1..x_n];
@@ -430,7 +433,10 @@ schubertPolyHelper(List, Ring) := (w, Q) -> (
     v := swap(w,r,s);
     previnds := select(0..r-1, q-> permLength(swap(v,q,r))==permLength(v)+1);
     us := apply(previnds, i-> swap(v,i,r));
-    sum(toList(apply(us, u->schubertPolyHelper(u,Q))))+ Q_r * schubertPolyHelper(v,Q)
+    if not isDouble then
+        sum(toList(apply(us, u->schubertPolyHelper(u,Q,Double=>isDouble))))+ Q_r * schubertPolyHelper(v,Q,Double=>isDouble)
+    else 
+        sum(toList(apply(us, u->schubertPolyHelper(u,Q,Double=>isDouble))))+ (Q_r-Q_(n-1+v_r)) * schubertPolyHelper(v,Q,Double=>isDouble)
     )
 
 schubertPoly = method()
@@ -438,7 +444,16 @@ schubertPoly(List) := (w) -> (
     n := #w;
     x := local x;
     Q := QQ[x_1..x_n];
-    schubertPolyHelper(w, Q)
+    schubertPolyHelper(w, Q, Double=>false)
+    )
+
+doubleSchubertPoly = method()
+doubleSchubertPoly(List) := (w) -> (
+    n := #w;
+    x := local x;
+    y := local y;
+    Q := QQ[x_1..x_n,y_1..y_n];
+    schubertPolyHelper(w, Q, Double=>true)
     )
 
 --TODO: add tests
