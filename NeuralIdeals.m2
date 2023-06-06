@@ -169,35 +169,6 @@ factoredCanonicalForm(NeuralCode) := C -> (apply(canonicalForm(neuralIdeal(C)),f
 
 
 
---this goes straight from a neural code C to its almost canonical form, in case you don't want to look at intermediate steps
---neuralCodetoCanonicalForm = C -> (
---    n:=#(C#0);
---    JRing:=ZZ/2[x_1 .. x_n];
---    D:=binaryVectorsComp(C);
---    J:=ideal(apply(D,i-> pseudoMonomial(i)));
---    decompProduct:=product(primaryDecomposition(J);i->i);
---    IRing:=R/ideal(apply(n,i->(x_(i+1)^2-x_(i+1))));
---    JQuotient:=substitute(decompProduct,IRing);
---    JBack:=substitute(JQuotient,JRing);
---    listJGens:=unique(first entries gens JBack);
---    apply(listJGens,factor)
---    )
-
---computing the canonical form of a neural code C split up into more pieces, warning that printing returned values takes a while
---C={{0,1,1,1,1},{1,1,1,0,0},{1,0,1,1,0},{1,0,0,1,1},{0,1,1,1,0},{0,0,1,1,1},{1,0,1,0,0},{1,0,0,1,0},{0,1,1,0,0},{0,0,1,1,0},{0,0,0,1,1},{0,0,1,0,0},{0,0,0,1,0},{0,0,0,0,0}}
---JC=neuralCodetoJ(C)
---decompJC=primaryDecomposition(JC)
---MJC=product(decompJC,i->i)
---factoredMJC=apply(first entries gens MJC,factor)
---next step is to set x_i(1-x_i)=0, so x_i=x_i^2, can't have x_i and 1-x_i together
---S=R/ideal(apply(n,i->(x_(i+1)^2-x_(i+1))))
---MJCS=substitute(MJC,S)
---MJCbacktoR=substitute(MJCS,R)
---listMJCbacktoR=first entries gens MJCbacktoR
---shortListGens=unique listMJCbacktoR
---factoredMJCbacktoR=apply(shortListGens,factor)
---then remove extraneous generators. Macaulay2 arranges the terms in such a way that this isn't too bad, but I'm not sure how to code it
-
 iterCanonicalForm = method();
 iterCanonicalForm(NeuralCode) := C -> (
     d := dim C;
