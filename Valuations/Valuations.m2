@@ -105,13 +105,13 @@ lowestTermValuation = valuation (f -> if f == 0 then infinity else (sort flatten
 -- localRingValuation = valuation (f -> if f == 0 then infinity else
 
 
-
 OrderedQQn = new Type of Module
+OrderedQQVector = new Type of Vector
 
 orderedQQn = method()
 orderedQQn(ZZ, List) := (n, monOrder) -> (
     R := QQ[Variables => n, MonomialOrder => monOrder];
-    ordMod := new OrderedQQn from QQ^n;
+    ordMod := new OrderedQQn of OrderedQQVector from QQ^n;
     ordMod.cache.Ring = R;
     ordMod
     )
@@ -120,12 +120,6 @@ OrderedQQn == OrderedQQn := (N, M) -> (
     N.cache.Ring === M.cache.Ring
     )
 
--*
-net(OrderedQQn) := M -> (
-    "Ordered QQ^" | toString (numgens M) | " module"
-    )
-*-
-
 OrderedQQn#{Standard,AfterPrint} =
 OrderedQQn#{Standard,AfterNoPrint} = M -> (
     << endl; -- double space
@@ -133,8 +127,7 @@ OrderedQQn#{Standard,AfterNoPrint} = M -> (
     << " : Ordered QQ^" | toString (numgens M) | " module" << endl
     );
 
-lessThan = method()
-lessThan(Vector, Vector) := (a, b) -> ( -- check that Vector is right here
+OrderedQQVector ? OrderedQQVector := (a, b) -> (
     M := class a;
     N := class b;
     assert(M == N);
@@ -150,9 +143,10 @@ lessThan(Vector, Vector) := (a, b) -> ( -- check that Vector is right here
     aMonomial := product for i from 0 to numgens R-1 list (R_i)^(sub(aScaled_i - c_i,ZZ));
     bMonomial := product for i from 0 to numgens R-1 list (R_i)^(sub(bScaled_i - c_i,ZZ));
 
-    aMonomial < bMonomial
+    if aMonomial < bMonomial then symbol <
+    else if aMonomial > bMonomial then symbol >
+    else symbol ==
     )
-
 
 ---Documentation
 beginDocumentation()
