@@ -238,16 +238,16 @@ Outputs
  bi: ZZ
 Description
   Text
-  If $(S,n,k)$ is a regular local ring with
-  ideal $I$ such that $R=S/I$ is a depth 0
-  local ring with residue field $k$, then the
-  Burch index of $I$ is the dimension of the
-  vector space $n/(In:(I:m))$.
-  The ring $R$ is called Burch if the Burch index
-  of $I$ is at least $1$. If the Burch index of $I$
-  is at least $2$, then the minimal free resolution of a non-free
-  $R$-module $M$ has the residue field as a direct
-  summand of the $n$th syzygy module of $M$ for $n\geq 7$.
+   If $(S,n,k)$ is a regular local ring with
+   ideal $I$ such that $R=S/I$ is a depth 0
+   local ring with residue field $k$, then the
+   Burch index of $I$ is the dimension of the
+   vector space $n/(In:(I:m))$.
+   The ring $R$ is called Burch if the Burch index
+   of $I$ is at least $1$. If the Burch index of $I$
+   is at least $2$, then the minimal free resolution of a non-free
+   $R$-module $M$ has the residue field as a direct
+   summand of the $n$th syzygy module of $M$ for $n\geq 7$.
   Example
    S = ZZ/101[a,b]
    I = (ideal(gens S))^2
