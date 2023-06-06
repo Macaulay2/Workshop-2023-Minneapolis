@@ -1,4 +1,4 @@
-# ssh key for GitHub
+# ssh key for GitHub (M2 version)
 
 On your machine:
 ```
