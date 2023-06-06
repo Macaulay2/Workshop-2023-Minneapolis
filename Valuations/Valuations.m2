@@ -64,6 +64,57 @@ padicValuation ZZ := p -> (
 --leading term valuation (max convention)
 leadTermValuation = valuation (x -> if x == 0 then infinity else leadMonomial x)
 
+
+
+
+OrderedQQn = new Type of Module
+
+orderedQQn = method()
+orderedQQn(ZZ, List) := (n, monOrder) -> (
+    R := QQ[Variables => n, MonomialOrder => monOrder];
+    ordMod := new OrderedQQn from QQ^n;
+    ordMod.cache.Ring = R;
+    ordMod
+    )
+
+OrderedQQn == OrderedQQn := (N, M) -> (
+    N.cache.Ring === M.cache.Ring
+    )
+
+-*
+net(OrderedQQn) := M -> (
+    "Ordered QQ^" | toString (numgens M) | " module"
+    ) 
+*-
+
+OrderedQQn#{Standard,AfterPrint} = 
+OrderedQQn#{Standard,AfterNoPrint} = M -> (
+    << endl; -- double space
+    << concatenate(interpreterDepth:"o") << lineNumber;
+    << " : Ordered QQ^" | toString (numgens M) | " module" << endl
+    );
+
+lessThan = method()
+lessThan(Vector, Vector) := (a, b) -> ( -- check that Vector is right here
+    M := class a;
+    N := class b;
+    assert(M == N);
+    assert(instance(M, OrderedQQn));
+    
+    d := lcm((entries a | entries b)/denominator);
+    aScaled := d*a;
+    bScaled := d*b;
+    
+    c := for i from 0 to numgens R-1 list min(a_i, b_i, 0);
+    
+    R := M.cache.Ring;
+    aMonomial := product for i from 0 to numgens R-1 list (R_i)^(sub(aScaled_i - c_i,ZZ));
+    bMonomial := product for i from 0 to numgens R-1 list (R_i)^(sub(bScaled_i - c_i,ZZ));
+    
+    aMonomial < bMonomial 
+    )
+
+
 ---Documentation
 beginDocumentation()
 
@@ -93,3 +144,16 @@ doc ///
      SeeAlso
      	 MethodFunction
      ///
+
+
+end ---
+
+N = orderedQQn(3, {GRevLex => {1,1,1}})
+M = orderedQQn(3, {Lex})
+
+N === M
+N.cache.Ring === M.cache.Ring
+
+a = N_0
+b = N_1
+lessThan(b, a)
