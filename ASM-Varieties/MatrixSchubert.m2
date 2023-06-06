@@ -257,7 +257,7 @@ isPartialASM Matrix := Boolean => (A) -> (
 --INPUT: an (n x n)- alternating sign matrix A OR a 1-line perm w
 --OUTPUT: an (n x n) integer matrix of ranks of each entry
 --Author: Yuyuan Luo
---TODO: add tests and documentation for this function
+--TODO: add tests for this function
 ----------------------------------------
 
 rankMatrix = method()
@@ -811,6 +811,28 @@ doc ///
             where I_{w_i} are Schubert ideals. 
 ///
 
+doc ///
+    Key
+    	rankMatrix
+	(rankMatrix, Matrix)
+	(rankMatrix, List)
+    Headline
+    	Computes a matrix of rank conditions that determines a Schubert determinental ideal or, more generally, an alternating sign matrix ideal.
+    Usage
+    	rankMatrix(M)
+	rankMatrix(w)
+    Inputs
+    	M:Matrix
+	w:List
+    Description
+    	Text
+	 Given an alternating sign matrix or a permutation in 1-line notation, 
+	 outputs the matrix of rank condition associated to thatalternating sign matrix or permutation.
+	Example
+	 rankMatrix({1,3,2})
+	 rankMatrix(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+
+///
 -------------------------
 -------------------------
 --**TESTS SECTIONS**--
