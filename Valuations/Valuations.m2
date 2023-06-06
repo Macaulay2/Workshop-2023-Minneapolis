@@ -15,6 +15,9 @@ newPackage("Valuations",
         Configuration => {},
         PackageExports => {"LocalRings", "SubalgebraBases"}
         )
+    
+importFrom_LocalRings {"LocalRing"}
+importFrom_SubalgebraBases {"Subring"}
 
 export{"function",
        "valuation",
@@ -22,6 +25,8 @@ export{"function",
        "padicValuation",
        "leadTermValuation",
        "lowestTermValuation",
+       "localRingValuation",
+       "getMExponent",
        "domain",
        "codomain"
        }
@@ -71,7 +76,35 @@ Valuation Thing := (v,t) -> (
     v.function t
     )
 
--- Ordered Q-modules
+--local ring valuation
+getMExponent = method()
+getMExponent (Ideal, RingElement) := (m, x) -> (
+    numFactors := 0;
+    while x % m^(numFactors + 1) == 0 do (
+	numFactors = numFactors + 1
+	);
+    numFactors
+    )
+
+localRingValuation = method()
+localRingValuation LocalRing := R -> (
+    m := R.maxIdeal;
+    S := ring m;
+    func := x -> (
+	if x == 0 then infinity
+	else getMExponent(m, sub(x, S))
+	);
+    valuation(func, R, ZZ)
+    )
+
+--leading term valuation (max convention)
+leadTermValuation = valuation (x -> if x == 0 then infinity else leadMonomial x)
+
+lowestTermValuation = valuation (f -> if f == 0 then infinity else (sort flatten entries monomials f)_0 )
+
+
+
+-- Ordered QQn
 OrderedQQn = new Type of Module
 OrderedQQVector = new Type of Vector
 
