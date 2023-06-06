@@ -667,6 +667,53 @@ doc ///
 	  betti res antiDiagInit w	   
 ///
 
+
+doc ///
+    Key
+	(permLength, List)
+        permLength
+    Headline
+    	to find the length of a permutation in 1-line notation.
+    Usage
+        permLength(w)
+    Inputs
+    	w:List
+    Description
+    	Text
+	 Given a permutation in 1-line notation returns the Coxeter length of the permutation.
+	Example
+    	    w = {2,5,4,1,3}
+	    permLength(w)
+
+	    
+///
+
+doc ///
+    Key
+        (augmentedRotheDiagram, List)
+	(augmentedRotheDiagram, Matrix)
+    	augmentedRotheDiagram
+    Headline
+    	to find the Rothe diagram of a partial alternating sign matrix together with the rank conditions determining the alternating sign matrix variety
+    Usage
+    	augmentedRotheDiagram(w)
+	augmentedRotheDiagram(M)
+    Inputs
+    	w:List
+	    or {\tt M} is a @TO Matrix@
+    Description
+    	Text
+	 Given a permutation in 1-line notation or a partial returns the length of the permutation.
+	Example
+    	    w = {2,5,4,1,3}
+	    augmentedRotheDiagram(w)
+	    M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+	    augmentedRotheDiagram(M)
+
+	    
+///
+
+
 doc ///
     Key
 	(isPartialASM, Matrix)
@@ -990,4 +1037,3 @@ restart
 needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
-
