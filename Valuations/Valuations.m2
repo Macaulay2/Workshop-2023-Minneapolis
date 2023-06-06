@@ -233,4 +233,8 @@ doc ///
      SeeAlso
      	 MethodFunction
      ///
+     
+     TEST ///
+     	 assert(trivialValuation 5 == 0)
+	 ///
 
