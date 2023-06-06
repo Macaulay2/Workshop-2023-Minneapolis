@@ -1,3 +1,5 @@
+needsPackage "RationalPoints2"
+
 load "./GW-type.m2"
 load "./matrixBooleans.m2"
 load "./squarefreePart.m2"
@@ -5,18 +7,21 @@ load "./easyUpperLeftTriangular.m2"
 load "./diagonalize.m2"
 
 
-wittDecomp =method()
+wittDecomp = method()
 wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     k:= ring A;
     
     -- Add error in case the base field is RR or CC
     if instance(k,InexactFieldFamily) then error "Error: base field is inexact, use wittDecompInexact() instead";
+    if instance(k,RealField) then error "Error: base field is inexact, use wittDecompInexact() instead";
+    if instance(k,ComplexField) then error "Error: base field is inexact, use wittDecompInexact() instead";
+    
     
     n:=numRows(A); --rank of matrix
     R:=k[x_0..x_(n-1)];
     f:=sum (
-        for i from 0 to n-1 list (
-            sum (for j from 0 to n-1 list (A_(i,j)*x_i*x_j))
+        for i from 0 to (n-1) list (
+            sum (for j from 0 to (n-1) list (A_(i,j)*x_i*x_j))
             )
         );
     use k;
@@ -53,7 +58,7 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     );
     --now recursively apply wittDecomp to W*A*W^T a (n-2)-by-(n-2) Gram matrix
     Wmat := matrix(W);
-    subComputation := wittDecomp(Wmat*A*transpose(Wmat),k);
+    subComputation := wittDecomp(Wmat*A*transpose(Wmat));
     return (1+subComputation_0, subComputation_1);
 )
 
@@ -97,4 +102,3 @@ wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
         else return (wittIndex, -id_(k^(-signature)));
         );
 );
-
