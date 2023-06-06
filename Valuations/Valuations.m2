@@ -21,7 +21,9 @@ export{"function",
        "trivialValuation",
        "padicValuation",
        "leadTermValuation",
-       "lowestTermValuation"
+       "lowestTermValuation",
+       "domain",
+       "codomain"
        }
 
 
@@ -30,7 +32,13 @@ Valuation = new Type of HashTable
 valuation = method()
 
 valuation Function := v -> (
-    internalValuation(v, null, null)
+    new Valuation from{
+	function => v,
+        domain => null,
+	codomain => null,
+	cache => new CacheTable
+	}
+--    internalValuation(v, null, null)
     )
 
 ourRings := {Ring,Subring,LocalRing}
@@ -49,20 +57,21 @@ internalValuation = method()
 internalValuation (Function, Thing, Thing) := (v, S, T) -> (
     new Valuation from{
         function => v,
-        source => S,
-        target => T,
+        domain => S,
+        codomain => T,
         cache => new CacheTable
         }
     )
 
 Valuation Thing := (v,t) -> (
-    if v.source != null
+    if (v.domain === null) or (ring t) === v.domain then
     -- Concerns with comparing things like ZZ and QQ
-    then if (ring t) === v.source
+    -- Concerns with subrings and local rings
     v.function t
     )
 
 -- Trivial Valuation
+--trivialValuation = symbol trivialValuation
 trivialValuation = valuation (x -> if x == 0 then infinity else 0)
 
 
@@ -135,9 +144,9 @@ lessThan(Vector, Vector) := (a, b) -> ( -- check that Vector is right here
     aScaled := d*a;
     bScaled := d*b;
     
+    R := M.cache.Ring;
     c := for i from 0 to numgens R-1 list min(a_i, b_i, 0);
     
-    R := M.cache.Ring;
     aMonomial := product for i from 0 to numgens R-1 list (R_i)^(sub(aScaled_i - c_i,ZZ));
     bMonomial := product for i from 0 to numgens R-1 list (R_i)^(sub(bScaled_i - c_i,ZZ));
     
@@ -150,8 +159,7 @@ beginDocumentation()
 
 doc ///
      Key
-     	 triviaValuation
-	 (triviaValuation)
+     	 "trivialValuation"
      Headline
      	 Constructs the trivial valuation
      Usage
@@ -165,9 +173,9 @@ doc ///
        	   A function to construct the trivial valuation, returning infinity when the valuation input is zero and returning zero otherwise.
        Example
        	   v = trivialValuation;
-	   v -13
+	   v (-13)
 	   v 100000000
-	   v 14/23
+	   v (14/23)
 	   v 0
      SeeAlso
      	 MethodFunction
@@ -203,13 +211,11 @@ doc ///
 
 doc ///
      Key
-    	lowestTermValuation     	
+    	"lowestTermValuation"     	
      Headline
     	The valuation which returns the lowest term of an element of an ordered ring
      Usage
      	 v = lowestTermValuation
-     Inputs
-     	 null
      Outputs
      	 v:Valuation
 	     the lowest term valuation
@@ -225,5 +231,6 @@ doc ///
 	   f = 13*a^2*b + a*c^3;
 	   v f
      SeeAlso
-     	 MethodFunction, leadTermValuation
+     	 MethodFunction
      ///
+
