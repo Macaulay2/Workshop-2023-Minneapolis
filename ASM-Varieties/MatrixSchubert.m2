@@ -898,6 +898,16 @@ assert(not isVexillary({7,2,5,8,1,3,6,4}));
 assert(isVexillary({1,6,9,2,4,7,3,5,8}));
 ///
 
+TEST /// 
+-- permLength 
+
+assert(permLength {1} == 0)
+assert(permLength {1,2} == 0)
+assert(permLength {3,2,1} == 3)
+assert(permLength {2,1,3} == 1)
+assert(permLength {8,7,6,5,4,3,2,1} == 28)
+///
+
 end---------------------------------------------------------------
 
 
