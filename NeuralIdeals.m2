@@ -26,11 +26,16 @@ export{--types
     "neuralCode",
     "neuralIdeal"}
 
+protect codes
+protect dimension
+protect ambientRing
+
 NeuralCode = new Type of HashTable
 NeuralCode.synonym = "neural code"
 
 neuralCode=method(List):= codeList -> (
     d := #(codeList#0);
+    x := getSymbol x;
     X:=new NeuralCode from {
 	symbol codes => codeList,
 	symbol dimension => d,
@@ -105,7 +110,7 @@ neuralCodeOpp = method();
 neuralCodeOpp  (NeuralCode) := NeuralCode => C ->(
     d := dim C;
     L1 := allCodeWords(d);
-    L=C.codes;
+    L:=C.codes;
     for i in L do L1=delete(i,L1);
     L1
     )    
@@ -117,15 +122,14 @@ neuralIdeal(NeuralCode) := C -> (
     R:=ring C;
     oppC:=neuralCodeOpp(C);
     genList:=for i to #oppC-1 list (
-    	prod=1;
+    	prod:=1;
     	for j to d-1 do
-	    prod=prod*(1-value((oppC#i)#j)-x_(j+1));
+	    prod=prod*(1-value((oppC#i)#j)-R_j);
 	prod);
     ideal(genList)
     )
 
 canonicalForm = method();
-
 
 canonicalForm(Ideal) := I -> (
     --this is from our old code, doesn't work yet, may not need pseudomonomial stuff actually
@@ -134,7 +138,7 @@ canonicalForm(Ideal) := I -> (
     multipliedGens :=product(decomp, i->i);
     R :=ring I;
     d :=numgens R;
-    booleanR :=R/ideal(apply(d,i->(x_(i+1)*(1-x_(i+1)))));
+    booleanR :=R/ideal(apply(d,i->(R_i*(1-R_i))));
     reducedGens :=apply(first entries gens multipliedGens,i->sub(i,booleanR));
     almostGens :=apply(delete(sub(0,booleanR),reducedGens),i->(sub(i,R)));
     actualGens := for i in almostGens list (
