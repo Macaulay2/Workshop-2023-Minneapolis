@@ -41,7 +41,8 @@ export{
     "permLength",
     "augmentedRotheDiagram",
     "isPatternAvoiding",
-    "isVexillary"
+    "isVexillary",
+    "SchubertDecomposition",
     }
 
 -- Utility routines --
@@ -97,7 +98,6 @@ findIndices(List, List) := (L, Bs) -> (for ell in L list position(Bs, b -> (b ==
 --auxiliary function for getting the index of a variable in a ring
 --INPUT: an indexed variable
 --OUTPUT: the index of the variable
---NOTE: I'm not sure if you need to overload the method for different input/output types
 --TODO: add docs and tests
 -----------------------------------
 variableIndex = method()
@@ -105,11 +105,10 @@ variableIndex IndexedVariable := Sequence => (elem) -> (
     --convert to string, parse, and select index, convert back
     value replace(".*_+", "", toString elem)
 )
-variableIndex IndexedVariable := ZZ => (elem) -> (
+variableIndex RingElement := Sequence => (elem) -> (
     --convert to string, parse, and select index, convert back
     value replace(".*_+", "", toString elem)
 )
-
 
 -----------------------------------------------
 -----------------------------------------------
@@ -117,6 +116,20 @@ variableIndex IndexedVariable := ZZ => (elem) -> (
 -----------------------------------------------
 -----------------------------------------------
 
+
+------------------------------------
+--INPUT: A transposition in cycle notation, and the n for which to regard perm 
+--       as an element of S_n
+--OUTPUT: the transposition in one-line notation
+--TODO: docs and tests
+------------------------------------
+toOneLineNotation = method()
+toOneLineNotation (Sequence, ZZ) := List => (perm, maxIdx) -> (
+    switch(perm_0-1, perm_1-1, toList(1..maxIdx))
+)
+toOneLineNotation (List, ZZ) := List => (perm, maxIdx) -> (
+    switch(perm_0-1, perm_1-1, toList(1..maxIdx))
+)
 
 ------------------------------------
 --INPUT: Two permutations in one-line notation
@@ -153,7 +166,7 @@ permLength List := ZZ => w -> (
 --checks if a permutation is pattern-avoiding
 --INPUT: a permutation (in one-line notation), written as a list
 --OUTPUT: whether the permutation avoid the pattern
---TODO: add documentation and tests
+--TODO: input validation/type checking
 --------------------------------
 isPatternAvoiding = method()
 isPatternAvoiding (List,List) := Boolean => (perm, pattern) -> (
@@ -173,7 +186,7 @@ isPatternAvoiding (List,List) := Boolean => (perm, pattern) -> (
 --checks if a permutation is vexillary, i.e. 2143-avoiding
 --INPUT: a permutation (one-line notation), written as a list
 --OUTPUT: whether the permutation is vexillary
---TODO: add documentation and tests
+--TODO: input validation/type checking
 --------------------------------
 isVexillary = method()
 isVexillary List := Boolean => (perm) -> (
@@ -504,18 +517,28 @@ minimalRankTable List := Matrix => (L) -> (
 -------------------------------------------
 --INPUT: an ASM ideal
 --OUTPUT: the primary decomposition of the ASM ideal
---TODO: the whole function
-
+--TODO: docs and tests
+--TODO: input validation/type checking
+--
 -- if lt(I) is not radical, then fuss
 -- if lt(I) radical, then 
-
+--
 -- output w_1..w_k
 -------------------------------------------
-ASMPrimaryDecomposition = method()
-ASMPrimaryDecomposition Ideal := List = (I) -> (
-    primDecomp := decompose leadTerm I;
-    -- get index of monomial, (q,r), by computing   index(mon) = q*a + r
+SchubertDecomposition = method()
+SchubertDecomposition Ideal := List => (I) -> (
+    primDecomp := decompose ideal leadTerm I;
+    maxIdx := max((flatten entries vars ring I) / variableIndex // max);
+    print("This is the max index: " | toString maxIdx);
+    cycleDecomp := {};
+    for primeComp in primDecomp do {
+        mons := primeComp_*;
+        perms := apply(mons / variableIndex, perm -> toOneLineNotation(perm, maxIdx));
+        cycleDecomp = append(cycleDecomp, fold(composePerms, reverse perms));
+    };
+    cycleDecomp
 )
+
 
 ----------------------------------------
 -- Part 2. Invariants of ASM Varieties
@@ -684,12 +707,12 @@ doc ///
     Key
         (ASMPrimaryDecomposition, Ideal)
         ASMPrimaryDecomposition
-    Headlines
+    Headline
         finds the primary decomposition of an ASM ideal
+    Usage
+        ASMPrimaryDecomposition(I)
     Inputs
-        an ASM ideal
-    Outputs
-        a list of permutations
+        I:Ideal
     Description
         Text
             Each element is the permutation associated to a prime component in 
@@ -841,5 +864,7 @@ restart
 installPackage "MatrixSchubert"
 restart
 needsPackage "MatrixSchubert"
+schubertDetIdeal {2,1,6,3,5,4}
+SchubertDecomposition oo
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
