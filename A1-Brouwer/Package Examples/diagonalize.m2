@@ -15,7 +15,7 @@ diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
                     break;
                 );
             );
-            if A_(col,col)==0 then (print "Error: Matrix A was singular"; return A;);
+            if A_(col,col)==0 then (error "Error: Matrix A was singular"; return A;);
         );
         --entry in A_(col,col) is non-zero at this point
          for row from (col+1) to (n-1) do (

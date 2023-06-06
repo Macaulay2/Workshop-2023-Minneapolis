@@ -1,14 +1,4 @@
 
---    wittDecomp method performs the Witt decomposition for Gram matrix A over field k
---    inputs:
---        Matrix A
---        Ring k
-
---    outputs:
---        ZZ: Witt index (number of copies of |H in A)
---        Matrix: The remaining anisotrpic part of A 
-
-
 load "./GW-type.m2"
 load "./matrixBooleans.m2"
 load "./squarefreePart.m2"
@@ -18,7 +8,7 @@ load "./diagonalize.m2"
 
 wittDecomp =method()
 wittDecomp (Matrix,Ring) := (ZZ,Matrix) => (A,k) -> (
-    n:=numRows(A);
+    n:=numRows(A); --rank of matrix
     R:=k[x_0..x_(n-1)];
     f:=sum (
         for i from 0 to n-1 list (
@@ -38,7 +28,7 @@ wittDecomp (Matrix,Ring) := (ZZ,Matrix) => (A,k) -> (
     );
     --if no solutions found we assume the form is anisotropic
     if ( not solnFound) then (return (0,A));
-    --if solution found for rank 2 form, then the form is purely isotropic
+    --if solution found for rank 2 form, then the form is purely isotropy
     if (n==2) then (return (1,{}));
 
     --find y not orthogonal (wrt bilinear form) to x
@@ -63,5 +53,37 @@ wittDecomp (Matrix,Ring) := (ZZ,Matrix) => (A,k) -> (
     return (1+subComputation_0, subComputation_1);
 )
 
-D=matrix{{-1/1,-1,1,1},{-1,1,1,0},{1,1,0,0},{1,0,0,0}};
-print wittDecomp(D,QQ);
+
+--wittDecomp method for InexactFieldFamily
+
+wittDecompInexact=method()
+
+wittDecompInexact (Matrix,InexactFieldFamily) := (ZZ,Matrix) => (A,k) -> (
+    n:=numRows(A); --rank of matrix
+    --if k is the complex numbers, witt decomposition depends only on rank
+    if (k===CC) then (
+        if (n%2==0) then(return (n//2,{})) --if rank is even, then matrix decomposes into n/2 hyberbolic forms with no anisotropic parts
+        else return (n//2,id_(k^1)); --if rank is odd, matrix decomposes into (n-1)/2 hyperbolic forms with 1-by-1 anisotropic part
+
+        );
+    --if k is the real numbers, witt decomposition depends on rank and signature
+    if (k===RR) then (
+        diagA := diagonalize(A);
+        posEntries := 0; --for loop counts the number of positive diagonal entries of diagA
+         for i from 0 to (n-1) do(
+            if diagA_(i,i)>0 then(
+                posEntries=posEntries+1;
+            );
+        );
+
+        negEntries := n-posEntries;
+        wittIndex := min(posEntries,negEntries); -- witt index is given by how many positive-negative diagonal entry pairs exist
+        signature := posEntries-negEntries; 
+        if signature == 0 then (return (wittIndex,{}))
+        else if signature > 0 then ( return (wittIndex, id_(k^(signature)))) --signature characterizes anisotropic part
+        else return (wittIndex, -id_(k^(-signature)));
+        );
+
+
+
+);
