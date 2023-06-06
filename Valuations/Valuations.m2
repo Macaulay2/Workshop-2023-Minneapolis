@@ -71,41 +71,7 @@ Valuation Thing := (v,t) -> (
     v.function t
     )
 
--- Trivial Valuation
---trivialValuation = symbol trivialValuation
-trivialValuation = valuation (x -> if x == 0 then infinity else 0)
-
-
--- padic Valuation
-getExponent = (p, x) -> (
-    numFactors := 0;
-    while x % p == 0 do (
-        x = x // p;
-        numFactors = numFactors + 1
-        );
-    numFactors
-    )
-
-
-padicValuation = method()
-padicValuation ZZ := p -> (
-    if not isPrime p
-    then error "expected a prime integer";
-    func := x -> (
-        if x == 0 then infinity
-        else getExponent(p, numerator x_QQ) - getExponent(p, denominator x_QQ)
-        );
-    valuation func
-    )
-
---leading term valuation (max convention)
-leadTermValuation = valuation (x -> if x == 0 then infinity else leadMonomial x)
-
-lowestTermValuation = valuation (f -> if f == 0 then infinity else (sort flatten entries monomials f)_0 )
-
--- localRingValuation = valuation (f -> if f == 0 then infinity else
-
-
+-- Ordered Q-modules
 OrderedQQn = new Type of Module
 OrderedQQVector = new Type of Vector
 
@@ -148,6 +114,49 @@ OrderedQQVector ? OrderedQQVector := (a, b) -> (
     else if aMonomial > bMonomial then symbol >
     else symbol ==
     )
+
+-- Trivial Valuation
+--trivialValuation = symbol trivialValuation
+trivialValuation = valuation (x -> if x == 0 then infinity else 0)
+
+
+-- padic Valuation
+getExponent = (p, x) -> (
+    numFactors := 0;
+    while x % p == 0 do (
+        x = x // p;
+        numFactors = numFactors + 1
+        );
+    numFactors
+    )
+
+padicValuation = method()
+padicValuation ZZ := p -> (
+    if not isPrime p
+    then error "expected a prime integer";
+    func := x -> (
+        if x == 0 then infinity
+        else getExponent(p, numerator x_QQ) - getExponent(p, denominator x_QQ)
+        );
+    valuation func
+    )
+
+--leading term valuation (max convention)
+leadTermValuation = method()
+leadTermValuation PolynomialRing := R -> (
+    monOrder := (options R).MonomialOrder;
+    orderedMod := orderedQQn(numgens R, monOrder);
+    valFunc := p -> (
+        expV := vector flatten exponents leadTerm p;
+        B := gens orderedMod;
+        B*expV
+        );
+    internalValuation(valFunc, R, orderedMod)
+    )
+
+lowestTermValuation = valuation (f -> if f == 0 then infinity else (sort flatten entries monomials f)_0 )
+
+-- localRingValuation = valuation (f -> if f == 0 then infinity else
 
 ---Documentation
 beginDocumentation()
@@ -232,31 +241,31 @@ doc ///
 doc ///
      Key
          valuation
-	 (valuation, Function)
+         (valuation, Function)
          (valuation, Function, Ring, Ring)
 
      Headline
          Constructs a user defined valuation object
      Usage
          v = valuation(f)
-     	 v = valuation(f, S, T)
+         v = valuation(f, S, T)
      Inputs
          f:Function
-     	 S:Ring
-     	 S:LocalRing
-     	 S:Subring
-     	 T:Ring
-     	 T:LocalRing
-     	 T:Subring
+         S:Ring
+         S:LocalRing
+         S:Subring
+         T:Ring
+         T:LocalRing
+         T:Subring
      Outputs
          v:Valuation
-     	    user defined valuation function
+            user defined valuation function
      Description
          Text
              A function to construct a user defined valuation function.
          Example
              v = valuation(x -> if x == 0 then infinity else 0)
-     	     v = valuation(x -> if x == 0 then infinity else 0, ZZ, ZZ)
+             v = valuation(x -> if x == 0 then infinity else 0, ZZ, ZZ)
      SeeAlso
           MethodFunction
 ///
