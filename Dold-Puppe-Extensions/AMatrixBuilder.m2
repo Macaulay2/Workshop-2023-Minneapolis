@@ -1,4 +1,4 @@
-compHash = (n,k) -> (new HashTable from for i in (P=compositions(k,n-k) list i =>position(P,j->j==i)))
+compHash = (n,k) -> (new HashTable from for i in (P=compositions(k,n-k)) list i =>position(P,j->j==i))
 
 entryCalculator = (mu,j) -> (
     u=0;
