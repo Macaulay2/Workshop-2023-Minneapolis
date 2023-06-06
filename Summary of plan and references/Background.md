@@ -3,7 +3,10 @@
 Two very important results underly a great deal of computation in this package.  The first is that the Fulton generators of ASM ideals form a Gröbner basis (Knutson-Miller+Weigandt) under all antidiagonal term orders.  Consequently, the (unique) antidiagonal initial ideals of ASM ideals are radical (as, therefore, are ASM themselves). The other key result is that a homogeneous ideal shares its Castlenuovo-Mumford regularity (henceforth, regularity) and depth with all of its radical initial ideals, should it have any (Conca-Varbaro).  Together, these results tell us that, in order to compute the regularity and depth of an ASM ideal, it suffices to compute the same for its antidiagonal initial ideal, which is at least as easy to write down as the ASM ideal itself and typically much faster to resolve. An ASM ideal and its antidiagonal initial ideal will also share the same multidegree (in particular, the same single and double Schubert polynomial).
 
 The basic functions in this package will (listed by goal, not by individual function name) 
+
 ⭐ = "priority for workshop"
+
+✔ = "completed task"
 
 1. ✔ Take a permutation (as a list or as a matrix) or ASM or rank table and produce the associated ASM ideal (via Fulton generators) or antidiagonal initial ideal (via initial terms of Fulton generators). **[requires tests and documentation]**
 2. ✔ Take a permutation (as a list or as a matrix) or ASM and produce its (minimal) rank table. **[requires tests and documentation]**
@@ -34,8 +37,8 @@ The set of ASM ideals is closed under addition.  Typically it's not easy to see 
 Regularity:
 
 15. Compute regularity of any CM ASM (allow opt out of CM check, opt our automatically if given a permutation) as degree of K-polynomial minus height
-16. Decide if a permutation is vexillary.
-17. Decide if a permutation is 1432 avoiding.
+16. ✔ Decide if a permutation is vexillary.
+17. ✔ Decide if a permutation is 1432 avoiding.
 18. Implement Theorems 1.1 and 1.5 of Rajchgot-Robichaux-Weigandt.
 19. ⭐ Compute Rajchgot index of a permutation and implement Theorem 1.1 of Pechenik-Speyer-Weigandt.
 

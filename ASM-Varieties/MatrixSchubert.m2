@@ -18,7 +18,8 @@ newPackage(
             "Depth",
 	    "SimplicialComplexes",
 	    "SimplicialDecomposability",
-	    "Posets"
+	    "Posets",
+        "MinimalPrimes"
             },
         DebuggingMode => true
         )
@@ -42,7 +43,10 @@ export{
     "permLength",
     "augmentedRotheDiagram",
     "isPatternAvoiding",
-    "isVexillary"
+    "isVexillary",
+    "schubertDecomposition",
+    "isASMIdeal",
+    "isRankTable"
     }
 
 -- Utility routines --
@@ -119,6 +123,21 @@ permToMatrix List := Matrix => (w) -> (
 findIndices(List, List) := (L, Bs) -> (for ell in L list position(Bs, b -> (b == ell)))
 *-
 
+--------------------------------
+--auxiliary function for getting the index of a variable in a ring
+--INPUT: an indexed variable
+--OUTPUT: the index of the variable
+--TODO: add docs and tests
+-----------------------------------
+variableIndex = method()
+variableIndex IndexedVariable := Sequence => (elem) -> (
+    --convert to string, parse, and select index, convert back
+    value replace(".*_+", "", toString elem)
+)
+variableIndex RingElement := Sequence => (elem) -> (
+    --convert to string, parse, and select index, convert back
+    value replace(".*_+", "", toString elem)
+)
 
 -----------------------------------------------
 -----------------------------------------------
@@ -126,6 +145,20 @@ findIndices(List, List) := (L, Bs) -> (for ell in L list position(Bs, b -> (b ==
 -----------------------------------------------
 -----------------------------------------------
 
+
+------------------------------------
+--INPUT: A transposition in cycle notation, and the n for which to regard perm 
+--       as an element of S_n
+--OUTPUT: the transposition in one-line notation
+--TODO: docs and tests
+------------------------------------
+toOneLineNotation = method()
+toOneLineNotation (Sequence, ZZ) := List => (perm, maxIdx) -> (
+    switch(perm_0-1, perm_1-1, toList(1..maxIdx))
+)
+toOneLineNotation (List, ZZ) := List => (perm, maxIdx) -> (
+    switch(perm_0-1, perm_1-1, toList(1..maxIdx))
+)
 
 ------------------------------------
 --INPUT: Two permutations in one-line notation
@@ -162,7 +195,7 @@ permLength List := ZZ => w -> (
 --checks if a permutation is pattern-avoiding
 --INPUT: a permutation (in one-line notation), written as a list
 --OUTPUT: whether the permutation avoid the pattern
---TODO: add documentation and tests
+--TODO: input validation/type checking
 --------------------------------
 isPatternAvoiding = method()
 isPatternAvoiding (List,List) := Boolean => (perm, pattern) -> (
@@ -182,7 +215,7 @@ isPatternAvoiding (List,List) := Boolean => (perm, pattern) -> (
 --checks if a permutation is vexillary, i.e. 2143-avoiding
 --INPUT: a permutation (one-line notation), written as a list
 --OUTPUT: whether the permutation is vexillary
---TODO: add documentation and tests
+--TODO: input validation/type checking
 --------------------------------
 isVexillary = method()
 isVexillary List := Boolean => (perm) -> (
@@ -289,13 +322,16 @@ rotheDiagram List := List => (w) -> (
 -----------------------
 
 augmentedRotheDiagram = method()
-aRD := w -> (
+augmentedRotheDiagram List := List => w -> (
     L := rotheDiagram(w);
     R := rankMatrix(w);
     apply(L, (i,j) -> ((i,j), R_(i-1,j-1)))
 )
-augmentedRotheDiagram List := List => aRD
-augmentedRotheDiagram Matrix := List => aRD
+augmentedRotheDiagram Matrix := List => w -> (
+    L := rotheDiagram(w);
+    R := rankMatrix(w);
+    apply(L, (i,j) -> ((i,j), R_(i-1,j-1)))
+)
 
 -----------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
@@ -447,13 +483,9 @@ diagLexInit List := monomialIdeal => (w) -> (
 --TODO: extend to more general subword complexes from Coxeter groups, not just these?
 -------------------------------------------
 subwordComplex = method()
-subwordComplex Matrix := simplicialComplex => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    simplicialComplex antiDiagInit A
-    );
 
 subwordComplex List := simplicialComplex => (w) -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
+    if not(isPerm w) then error("The input must be a permutation.");
     simplicialComplex antiDiagInit w
     );
 
@@ -492,32 +524,103 @@ minimalRankTable List := Matrix => (L) -> (
         minimalRankMtx
     );
 
->>>>>>> refs/remotes/origin/asm
+-------------------------------------------
+--INPUT: an ASM ideal
+--OUTPUT: the primary decomposition of the ASM ideal
+--TODO: docs and tests
+--TODO: input validation/type checking
+--
+-- if lt(I) is not radical, then fuss
+-- if lt(I) radical, then 
+--
+-- output w_1..w_k
+-------------------------------------------
+schubertDecomposition = method()
+schubertDecomposition Ideal := List => (I) -> (
+    primDecomp := decompose ideal leadTerm I;
+    maxIdx := max((flatten entries vars ring I) / variableIndex // max);
+    cycleDecomp := {};
+    for primeComp in primDecomp do {
+        mons := primeComp_*;
+        perms := apply(mons / variableIndex, perm -> toOneLineNotation(perm, maxIdx));
+        cycleDecomp = append(cycleDecomp, fold(composePerms, reverse perms));
+    };
+    cycleDecomp
+)
+
+
+
+-------------------------------------------
+--INPUT: an ideal
+--OUTPUT: whether the ideal is an ASM ideal
+--WARNING: Might not be right depending on if {2,1,6,3,5,4} is ASM.
+--         If it is, then buggy; else, we are good.
+--TODO: docs and tests
+--TODO: input validation/type checking
+-------------------------------------------
+isASMIdeal = method()
+isASMIdeal Ideal := List => (I) -> (
+    isASM := true;
+    if (I == radical(I)) then {
+        schubDecomp := schubertDecomposition I;
+        isASM = I == intersect apply(schubDecomp/schubertDetIdeal, J -> sub(J, vars ring I));
+    }
+    else {
+        isASM = false;
+    };
+    isASM
+)
+------------------------------------------
+--INPUT: a square matrix M
+--OUTPUT: whether M is a valid rank table.
+--TODO: documentation, tests
+------------------------------------------
+isRankTable = method()
+isRankTable Matrix := Boolean => (A) -> (
+    AList := entries A;
+
+    a := #AList;
+    b := #(AList#0);
+    if not(a == b) then return false;
+
+    for i from 0 to a-1 do (    
+        for j from 0 to a-1 do (
+            if (i==0 and j==0 and not(AList#i#j == 0 or AList#i#j == 1)) then return false
+            else if (i == 0 and j != 0 and (not(AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1) or not(AList#i#j == 0 or AList#i#j == 1))) then return false
+            else if (i != 0 and j == 0 and (not(AList#i#j-AList#(i-1)#j == 0 or AList#i#j-AList#(i-1)#j == 1) or not(AList#i#j == 0 or AList#i#j == 1))) then return false
+            else if (i != 0 and j != 0 and (not((AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1) or not(AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1)))) then return false;
+        );
+    );
+
+    true
+);
+
+-*
+------------------------------------------
+--INPUT: a rank table, presented as a matrix
+--OUTPUT: an ASM corresponding to the rank table, presented as a matrix
+------------------------------------------
+rankTableToASM = method()
+rankTableToASM Matrix := Matrix => (A) -> (
+    n := #A;
+    ASM :=  mutableMatrix(ZZ,n,n);
+
+    -- find where all the ones are by checking whether it is larger than the entries above and to the left
+    for i from 0 to n-1 do (
+        for j from 0 to n-1 do (
+            if (i == 0) then do (
+
+            );
+        );
+    );
+);*-
+
+
 ----------------------------------------
 -- Part 2. Invariants of ASM Varieties
 ----------------------------------------
-----------------------------------------
 
 
-----------------------
---INPUT: An alternating sign matrix A
---OUTPUT: the regularity of the ASM variety for A using antidiag initial ideal
-----------------------
-
-matrixSchubertReg = method()
-matrixSchubertReg Matrix := ZZ => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    regularity antiDiagInit A
-    );
-
--*
-matrixSchubertReg(List) := o -> (w) -> (
-    if o#Strategy === "viaInitialIdeal" then (
-	return (regularity antiDiagInit w)
-	);
-    if o#Strategy === "
-    );
-*-
 ---------------------------------
 ---------------------------------
 -- **DOCUMENTATION SECTION** --
@@ -552,7 +655,7 @@ doc ///
 	(isPartialASM, Matrix)
     	isPartialASM
     Headline
-    	determines whether a matrix is a partial alternating sign matrix.
+    	whether a matrix is a partial alternating sign matrix.
     Usage
     	isPartialASM(M)
     Inputs
@@ -578,22 +681,18 @@ doc ///
 
 doc ///
     Key
+    	(schubertDetIdeal, Matrix)
     	schubertDetIdeal
-	(schubertDetIdeal, List)
-	(schubertDetIdeal, Matrix)
     Headline
-    	Computes the Schubert determinantal ideal of a given permutation in 1-line notation or the alternating sign matrix ideal of any (partial) 
-	alternating sign matrix.
+    	Computes Schubert determinantal ideal for a given permutation.
     Usage
-    	schubertDetIdeal(w)
     	schubertDetIdeal(M)
     Inputs
-    	w:List
     	M:Matrix
     Description
     	Text
-	 Given a permutation in 1-line notation or (partial) alternating sign matrix, 
-	 outputs the associated alternating sign matrix or Schubert determinantal ideal.
+	 Given an alternating sign matrix or a permutation in 1-line notation, 
+	 outputs the Schubert determinantal ideal associated to that matrix.
 	Example
 	 schubertDetIdeal({1,3,2})
 	 schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
@@ -602,7 +701,6 @@ doc ///
 
 doc ///
     Key
-<<<<<<< Updated upstream
         (composePerms, List, List)
         composePerms
     Headline
@@ -628,27 +726,6 @@ doc ///
             u = {3,5,2,1,4}
             v = {1,2,3,4,5}
             composePerms(u,v)
-=======
-        antiDiagInit
-	(antiDiagInit, List)
-	(antiDiagInit, Matrix)
-    Headline
-    	Computes the (unique) antidigaonal initial ideal of a Schubert determinantal ideal or, more generally, alternating sign matrix ideal.
-    Usage
-    	schubertDetIdeal(w)
-	schubertDetIdeal(M)
-    Inputs
-    	M:Matrix
-	L:List
-    Description
-    	Text
-	 Theorem B of Knutson and Miller's [put in citation] ensures that there is exactly one antidiagonal initial ideal of each Schubert determinantal ideal.  
-	 [other citations] extend this result to alternating sign matrix ideals. 
-	Example
-	 antiDiagInit({2,1,4,3})
-	 antiDiagInit(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
-
->>>>>>> Stashed changes
 ///
 
 doc ///
@@ -698,6 +775,38 @@ doc ///
 
             v = {1,6,9,2,4,7,3,5,8}
             isVexillary(v)
+///
+
+doc ///
+    Key
+        (schubertDecomposition, Ideal)
+        schubertDecomposition
+    Headline
+        finds the decomposition of an ASM ideal into Schubert ideals
+    Usage
+        schubertDecomposition(I)
+    Inputs
+        I:Ideal
+    Description
+        Text
+            Each element is the permutation associated to a prime component in 
+            the primary decomposition of the antidiagonal initial ideal of I.
+///
+
+doc ///
+    Key
+        (isASMIdeal, Ideal)
+        isASMIdeal
+    Headline
+        whether an ideal is ASM
+    Usage
+        isASMIdeal(I)
+    Inputs
+        I:Ideal
+    Description
+        Text
+            An ideal I is ASM if I is radical and I = I_{w_1} \cap ... \cap I_{w_k},
+            where I_{w_i} are Schubert ideals. 
 ///
 
 -------------------------
@@ -847,3 +956,4 @@ restart
 needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
+
