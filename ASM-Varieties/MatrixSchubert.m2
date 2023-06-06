@@ -345,7 +345,7 @@ augmentedRotheDiagram Matrix := List => w -> (
 --INPUT: a list w corresponding to a permutation in 1-line notation
     	--OR an alternating sign matrix A
 --OUTPUT: a list of essential boxes in the Rothe diagram for A
---TODO: add documentation
+--TODO:
 -----------------------
 essentialBoxes = method()
 essentialBoxes Matrix := List => (A) -> (
@@ -982,7 +982,7 @@ doc ///
 	(rankMatrix, Matrix)
 	(rankMatrix, List)
     Headline
-    	Computes a matrix of rank conditions that determines a Schubert determinental ideal or, more generally, an alternating sign matrix ideal.
+    	Computes a matrix of rank conditions that determines a Schubert determinantal ideal or, more generally, an alternating sign matrix ideal.
     Usage
     	rankMatrix(M)
 	rankMatrix(w)
@@ -992,12 +992,39 @@ doc ///
     Description
     	Text
 	 Given an alternating sign matrix or a permutation in 1-line notation, 
-	 outputs the matrix of rank condition associated to thatalternating sign matrix or permutation.
+	 outputs the matrix of rank condition associated to that alternating sign matrix or permutation.
 	Example
 	 rankMatrix({1,3,2})
 	 rankMatrix(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 
 ///
+
+doc ///
+    Key
+    	essentialBoxes
+	(essentialBoxes, Matrix)
+	(essentialBoxes, List)
+    Headline
+    	Computes a list of the essential boxes in the Rothe Diagram for an alternating sign matrix M or a permutation in 1-line notation.
+    Usage
+    	essentialBoxes(M)
+	essentialBoxes(w)
+    Inputs
+    	M:Matrix
+	w:List
+    Description
+    	Text
+	 Given an alternating sign matrix or a permutation in 1-line notation, 
+	 outputs a list of the essential boxes in the Rothe diagram for that matrix. 
+	Example
+	 essentialBoxes({1,3,2})
+	 essentialBoxes(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+
+///
+
+
+
+
 -------------------------
 -------------------------
 --**TESTS SECTIONS**--
@@ -1104,6 +1131,16 @@ assert(sort augmentedRotheDiagram {2,1,5,4,3} == sort {((1,1),0), ((3,3),2),((3,
 assert(sort augmentedRotheDiagram matrix{{0,1,0},{1,-1,1},{0,1,0}} == sort{((1,1),0), ((2,2),1)})
 assert (sort augmentedRotheDiagram matrix {{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}} == sort {((1,1),0),((1,2),0),((4,3),2),((3,3),2)})
 ///
+
+
+TEST ///
+-- essentialBoxes 
+
+assert(essentialBoxes({2,1,6,3,5,4 })== {(1, 1), (3, 5), (5, 4)})
+assert(essentialBoxes matrix {{0,1,0,0,0,0},{1,0,0,0,0,0},{0,0,0,0,0,1},{0,0,1,0,0,0},{0,0,0,0,1,0},{0,0,0,1,0,0}} == {(1, 1), (3, 5), (5, 4)})
+///
+
+
 end---------------------------------------------------------------
 
 
