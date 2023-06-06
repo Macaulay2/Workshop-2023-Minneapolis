@@ -1,4 +1,4 @@
-load "Compositions.m2"
+compHash = (n,k) -> (new HashTable from for i in (P=compositions(k,n-k) list i =>position(P,j->j==i)))
 
 entryCalculator = (mu,j) -> (
     u=0;
@@ -22,4 +22,13 @@ ABuilder = (n,k) -> (
     	    entryCalculator(mu,j)
     )
 )	
-	
+
+AhashBuilder = (n,k) -> (
+    L := sort compositions(k+1,n-k);
+    H := new MutableHashTable;
+    for i from 0 to #L-1 do (
+	for j to n do (H#(i,j) = entryCalculator(L_i,j)));
+    H
+    ) 	
+
+
