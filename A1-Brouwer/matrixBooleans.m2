@@ -35,3 +35,29 @@ isUpperLeftTriangular (Matrix) := Boolean => M -> (
     );
 true
 )
+ 
+
+-- Check if a square matrix is diagonal
+isDiagonal = method()
+isDiagonal (Matrix) := Boolean => M -> (
+
+    if not isSquare(M) then error "Error: matrix isn't square";
+
+    n := numRows(M);
+    
+    for i from 0 to n-2 do(
+	for j from  i+1 to n-1 do(
+	    
+	    -- Search in the matrix entries that aren't on diagonal
+	    if i != j  then(
+		
+		-- If any entry off diagonal  is nonzero then the matrix isn't diagonal
+		if  M_(i,j) != 0 or M_(j,i) != 0  then(
+		    return false
+		    );
+		);
+        );
+    );
+true
+)
+
