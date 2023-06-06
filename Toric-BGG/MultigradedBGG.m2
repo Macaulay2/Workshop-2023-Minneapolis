@@ -17,7 +17,7 @@ newPackage("MultigradedBGG",
   )
 
 
---Not sure about all these exports--sort out later.
+--Not sure about all these exports--sort out later..
 exports {
     "addTateData",
     "dualRingToric",
