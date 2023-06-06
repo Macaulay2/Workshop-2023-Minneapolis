@@ -13,7 +13,7 @@ newPackage("Valuations",
         DebuggingMode => false,
         HomePage => "https://github.com/Macaulay2/Workshop-2023-Minneapolis/tree/valuations",
         Configuration => {},
-	PackageExports => {"LocalRings", "SubalgebraBases"}  
+        PackageExports => {"LocalRings", "SubalgebraBases"}
         )
 
 export{"function",
@@ -33,11 +33,11 @@ valuation = method()
 
 valuation Function := v -> (
     new Valuation from{
-	function => v,
+        function => v,
         domain => null,
-	codomain => null,
-	cache => new CacheTable
-	}
+        codomain => null,
+        cache => new CacheTable
+        }
 --    internalValuation(v, null, null)
     )
 
@@ -45,10 +45,10 @@ ourRings := {Ring,Subring,LocalRing}
 
 for i in ourRings do (
     for j in ourRings do (
-	valuation (Function, i, j) := (v, S, T) -> (
-    	    internalValuation(v, S, T)
-    	    )
-	)
+        valuation (Function, i, j) := (v, S, T) -> (
+            internalValuation(v, S, T)
+            )
+        )
     )
 
 -- parameter class was Type, but the null
@@ -102,7 +102,7 @@ leadTermValuation = valuation (x -> if x == 0 then infinity else leadMonomial x)
 
 lowestTermValuation = valuation (f -> if f == 0 then infinity else (sort flatten entries monomials f)_0 )
 
--- localRingValuation = valuation (f -> if f == 0 then infinity else 
+-- localRingValuation = valuation (f -> if f == 0 then infinity else
 
 
 
@@ -123,10 +123,10 @@ OrderedQQn == OrderedQQn := (N, M) -> (
 -*
 net(OrderedQQn) := M -> (
     "Ordered QQ^" | toString (numgens M) | " module"
-    ) 
+    )
 *-
 
-OrderedQQn#{Standard,AfterPrint} = 
+OrderedQQn#{Standard,AfterPrint} =
 OrderedQQn#{Standard,AfterNoPrint} = M -> (
     << endl; -- double space
     << concatenate(interpreterDepth:"o") << lineNumber;
@@ -139,18 +139,18 @@ lessThan(Vector, Vector) := (a, b) -> ( -- check that Vector is right here
     N := class b;
     assert(M == N);
     assert(instance(M, OrderedQQn));
-    
+
     d := lcm((entries a | entries b)/denominator);
     aScaled := d*a;
     bScaled := d*b;
-    
+
     R := M.cache.Ring;
     c := for i from 0 to numgens R-1 list min(a_i, b_i, 0);
-    
+
     aMonomial := product for i from 0 to numgens R-1 list (R_i)^(sub(aScaled_i - c_i,ZZ));
     bMonomial := product for i from 0 to numgens R-1 list (R_i)^(sub(bScaled_i - c_i,ZZ));
-    
-    aMonomial < bMonomial 
+
+    aMonomial < bMonomial
     )
 
 
@@ -159,82 +159,81 @@ beginDocumentation()
 
 doc ///
      Key
-     	 "trivialValuation"
+         "trivialValuation"
      Headline
-     	 Constructs the trivial valuation
+         Constructs the trivial valuation
      Usage
-     	 v = trivialValuation
+         v = trivialValuation
 
      Outputs
-     	 v:Valuation
-	     the trivial valuation
+         v:Valuation
+             the trivial valuation
      Description
        Text
-       	   A function to construct the trivial valuation, returning infinity when the valuation input is zero and returning zero otherwise.
+           A function to construct the trivial valuation, returning infinity when the valuation input is zero and returning zero otherwise.
        Example
-       	   v = trivialValuation;
-	   v (-13)
-	   v 100000000
-	   v (14/23)
-	   v 0
+           v = trivialValuation;
+           v (-13)
+           v 100000000
+           v (14/23)
+           v 0
      SeeAlso
-     	 MethodFunction
+         MethodFunction
      ///
 
 
 doc ///
      Key
-     	 padicValuation
-	 (padicValuation, ZZ)
+         padicValuation
+         (padicValuation, ZZ)
      Headline
-     	 Construct a p-adic valuation
+         Construct a p-adic valuation
      Usage
-     	 v = padicValuation(p)
+         v = padicValuation(p)
      Inputs
-     	 p:ZZ 
-	     a prime
+         p:ZZ
+             a prime
      Outputs
-     	 v:Valuation
-	     p-adic valuation using prime p
+         v:Valuation
+             p-adic valuation using prime p
      Description
        Text
-       	   Stuff goes here
+           Stuff goes here
        Example
-       	   v = padicValuation 7;
-	   v 98
-	   v (2/7)
-	   v 0
-	   v (-42)
+           v = padicValuation 7;
+           v 98
+           v (2/7)
+           v 0
+           v (-42)
      SeeAlso
-     	 MethodFunction
+         MethodFunction
      ///
 
 doc ///
      Key
-    	"lowestTermValuation"     	
+        "lowestTermValuation"
      Headline
-    	The valuation which returns the lowest term of an element of an ordered ring
+        The valuation which returns the lowest term of an element of an ordered ring
      Usage
-     	 v = lowestTermValuation
+         v = lowestTermValuation
      Outputs
-     	 v:Valuation
-	     the lowest term valuation
+         v:Valuation
+             the lowest term valuation
      Description
        Text
-       	   This valuation returns the lowest (trailing) term of a polynomial with respect to the ring's term order.
+           This valuation returns the lowest (trailing) term of a polynomial with respect to the ring's term order.
        Example
-       	   R = QQ[a,b,c, MonomialOrder => Lex];
-       	   v = lowestTermValuation;
-	   f = 13*a^2*b + a*c^3;
-	   v f
-	   S = QQ[a,b,c, MonomialOrder => RevLex, Global => false];
-	   f = 13*a^2*b + a*c^3;
-	   v f
+           R = QQ[a,b,c, MonomialOrder => Lex];
+           v = lowestTermValuation;
+           f = 13*a^2*b + a*c^3;
+           v f
+           S = QQ[a,b,c, MonomialOrder => RevLex, Global => false];
+           f = 13*a^2*b + a*c^3;
+           v f
      SeeAlso
-     	 MethodFunction
+         MethodFunction
      ///
-     
-     TEST ///
-     	 assert(trivialValuation 5 == 0)
-	 ///
 
+     TEST ///
+         assert(trivialValuation 5 == 0)
+         ///
