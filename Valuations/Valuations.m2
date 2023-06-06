@@ -19,7 +19,8 @@ export{"function",
        "valuation",
        "trivialValuation",
        "padicValuation",
-       "leadTermValuation"
+       "leadTermValuation",
+       "lowestTermValuation"
        }
 
 Valuation = new Type of HashTable
@@ -63,6 +64,9 @@ padicValuation ZZ := p -> (
 
 --leading term valuation (max convention)
 leadTermValuation = valuation (x -> if x == 0 then infinity else leadMonomial x)
+
+lowestTermValuation = valuation (f -> if f == 0 then infinity else (sort flatten entries monomials f)_0 )
+
 
 ---Documentation
 beginDocumentation()
