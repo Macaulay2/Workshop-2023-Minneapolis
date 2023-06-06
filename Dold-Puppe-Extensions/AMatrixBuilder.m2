@@ -31,4 +31,4 @@ AhashBuilder = (n,k) -> (
     H
     ) 	
 
-
+AtableBuilder = (n,k) -> table(sort compositions(k+1,n-k),0..n,entryCalculator)
