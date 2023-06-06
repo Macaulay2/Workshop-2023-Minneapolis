@@ -1,6 +1,6 @@
 load "ABuilder.m2"
-listBuilder = n -> for i to n list
-    (new List from i:0) | {1} | (new List from (n-i):0)
+listBuilder = n -> for i to n-1 list
+    (new List from i:0) | {1} | (new List from (n-1-i):0)
 
 DegenMapHelper = (n, k, i) -> (
     curList = listBuilder(binomial(n-1,k));
