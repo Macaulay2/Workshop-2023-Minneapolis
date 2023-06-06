@@ -39,15 +39,19 @@ print diagonalize(C)
 print diagonalize(D)
 
 print "------------------------------------------------------------";
---wittIndex method
-wittIndex =method()
+--wittDecompFromList method & wiitDecompFromMatrix method
+wittDecompFromList =method()
+wittDecompFromMatrix =method()
 
-wittIndex (Matrix,Ring) := ZZ => (A,k) -> (
-    D := diagonalize(A);
-    n:=numRows(A);
+wittDecompFromMatrix (Matrix,Ring) := (ZZ,List) => (A,k) -> (
+    D:= diagonalize(A);
+    return wittDecompFromList((for i from 0 to numRows(A)-1 list (D_(i,i))),k);
+)
+
+wittDecompFromList (List,Ring) := (ZZ,List) => (vals,k) -> (
+    n:=#vals;
     R:=k[x_0..x_(n-1)];
-    Dvals := (for i from 0 to n-1 list (D_(i,i)));
-    f:=sum (for i from 0 to n-1 list (Dvals_i*x_i^2));
+    f:=sum (for i from 0 to n-1 list (vals_i*x_i^2));
     use k;
     soln:=new MutableList;
     solnPt:=new MutableList;
@@ -63,10 +67,14 @@ wittIndex (Matrix,Ring) := ZZ => (A,k) -> (
         then (y#0=1;) 
         else (y#0=-solnPt#1; y#1=solnPt#0);
     --solnPt and y span a copy of |H in A
+    --now turn solnPt and y into row matrices
+    v1:=matrix{toList solnPt};
+    v2:=matrix{toList y};
+    print v2;
     return 0;
 );
 
-print wittIndex(B,QQ);
+print wittDecompFromMatrix(B,QQ);
 
 
 
