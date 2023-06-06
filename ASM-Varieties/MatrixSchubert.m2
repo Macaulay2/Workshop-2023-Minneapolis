@@ -728,15 +728,18 @@ doc ///
         (schubertDecomposition, Ideal)
         schubertDecomposition
     Headline
-        finds the decomposition of an ASM ideal into Schubert ideals
+        finds the decomposition of an ASM ideal into Schubert determinantal ideals
     Usage
         schubertDecomposition(I)
     Inputs
         I:Ideal
     Description
         Text
-            Each element is the permutation associated to a prime component in 
-            the primary decomposition of the antidiagonal initial ideal of I.
+            Given an ASM ideal, it can be decomposed into Schubert determinantal ideals
+            as I = I_{w_1} \cap ... \cap I_{w_k}, where the w_i are permutations.
+            As output, each element in the list is the permutation associated 
+            to a prime component in the Schubert decomposition of the antidiagonal 
+            initial ideal of I.
 ///
 
 doc ///
@@ -752,7 +755,7 @@ doc ///
     Description
         Text
             An ideal I is ASM if I is radical and I = I_{w_1} \cap ... \cap I_{w_k},
-            where I_{w_i} are Schubert ideals. 
+            where the I_{w_i} are Schubert determinantal ideals.
 ///
 
 -------------------------
