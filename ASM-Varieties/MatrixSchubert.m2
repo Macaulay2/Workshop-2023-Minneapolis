@@ -52,7 +52,7 @@ export{
     "rajIndex",
     "isMinRankTable",
     "Double",
-    "rankTableToASM"
+    "rankTableToASM",
     "schubertReg"
     }
 
