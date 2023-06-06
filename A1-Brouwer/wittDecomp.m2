@@ -12,10 +12,7 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     k:= ring A;
     
     -- Add error in case the base field is RR or CC
-    if instance(k,InexactFieldFamily) then error "Error: base field is inexact, use wittDecompInexact() instead";
-    if instance(k,RealField) then error "Error: base field is inexact, use wittDecompInexact() instead";
-    if instance(k,ComplexField) then error "Error: base field is inexact, use wittDecompInexact() instead";
-    
+    if (instance(k,InexactFieldFamily) or instance(k,RealField) or instance(k,ComplexField)) then error "Error: base field is inexact, use wittDecompInexact() instead";
     
     n:=numRows(A); --rank of matrix
     R:=k[x_0..x_(n-1)];
@@ -70,18 +67,18 @@ wittDecompInexact=method()
 wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
     k := ring A;
     
-    if not instance(k,InexactFieldFamily) then error "Error: base field is not RR or CC";
+    if not (instance(k,RealField) or instance(k,ComplexField) or instance(k,InexactFieldFamily)) then error "Error: base field is not RR or CC";
     
     n:=numRows(A); --rank of matrix
     
     --if k is the complex numbers, witt decomposition depends only on rank
-    if (k===CC) then (
+    if (k===CC or instance(k,ComplexField)) then (
         if (n%2==0) then(return (n//2,{})) --if rank is even, then matrix decomposes into n/2 hyberbolic forms with no anisotropic parts
         else return (n//2,id_(k^1)); --if rank is odd, matrix decomposes into (n-1)/2 hyperbolic forms with 1-by-1 anisotropic part
 
         );
     --if k is the real numbers, witt decomposition depends on rank and signature
-    if (k===RR) then (
+    if (k===RR or instance(k,RealField)) then (
         diagA := diagonalize(A);
         posEntries := 0; --for loop counts the number of positive diagonal entries of diagA
         negEntries := 0; --for loop counts the number of negative diagonal entries
