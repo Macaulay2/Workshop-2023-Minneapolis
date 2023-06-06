@@ -4,4 +4,4 @@ Please use this repository throughout the workshop to track and contribute to th
 
 See the [workshop webpage](https://macaulay2.github.io/Workshop-2023-Minneapolis/) for general information.
 
-See the [wiki tab](https://github.com/Macaulay2/Workshop-2023-Minneapolis/wiki) for project descriptions, schedules, guides, etc. You can also use the [projects tab](https://github.com/Macaulay2/Workshop-2023-Minneapolis/projects) to keep track of remaining tasks in your project.
+See the [wiki tab](https://github.com/Macaulay2/Workshop-2023-Minneapolis/wiki) for project descriptions, schedules, guides, etc. You can also use the [projects tab](https://github.com/Macaulay2/Workshop-2023-Minneapolis/projects) to keep track of remaining tasks in your project..

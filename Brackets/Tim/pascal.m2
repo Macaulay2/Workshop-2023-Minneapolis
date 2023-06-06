@@ -1,44 +1,37 @@
--- pascal's theorem
+-- Pascal's Theorem
+
 restart
-needsPackage "Brackets"
+debug needsPackage "Brackets"
+
+-*
+Under what conditions do 6 points in the projective plane lie on a single quadric?
+
+Choose six projective points a, b, c, d, e, f
+*-
+
 G = gc(a .. f, 3)
 
-abLine = (a * b)_G
-afLine = (a * f)_G
-edLine = (e * d)_G
-efLine = (e * f)_G
-cdLine = (c * d)_G
-bcLine = (b * c)_G
-
-p1 = abLine ^ edLine
-p2 = afLine ^ cdLine
-p3 = bcLine ^ efLine
-
-q = p1 * p2 * p3
--- a*b*c is a top-exterior power so it's just the determinant [abc]
--- Improvement: interpret a*b*c as [abc] here.
-
--- peek under the hood
-t = flatten ((x -> first entries (coefficients x)_1) \ terms q#RingElement)
-R = ring G#bracketRing
-use R
-tR = t / (x -> sub(x, R))
-V = vars R
-
-q' = tR_0 * V_(0,37) + tR_1 * V_(0,34) + tR_2 * V_(0,31) + tR_3 * V_(0,25)
-I = ideal G#bracketRing
-
-normForm = q' % I
-normForm_(bracketRing ring q) -- this is what we want automatically
+B = bracketRing G;
+X = matrix B;
+C = fold(apply(0..5,i->basis(2,ring X,Variables => (entries X)#i)),(a,b)->a||b); -- Matrix with rows corresponding to six point on a quadric
+D = det C; -- D = 0 if and only if the six points lie on a single conic
+I = B#ideal;
+(D % I)_B -- Bracket polynomial associated to D
 
 
+abLine = (a * b)_G -- Line joining a and b
+afLine = (a * f)_G -- Line joining a and f
+edLine = (e * d)_G -- Line joining e and d
+efLine = (e * f)_G -- Line joining e and f
+cdLine = (c * d)_G -- Line joining c and d
+bcLine = (b * c)_G -- Line joining b and c
+
+p1 = abLine ^ edLine -- Intersection point of lines joining a, b and e, d
+p2 = afLine ^ cdLine -- Intersection point of lines joining a, f and c, d
+p3 = bcLine ^ efLine -- Intersection point of lines joining b, c and e, f
+
+q = p1 * p2 * p3 -- Span of p1, p2, p3. q = 0 if the points are collinear.
+
+normalForm q === (-1)*(D % I)_B -- True! So, a,b,c,d,e,f lie on a single quadric if and only if p1, p2, p3 are collinear.
 
 
---thomas trying math
-B = bracketRing G
-X = matrix B
-
-C = fold(apply(0..5,i->basis(2,ring X,Variables => (entries X)#i)),(a,b)->a||b)
-D = det C
-I = B#ideal
-D % I --looks pretty
