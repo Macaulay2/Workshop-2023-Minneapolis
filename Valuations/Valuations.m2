@@ -243,7 +243,14 @@ doc ///
          valuation
          (valuation, Function)
          (valuation, Function, Ring, Ring)
-
+	 (valuation, Function, Ring, LocalRing)
+	 (valuation, Function, Ring, Subring)
+	 (valuation, Function, LocalRing, Ring)
+	 (valuation, Function, LocalRing, LocalRing)
+	 (valuation, Function, LocalRing, Subring)
+	 (valuation, Function, Subring, Ring)
+	 (valuation, Function, Subring, LocalRing)
+	 (valuation, Function, Subring, Subring)
      Headline
          Constructs a user defined valuation object
      Usage
@@ -270,6 +277,6 @@ doc ///
           MethodFunction
 ///
 
-     TEST ///
-         assert(trivialValuation 5 == 0)
-         ///
+TEST ///
+     assert(trivialValuation 5 == 0)
+///
