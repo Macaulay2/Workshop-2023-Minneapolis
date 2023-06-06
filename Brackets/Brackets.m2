@@ -183,6 +183,13 @@ GCExpression * RingElement := (b, c) -> new GCExpression from {RingElement => c 
 Number * GCExpression := (c, b) -> new GCExpression from {RingElement => c * b#RingElement, ring => ring b}
 GCExpression * Number := (b, c) -> new GCExpression from {RingElement => c * b#RingElement, ring => ring b}
 
+toBracketPolynomial = method();
+toBracketPolynomial(RingElement, BracketRing) := (f, G) -> ( --input: polynomial, bracketring
+    I := G#ideal;
+    (f % I) _ G
+)
+
+
 isExtensor = method()
 isExtensor GCExpression := A -> (
     assert(instance(ring A, GCAlgebra));
