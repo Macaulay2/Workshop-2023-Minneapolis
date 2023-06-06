@@ -201,6 +201,42 @@ cohomDim Ideal := ZZ => I ->
     n
 )
 
+--- I-filter regular sequences ---
+isFilterRegElement = method()
+
+isFilterRegElement (RingElement,Ideal,Module) := Boolean => (x,I,M) ->
+(
+    J:=radical(ann((M:x)/M));
+    isSubset(I,J)
+)
+
+isFilterRegSeq = method()
+
+isFilterRegSeq (BasicList,Ideal,Module) := Boolean => (L,I,M) ->
+(
+    l:=#L;
+    isFRE := isFilterRegElement(L#0,I,M);
+    N:=ideal(L#0)*M;
+    i:=1;
+    while (isFRE and i<l) do (
+	isFRE = isFilterRegElement(L#i,I,N);
+	N=N+ideal(L#i)*M;
+	i=i+1;
+	);
+    isFRE
+)
+
+isFilterRegSeq (BasicList,Ideal,Ring) := Boolean => (L,I,R) ->
+(
+    isFilterRegSeq(L,I,module R)
+)
+
+isFilterRegSeq (BasicList,Ideal,Ideal) := Boolean => (L,I,R) ->
+(
+    isFilterRegSeq(L,I,module R)
+)
+    
+
 
 
     
