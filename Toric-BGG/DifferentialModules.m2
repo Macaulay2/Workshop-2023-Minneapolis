@@ -11,7 +11,7 @@ newPackage("DifferentialModules",
 	{Name => "Prashanth Sridhar",	     Email => "pzs0094@auburn.ed",     HomePage => "https://sites.google.com/view/prashanthsridhar/home" }
 	{Name => "Andrew Tawfeek",   	     Email => "atawfeek@uw.edu",       HomePage => "https://www.atawfeek.com/" }
 	{Name => "Eduardo Torres Davila",    Email => "torre680@umn.edu",      HomePage => "https://etdavila10.github.io/" }
-	{Name => "Sasha	Zotine",    	     Email => "18az45@qiueensu.ca",    HomePage => "Fill in" }
+	{Name => "Sasha	Zotine",    	     Email => "18az45@queensu.ca",     HomePage => "https://sites.google.com/view/szotine/home" }
 	    },
   DebuggingMode => true
   )
