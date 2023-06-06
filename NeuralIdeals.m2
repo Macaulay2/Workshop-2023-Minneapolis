@@ -6,7 +6,7 @@ Authors => {{Name => "Hugh Geller"},{Name => "Rebecca R.G."}},
 Headline => "neural ideals",
 Keywords => {"Commutative Algebra"},
 DebuggingMode => false,
-PackageImports => {"PrimaryDecomposition"},
+PackageImports => {"PrimaryDecomposition","PseudomonomialPrimaryDecomposition"},
 Reload => false
 )
 
@@ -24,7 +24,8 @@ export{--types
     "NeuralCode",
     --methods/functions
     "neuralCode",
-    "neuralIdeal"}
+    "neuralIdeal",
+    "canonicalForm"}
 
 protect codes
 protect dimension
@@ -133,19 +134,21 @@ canonicalForm = method();
 
 canonicalForm(Ideal) := I -> (
     --this is from our old code, doesn't work yet, may not need pseudomonomial stuff actually
-    --if isSquarefreePseudomonomialIdeal I then continue;
+    if isSquarefreePseudomonomialIdeal I==true then (
     decomp := primaryDecomposition I;
     multipliedGens :=product(decomp, i->i);
     R :=ring I;
     d :=numgens R;
-    booleanR :=R/ideal(apply(d,i->(R_i*(1-R_i))));
+    booleanIdeal :=ideal(apply(d,i->(R_i*(1-R_i))));
+    booleanR :=R/booleanIdeal;
     reducedGens :=apply(first entries gens multipliedGens,i->sub(i,booleanR));
-    almostGens :=apply(delete(sub(0,booleanR),reducedGens),i->(sub(i,R)));
+    almostGens :=unique apply(delete(sub(0,booleanR),reducedGens),i->(sub(i,R)));
     actualGens := for i in almostGens list (
 	isDivisible := false;
 	for j in almostGens do (
 	    if i%j==0 and i =!= j then (isDivisible=true; break));
-	if isDivisible==true then continue; i)
+	if isDivisible==true then continue; i))
+    else print "Input must be a squarefree pseudomonomial ideal"
     --delete(,actualGens)
     --to factor:
     --apply(J_*,factor)
