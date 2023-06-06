@@ -1,11 +1,15 @@
 KoszulMF = method()
-KoszulMF(List) := List -> (
+KoszulMF(List) := L -> (
 
-X := ZZdfactorization{matrix{{L#0}}, matrix{{L#1}}};
-for i from 2 to #List do X := tensorMF(X, ZZdfactorization{L#i,L#(i+1)});
+X := ZZdfactorization{map(R^1, R^1, matrix{{L#0}}), map(R^1, R^1, matrix{{L#1}})};
+for i from 1 to (#L)//2-1 do X = tensorMF(X, ZZdfactorization{ map(R^1, R^1, L#(2*i)), map(R^1, R^1, L#(2*i+1))});
 
 X
 )
 
 ---test
-KoszulMF {x^2*y^2,z^2*w^2, x*y, y^10, x*y, z^100}
+K = KoszulMF({x^2*y^2,z^2*w^2, x*y, y^10, x*y, z^100})
+
+KMF = KoszulMF({x,x,y,y,z,z})
+
+(dd^KMF)_1*(dd^KMF)_2
