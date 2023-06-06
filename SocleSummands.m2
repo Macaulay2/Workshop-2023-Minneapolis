@@ -154,12 +154,8 @@ isBurch = I -> (
     mm != (mm*I):(I:mm)
     )
 
-<<<<<<< HEAD
 burchIndex = method()
 burchIndex Ideal := I -> (
-=======
-burchIndex = I -> (
->>>>>>> dcd6872f3d4ed0bfb8f6b26241664681eac30d96
     R := ring I;
     mm := ideal gens R;
     degree(mm/((mm*I):(I:mm)))
