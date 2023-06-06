@@ -1,5 +1,4 @@
-restart
-load "ZZdFactorizations.m2" 
+needs "ZZdFactorizations.m2" 
 
 --shift function
 shift = method()
@@ -49,3 +48,8 @@ cone(ZZdFactorizationMap) := ZZdFactorization => f -> (
     )
 
 
+--dual
+--note: dual is a method with options
+dual(ZZdFactorization) := ZZdFactorization => {} >> o -> X -> (
+    ZZdfactorization{-dual((dd^X)_2), dual((dd^X)_1)}
+    )
