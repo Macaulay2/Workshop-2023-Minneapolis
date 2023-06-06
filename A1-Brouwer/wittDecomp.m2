@@ -1,4 +1,14 @@
-load "./_init.m2"
+{*
+    wittDecomp method performs the Witt decomposition for Gram matrix A over field k
+    inputs:
+        Matrix A
+        Ring k
+
+    outputs:
+        ZZ: Witt index (number of copies of |H in A)
+        Matrix: The remaining anisotrpic part of A 
+*}
+
 
 wittDecomp =method()
 wittDecomp (Matrix,Ring) := (ZZ,Matrix) => (A,k) -> (

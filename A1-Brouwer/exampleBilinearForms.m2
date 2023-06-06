@@ -1,4 +1,3 @@
-load "./_init.m2"
 
 b = matrix(QQ,{{1,2},{2,0}})
 beta = gwClass(b)
