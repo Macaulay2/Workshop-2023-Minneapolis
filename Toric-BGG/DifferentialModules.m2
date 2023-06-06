@@ -34,8 +34,6 @@ concatMatrices(List) := L -> (
     m:= first L;
     scan(#L-1,i->m=m|L_(i+1));
     m)
-
-
 --Example
 --R = ZZ/101[x,y]
 --A = matrix{{x*y, -x^2}, {y^2, -x*y}}
@@ -168,15 +166,15 @@ resDM(DifferentialModule) := opts -> (D) ->(
     m := max(length cyc, length bou);
     -- this is code which turns a free complex into a differential module...
     L := apply(length cyc+1,j->(
-	    transpose concatMatrices apply(m+1,i->map(cyc_j,cyc_i, if i == j+1 then cyc.dd_i else 0))
+	    transpose matrix{apply(m+1,i->map(cyc_j,cyc_i, if i == j+1 then cyc.dd_i else 0))}
 	));
-    cycDiff := transpose(concatMatrices L);
+    cycDiff := transpose(matrix{L});
     cycMod := cyc_0;
     scan(m+1, i-> cycMod = cycMod ++ ((cyc_(i+1))**(R)^{(i+1)*d}));
     L' := apply(length bou+1,j->(
-	    transpose concatMatrices apply(m+1,i->map(bou_j,bou_i, if i == j+1 then bou.dd_i else 0))
+	    transpose matrix{apply(m+1,i->map(bou_j,bou_i, if i == j+1 then bou.dd_i else 0))}
 	));
-    bouDiff := transpose(concatMatrices L');
+    bouDiff := transpose(matrix {L'});
     bouMod := bou_0**(R)^{d};
     scan(m+1, i-> bouMod = bouMod ++ ((bou_(i+1))**(R)^{(i+2)*d}));
     --cycDiff and bouDiff are the differentials of cycle and boundary resolutions, as a diff module
@@ -194,12 +192,12 @@ resDM(DifferentialModule) := opts -> (D) ->(
 	    apply(length bou+1,i->(
 		    map(cyc_j,bou_i, if j == i then PSI_i else 0)
 		    ))));
-    bouToCycPSI := transpose concatMatrices apply(K,i-> transpose concatMatrices i);
+    bouToCycPSI := transpose matrix{apply(K,i-> transpose matrix{i})};
     K' := apply(length cyc + 1,j->(
 	    apply(length bou+1,i->(
 		    map(cyc_j,bou_i, if j == i - 1 then TAU_i else 0)
 		    ))));
-    bouToCycTAU := transpose concatMatrices apply(K',i-> transpose concatMatrices i);
+    bouToCycTAU := transpose matrix {apply(K',i-> transpose matrix{i})};
     bouToCyc := bouToCycPSI + bouToCycTAU;
     lastMap := map(bouMod,cycMod**R^{-d},0);
     CEdiff := map(cycMod++bouMod,(cycMod++bouMod)**(ring D)^{-d}, (cycDiff|bouToCyc) || (lastMap|bouDiff));
@@ -223,15 +221,15 @@ resDMwMap(DifferentialModule) := opts -> (D) ->(
     m := max(length cyc, length bou);
     -- this is code which turns a free complex into a differential module...
     L := apply(length cyc+1,j->(
-	    transpose concatMatrices apply(m+1,i->map(cyc_j,cyc_i, if i == j+1 then cyc.dd_i else 0))
+	    transpose matrix{apply(m+1,i->map(cyc_j,cyc_i, if i == j+1 then cyc.dd_i else 0))}
 	));
-    cycDiff := transpose(concatMatrices L);
+    cycDiff := transpose(matrix{L});
     cycMod := cyc_0;
     scan(m+1, i-> cycMod = cycMod ++ ((cyc_(i+1))**(R)^{(i+1)*d}));
     L' := apply(length bou+1,j->(
-	    transpose concatMatrices apply(m+1,i->map(bou_j,bou_i, if i == j+1 then bou.dd_i else 0))
+	    transpose matrix{apply(m+1,i->map(bou_j,bou_i, if i == j+1 then bou.dd_i else 0))}
 	));
-    bouDiff := transpose(concatMatrices L');
+    bouDiff := transpose(matrix {L'});
     bouMod := bou_0**(R)^{d};
     scan(m+1, i-> bouMod = bouMod ++ ((bou_(i+1))**(R)^{(i+2)*d}));
     --cycDiff and bouDiff are the differentials of cycle and boundary resolutions, as a diff module
@@ -249,18 +247,18 @@ resDMwMap(DifferentialModule) := opts -> (D) ->(
 	    apply(length bou+1,i->(
 		    map(cyc_j,bou_i, if j == i then PSI_i else 0)
 		    ))));
-    bouToCycPSI := transpose concatMatrices apply(K,i-> transpose concatMatrices i);
+    bouToCycPSI := transpose matrix{apply(K,i-> transpose matrix{i})};
     K' := apply(length cyc + 1,j->(
 	    apply(length bou+1,i->(
 		    map(cyc_j,bou_i, if j == i - 1 then TAU_i else 0)
 		    ))));
-    bouToCycTAU := transpose concatMatrices apply(K',i-> transpose concatMatrices i);
+    bouToCycTAU := transpose matrix{apply(K',i-> transpose matrix{i})};
     bouToCyc := bouToCycPSI + bouToCycTAU;
     lastMap := map(bouMod,cycMod**R^{-d},0);
     CEdiff := map(cycMod++bouMod,(cycMod++bouMod)**(ring D)^{-d}, (cycDiff|bouToCyc) || (lastMap|bouDiff));
     RD := differentialModule(chainComplex(CEdiff**(ring D)^{d},CEdiff)[1]);
-    epsBou := concatMatrices( {epsB0} | apply(length bou, i-> map(D_0,bou_(i+1),0))    );
-    epsCyc := concatMatrices( {epsZ0} | apply(length cyc, i-> map(D_0,cyc_(i+1),0))    );
+    epsBou := matrix{ {epsB0} | apply(length bou, i-> map(D_0,bou_(i+1),0))    };
+    epsCyc := matrix{ {epsZ0} | apply(length cyc, i-> map(D_0,cyc_(i+1),0))    };
     eps := epsCyc|epsBou;
     (RD,eps)
 	)
