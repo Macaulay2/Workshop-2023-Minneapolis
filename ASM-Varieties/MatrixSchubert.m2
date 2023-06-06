@@ -53,6 +53,7 @@ export{
     "isMinRankTable",
     "Double",
     "rankTableToASM"
+    "schubertReg"
     }
 
 -- Utility routines --
@@ -479,6 +480,21 @@ antiDiagInit List := monomialIdeal => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     monomialIdeal leadTerm schubertDetIdeal w
     );
+
+----------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation or a partial ASM
+--OUTPUT: the Castlenuovo-Mumford regularity of I_A or I_w
+----------------------------------------
+schubertReg = method()
+schubertReg Matrix := ZZ => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    regularity(antiDiagInit A)
+    );
+schubertReg List := ZZ => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
+     regularity(antiDiagInit w)
+    );
+
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: diagonal initial ideal of Schubert determinantal ideal for w
