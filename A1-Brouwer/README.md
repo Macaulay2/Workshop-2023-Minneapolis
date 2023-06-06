@@ -29,6 +29,8 @@ The other links may also be useful:
 
 :small_orange_diamond: Refined algorithms for quickly diagonalizing sparse matrices (see `easyUpperLeftTriangular`)
 
+:small_orange_diamond: Added `isIsomorphic2' to test whether two Grothendieck-Witt classes are isomorphic; only implemented over $\mathbb{R}$ and $\mathbb{C}$
+
 # Still to do
 
 :small_red_triangle: Implement A1-Brouwer degrees into Macaulay2
