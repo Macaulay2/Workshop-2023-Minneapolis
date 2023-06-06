@@ -21,6 +21,8 @@ The other links may also be useful:
 
 :white_check_mark: Made `rationalSimplify`, which takes in a symmetric bilinear form over $\mathbb{Q}$ and diagonalizes it, replaces each diagonal entry by the smallest magnitude integer in its square class, and splits off occurences of $\langle a\rangle + \langle -a\rangle$ as hyperbolic forms
 
+:white_check_mark: Made `easyIsomorphicGW` which checks, up to a certain height, whether two Gram matrices are congruent.
+
 # In progress
 
 :small_orange_diamond: `wittDecomp` algorithm for detecting the Witt class of a symmetric bilinear form
