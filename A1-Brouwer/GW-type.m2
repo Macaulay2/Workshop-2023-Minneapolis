@@ -22,6 +22,11 @@ gwClass (Matrix) := GrothendieckWittClass => M -> (
 -- This allows us to extract the matrix from a class
 matrix GrothendieckWittClass := Matrix => beta -> beta.matrix
 
+baseField = method()
+baseField GrothendieckWittClass := Ring => beta -> (
+    ring beta.matrix
+)
+
 -- Check if a constructed class is well-defined
 isWellDefined GrothendieckWittClass := Boolean => beta -> (
     
