@@ -1,10 +1,12 @@
 -- -*- coding: utf-8 -*-
 newPackage(
-    "FirstPackage",
-    Version => "1.1",
-    Date => "August 5, 2012",
+    "Subrings",
+    Version => "1.0",
+    Date => "June 6, 2023",
     Authors => {
-	{Name => "Jane Doe", Email => "doe@math.uiuc.edu", HomePage => "http://www.math.uiuc.edu/~doe/"}},
+	{Name => "Casey Hill", Email => "caseybhill2@gmail.com"},
+        {Name => "Jane Doe", Email => "doe@math.uiuc.edu", HomePage => "http://www.math.uiuc.edu/~doe/"},
+        {Name => "Jane Doe", Email => "doe@math.uiuc.edu", HomePage => "http://www.math.uiuc.edu/~doe/"}},
     Headline => "an example Macaulay2 package",
     Keywords => {"Documentation"},
     DebuggingMode => false
