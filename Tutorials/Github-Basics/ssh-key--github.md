@@ -22,7 +22,7 @@ On github:
 * follow this instructions 
   * you may want to use `cat` instead of `clip`: 
     ```
-    cat ~/.ssh/id_ed25519.pub`
+    cat ~/.ssh/id_ed25519.pub
     ```
   * copy to clipboard
   * follow the rest of instrunctions, starting with "Settings..." on GitHub
