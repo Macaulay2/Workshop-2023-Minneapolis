@@ -268,9 +268,9 @@ Outputs
  isBur: Boolean
 Description
   Text
-   An ideal is Burch if the ideal $(Im):(I:m)$
-   is strictly contained in $m$ where $m$ is
-   the maximal ideal of the ring of $I$.
+   An ideal $I$ of a local ring $(S,m,k)$ is an ideal where $(m*I):(I:m)$
+   is strictly contained in $m$. Equivalently, $I$ is Burch if and only if
+   the second syzygy of $k$ over $S/I$ contains $k$ as a direct summand.
   Example
    S = ZZ/101[a,b]
    I = (ideal(gens S))^2
