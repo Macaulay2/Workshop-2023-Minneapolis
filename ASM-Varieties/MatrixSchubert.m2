@@ -41,6 +41,7 @@ export{
     "schubertPoly",
     "doubleSchubertPoly",
     "entrywiseMinRankTable",
+    "entrywiseMaxRankTable",
     "permLength",
     "augmentedRotheDiagram",
     "isPatternAvoiding",
@@ -564,7 +565,7 @@ entrywiseMinRankTable List := Matrix => (L) -> (
             );
         );
 
-        -- comb through the list to get the minimal entrys
+        -- comb through the list to get the minimal entries
         for M in L do (
             listRankM := entries rankMatrix(M);
             if (#listRankM != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
@@ -578,6 +579,35 @@ entrywiseMinRankTable List := Matrix => (L) -> (
         );
 
         minimalRankMtx
+    );
+
+    ------------------------------------------
+--INPUT: a nonempty list of equidimensional ASMs, presented as matrices
+--OUTPUT: the maximal rank table, presented as a matrix
+--TODO: tests, documentation
+------------------------------------------
+
+entrywiseMaxRankTable = method()
+entrywiseMaxRankTable List := Matrix => (L) -> (
+        if (#L == 0) then error("The input must be a nonempty list.");
+        n := #(entries L#0);
+        maximalRankMtx := mutableMatrix(ZZ,n,n);
+
+
+        -- comb through the list to get the maximal entries
+        for M in L do (
+            listRankM := entries rankMatrix(M);
+            if (#listRankM != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
+            if not(isPartialASM(M)) then error("The input must be a list containing partial alternating sign matrices.");
+
+            for i from 0 to n-1 do (
+                for j from 0 to n-1 do (
+                    maximalRankMtx_(i,j) = max {maximalRankMtx_(i,j), listRankM#i#j};
+                );
+            );
+        );
+
+        maximalRankMtx
     );
 
 -------------------------------------------
