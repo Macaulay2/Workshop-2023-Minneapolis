@@ -16,6 +16,7 @@ export {
     "isBurch",
     "burchIndex",
     --
+    "Boundaries"
 
 }
     
@@ -39,15 +40,19 @@ socle Module := M -> (
     (0_R*M):(ideal gens ring M)
     )
 
-socleSummands = method(Options => {Verbose => false})
+
+socleSummands = method(Options => {Verbose => false, Boundaries => true})
+
+-*
 socleSummands Module := o-> M -> (
-    mm := ideal gens ring M;
-    ss := socle M;
+   mm := ideal gens ring M;
+   ss := socle M;
     if o.Verbose == false then
        numcols compress (gens ss % (mm*M)) 
           else
        flatten degrees source (gens ss % (mm*M))
     )
+*-
 
 socleSummands ChainComplex := o -> C -> (
     --for i from 1+min C to max C, return
@@ -56,9 +61,13 @@ socleSummands ChainComplex := o -> C -> (
     R := ring C;
     mm := ideal gens R;
     socR := trim (ideal(0_R):mm);
-    for i from min C + 1 to max C list 
-        imageSocleSummands(C.dd_i, socR, o)
-       )
+    if o.Boundaries == true then
+       for i from min C + 1 to max C list 
+           imageSocleSummands(C.dd_i, socR, Verbose => o.Verbose)
+    else for i from min C + 1 to max C list (
+	   if i == min C + 1 then imageSocleSummands(C.dd_i, socR, o)
+	   else imageSocleSummands(syz C.dd_(i-1), socR, Verbose => o.Verbose)
+	   ))
 
 socleSummands(Module,ZZ) := o -> (M,ell) -> (
     F := res(M, LengthLimit => ell);
@@ -268,6 +277,37 @@ Description
 
 
 
+doc ///
+Key
+ socleSummands
+ (socleSummands, Module, ZZ)
+ (socleSummands, ChainComplex)
+ [socleSummands, Verbose]
+ [socleSummands, Boundaries]
+Headline
+ Computes the number of socle summands or the generators of the kernels of the differentials of a chain complexx
+Usage
+ S = socleSummands (M,n)
+ S = socleSummands C
+Inputs
+ M: Module
+ n: ZZ
+ C: ChainComplex
+Outputs
+ S: List
+Description
+  Text
+   Given a chain complex (usually a free resolution) this method computes the number of copies of the residue field appearing
+  Example
+   S = ZZ/101[a,b,c]
+   I = ideal(a^4,b^4,c^4,a*b^3,b*c^3)
+   R = S/I
+   mm = ideal gens R
+   F = res( mm, LengthLimit => 6)
+   socleSummands F
+///
+
+
 
 -* Test section *-
 TEST///
@@ -280,6 +320,7 @@ assert (L == {{0}, {0,2,3}, {0,3,4,5}, {0,4,5,6,7}})
 
 
 end--
+
 uninstallPackage "SocleSummands"
 restart
 installPackage "SocleSummands"
