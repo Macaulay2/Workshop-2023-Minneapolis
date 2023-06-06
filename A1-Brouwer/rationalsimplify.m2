@@ -2,8 +2,8 @@
 
 load "diagonalize.m2"
 load "matrixBooleans.m2"
-load "squarefreepart.m2"
-load "splitoffobvioushyperbolics.m2"
+load "squarefreePart.m2"
+load "splitOffObviousHyperbolics.m2"
 
 rationalSimplify = method()
 
