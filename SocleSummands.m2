@@ -142,9 +142,9 @@ inSemigroup(ZZ,List) := (a,L) -> (
 	val
 	)
 
-socleSummandsSemigroup = method()
-socleSummandsSemigroup ChainComplex :=  F -> (
-    L := socleSummands F;
+socleSummandsSemigroup = method(Options => {Verbose => false, Boundaries => true})
+socleSummandsSemigroup ChainComplex :=  o -> F -> (
+    L := socleSummands(F,o);
     P := positions(L, ell -> ell != 0);
     	gens := {0}; --identity element of the semigroup
 	for p in P do
@@ -152,11 +152,12 @@ socleSummandsSemigroup ChainComplex :=  F -> (
 	gens
 	)
 
-socleSummandsSemigroup(Ideal, ZZ) := (I,n) -> (
+socleSummandsSemigroup(Ideal, ZZ) := o -> (I,n) -> (
     R := ring I/I;
     F := res(coker vars R, LengthLimit => n);
-    socleSummandsSemigroup F
+    socleSummandsSemigroup(F,o)
     )
+
 
 isBurch = method()
 isBurch Ideal := I -> (
