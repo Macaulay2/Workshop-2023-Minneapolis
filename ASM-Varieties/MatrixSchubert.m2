@@ -46,7 +46,7 @@ export{
     "isPatternAvoiding",
     "isVexillary",
     "schubertDecomposition",
-    "isASMIdeal",
+    "isIntersectionSchubIdeals",
     "isRankTable",
     "rajCode",
     "rajIndex",
@@ -171,6 +171,21 @@ toOneLineNotation (List, ZZ) := List => (perm, maxIdx) -> (
 )
 
 ------------------------------------
+--INPUT: An index (i,j)
+--OUTPUT: the corresponding transposition according to antidiagonal term order
+--TODO: docs and tests
+------------------------------------
+toAntiDiagTrans = method()
+toAntiDiagTrans (Sequence, ZZ) := List => (idx, maxIdx) -> (
+    transposition := (sum(toList idx)-1, sum(toList idx));
+    toOneLineNotation(transposition, maxIdx)
+)
+toAntiDiagTrans (List, ZZ) := List => (idx, maxIdx) -> (
+    transposition := {sum(toList idx)-1, sum(toList idx)};
+    toOneLineNotation(transposition, maxIdx)
+)
+
+------------------------------------
 --INPUT: Two permutations in one-line notation
 --OUTPUT: the composition of the two permutations w = vu
 ------------------------------------
@@ -209,8 +224,9 @@ composePerms (List, List) := List => (u,v) -> (
 --------------------------------
 isPatternAvoiding = method()
 isPatternAvoiding (List,List) := Boolean => (perm, pattern) -> (
-    -- Checks if the given permutation avoids the given pattern.
-    -- Assume permutation is pattern-avoiding, break if not true
+    --input validation
+    if not (isPerm perm) then error(toString perm | " is not a permutation.");
+    --assume permutation is pattern-avoiding, break if not true
     isAvoiding := true;
     for idx in subsets(0..#perm-1, #pattern) do {
         sortedIdx := sort(idx);
@@ -229,6 +245,8 @@ isPatternAvoiding (List,List) := Boolean => (perm, pattern) -> (
 --------------------------------
 isVexillary = method()
 isVexillary List := Boolean => (perm) -> (
+    --input validation
+    if not (isPerm perm) then error(toString perm | " is not a permutation.");
     isPatternAvoiding(perm, {2,1,4,3})
 )
 
@@ -567,25 +585,20 @@ entrywiseMinRankTable List := Matrix => (L) -> (
 --OUTPUT: the primary decomposition of the ASM ideal
 --TODO: docs and tests
 --TODO: input validation/type checking
---
--- if lt(I) is not radical, then fuss
--- if lt(I) radical, then 
---
--- output w_1..w_k
 -------------------------------------------
 schubertDecomposition = method()
 schubertDecomposition Ideal := List => (I) -> (
-    primDecomp := decompose ideal leadTerm I;
+    primeDecomp := decompose ideal leadTerm I;
     maxIdx := max((flatten entries vars ring I) / variableIndex // max);
+    -- varWeights := (monoid ring I).Options.MonomialOrder#1#1;
     cycleDecomp := {};
-    for primeComp in primDecomp do {
-        mons := primeComp_*;
-        perms := apply(mons / variableIndex, perm -> toOneLineNotation(perm, maxIdx));
-        cycleDecomp = append(cycleDecomp, fold(composePerms, reverse perms));
+    for primeComp in primeDecomp do {
+        mons := sort(primeComp_*, mon -> ((variableIndex mon)_0+1)*maxIdx - (variableIndex mon)_1); --bad because variableIndex; need decorated sort paradigm
+        perms := apply(mons / variableIndex, perm -> toAntiDiagTrans(perm, maxIdx));
+        cycleDecomp = append(cycleDecomp, fold(composePerms, perms));
     };
-    cycleDecomp
+    unique cycleDecomp
 )
-
 
 
 -------------------------------------------
@@ -596,8 +609,8 @@ schubertDecomposition Ideal := List => (I) -> (
 --TODO: docs and tests
 --TODO: input validation/type checking
 -------------------------------------------
-isASMIdeal = method()
-isASMIdeal Ideal := List => (I) -> (
+isIntersectionSchubIdeals = method()
+isIntersectionSchubIdeals Ideal := List => (I) -> (
     isASM := true;
     if (I == radical(I)) then {
         schubDecomp := schubertDecomposition I;
@@ -1017,31 +1030,34 @@ doc ///
         (schubertDecomposition, Ideal)
         schubertDecomposition
     Headline
-        finds the decomposition of an ASM ideal into Schubert ideals
+        finds the decomposition of an ASM ideal into Schubert determinantal ideals
     Usage
         schubertDecomposition(I)
     Inputs
         I:Ideal
     Description
         Text
-            Each element is the permutation associated to a prime component in 
-            the primary decomposition of the antidiagonal initial ideal of I.
+            Given an ASM ideal, it can be decomposed into Schubert determinantal ideals
+            as I = I_{w_1} \cap ... \cap I_{w_k}, where the w_i are permutations.
+            As output, each element in the list is the permutation associated 
+            to a prime component in the Schubert decomposition of the antidiagonal 
+            initial ideal of I.
 ///
 
 doc ///
     Key
-        (isASMIdeal, Ideal)
-        isASMIdeal
+        (isIntersectionSchubIdeals, Ideal)
+        isIntersectionSchubIdeals
     Headline
         whether an ideal is ASM
     Usage
-        isASMIdeal(I)
+        isIntersectionSchubIdeals(I)
     Inputs
         I:Ideal
     Description
         Text
             An ideal I is ASM if I is radical and I = I_{w_1} \cap ... \cap I_{w_k},
-            where I_{w_i} are Schubert ideals. 
+            where the I_{w_i} are Schubert determinantal ideals.
 ///
 
 doc ///
