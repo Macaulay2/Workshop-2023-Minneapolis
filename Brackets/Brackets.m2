@@ -6,7 +6,7 @@ newPackage(
           Authors => {{ Name => "Tim Duff", Email => "timduff@uw.edu", HomePage => "https://timduff35.github.io/timduff35/"}},
 	  PackageImports => {"SubalgebraBases"},
           AuxiliaryFiles => false,
-          DebuggingMode => false
+          DebuggingMode => true
           )
 
 export {"AbstractGCRing", "bracketRing", "BracketRing", "GCAlgebra", "normalForm", "gc"}
@@ -87,7 +87,7 @@ numcols BracketRing := B -> B#numcols
 ideal BracketRing := B -> B#ideal
 bracketRing BracketRing := o -> B -> B
 ZZ _ AbstractGCRing := (k, G) -> sub(k, ring G)
-    
+matrix BracketRing := o -> B -> transpose genericMatrix(ring B,numcols B, numrows B)
 
 -- class declaration for GCAlgebra
 GCAlgebra = new Type of AbstractGCRing
@@ -156,6 +156,10 @@ ring GCExpression := b -> b#ring
 RingElement _ AbstractGCRing := (b, R) -> new GCExpression from {RingElement => b, ring => R}
 
 -- piggybacking on operators for the associated RingElement
+terms GCExpression := b -> (bRTerms := terms(b#RingElement);
+     for term in bRTerms list term_(ring b))
+
+
 GCExpression + GCExpression := (b1, b2) -> (
     R := commonRing(b1, b2);
     b := b1#RingElement + b2#RingElement;
@@ -165,7 +169,8 @@ GCExpression * GCExpression := (b1, b2) -> (
     R := commonRing(b1, b2);
     b := b1#RingElement * b2#RingElement;
     bR := b_R;
-    if (instance(R, GCAlgebra) and (isBottomDegree bR or isTopDegree bR) and isExtensor bR) then bR_(bracketRing R) else bR
+    bRTerms := terms bR;
+    if (instance(R, GCAlgebra) and (all(bRTerms, isTopDegree) or all(bRTerms, isBottomDegree))) then sum(bRTerms, t -> t_(bracketRing R)) else bR
     )
 GCExpression - GCExpression := (b1, b2) -> (
     R := commonRing(b1, b2);
@@ -181,6 +186,7 @@ GCExpression * Number := (b, c) -> new GCExpression from {RingElement => c * b#R
 isExtensor = method()
 isExtensor GCExpression := A -> (
     assert(instance(ring A, GCAlgebra));
+    print someTerms(A#RingElement, 0, 2);
     1 == length terms someTerms(A#RingElement, 0, 2)
     )
 isTopDegree = method()
