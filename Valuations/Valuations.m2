@@ -41,10 +41,11 @@ valuation Function := v -> (
 --    internalValuation(v, null, null)
     )
 
-ourRings := {Ring,Subring,LocalRing}
+ourSources := {Ring,Subring,LocalRing}
+ourTargets := {Ring,Subring,LocalRing}
 
-for i in ourRings do (
-    for j in ourRings do (
+for i in ourSources do (
+    for j in ourTargets do (
         valuation (Function, i, j) := (v, S, T) -> (
             internalValuation(v, S, T)
             )
@@ -233,7 +234,7 @@ doc ///
      SeeAlso
          MethodFunction
      ///
-     
+
 doc ///
      Key
          valuation
@@ -263,9 +264,9 @@ doc ///
              v = valuation(x -> if x == 0 then infinity else 0)
      	     v = valuation(x -> if x == 0 then infinity else 0, ZZ, ZZ)
      SeeAlso
-          MethodFunction		 
+          MethodFunction
 ///
-	  
+
      TEST ///
          assert(trivialValuation 5 == 0)
          ///
