@@ -19,7 +19,7 @@ newPackage(
 	    "SimplicialComplexes",
 	    "SimplicialDecomposability",
 	    "Posets",
-        "MinimalPrimes"
+            "MinimalPrimes"
             },
         DebuggingMode => true
         )
@@ -650,7 +650,7 @@ lengthIncrSubset = (w) -> (
    
    if (w == {}) then return 0;
    
-   preVal = w_0;
+   preVal := w_0;
    for i from 1 to #w-1 do (
        if (preVal > w_i) then return i;
        preVal = w_i;
@@ -666,22 +666,21 @@ lengthIncrSubset = (w) -> (
 
 rajCode = method()
 rajCode List := ZZ => (w) -> (
-    
+
     if not (isPerm w) then error ("Expecting a permutation.");
-    
-    rajCodeVec = {};
+   
+    rajCodeVec := {};
     for k from 0 to #w-2 do (
-	
-	maxLengthIncr = 1;
-	fVal = w_k;
-	subPerm = w_{k+1..#w-1};
+	maxLengthIncr := 1;
+	fVal := w_k;
+	subPerm := w_{k+1..#w-1};
 	
 	for l in delete({},subsets(subPerm)) do (
-	    testPerm = {fVal} | l;
+	    testPerm := {fVal} | l;
 	    maxLengthIncr = max(maxLengthIncr,lengthIncrSubset(testPerm));
 	);
     	
-	rajCodeVec = rajCodeVec | {#subPerm+1 - maxLengthIncr};
+	rajCodeVec := rajCodeVec | {#subPerm+1 - maxLengthIncr};
     );
     return rajCodeVec;
 );
