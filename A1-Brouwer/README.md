@@ -4,7 +4,7 @@ The goal of this project is to implement algorithms for computing $\mathbb{A}^1$
 
 Our goals for the workshop:
 
-1. Implement the Grothendieck-Witt ring into Macaulay2. For background see [./References/GW.pdf](./GW.pdf)
+1. Implement the Grothendieck-Witt ring into Macaulay2. For background see [GW.pdf](./References/GW.pdf)
 2. Implement and improve upon the algorithms from [BMP] for computing $\mathbb{A}^1$-degrees. For background see [Bezoutians.pdf](./References/Bezoutians.pdf)
 
 The other links may also be useful:
