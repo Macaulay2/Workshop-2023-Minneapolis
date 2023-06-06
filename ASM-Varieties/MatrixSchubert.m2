@@ -40,7 +40,7 @@ export{
     "isPerm",
     "schubertPoly",
     "doubleSchubertPoly",
-    "minimalRankTable",
+    "entrywiseMinRankTable",
     "permLength",
     "augmentedRotheDiagram",
     "isPatternAvoiding",
@@ -551,8 +551,8 @@ subwordComplex List := simplicialComplex => (w) -> (
 --TODO: tests, documentation
 ------------------------------------------
 
-minimalRankTable = method()
-minimalRankTable List := Matrix => (L) -> (
+entrywiseMinRankTable = method()
+entrywiseMinRankTable List := Matrix => (L) -> (
         if (#L == 0) then error("The input must be a nonempty list.");
         n := #(entries L#0);
         minimalRankMtx := mutableMatrix(ZZ,n,n);
