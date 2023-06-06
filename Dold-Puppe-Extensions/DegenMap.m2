@@ -5,7 +5,7 @@ DegenMapHelper = (n, k, i) -> (
     A = ABuilder(n,k);
     sig = {};
     l = 0;
-    for j to #A_0-1 do(
+    for j to #A-1 do(
 	if (A_i_j == 0) then (
 	    sig = append(sig, curList_l);
 	    l = l+1;
