@@ -278,6 +278,22 @@ for i from 0 to m-1 do (
 return true
 ); 
 
+
+----------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation
+--OUTPUT: ANTIdiagonal initial ideal of Schubert determinantal ideal for w
+--WARNING: This method does not like the identity permutation
+----------------------------------------
+antiDiagInit = method()
+antiDiagInit Matrix := monomialIdeal => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    monomialIdeal leadTerm schubertDetIdeal A
+    );
+antiDiagInit List := monomialIdeal => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
+    monomialIdeal leadTerm schubertDetIdeal w
+    );
+
 ----------------------------------------
 --Computes rank matrix of an ASM
 --INPUT: an (n x n)- alternating sign matrix A OR a 1-line perm w
@@ -319,11 +335,12 @@ rotheDiagram = method()
 rotheDiagram Matrix := List => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     n := numrows A;
-    listEntries := flatten table(n,n, (i,j)->(i,j));
+    m := numcols A;
+    listEntries := flatten table(n,m, (i,j)->(i,j));
     ones := select(listEntries, i-> A_i == 1);
     seen := new MutableList;
     for one in ones do(
-	for i from one_0 to n-1 do(
+	for i from one_0 to m-1 do( --death rays to the right
 	    if (A_(i,one_1)==-1) then break;
 	    seen#(#seen) = (i,one_1);
 	    );
@@ -428,8 +445,8 @@ fultonGens List := List => (w) -> (
 isSchubertCM = method()
 isSchubertCM Matrix := Boolean => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    R=ring(antiDiagInit A);
-    codim(antiDiagInit A)==pdim(R^1/(antiDiagInit A))
+    R:=ring(antiDiagInit A);
+    codim(antiDiagInit A)==pdim(comodule (antiDiagInit A))
     );
 
 isSchubertCM List := Boolean => (w) -> (
@@ -504,20 +521,7 @@ doubleSchubertPoly(List) := (w) -> (
 --TODO: add tests
 --TODO: double grothendieck. Problem: can't rename variables. use divided differences instead
 
-----------------------------------------
---INPUT: a list w corresponding to a permutation in 1-line notation
---OUTPUT: ANTIdiagonal initial ideal of Schubert determinantal ideal for w
---WARNING: This method does not like the identity permutation
-----------------------------------------
-antiDiagInit = method()
-antiDiagInit Matrix := monomialIdeal => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    monomialIdeal leadTerm schubertDetIdeal A
-    );
-antiDiagInit List := monomialIdeal => (w) -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    monomialIdeal leadTerm schubertDetIdeal w
-    );
+
 
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation or a partial ASM
@@ -828,7 +832,6 @@ rajCode List := ZZ => (w) -> (
 	maxLengthIncr := 1;
 	fVal := w_k;
 	subPerm := w_{k+1..#w-1};
-	
 	for l in delete({},subsets(subPerm)) do (
 	    testPerm := {fVal} | l;
 	    maxLengthIncr = max(maxLengthIncr,lengthIncrSubset(testPerm));
