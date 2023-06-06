@@ -44,7 +44,7 @@ export{
     "isPatternAvoiding",
     "isVexillary",
     "schubertDecomposition",
-    "isASMIdeal"
+    "isASMIdeal",
     "isRankTable"
     }
 
