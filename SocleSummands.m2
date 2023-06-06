@@ -27,8 +27,8 @@ export {
     (2,ideal"a4,b4,c4,ab3,cb3"),
     (3, ideal"a4,b4,c4,ab3,bc3"),
     (4, ideal"a4,b4,c4,abc"),
-    (5, ideal"a4,b4,c4,ab3, b2c2"),
-    (6, ideal"a4,a3b,b3,abc2,c5")}
+--    (5, ideal"a4,b4,c4,ab3, b2c2"),
+    (5, ideal"a4,a3b,b3,abc2,c5")}
 )
 
 socle = method()
@@ -389,20 +389,22 @@ Description
 
 -* Test section *-
 TEST///
-L = for i from 1 to 4 list(
+elapsedTime L = netList for i from 1 to 6 list(
 I = summandExamples#i;
 socleSummandsSemigroup(I,7)
 )
 assert (L == {{0}, {0,2,3}, {0,3,4,5}, {0,4,5,6,7}})
 ///
-
+TEST///
+S = ZZ/101[x,y,u
+///
 
 end--
 
 uninstallPackage "SocleSummands"
 restart
 installPackage "SocleSummands"
-
+loadPackage("SocleSummands", Reload => true)
 
 restart
 needsPackage "DGAlgebras"
