@@ -14,7 +14,12 @@ newPackage("Valuations",
         HomePage => "https://github.com/Macaulay2/Workshop-2023-Minneapolis/tree/valuations",
         Configuration => {},
         PackageExports => {"LocalRings", "SubalgebraBases"}
+--    	PackageExports => {"SubalgebraBases"}
         )
+    
+-- importFrom_"LocalRings" {"LocalRing"}
+-- importFrom_LocalRings {"LocalRing"}
+-- importFrom_SubalgebraBases {"Subring"}
 
 export{"function",
        "valuation",
@@ -22,6 +27,8 @@ export{"function",
        "padicValuation",
        "leadTermValuation",
        "lowestTermValuation",
+       "localRingValuation",
+       "getMExponent",
        "domain",
        "codomain"
        }
@@ -32,13 +39,7 @@ Valuation = new Type of HashTable
 valuation = method()
 
 valuation Function := v -> (
-    new Valuation from{
-        function => v,
-        domain => null,
-        codomain => null,
-        cache => new CacheTable
-        }
---    internalValuation(v, null, null)
+    internalValuation(v, null, null)
     )
 
 ourSources := {Ring,Subring,LocalRing}
@@ -71,7 +72,35 @@ Valuation Thing := (v,t) -> (
     v.function t
     )
 
--- Ordered Q-modules
+--local ring valuation
+getMExponent = method()
+getMExponent (Ideal, RingElement) := (m, x) -> (
+    numFactors := 0;
+    while x % m^(numFactors + 1) == 0 do (
+	numFactors = numFactors + 1
+	);
+    numFactors
+    )
+
+localRingValuation = method()
+localRingValuation LocalRing := R -> (
+    m := R.maxIdeal;
+    S := ring m;
+    func := x -> (
+	if x == 0 then infinity
+	else getMExponent(m, sub(x, S))
+	);
+    valuation(func, R, ZZ)
+    )
+
+--leading term valuation (max convention)
+leadTermValuation = valuation (x -> if x == 0 then infinity else leadMonomial x)
+
+lowestTermValuation = valuation (f -> if f == 0 then infinity else (sort flatten entries monomials f)_0 )
+
+
+
+-- Ordered QQn
 OrderedQQn = new Type of Module
 OrderedQQVector = new Type of Vector
 
@@ -243,7 +272,14 @@ doc ///
          valuation
          (valuation, Function)
          (valuation, Function, Ring, Ring)
-
+	 (valuation, Function, Ring, LocalRing)
+	 (valuation, Function, Ring, Subring)
+	 (valuation, Function, LocalRing, Ring)
+	 (valuation, Function, LocalRing, LocalRing)
+	 (valuation, Function, LocalRing, Subring)
+	 (valuation, Function, Subring, Ring)
+	 (valuation, Function, Subring, LocalRing)
+	 (valuation, Function, Subring, Subring)
      Headline
          Constructs a user defined valuation object
      Usage
@@ -251,12 +287,8 @@ doc ///
          v = valuation(f, S, T)
      Inputs
          f:Function
-         S:Ring
-         S:LocalRing
-         S:Subring
-         T:Ring
-         T:LocalRing
-         T:Subring
+         S:{Ring,LocalRing,Subring}
+         T:{Ring,LocalRing,Subring}
      Outputs
          v:Valuation
             user defined valuation function
@@ -298,10 +330,10 @@ doc ///
 	   v f > v g
      SeeAlso
          valuation
-     ///
+///
 
 
 
-     TEST ///
-         assert(trivialValuation 5 == 0)
-         ///
+TEST ///
+assert(trivialValuation 5 == 0)
+///
