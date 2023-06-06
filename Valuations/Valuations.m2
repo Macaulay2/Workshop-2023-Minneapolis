@@ -67,9 +67,37 @@ leadTermValuation = valuation (x -> if x == 0 then infinity else leadMonomial x)
 
 lowestTermValuation = valuation (f -> if f == 0 then infinity else (sort flatten entries monomials f)_0 )
 
+localRingValuation = valuation (f -> if f == 0 then infinity else 
+
 
 ---Documentation
 beginDocumentation()
+
+doc ///
+     Key
+     	 triviaValuation
+	 (triviaValuation)
+     Headline
+     	 Constructs the trivial valuation
+     Usage
+     	 v = trivialValuation
+
+     Outputs
+     	 v:Valuation
+	     the trivial valuation
+     Description
+       Text
+       	   A function to construct the trivial valuation, returning infinity when the valuation input is zero and returning zero otherwise.
+       Example
+       	   v = trivialValuation;
+	   v -13
+	   v 100000000
+	   v 14/23
+	   v 0
+     SeeAlso
+     	 MethodFunction
+     ///
+
 
 doc ///
      Key
