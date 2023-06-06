@@ -25,7 +25,8 @@ export{--types
     --methods/functions
     "neuralCode",
     "neuralIdeal",
-    "canonicalForm"}
+    "canonicalForm",
+    "iterCanonicalForm"}
 
 protect codes
 protect dimension
