@@ -93,6 +93,23 @@ permToMatrix List := Matrix => (w) -> (
 findIndices(List, List) := (L, Bs) -> (for ell in L list position(Bs, b -> (b == ell)))
 *-
 
+--------------------------------
+--auxiliary function for getting the index of a variable in a ring
+--INPUT: an indexed variable
+--OUTPUT: the index of the variable
+--NOTE: I'm not sure if you need to overload the method for different input/output types
+--TODO: add docs and tests
+-----------------------------------
+variableIndex = method()
+variableIndex IndexedVariable := Sequence => (elem) -> (
+    --convert to string, parse, and select index, convert back
+    value replace(".*_+", "", toString elem)
+)
+variableIndex IndexedVariable := ZZ => (elem) -> (
+    --convert to string, parse, and select index, convert back
+    value replace(".*_+", "", toString elem)
+)
+
 
 -----------------------------------------------
 -----------------------------------------------
@@ -484,6 +501,22 @@ minimalRankTable List := Matrix => (L) -> (
         minimalRankMtx
     );
 
+-------------------------------------------
+--INPUT: an ASM ideal
+--OUTPUT: the primary decomposition of the ASM ideal
+--TODO: the whole function
+
+-- if lt(I) is not radical, then fuss
+-- if lt(I) radical, then 
+
+-- output w_1..w_k
+-------------------------------------------
+ASMPrimaryDecomposition = method()
+ASMPrimaryDecomposition Ideal := List = (I) -> (
+    primDecomp := decompose leadTerm I;
+    -- get index of monomial, (q,r), by computing   index(mon) = q*a + r
+)
+
 ----------------------------------------
 -- Part 2. Invariants of ASM Varieties
 ----------------------------------------
@@ -645,6 +678,22 @@ doc ///
 
             v = {1,6,9,2,4,7,3,5,8}
             isVexillary(v)
+///
+
+doc ///
+    Key
+        (ASMPrimaryDecomposition, Ideal)
+        ASMPrimaryDecomposition
+    Headlines
+        finds the primary decomposition of an ASM ideal
+    Inputs
+        an ASM ideal
+    Outputs
+        a list of permutations
+    Description
+        Text
+            Each element is the permutation associated to a prime component in 
+            the primary decomposition of the antidiagonal initial ideal of I.
 ///
 
 -------------------------
