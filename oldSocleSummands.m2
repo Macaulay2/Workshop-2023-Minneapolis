@@ -295,6 +295,8 @@ colsInIdeal(Matrix, Ideal) := (M, I) -> (
     select(numcols M, j -> gens ideal (M_{j}) % I == 0)
 )
 
+-*
+--this doesn't work!
 socleSummands(ChainComplex, ZZ) := o -> (C,m) -> (
     R := ring C;
     mm := ideal gens R;
@@ -312,6 +314,70 @@ socleSummands(ChainComplex, ZZ) := o -> (C,m) -> (
 --ssc -> #ssc)
 )
 
+
+*-
+imageSocleSummands = method(Options =>{Verbose => false})
+imageSocleSummands(Matrix,Ideal) := o -> (phi, socR) ->(
+    --phi:F \to G map of free modules
+    --socR = gens trim ideal(0_R):mm;
+    --the ideal of the socle in ring F
+    --compute the number and 
+    --degrees of the (socle of target phi)/(m*im phi)
+    R := ring phi;
+    F := source phi;
+    G := target phi;
+
+    Rbar := R/(ideal vars R);
+    ss := modulo(G**gens socR, phi**vars R);
+    --ss is a non-minimal map to source G**socR, a free R-module
+    --whose basis corresponds to the socle of G. Thus numrows ss = rank socle G.
+    --the map ss surjects to the summand
+    --corresponding to socle elements in mm*(image phi), 
+    --thus rank (Rbar**ss) is the rank of the summand of the socle of G,
+    --contained in mm(image phi).
+    --the cokernel of Rbar**ss is thus the vector space of
+    --socle summands.
+      socSummands := coker (Rbar**ss);
+     if not o.Verbose then degree socSummands else
+          degrees socSummands
+    )
+///
+restart
+debug loadPackage("SocleSummands", Reload=>true)
+S = ZZ/101[a,b,c]
+mm = ideal vars S
+R = S/mm^3
+mmR = ideal vars R
+socR = gens (ideal(0_R):(ideal vars R))
+F = res (coker vars R, LengthLimit=>7)
+socleSummands(F, 5)
+phi = F.dd_6;
+--elapsedTime socleSummands(image phi) --2.4 sec for F.dd_5 of 3 vars mod mm^3
+elapsedTime (ss=imageSocleSummands(phi, socR))
+
+rank matrix (ss**(R^1/mmR))
+((vars R)**ss)
+target phi
+prune coker o147
+betti o147
+///    
+socleSummands(ChainComplex, ZZ) := o -> (C,m) -> (
+    --for i from 1+min C to m, return
+    --numgens  (socle of target C.dd_i)/(m*image C.dd_i)
+    --or the degrees of these gens (slower)
+    R := ring C;
+    mm := ideal gens R;
+    socR := gens(ideal(0_R):mm);
+    Rbar := R/mm;
+    for i from min C + 1 to m list(
+	phi := C.dd_i;
+        ss := modulo((target phi)**socR, phi**vars R);
+	    if o.Verbose == false then
+        numrows ss - rank(Rbar**ss)
+          else
+       (degrees gens prune coker ss)_0
+       )
+)
 socleSummands ChainComplex := o -> C ->  socleSummands(C, length C, o)
 
 socleSummands(Module,ZZ) := o -> (M,ell) -> (
@@ -516,14 +582,35 @@ i
 
 
 hasSocleSummand1 = method(Options => {Numinfo => false})
+-*
 hasSocleSummand1(Module) := o-> M -> (
-    --this version REQIRES M to be a submodule of a free module ambient M that shares the same socle!
-    --this is the case when M is a module of cycles in a minimal free resolution.
+    --this version REQIRES M to be 
+    --a submodule of a free module ambient M 
+    --that shares the same socle!
+    --this is the case when M is a module of cycles in a minimal 
+    --chainComplex
 	R := ring M;
 	mR := ideal vars R;
 	socR := (ideal 0_R):mR;
-	socSummands := gens(socR*ambient M) % (mR*M);
+	socSummands := imageSocleSummands(gens(socR*ambient M), socR);
+--	socSummands := gens(socR*ambient M) % (mR*M);
         if o.Numinfo then numgens prune coker socSummands 
+        else socSummands !=0
+    	)
+*-
+hasSocleSummand1(Module, Ideal) := o-> (M,socR) -> (
+    --this version REQIRES M to be 
+    --a submodule of a free module ambient M 
+    --that shares the same socle!
+    --this is the case when M is a module of cycles in a minimal 
+    --chainComplex
+    --socR is the trimmed socle of R (as ideal)
+	R := ring M;
+	mR := ideal vars R;
+--	socR := (ideal 0_R):mR;
+	socSummands := imageSocleSummands(gens(socR*ambient M), socR);
+--	socSummands := gens(socR*ambient M) % (mR*M);
+        if o.Numinfo then socSummands 
         else socSummands !=0
     	)
 
@@ -584,11 +671,11 @@ hasSocleSummand1 M
 ///
 
 kSi = method(Options=>{Numinfo => false})
-kSi ChainComplex := o -> F -> (
+kSi (ChainComplex, Ideal) := o -> (F,socR) -> (
     --does not assume that F is a resolution, eg Koszul complex
     ell := length F;
     apply(ell-1, i-> (
-	    hasSocleSummand1(image syz F.dd_(i+1),o)
+	    hasSocleSummand1(image syz F.dd_(i+1),socR, o)
 	       ))
        )
 
@@ -697,7 +784,8 @@ kSS(QuotientRing, ZZ) := (R,n) -> (
     	mm := ideal gens ambient R;
 	I := ideal R;
 	if 0 != gens(mm*(I:mm)) % (mm*I) then return {2,3};	
-	K := kSi(R,n); --compute kSi
+	socR := trim((ideal 0_R):mm);
+	K := kSi(R,socR, n); --compute kSi
 	L := {}; --empty list
 	newgen := null;
 	for i from 1 to (n-1) do (
@@ -1957,6 +2045,37 @@ doc ///
     
 ///
 
+doc ///
+	Key
+		kSi
+		(kSi, QuotientRing)
+		(kSi, QuotientRing, ZZ)
+	Headline
+		A boolean list of when k is a direct summand of its syzygy
+	Usage
+		kSi R
+		kSi(R, n)
+	Inputs
+		R:QuotientRing
+			An Atrin local ring
+		n:ZZ
+			maximum index of syzygy module considered
+	Outputs
+		:List
+			List of booleans when k is a direct summand of its
+			syzygy
+	Description
+		Text
+			Takes in an Artin local ring, R, and computes a free
+			resolution of its residue field, k, and determines when
+			k is a direct summand of its ith syzygy. Outputs a list
+			of boolean values for when it is.
+		Example
+			S = ZZ/1993[a,b,c]
+			I = ideal("a4,b4,c4,ab3,a2c2")
+			R = S/I
+			kSi(R,6)
+///
 
 
 doc ///
@@ -1992,8 +2111,68 @@ doc ///
 ///
 
 
+doc ///
+	Key
+		kSI
+		(kSI, QuotientRing, ZZ)
+	Headline
+		The (kS) index of R
+	Usage
+		kSI(R, n)
+	Inputs
+		R:QuotientRing
+			An Atrin local ring
+		n:ZZ
+			maximum index of syzygy module considered
+	Outputs
+		:ZZ
+			the infimum of indexes i for which R is (kSi) for i > 0
+	Description
+		Text
+			Takes in an Artin local ring, R, and integer n and
+			computes a free resolution of its residue field, k, up
+			to index n and determines when k is a direct summand of
+			its ith syzygy. If any positive index results in (kSi)
+			being true then this will return the minimum of these
+			indexes. Otherwise this method returns infinity.
+		Example
+			S = ZZ/1993[a,b,c]
+			I = ideal("a4,b4,c4,ab3,a2c2")
+			R = S/I
+			kSI(R,7)
+///
 
 
+doc ///
+	Key
+		MSi
+		(MSi, Module, ZZ)
+	Headline
+		A boolean list of when k is a direct summand of the syzygies of M
+	Usage
+		MSi(M, n)
+	Inputs
+		M:Module
+			A module over an Atrin local ring, R
+		n:ZZ
+			maximum index of syzygy module considered
+	Outputs
+		:List
+			List of booleans when k is a direct summand of the
+			syzygies of M
+	Description
+		Text
+			Takes in a module over an Artin local ring, R, and
+			computes a free resolution of its residue field, k, and
+			determines when k is a direct summand of its ith
+			syzygy. Outputs a list of boolean values for when it is.
+		Example
+			S = ZZ/1993[a,b,c]
+			I = ideal("a4,b4,c4,ab3")
+			R = S/I
+			M = coker matrix {{a*b,b*c},{c,a*b*c}}
+			MSi(M, 6)
+///
 
 doc ///
 	Key
@@ -2259,7 +2438,7 @@ loadPackage("SocleSummands", Reload=> true)
 uninstallPackage "SocleSummands"
 restart
 installPackage "SocleSummands"
-check "SocleSummands"
+--check "SocleSummands"
 
 
 
@@ -3259,8 +3438,8 @@ I = ideal"x3, x2y2, y5"
 R=S/I
 kSS(R,8)
 M = coker random(R^2,R^{4:-2})
-    
-    F = res coker vars R
+MSi(M,8)
+F = res coker vars R
 hasSocleSummand1 image F.dd_3
 b = 15
 F = res(coker vars R, LengthLimit=>b)
