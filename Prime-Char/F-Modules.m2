@@ -43,7 +43,6 @@ morphism = method()
 
 morphism Matrix := Morphism => f -> 
 ( 
-    if f == 0 then return new Morphism from f;
     M := moduleClass source f;
     N := moduleClass target f;
     new Morphism from map( N, M, matrix f )
@@ -83,7 +82,7 @@ stdMap = method()
 --     M' --->  N'
 
 stdMap Morphism := Morphism => ( cacheValue symbol stdMap )( f ->
-(
+( 
     g := stdIsomorphism source f;
     h := stdIsomorphism target f;
     morphism( inverse(h) )*morphism( f*g )
@@ -99,7 +98,7 @@ FF = method()
 
 FF ( ZZ, ModuleClass ) := ModuleClass => ( e, C ) -> 
 (
-    if isFreeModule C then return C; 
+    if isFreeModule C or C == 0 then return C; 
     R := ring C;
     p := char R;
     Rel := relations source stdIsomorphism C;
@@ -178,7 +177,7 @@ generatingRoot FModule := GeneratingMorphism => ( cacheValue symbol generatingRo
         K = K1;
         g1 = (FF g1)*g;
         K1 = ker g1
-    );
+    );   
     generatingMorphism map( FF( M/K ), M/K, matrix g )
 ))
            

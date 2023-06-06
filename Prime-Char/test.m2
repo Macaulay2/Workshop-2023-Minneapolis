@@ -44,3 +44,24 @@ X = matrix toList apply(1..r, i -> toList apply(1..s, j -> x_(i,j) ) );
 I = minors( min(r,s), X );
 cohomDim I == s - r + 1 and all( 0..(s-r), i -> localCohomology( i, I, R ) == 0 )
 
+-----------------
+-- Example 4.2 in https://arxiv.org/pdf/1509.01519.pdf
+
+R = ZZ/2[x_0,x_1,x_2,y_0,y_1,y_2,z_0,z_1,z_2];
+S = R[t];
+F1 = x_0+x_1*t+x_2*t^2;
+F2 = y_0+y_1*t+y_2*t^2;
+F3 = z_0+z_1*t+z_2*t^2;
+r1 = resultant( F2, F3, t );
+r2 = resultant( F1, F3, t );
+r3 = resultant( F1, F2, t );
+r4 = resultant( F1 + F2, F3, t );
+I = ideal( r1, r2, r3, r4 )
+
+localCohomology( 4, I, R ) == 0 
+
+f = inducedMap(R^1/I, R^1/(frobenius I) )
+
+E = Ext^4( f, R^1 )
+
+
