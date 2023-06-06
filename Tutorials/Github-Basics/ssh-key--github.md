@@ -20,6 +20,10 @@ git remote set-url origin git@github.com:Macaulay2/Workshop-2023-Minneapolis.git
 On github:
 * [read this](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account#adding-a-new-ssh-key-to-your-account)
 * follow this instructions 
-  * you may want to use `cat` instead of `clip`: `cat ~/.ssh/id_ed25519.pub`
-    
+  * you may want to use `cat` instead of `clip`: 
+    ```
+    cat ~/.ssh/id_ed25519.pub`
+    ```
+  * copy to clipboard
+  * follow the rest of instrunctions, starting with "Settings..." on GitHub
   
