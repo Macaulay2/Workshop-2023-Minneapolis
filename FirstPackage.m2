@@ -5,7 +5,7 @@ newPackage(
     Date => "June 6, 2023",
     Authors => {
 	{Name => "Casey Hill", Email => "caseybhill2@gmail.com"},
-        {Name => "Miranda Moore", Email => "moor2340@umn.edu"},
+        {Name => "Jane Doe", Email => "doe@math.uiuc.edu", HomePage => "http://www.math.uiuc.edu/~doe/"},
         {Name => "Jane Doe", Email => "doe@math.uiuc.edu", HomePage => "http://www.math.uiuc.edu/~doe/"}},
     Headline => "an example Macaulay2 package",
     Keywords => {"Documentation"},
