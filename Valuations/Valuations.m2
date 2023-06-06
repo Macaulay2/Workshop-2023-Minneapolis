@@ -68,7 +68,7 @@ internalValuation (Function, Thing, Thing) := (v, S, T) -> (
 Valuation Thing := (v,t) -> (
     if (v.domain === null) or (ring t) === v.domain then
     -- Concerns with comparing things like ZZ and QQ
-    -- Concerns with subrings and local rings
+    -- Concerns with subrings and local rings, will need testing.
     v.function t
     )
 
@@ -76,8 +76,10 @@ Valuation Thing := (v,t) -> (
 getMExponent = method()
 getMExponent (Ideal, RingElement) := (m, x) -> (
     numFactors := 0;
-    while x % m^(numFactors + 1) == 0 do (
-	numFactors = numFactors + 1
+    n := m;
+    while x % n == 0 do (
+	numFactors = numFactors + 1;
+	n = n*m;
 	);
     numFactors
     )
