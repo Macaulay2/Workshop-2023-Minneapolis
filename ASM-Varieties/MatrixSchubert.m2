@@ -53,7 +53,8 @@ export{
     "isMinRankTable",
     "Double",
     "rankTableToASM",
-    "schubertReg"
+    "schubertReg",
+    "rankTableFromMatrix"
     }
 
 -- Utility routines --
@@ -663,6 +664,57 @@ rankTableToASM Matrix := Matrix => (A) -> (
     );
 
     ASMret
+);
+
+--------------------------------------------
+-- INPUT: an integer matrix M where the entries are at least 0
+-- OUTPUT: the minimal rank table associated to M representing an ASM 
+-- TODO: tests and documentation
+--------------------------------------------
+rankTableFromMatrix = method()
+rankTableFromMatrix Matrix := Matrix => (A) -> (
+    AList := entries A;
+    n := #AList;
+    rankTable := mutableMatrix(ZZ,n,n);
+    if not(#(AList#0) == n) then error("Must be a square matrix.");
+
+    for i from 0 to n-1 do (
+        for j from 0 to n-1 do(
+            if not(ring(AList#i#j) === ZZ) then error("Must be an integer matrix.");
+            if (AList#i#j < 0) then error("Must be a matrix with nonnegative entries.");
+            if (i == 0 and j == 0) then (
+                rankTable_(n-1,n-1) = min(n,AList#(n-1)#(n-1));
+            )
+            else if (i == 0) then (
+                rankTable_(n-1-i,n-1-j) = min(n-i,n-j,AList#(n-1-i)#(n-1-j),rankTable_(n-1-i,n-j));
+            )
+            else if (j == 0) then (
+                rankTable_(n-1-i,n-1-j) = min(n-i,n-j,AList#(n-1-i)#(n-1-j),rankTable_(n-i,n-j-1));
+            )
+            else (
+                rankTable_(n-1-i,n-1-j) = min(n-i,n-j,AList#(n-1-i)#(n-1-j),rankTable_(n-1-i,n-j),rankTable_(n-i,n-j-1));
+            );
+        );
+    );
+
+    for i from 0 to n-1 do (
+        for j from 0 to n-1 do(
+            if (i == 0 and j == 0) then (
+                rankTable_(i,j) = min(1,rankTable_(i,j));
+            )
+            else if (i == 0) then (
+                rankTable_(i,j) = min(rankTable_(i,j), rankTable_(i,j-1)+1);
+            )
+            else if (j == 0) then (
+                rankTable_(i,j) = min(rankTable_(i,j), rankTable_(i-1,j)+1);
+            )
+            else (
+                rankTable_(i,j) = min(rankTable_(i,j), rankTable_(i,j-1)+1, rankTable_(i-1,j)+1);
+            );
+        );
+    );
+
+    rankTable
 );
 
 
