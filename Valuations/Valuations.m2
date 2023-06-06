@@ -289,12 +289,8 @@ doc ///
          v = valuation(f, S, T)
      Inputs
          f:Function
-         S:Ring
-         S:LocalRing
-         S:Subring
-         T:Ring
-         T:LocalRing
-         T:Subring
+         S:{Ring,LocalRing,Subring}
+         T:{Ring,LocalRing,Subring}
      Outputs
          v:Valuation
             user defined valuation function
@@ -308,6 +304,38 @@ doc ///
           MethodFunction
 ///
 
+doc ///
+     Key
+        leadTermValuation
+	(leadTermValuation, PolynomialRing)
+     Headline
+        The valuation which returns the exponent of the lead term of an element of an ordered ring
+     Usage
+         v = leadTermValuation R
+     Inputs
+     	 R:PolynomialRing
+     Outputs
+         v:Valuation
+             the lead term valuation
+     Description
+       Text
+           This valuation returns the exponent vector of the lead term of a polynomial with respect to the ring's term order.
+	   The valuation returns vectors in an \textit{ordered $\QQ$-module}, which respects the monomial order of the
+	   given @TO "PolynomialRing"@.
+       Example
+           R = QQ[a,b,c, MonomialOrder => Lex];
+           v = leadTermValuation R;
+           f = 13*a^2*b + a*c^3;
+	   g = 5*a^2*c + b^3;
+           v f
+	   v g
+	   v f > v g
+     SeeAlso
+         valuation
+///
+
+
+
 TEST ///
-     assert(trivialValuation 5 == 0)
+assert(trivialValuation 5 == 0)
 ///
