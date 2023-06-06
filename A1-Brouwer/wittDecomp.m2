@@ -1,3 +1,4 @@
+load "./_init.m2"
 
 wittDecomp =method()
 wittDecomp (Matrix,Ring) := (ZZ,Matrix) => (A,k) -> (
