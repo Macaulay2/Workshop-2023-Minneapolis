@@ -191,7 +191,9 @@ FModule == ZZ := ( M, n ) ->
     generatingRoot( M ) == 0
 )
 
-cohomDim = I ->
+cohomDim = method()
+
+cohomDim Ideal := ZZ => I ->
 (
     R:=ring I;
     n:=#(trim I)_*;
