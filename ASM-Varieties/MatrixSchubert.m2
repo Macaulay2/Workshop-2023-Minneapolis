@@ -39,6 +39,7 @@ export{
     "composePerms",
     "isPerm",
     "schubertPoly",
+    "doubleSchubertPoly",
     "minimalRankTable",
     "permLength",
     "augmentedRotheDiagram",
@@ -48,7 +49,8 @@ export{
     "isASMIdeal",
     "isRankTable",
     "rajCode",
-    "rajIndex"
+    "rajIndex",
+    "Double"
     }
 
 -- Utility routines --
@@ -100,8 +102,10 @@ lastDescent List := Boolean => (w) -> (
     )
 
 permLength = method()
-permLength List:= ZZ => (p) -> (l := 0;
-     scan(#p, i->scan(i..#p-1, j ->(if p#i>p#j then l=l+1)));
+permLength List:= ZZ => (p) -> (
+    if not(isPerm p) then error("The input must be a permutation.");
+    l := 0;
+    scan(#p, i->scan(i..#p-1, j ->(if p#i>p#j then l=l+1)));
      l)
  
 swap = (L,i,j) -> (apply(#L, k-> if k!=i and k!=j then L_k
@@ -175,23 +179,23 @@ composePerms (List, List) := List => (u,v) -> (
     apply(u0_v0, i-> i+1)
     )
 
-------------------------------------
--- INPUT: A permutation in one-line notation
--- OUTPUT: The length of the permutation (number of inversions)
--- TODO: Add documentations + examples
-------------------------------------
+-- ------------------------------------
+-- -- INPUT: A permutation in one-line notation
+-- -- OUTPUT: The length of the permutation (number of inversions)
+-- -- TODO: Add documentations + examples
+-- ------------------------------------
 
-permLength = method()
-permLength List := ZZ => w -> (
-    if not (isPerm w) then error("the argument is not a permutation");
-    k := 0;
-    for i from 0 to #w - 2 do (
-        for j from i + 1 to #w - 1 do (
-            if w_i > w_j then k = k +1;
-        ); 
-    );
-    k
-)
+-- permLength = method()
+-- permLength List := ZZ => w -> (
+--     if not (isPerm w) then error("the argument is not a permutation");
+--     k := 0;
+--     for i from 0 to #w - 2 do (
+--         for j from i + 1 to #w - 1 do (
+--             if w_i > w_j then k = k +1;
+--         ); 
+--     );
+--     k
+-- )
 
 --------------------------------
 --checks if a permutation is pattern-avoiding
@@ -417,8 +421,9 @@ grothendieckPoly(List) := (w) -> (
 
 
 
-schubertPolyHelper = method()
-schubertPolyHelper(List, Ring) := (w, Q) -> (
+schubertPolyHelper = method(Options=>{Double=>false})
+schubertPolyHelper(List, Ring) := opts->(w, Q) -> (
+    isDouble := opts.Double;
     n := #w;
     if not (isPerm w) then error ("The input must be a permutation matrix.");
    -- Q := QQ[x_1..x_n];
@@ -432,7 +437,10 @@ schubertPolyHelper(List, Ring) := (w, Q) -> (
     v := swap(w,r,s);
     previnds := select(0..r-1, q-> permLength(swap(v,q,r))==permLength(v)+1);
     us := apply(previnds, i-> swap(v,i,r));
-    sum(toList(apply(us, u->schubertPolyHelper(u,Q))))+ Q_r * schubertPolyHelper(v,Q)
+    if not isDouble then
+        sum(toList(apply(us, u->schubertPolyHelper(u,Q,Double=>isDouble))))+ Q_r * schubertPolyHelper(v,Q,Double=>isDouble)
+    else 
+        sum(toList(apply(us, u->schubertPolyHelper(u,Q,Double=>isDouble))))+ (Q_r-Q_(n-1+v_r)) * schubertPolyHelper(v,Q,Double=>isDouble)
     )
 
 schubertPoly = method()
@@ -440,7 +448,16 @@ schubertPoly(List) := (w) -> (
     n := #w;
     x := local x;
     Q := QQ[x_1..x_n];
-    schubertPolyHelper(w, Q)
+    schubertPolyHelper(w, Q, Double=>false)
+    )
+
+doubleSchubertPoly = method()
+doubleSchubertPoly(List) := (w) -> (
+    n := #w;
+    x := local x;
+    y := local y;
+    Q := QQ[x_1..x_n,y_1..y_n];
+    schubertPolyHelper(w, Q, Double=>true)
     )
 
 --TODO: add tests
@@ -714,6 +731,78 @@ doc ///
 	  betti res antiDiagInit w	   
 ///
 
+
+doc ///
+    Key
+	(permLength, List)
+        permLength
+    Headline
+    	to find the length of a permutation in 1-line notation.
+    Usage
+        permLength(w)
+    Inputs
+    	w:List
+    Description
+    	Text
+	 Given a permutation in 1-line notation returns the Coxeter length of the permutation.
+	Example
+    	    w = {2,5,4,1,3}
+	    permLength(w)
+
+	    
+///
+
+doc ///
+    Key
+        (rotheDiagram, List)
+	(rotheDiagram, Matrix)
+    	rotheDiagram
+    Headline
+    	to find the Rothe diagram of a partial alternating sign matrix
+    Usage
+    	rotheDiagram(w)
+	rotheDiagram(M)
+    Inputs
+    	w:List
+	    or {\tt M} is a @TO Matrix@
+    Description
+    	Text
+	 Given a permutation in 1-line notation or a partial alternating sign matrix returns the Rothe diagram.
+	Example
+    	    w = {2,5,4,1,3}
+	    rotheDiagram(w)
+	    M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+	    rotheDiagram(M)
+
+	    
+///
+
+doc ///
+    Key
+        (augmentedRotheDiagram, List)
+	(augmentedRotheDiagram, Matrix)
+    	augmentedRotheDiagram
+    Headline
+    	to find the Rothe diagram of a partial alternating sign matrix together with the rank conditions determining the alternating sign matrix variety
+    Usage
+    	augmentedRotheDiagram(w)
+	augmentedRotheDiagram(M)
+    Inputs
+    	w:List
+	    or {\tt M} is a @TO Matrix@
+    Description
+    	Text
+	 Given a permutation in 1-line notation or a partial alternating sign matrix returns list of entries of Rothe diagram with the ranks of each entry.
+	Example
+    	    w = {2,5,4,1,3}
+	    augmentedRotheDiagram(w)
+	    M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+	    augmentedRotheDiagram(M)
+
+	    
+///
+
+
 doc ///
     Key
 	(isPartialASM, Matrix)
@@ -962,6 +1051,23 @@ assert(not isVexillary({7,2,5,8,1,3,6,4}));
 assert(isVexillary({1,6,9,2,4,7,3,5,8}));
 ///
 
+TEST /// 
+-- permLength 
+
+assert(permLength {1} == 0)
+assert(permLength {1,2} == 0)
+assert(permLength {3,2,1} == 3)
+assert(permLength {2,1,3} == 1)
+assert(permLength {8,7,6,5,4,3,2,1} == 28)
+///
+
+TEST ///
+-- augmentedRotheDiagram 
+
+assert(sort augmentedRotheDiagram {2,1,5,4,3} == sort {((1,1),0), ((3,3),2),((3,4),2), ((4,3),2)})
+assert(sort augmentedRotheDiagram matrix{{0,1,0},{1,-1,1},{0,1,0}} == sort{((1,1),0), ((2,2),1)})
+assert (sort augmentedRotheDiagram matrix {{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}} == sort {((1,1),0),((1,2),0),((4,3),2),((3,3),2)})
+///
 end---------------------------------------------------------------
 
 
@@ -1020,4 +1126,3 @@ restart
 needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
-
