@@ -690,6 +690,31 @@ doc ///
 
 doc ///
     Key
+        (rotheDiagram, List)
+	(rotheDiagram, Matrix)
+    	rotheDiagram
+    Headline
+    	to find the Rothe diagram of a partial alternating sign matrix
+    Usage
+    	rotheDiagram(w)
+	rotheDiagram(M)
+    Inputs
+    	w:List
+	    or {\tt M} is a @TO Matrix@
+    Description
+    	Text
+	 Given a permutation in 1-line notation or a partial alternating sign matrix returns the Rothe diagram.
+	Example
+    	    w = {2,5,4,1,3}
+	    rotheDiagram(w)
+	    M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+	    rotheDiagram(M)
+
+	    
+///
+
+doc ///
+    Key
         (augmentedRotheDiagram, List)
 	(augmentedRotheDiagram, Matrix)
     	augmentedRotheDiagram
@@ -703,7 +728,7 @@ doc ///
 	    or {\tt M} is a @TO Matrix@
     Description
     	Text
-	 Given a permutation in 1-line notation or a partial returns the length of the permutation.
+	 Given a permutation in 1-line notation or a partial alternating sign matrix returns list of entries of Rothe diagram with the ranks of each entry.
 	Example
     	    w = {2,5,4,1,3}
 	    augmentedRotheDiagram(w)
