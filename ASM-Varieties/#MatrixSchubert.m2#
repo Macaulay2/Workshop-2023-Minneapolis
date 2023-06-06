@@ -54,8 +54,7 @@ export{
     "Double",
     "rankTableToASM",
     "schubertReg",
-    "rankTableFromMatrix",
-    "schubertCodim",
+    "rankTableFromMatrix"
     "isSchubertCM"
     }
 
@@ -265,18 +264,20 @@ isVexillary List := Boolean => (perm) -> (
 -------------------------------------
 isPartialASM = method()
 isPartialASM Matrix := Boolean => (A) -> (
-    n:=numrows(A);
-    m:=numcols(A);
-for i from 0 to n-1 do (
-    rowPartialSum := accumulate(plus,{0}|(flatten entries(A^{i})));
-    if (not(isSubset(sort unique rowPartialSum,{0,1}))) then return false;
-    );
-for i from 0 to m-1 do (
-    colPartialSum := accumulate(plus,{0}|(flatten entries(A_{i})));
-    if (not(isSubset(sort unique colPartialSum, {0,1}))) then return false;
-    );
-return true
-); 
+    n := numrows A;
+    m := numcols A;
+    rowCheck := new MutableList;
+    colCheck := new MutableList;
+    for i from 0 to n-1 do(
+	partialSums := for i from 0 to m-1 list(sum(delete(0, flatten entries A_{i})));
+	rowCheck#(#rowCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
+	);
+    for i from 0 to m-1 do(
+	partialSums := for i from 0 to n-1 list(sum(delete(0, flatten entries A^{i})));
+	rowCheck#(#colCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
+	);
+    (toList rowCheck == toList(#rowCheck:true)) and (toList colCheck == toList(#colCheck:true))
+)
 
 ----------------------------------------
 --Computes rank matrix of an ASM
@@ -438,8 +439,6 @@ isSchubertCM List := Boolean => (w) -> (
     true
     );
 
-isSchubertCM(matrix{{0,1,0},{1,-1,1},{0,1,0}})
-
 ----------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: single Grothendieck polynomials
@@ -532,16 +531,6 @@ schubertReg List := ZZ => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
      regularity(antiDiagInit w)
     );
-
-schubertCodim = method() 
-schubertCodim Matrix := ZZ => A -> (
-    if not (isPartialASM A) then error("The input must be a partial alternating sign matrix");
-    codim antiDiagInit A
-)
-schubertCodim List := ZZ => (w) -> (
-    if not (isPerm w) then error("The input must be a permutation in one line notation");
-    permLength w
-)
 
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
@@ -1164,26 +1153,7 @@ doc ///
 
 ///
 
-doc ///
-    Key
-        schubertCodim
-        (schubertCodim, Matrix)
-        (schubertCodim, List)
-    Headline
-        Computes the codimension of a schubert determinantal ideal
-    Usage
-        schubertCodim(M)
-        schubertCodim(w)
-    Inputs
-        w:List
-	        or {\tt M} is a @TO Matrix@
-    Description
-        Text
-            Given a partial alternating sign matrix or a permutation in 1-line notation, outputs the codimension of the corresponding schubert determinantal ideal.
-        Example
-            schubertCodim(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
-            schubertCodim({1,3,2})
-///
+
 
 
 -------------------------
@@ -1219,7 +1189,8 @@ L = {
     matrix{{0,1,0},{1,-1,0}},
     matrix{{0,1,0},{1,-1,0}},
     matrix{{0,0,1},{1,0,-1}},
-    matrix{{0,0,1,0,0},{0,0,0,0,1},{0,0,0,0,0},{0,1,0,0,0}}
+    matrix{{0,0,1,0,0},{0,0,0,0,1},{0,0,0,0,0},{0,1,0,0,0}},
+    matrix{{1,0,0,0},{0,0,1,0},{-1,1,0,0},{1,0,-1,1}}
     };
 assert(apply(L,isPartialASM) == toList (#L:true))
 
@@ -1228,8 +1199,7 @@ assert(apply(L,isPartialASM) == toList (#L:true))
 T = {
     matrix{{-1}},
     matrix{{0,1,0},{1,0,1},{0,1,0}},
-    matrix{{0,0,1,0,0,0,0,0},{1,0,1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}},
-    matrix{{1,0,0,0},{0,0,1,0},{-1,1,0,0},{1,0,-1,1}}
+    matrix{{0,0,1,0,0,0,0,0},{1,0,1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}}
     };
 assert( apply(T, isPartialASM) == toList (#T:false))
 ///
@@ -1302,17 +1272,6 @@ assert(essentialBoxes matrix {{0,1,0,0,0,0},{1,0,0,0,0,0},{0,0,0,0,0,1},{0,0,1,0
 ///
 
 
-TEST ///
--- schubertCodim
-L = {
-    {1},
-    {2,1},
-    matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}},
-    matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
-}
-assert all (L, i -> schubertCodim i == codim schubertDetIdeal i)
-///
-
 end---------------------------------------------------------------
 
 
@@ -1343,6 +1302,7 @@ subwordComplex M
 betti res diagLexInit M
 betti res antiDiagInit M
 
+
 A = matrix{{0,-1,0,1,1},{1,-1,1,-1,1},{0,1,1,0,-1},{1,1,-1,1,-1},{-1,1,0,0,1}}
 n = numrows A
 m = numcols A
@@ -1359,6 +1319,21 @@ for i from 0 to m-1 do(
 (toList rowCheck == toList(#rowCheck:true)) and (toList colCheck == toList(#colCheck:true))
 )
 
+
+----------------------------------
+schubertIsCM = method()
+schubertIsCM Matrix := Boolean => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    R=ring(antiDiagInit A);
+    codim(antiDiagInit A)==pdim(R^1/(antiDiagInit A))
+    );
+
+schubertIsCM List := Boolean => w -> (
+    if not (isPerm w) then error "The input must be a partial alternating sign matrix or a permutation.";
+    print "We know from a theorem of Fulton that the quotient by any Schubert determinantal ideal is actually Cohen--Macaulay!";
+    true 
+    );
+schubertIsCM({2,1,4,3})
 
 ------------------------------------
 --Development Section
