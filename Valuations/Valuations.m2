@@ -97,3 +97,30 @@ doc ///
      SeeAlso
      	 MethodFunction
      ///
+
+doc ///
+     Key
+    	lowestTermValuation     	
+     Headline
+    	The valuation which returns the lowest term of an element of an ordered ring
+     Usage
+     	 v = lowestTermValuation
+     Inputs
+     	 null
+     Outputs
+     	 v:Valuation
+	     the lowest term valuation
+     Description
+       Text
+       	   This valuation returns the lowest (trailing) term of a polynomial with respect to the ring's term order.
+       Example
+       	   R = QQ[a,b,c, MonomialOrder => Lex];
+       	   v = lowestTermValuation;
+	   f = 13*a^2*b + a*c^3;
+	   v f
+	   S = QQ[a,b,c, MonomialOrder => RevLex, Global => false];
+	   f = 13*a^2*b + a*c^3;
+	   v f
+     SeeAlso
+     	 MethodFunction, leadTermValuation
+     ///
