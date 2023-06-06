@@ -1,4 +1,4 @@
-restart
+--restart
 load "ZZdFactorizations.m2" 
 
 ------tensorMF
@@ -36,6 +36,30 @@ for i from 1 to (#L)//2-1 do X = tensorMF(X, ZZdfactorization{ matrix{{L#(2*i)}}
 X
 )
 
+
+------KoszulMF from ideal and function
+KoszulMFf = method()
+KoszulMFf(List, RingElement) := (L,f) -> (
+    I := ideal L;
+    M := f //gens(I);
+    N := transpose (gens I) | M;     
+    E  := entries N;
+    F := select(E, i -> not(i#1 == 0)); 
+    A := flatten F;
+    KoszulMF(A)
+)
+
+KoszulMFf(Ideal, RingElement) := (I,f) -> (
+    KoszulMFf(flatten entries gens I, f)
+)
+
+eulerMF = f -> (KoszulMFf(ideal jacobian f , f))
+
+
+end--
+
+needs "tensorMF.m2"
+
 ---test
 R = QQ[x,y,z,w]
 K = KoszulMF({x^2*y^2,z^2*w^2, x*y, y^10, x*y, z^100})
@@ -44,24 +68,6 @@ KMF = KoszulMF({x,x,y,y,z,z})
 
 (dd^KMF)_1*(dd^KMF)_2
 
-------KoszulMF from ideal and function
-KoszulMFf = method()
-KoszulMFf(List, RingElement) := (L,f) -> (
-I := ideal L;
-M := f //gens(I);
-N := transpose (gens I) | M;     
-E  := entries N;
-F := select(E, i -> not(i#1 == 0)); 
-A := flatten F;
-KoszulMF(A)
-)
-
-KoszulMFf(Ideal, RingElement) := (I,f) -> (
-KoszulMF(A)
-)
-
-eulerMF = f -> (KoszulMFf(ideal jacobian f , f))
-
 ----test
 R= QQ[a,b,c,d]
 K = KoszulMFf({a,b,c,d^2}, a^5*d + d^100 + a*b*c)
@@ -69,6 +75,8 @@ isMatrixFactorization K
 dd^K
 I = ideal {a,b,c,d^2}
 f = a^5*d + d^100 + a*b*c
+KoszulMFf(I, f)
+
 M = f //gens(I)
 N = transpose (gens I) | M
 E = entries N
