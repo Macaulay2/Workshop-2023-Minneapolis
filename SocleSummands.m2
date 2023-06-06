@@ -65,7 +65,7 @@ socleSummands ChainComplex := o -> C -> (
        for i from min C + 1 to max C list 
            imageSocleSummands(C.dd_i, socR, Verbose => o.Verbose)
     else for i from min C + 1 to max C list (
-	   if i == min C + 1 then imageSocleSummands(C.dd_i, socR, o)
+	   if i == min C + 1 then imageSocleSummands(C.dd_i, socR,  Verbose => o.Verbose)
 	   else imageSocleSummands(syz C.dd_(i-1), socR, Verbose => o.Verbose)
 	   ))
 
@@ -291,7 +291,7 @@ Key
  [socleSummands, Verbose]
  [socleSummands, Boundaries]
 Headline
- Computes the number of socle summands or the generators of the kernels of the differentials of a chain complexx
+ Computes the number of socle summands of the images of the differentials of a chain complex or free resolution of a module
 Usage
  S = socleSummands (M,n)
  S = socleSummands C
@@ -303,7 +303,11 @@ Outputs
  S: List
 Description
   Text
-   Given a chain complex (usually a free resolution) this method computes the number of copies of the residue field appearing
+   Given a chain complex, this function calculates the number of socle summands in the images of each differential.
+   If one instead inputs a module M and an integer n, the function will calculate the socle summands in the images of the differentials of the free resolution of M truncated after n steps. 
+   Note that function ignores the 0-th differential of the resolution.
+   One may use the option Boundaries => false to instead find the number of socle summands of the cycles of the complex (which will give the same output for a free resolution)
+   One may use the option Verbose => true to instead find the degrees of the socle summands
   Example
    S = ZZ/101[a,b,c]
    I = ideal(a^4,b^4,c^4,a*b^3,b*c^3)
@@ -311,6 +315,22 @@ Description
    mm = ideal gens R
    F = res( mm, LengthLimit => 6)
    socleSummands F
+  Text
+    We will get the same ouput if we instead input the module and length limit:
+  Example
+    S= ZZ/101[a,b,c]
+    I = ideal(a^4,b^4,c^4,a*b^3,b*c^3)
+    R = S/I
+    mm = ideal gens R
+    socleSummands((R^1/mm),6)
+  Text
+    We can instead use the cycles of the free resolution (which again will give the same output):
+  Example
+    S= ZZ/101[a,b,c]
+    I = ideal(a^4,b^4,c^4,a*b^3,b*c^3)
+    R = S/I
+    mm = ideal gens R
+    socleSummands((R^1/mm),6, Boundaries => false)
 ///
 
 
