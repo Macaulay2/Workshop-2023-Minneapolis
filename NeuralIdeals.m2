@@ -124,6 +124,9 @@ neuralIdeal(NeuralCode) := C -> (
     ideal(genList)
     )
 
+canonicalForm = method();
+
+
 canonicalForm(Ideal) := I -> (
     --this is from our old code, doesn't work yet, may not need pseudomonomial stuff actually
     --if isSquarefreePseudomonomialIdeal I then continue;
@@ -135,7 +138,7 @@ canonicalForm(Ideal) := I -> (
     reducedGens :=apply(first entries gens multipliedGens,i->sub(i,booleanR));
     almostGens :=apply(delete(sub(0,booleanR),reducedGens),i->(sub(i,R)));
     actualGens := for i in almostGens list (
-	isDivisible = false;
+	isDivisible := false;
 	for j in almostGens do (
 	    if i%j==0 and i =!= j then (isDivisible=true; break));
 	if isDivisible==true then continue; i)
@@ -236,32 +239,32 @@ document{
   Caveat => "In progress"
   }
 
-document{
-  Key => {neuralCode},
-  Headline => "The type neuralCode",
-  TEX "Turns a list of binary strings of the same length into a NeuralCode type.",
-  Usage => "neuralCode("000","111")",
-  Inputs => {"000","111"},
-  Outputs => {"The neural code consisting of the given codes."},
-  TEX "We demonstrate how to enter a neural code as a list of binary strings of the same length.",
-  EXAMPLE lines ///
-  neuralCode("000","001","101")
-  ///
-  }
+--document{
+--  Key => {neuralCode},
+--  Headline => "The type neuralCode",
+--  TEX "Turns a list of binary strings of the same length into a NeuralCode type.",
+--  Usage => "neuralCode(code)",
+--  Inputs => {"Binary strings of the same length"},
+--  Outputs => {"The neural code consisting of the given codes."},
+--  TEX "We demonstrate how to enter a neural code as a list of binary strings of the same length.",
+--  EXAMPLE lines ///
+--  neuralCode("000","001","101")
+--  ///
+--  }
 
-document{
-  Key => {neuralIdeal(NeuralCode)},
-  Headline => "Neural ideal.",
-  TEX "A method which computes the neural ideal for a given neural code.",
-  Usage => "neuralIdeal(NeuralCode)",
-  Inputs => {"neuralCode"},
-  Outputs => {"The neural ideal corresponding to the given neural code"},
-  TEX "We compute an example",
-  EXAMPLE lines ///
-  C=neuralCode("000","001");
-  neuralIdeal(C)
-  ///,
-}
+--document{
+--  Key => {neuralIdeal(NeuralCode)},
+--  Headline => "Neural ideal.",
+--  TEX "A method which computes the neural ideal for a given neural code.",
+--  Usage => "neuralIdeal(neuralCode(code))",
+--  Inputs => {"neuralCode"},
+--  Outputs => {"The neural ideal corresponding to the given neural code"},
+--  TEX "We compute an example",
+--  EXAMPLE lines ///
+--  C=neuralCode("000","001");
+--  neuralIdeal(C)
+--  ///,
+--}
 
 
 -- **TEST0**
