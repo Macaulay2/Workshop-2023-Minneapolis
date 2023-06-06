@@ -23,32 +23,32 @@ easyIsomorphicGW (GrothendieckWittClass, GrothendieckWittClass) := Boolean => op
     -- Returns error if the matrices are defined over different base fields
     if not baseField(beta) === baseField(gamma) then error "Error: these classes have different underlying fields";
     
-    b := beta.matrix;
-    g := gamma.matrix;
+    A := beta.matrix;
+    B := gamma.matrix;
     
     -- Return false if the matrices are not of the same size
-    if not numRows(b) == numRows(g) then return false;
+    if not numRows(A) == numRows(B) then return false;
     
     k := baseField(beta);
-    n := numRows(b);
+    n := numRows(A);
     
     -- Build a generic matrix P in indeterminants over our field
     R := k[x_(1,1)..x_(n,n)];
     P := genericMatrix(R,n,n);
     
     -- Take the n^2 equations produced by this matrix equality
-    testZeroMatx := transpose(P)*b*P - g;
+    testZeroMatx := transpose(P)*A*P - B;
     fullEqns := flatten entries testZeroMatx;
     I := ideal(fullEqns);
     
     -- Increasing the height bound, check for solutions at each stage
     for i in 1..opts.HeightBound do(
 	L := rationalPoints(k, I, Bound=>i);
-	if L#?0 then(
+	if not #L === 0 then(
 	    return true;
 	    break;
 	    );
-	if not L#?0 then(
+	if #L === 0 then(
 	    print("No solutions up to height " | toString(i));
 	    );
      	);
