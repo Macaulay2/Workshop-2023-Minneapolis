@@ -1,5 +1,5 @@
 newPackage(
-"Neural Ideals",
+"NeuralIdeals",
 Version => "1.00",
 Date => "June 5, 2023",
 Authors => {{Name => "Hugh Geller"},{Name => "Rebecca R.G."}},
@@ -43,6 +43,59 @@ neuralCode=method(List):= codeList -> (
  dim NeuralCode := C -> C.dimension
  
  ring NeuralCode :=  C -> C.ambientRing
+ 
+iterCanonicalForm = method();
+iterCanonicalForm(NeuralCode) := C -> (
+    d := dim C;
+    initCode := C.codes#0;
+    canonical := {};
+    for i to d-1 do (
+	canonical = append(canonical,x_(i+1) - value(initCode#i))
+	);
+    for i from 1 to #C.codes - 1 do (
+	current := C.codes#i;
+	codeCoordinate := {};
+	factors := {};
+	subs := {};
+	for j to #current - 1 do (
+	    c :=  value(current#j);
+	    codeCoordinate = append(codeCoordinate,c);
+	    factors = append(factors,x_(j+1) - c);
+	    subs = append(subs,x_(j+1) => c);
+	    );
+	currentGens := canonical;
+	M := {};
+	N := {};
+	L := {};
+	for gen in currentGens do (
+	    if sub(gen,subs) == 0
+	    then M = append(M,gen)
+	    else N = append(N,gen);
+	    );
+	for ngen in N do (
+	    for fac in factors do (
+		goToNext := false;
+		g := ngen*fac;
+		if ngen%(fac - 1) == 0 then continue;
+		for mgen in M do (
+		    if g%mgen == 0 then goToNext = true;
+		    break;
+		    );
+		if goToNext then continue;
+		L = append(L,g);
+		);
+	    );
+	canonical = join(M,L);
+	);
+    canonical
+    )
+
+end
+
+---Test Code---
+C = neuralCode("000","100","101")
+iterCanonicalForm(C)
+
 
 isWellDefined NeuralCode := --Boolean =>
  X -> (
@@ -172,9 +225,6 @@ canonicalForm(NeuralCode) := C -> (canonicalForm(neuralIdeal(C)))
 --shortListGens=unique listMJCbacktoR
 --factoredMJCbacktoR=apply(shortListGens,factor)
 --then remove extraneous generators. Macaulay2 arranges the terms in such a way that this isn't too bad, but I'm not sure how to code it
-
-
-
 
 
 
