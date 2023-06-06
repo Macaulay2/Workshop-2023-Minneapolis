@@ -1,4 +1,7 @@
 needsPackage "RationalPoints2"
+
+load "./GW-type.m2"
+
 --diagonalize method
 diagonalize = method()
 
@@ -27,3 +30,11 @@ diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
     );
     return matrix A
 )
+
+diagonalizeGW = method()
+
+diagonalizeGW (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
+    A := beta.matrix;
+    D := diagonalize(A);
+    return gwClass(D)
+    )
