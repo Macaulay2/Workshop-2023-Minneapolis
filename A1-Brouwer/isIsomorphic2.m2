@@ -1,4 +1,4 @@
---tests whether two quadratic forms are isomorphic; only implemented over RR and CC.
+--tests whether two quadratic forms are isomorphic; only implemented over RR and CC, only implemented for nonsingular matrices.
 
 load "GW-type.m2"
 load "diagonalize.m2"
