@@ -126,17 +126,23 @@ neuralIdeal(NeuralCode) := C -> (
 
 canonicalForm(Ideal) := I -> (
     --this is from our old code, doesn't work yet, may not need pseudomonomial stuff actually
-    if isSquarefreePseudomonomialIdeal I then continue;
-    decomp := primaryDecompositionPseudomonomial I;
+    --if isSquarefreePseudomonomialIdeal I then continue;
+    decomp := primaryDecomposition I;
     multipliedGens :=product(decomp, i->i);
     R :=ring I;
     d :=numgens R;
-    booleanR :=(ring I)/ideal(apply(d,i->(x_(i+1)*(1-x_(i+1)))));
-    booleanIdeal :=substitute(multipliedGens,S);
-    J :=substitute(booleanIdeal,R);
-    --check sage package to see how they do this, do what they do
+    booleanR :=R/ideal(apply(d,i->(x_(i+1)*(1-x_(i+1)))));
+    reducedGens :=apply(first entries gens multipliedGens,i->sub(i,booleanR));
+    almostGens :=apply(delete(sub(0,booleanR),reducedGens),i->(sub(i,R)));
+    actualGens := for i in almostGens list (
+	isDivisible = false;
+	for j in almostGens do (
+	    if i%j==0 and i =!= j then (isDivisible=true; break));
+	if isDivisible==true then continue; i)
+    --delete(,actualGens)
     --to factor:
     --apply(J_*,factor)
+    --not working right now
     )
 
 canonicalForm(NeuralCode) := C -> (canonicalForm(neuralIdeal(C)))
