@@ -270,8 +270,8 @@ minimizeDiffOnce(Matrix,ZZ,ZZ) := (A,u,v) -> (
     a := rank target A;
     R := ring A;
     inv := (A_(u,v))^(-1);
-    N := map(R^a,R^a, (i,j) -> if i == v and j != v then -inv*A_(u,j) else 0) + id_(R^a);
-    Q := map(R^a,R^a, (i,j) -> if j == u and i != u then -inv*A_(i,v) else 0) + id_(R^a);
+    N := map(source A, source A, (i,j) -> if i == v and j != v then -inv*A_(u,j) else 0) + id_(R^a);
+    Q := map(target A,target A, (i,j) -> if j == u and i != u then -inv*A_(i,v) else 0) + id_(R^a);
     A' := Q*N^(-1)*A*N*Q^(-1);
     newRows := select(a,i-> i != u and i != v);
     newCols := select(a,i-> i != u and i != v);
