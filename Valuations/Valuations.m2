@@ -14,7 +14,10 @@ newPackage("Valuations",
         HomePage => "https://github.com/Macaulay2/Workshop-2023-Minneapolis/tree/valuations",
         Configuration => {},
         PackageExports => {"LocalRings", "SubalgebraBases"}
+--    	PackageExports => {"SubalgebraBases"}
         )
+    
+-- importFrom_"LocalRings" {"LocalRing"}
 
 export{"function",
        "valuation",
@@ -32,13 +35,7 @@ Valuation = new Type of HashTable
 valuation = method()
 
 valuation Function := v -> (
-    new Valuation from{
-        function => v,
-        domain => null,
-        codomain => null,
-        cache => new CacheTable
-        }
---    internalValuation(v, null, null)
+    internalValuation(v, null, null)
     )
 
 ourSources := {Ring,Subring,LocalRing}
