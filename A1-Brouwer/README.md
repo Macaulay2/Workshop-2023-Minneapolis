@@ -32,3 +32,5 @@ The other links may also be useful:
 # Still to do
 
 :small_red_triangle: Implement A1-Brouwer degrees into Macaulay2
+
+:small_red_triangle: Figure out how to send the diagonal form of a GrothendieckWittClass to the `CacheTable` in the type file
