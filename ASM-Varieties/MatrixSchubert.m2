@@ -623,7 +623,7 @@ schubertDecomposition Ideal := List => (I) -> (
     -- varWeights := (monoid ring I).Options.MonomialOrder#1#1;
     cycleDecomp := {};
     for primeComp in primeDecomp do {
-        mons := sort(primeComp_*, mon -> ((variableIndex mon)_0+1)*maxIdx - (variableIndex mon)_1); --bad because variableIndex; need decorated sort paradigm
+        mons := sort(primeComp_*, mon -> ((variableIndex mon)_0+1)*maxIdx - (variableIndex mon)_1); --bad because variableIndex called twice; need decorated sort paradigm
         perms := apply(mons / variableIndex, perm -> toAntiDiagTrans(perm, maxIdx));
         cycleDecomp = append(cycleDecomp, fold(composePerms, perms));
     };
@@ -641,15 +641,15 @@ schubertDecomposition Ideal := List => (I) -> (
 -------------------------------------------
 isIntersectionSchubIdeals = method()
 isIntersectionSchubIdeals Ideal := List => (I) -> (
-    isASM := true;
+    isIntersection := true;
     if (I == radical(I)) then {
         schubDecomp := schubertDecomposition I;
-        isASM = I == intersect apply(schubDecomp/schubertDetIdeal, J -> sub(J, vars ring I));
+        isIntersection = I == intersect apply(schubDecomp/schubertDetIdeal, J -> sub(J, vars ring I));
     }
     else {
-        isASM = false;
+        isIntersection = false;
     };
-    isASM
+    isIntersection
 )
 ------------------------------------------
 --INPUT: a square matrix M
