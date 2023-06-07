@@ -41,8 +41,6 @@ export{
     "isPerm",
     "schubertPoly",
     "doubleSchubertPoly",
-    "entrywiseMinRankTable",
-    "entrywiseMaxRankTable",
     "permLength",
     "augmentedRotheDiagram",
     "isPatternAvoiding",
@@ -61,7 +59,12 @@ export{
     "matrixSchubertRegWPS",
     "lengthIncrSubset",
     "isASMIdeal",
-    "isSchubertCM"
+    "ASM",
+    "getASM",
+    "isSchubertCM",
+    "ASMFullList",
+    "cohenMacaulayASMsList",
+    "nonCohenMacaulayASMsList"
     }
     
 ------------------------------------------------------------------------------
@@ -73,6 +76,7 @@ load "./MatrixSchubert/Code/helpers.m2"
 load "./MatrixSchubert/Code/permutationMethods.m2"
 load "./MatrixSchubert/Code/MatrixSchubertConstructions.m2"
 load "./MatrixSchubert/Code/MatrixSchubertInvariants.m2"
+load "./MatrixSchubert/Code/lists.m2"
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 -- **DOCUMENTATION** --
@@ -179,7 +183,12 @@ TesterPermTime = (w) -> (
 
 apply(1..10,i->Tester(i));
 
-
+restart
+needsPackage "MatrixSchubert"
+I = schubertDetIdeal {2,1,6,3,5,4}
+isASMIdeal I
+I.cache.ASM
+getASM(I)
 
 ------------------------------------
 --Development Section
