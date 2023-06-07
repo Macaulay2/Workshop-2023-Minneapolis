@@ -29,8 +29,8 @@ return true
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: ANTIdiagonal initial ideal of Schubert determinantal ideal for w
---WARNING: This method does not like the identity permutation
 ----------------------------------------
+
 antiDiagInit = method()
 antiDiagInit Matrix := monomialIdeal => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
@@ -41,6 +41,38 @@ antiDiagInit List := monomialIdeal => (w) -> (
     monomialIdeal leadTerm schubertDetIdeal w
     );
 
+
+-*
+--This will be the updated/faster antiDiagInit code
+--but it's still under construction
+antiDiagInit = method()
+antiDiagInit Matrix := MonomialIdeal => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    zMatrix := genMat(numrows A, numcols A); --generic matrix
+    rankMat := rankMatrix A; --rank matrix for A
+    essBoxes := essentialBoxes A;
+    if essBoxes == {} then (
+	R := ring zMatrix;
+	return ideal(0_R)
+	);
+    zBoxes := apply(essBoxes, i-> flatten table(i_0,i_1, (j,k)->(j+1,k+1))); --smaller matrix indices for each essential box
+    ranks := apply(essBoxes, i-> rankMat_(i_0-1,i_1-1)); --ranks for each essential box
+    antiDiagGens := new MutableList;
+    for box in essBoxes do (
+    	pos := position(essBoxes, i-> i==box);
+	boxSubmatrix := zMatrix^{0..(box_0-1)}_{0..(box_1-1)};
+	for x in subsets(numRows boxSubmatrix) do (
+	    for y in subsets(numCols boxSubmatrix do(
+		    product(
+        antiDiagGens#(#antiDiagGens) = apply((minors(ranks_pos+1, zMatrix^{0..(box_0-1)}_{0..(box_1-1)}))_*,);
+        );
+    return ideal(unique flatten toList antiDiagGens)
+    );
+antiDiagInit List := monomialIdeal => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
+    monomialIdeal leadTerm schubertDetIdeal w
+    );
+*-
 ----------------------------------------
 --Computes rank matrix of an ASM
 --INPUT: an (n x n)- alternating sign matrix A OR a 1-line perm w
