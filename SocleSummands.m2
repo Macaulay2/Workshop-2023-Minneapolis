@@ -427,9 +427,9 @@ Description
    5 examples in the HashTabel summandExamples:
   Example
    netList (L = for i from 1 to 5 list(
-   I = summandExamples#i;
-   socleSummandsSemigroup(I,7)
-   ))
+     I = summandExamples#i;
+     socleSummandsSemigroup(I,7)
+     ))
   Text
    Though resolutions may not have any socle summands, as in the first case above,
    the cycles in the Koszul complex always have them, at least in the last place.
@@ -575,4 +575,14 @@ elapsedTime socleSummandsSemigroup(I, 8)
 
 R = S/I
 betti res (coker vars R, LengthLimit => 8, DegreeLimit => 4)
-sparseSpecialization
+
+
+linearPart = F ->(
+    L := for i from 1 to length F list (
+	submatrixByDegrees(F.dd_i, (i-1, i-1),(i,i)));
+    chainComplex L)
+F = res(coker vars R, LengthLimit => 6)
+betti F
+betti linearPart F
+socleSummands linearPart F
+socleSummands F
