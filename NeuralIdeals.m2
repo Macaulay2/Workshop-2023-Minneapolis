@@ -27,14 +27,13 @@ export{--types
     "neuralIdeal",
     "canonicalForm",
     "iterCanonicalForm",
-    "factoredCanonicalForm",
     "codeSupport",
     --Symbols
     "codes"}
 
 protect codes
 protect dimension
-protect ambientRing
+protect Factor
 
 NeuralCode = new Type of HashTable
 NeuralCode.synonym = "neural code"
@@ -121,7 +120,8 @@ neuralIdeal = method();
 neuralIdeal(NeuralCode,Ring) := Ideal => (C,R) -> (
     d:=dim C;
     if numgens R =!= d then error "Expected ring of the same dimension as the neuralCode";
-    --add error if ring is not characteristic 2
+    if coefficientRing R =!= ZZ/2 then error "Expected coefficientRing of ring to be ZZ/2";
+    if instance(R,PolynomialRing)==false then error "Expected ring to be a PolynomialRing";
     oppC:=neuralCodeOpp(C);
     genList:=for i to #oppC-1 list (
     	prod:=1;
@@ -157,7 +157,7 @@ canonicalForm Ideal := List => opts -> I -> (
 	    if i%j==0 and i =!= j then (isDivisible=true; break));
 	if isDivisible==true then continue; 
 	if opts.Factor == true then factor(i) else i
-	);
+	)
     )
     else error "Input must be a squarefree pseudomonomial ideal"
     )
@@ -166,18 +166,9 @@ canonicalForm NeuralCode := List => opts -> C -> (
     canonicalForm(neuralIdeal(C),Factor => opts.Factor)
     )
 
-canonicalForm(NeuralCode,Ring) := List => (C,R) -> (
+canonicalForm(NeuralCode,Ring) := List => opts -> (C,R) -> (
     canonicalForm(neuralIdeal(C,R),Factor => opts.Factor)
     )
-
---make this an optional argument to canonicalForm instead
-factoredCanonicalForm = method()
-
-factoredCanonicalForm(Ideal):= I -> (
-    apply(canonicalForm(I),factor)
-    )
-
-factoredCanonicalForm(NeuralCode) := C -> (apply(canonicalForm(neuralIdeal(C)),factor))
 
 
 
@@ -301,25 +292,6 @@ document{
   ///,
 }
 
-document{
-  Key => {factoredCanonicalForm, (factoredCanonicalForm,Ideal),(factoredCanonicalForm,NeuralCode)},
-  Headline => "Factored Canonical Form",
-  TEX "A method which computes the canonical form of a given squarefree pseudomonomial ideal or neural code and presents a factored list of generators.",
-  Usage => "factoredCanonicalForm(Ideal) or factoredCanonicalForm(NeuralCode)",
-  Inputs => {"Squarefree pseudomonomial ideal or NeuralCode"},
-  Outputs => {"The canonical form with all generators factored"},
-  TEX "We compute an example",
-  EXAMPLE lines ///
-  C=neuralCode("000","001");
-  factoredCanonicalForm(C)
-  ///,
-  EXAMPLE lines ///
-  R=ZZ/2[x_1..x_3];
-  I=ideal(x_1*x_3,x_2*(1-x_1));
-  factoredCanonicalForm(I)
-  ///,
-}
-
 
 -- **TEST0**
 TEST ///
@@ -342,7 +314,7 @@ TEST ///
     cI=canonicalForm(I);
     cC=canonicalForm(C,R);
     L={x_2};
-    assert((cI==cC) and (cI==L)) --issue: want to compare both to {x_2}, but it's in a different ring
+    assert((cI==cC) and (cI==L))
 
 -- **TEST1**  This makes a pinch point.  We check that it has one minimal prime, that it has 3 variables, and that the singular locus is dimension 1 while the ambient object is dimension 2.  We also check that the ring we construct is a subring of A.
 --TEST ///
