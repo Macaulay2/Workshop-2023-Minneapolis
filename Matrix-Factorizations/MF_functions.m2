@@ -135,58 +135,41 @@ for j to N-1 list(
     {j, (N + i - j)%N} => (F_j)**(G_((N+i-j)%N))
     )))
 
-freeMods(F, G)
-netList oo
+restart
+needs "MF_functions.m2"
 
-dTensor = method()
-dTensor(ZZdFactorization, ZZdFactorization) := (F,G) -> (
-    N := F.period;
-    dF := dd^F;
-    dG := dd^G;
-    for i to N-1 list(
-	for j to N-1 list(
-	    {j, (N + i - j)%N} =>
-	    if (i==j) (id_(F_i)**(dG)_(j+1))
-	    else if (j==((i+1)%N))
-	    else 0 
-    
-k=0
+S = QQ[x,y,z, u, v, w]
+F = ZZdfactorization{matrix{{x}}, matrix{{y}}, matrix{{z}}}
+G = ZZdfactorization{matrix{{u}}, matrix{{v}}, matrix{{w}}}
+
+--2x2 example
+F = ZZdfactorization{matrix{{x,0},{0,x}}, matrix{{y,0},{0,y}}, matrix{{z,0},{0,z}}}
+G = ZZdfactorization{matrix{{u,0},{0,u}}, matrix{{v,0},{0,v}}, matrix{{w,0},{0,w}}}
+
+--add check that F.period = G.period
 N = F.period
 dF = dd^F
 dG = dd^G
-for i to N-1 list(
-	for j to N-1 list(
-	    {j, (i)%N} =>(
-	    if i==j then id_(F_i)**(dG)_(k-i+1)
-	    --else if then 0 --(j==((i+1)%N))
-	    else 0)
 
+--dTensor = method(Options => {RootOfUnity=>false})
+dTensor = method()
+dTensor(ZZdFactorization, ZZdFactorization) := (F,G) -> (
+    --put in check for F.period = G.period
+    N := F.period;
+    dF := dd^F;
+    dG := dd^G;
+    M := for k to N-1 list(
+	for i to N-1 list(
+	    for j to N-1 list(
+		if i == j then (id_(F_i))**(dG_(k-i+1))		
+		else if (j == (i+1)%N) then (dF_(i+1))**(id_(G_((k-i)%N)))
+		else 0
+	    )));
+    ZZdfactorization(for i to #M-1 list matrix M_i)
 )
-)
-netList oo
 
-
-M = for k to N-1 list(
-    for i to N-1 list(
-	for j to N-1 list(
-	    if i == j then 
-		(id_(F_i))**(dG_((k-i+1)%N))		
-	    --else if (j == (i+1)%N) then(
-		--0
-		--)
-	    else 0
-	    ))
-    )
-netList oo
-matrix M_0
-M_0
-id_(F_2)**(dG_((0-2+1)%3))
-
---if i < 0 then "neg" 
- --              else if i == 0 then "zer" 
-   --            else "pos")
---tests
-
+T = dTensor(F,G)
+dd^T
 
 ---test
 R = QQ[x,y,z,w]
