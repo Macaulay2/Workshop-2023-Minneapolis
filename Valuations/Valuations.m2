@@ -365,6 +365,36 @@ doc ///
          valuation
 ///
 
+doc ///
+     Key
+         localRingValuation
+         (localRingValuation, LocalRing)
+     Headline
+         Construct a local ring valuation given a local ring.
+     Usage
+         v = localRingValuation(R)
+     Inputs
+         R:LocalRing
+             a local ring
+     Outputs
+         v:Valuation
+             local ring valuation using a local ring R
+     Description
+       Text
+           A function to construct a local ring valuation. This function returns the largest power of the maximal ideal
+	   of R that contains the input of the valuation.
+       Example
+           R = QQ[x,y];
+	   I = ideal(x,y);
+	   S = R_I
+	   localVal = localRingValuation(S)
+	   localVal(1 + x + y)
+	   localVal(x^4 + x^2*y^2 + x^7 + y^3)
+	   localVal(x^2 + x*y + y^2)
+     SeeAlso
+         MethodFunction
+     ///
+
 --------------------------------------------------------------------------------
 ------------------------------------ Tests -------------------------------------
 --------------------------------------------------------------------------------
