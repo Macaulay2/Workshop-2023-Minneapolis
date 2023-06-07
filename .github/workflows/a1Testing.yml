@@ -1,0 +1,26 @@
+name: A1BrouwerDegree Testing
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  test-bot:
+    name: Testing ${{ github.head_ref || github.ref_name }}
+    runs-on: ubuntu-latest
+    container:
+      image: 'ghcr.io/mahrud/macaulay2:latest'
+      volumes:
+        - '${{ github.workspace }}:/home/macaulay'
+
+    steps:
+      - name: Checkout the project repository
+        uses: actions/checkout@v2
+
+      - name: Run testbot on project branch
+        run: |
+          M2 --script testing/gwTypeTest.m2
