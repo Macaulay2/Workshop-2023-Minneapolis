@@ -1,9 +1,15 @@
 newPackage(
           "Brackets",
           Version => "0.1",
-          Date => "May 5, 2023",
+          Date => "June 7, 2023",
           Headline => "Brackets, Grassmann-Cayley Algebra, and Projective Geometry",
-          Authors => {{ Name => "Tim Duff", Email => "timduff@uw.edu", HomePage => "https://timduff35.github.io/timduff35/"}},
+          Authors => {
+	      { Name => "Dalton Bidleman", Email => "", HomePage => ""},
+	      { Name => "Tim Duff", Email => "timduff@uw.edu", HomePage => "https://timduff35.github.io/timduff35/"},
+	      { Name => "Jack Kendrick", Email => "", HomePage => ""},
+	      { Name => "Thomas Yahl", Email => "", HomePage => ""},
+	      { Name => "Michael Zeng", Email => "", HomePage => ""}		      
+	      },
 	  PackageImports => {"SubalgebraBases"},
           AuxiliaryFiles => false,
           DebuggingMode => true
@@ -58,7 +64,7 @@ bracketRing (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     I := ideal apply(minorsX, bracketVariables, (m, b) -> sub(m, S) - b_S);
     ret := new BracketRing from {numrows => n, numcols => d, ring => S, ideal => I, table => lookupTable, cache => new CacheTable from {}};
     if o#Strategy === GroebnerBasis then (
-	-- TODO: it's likely more efficient to apply forceGB to a known Groebner basis (Pluecker relations? van der Waerden syzygies?)
+	-- TODO: it's likely more efficient to apply forceGB to a known Groebner basis (Plücker relations? van der Waerden syzygies?)
 	-- TODO: allow computing with SubalgebraBases instead of Groebner bases
 	G := groebnerBasis I;
 	ret.cache#gb = G;
@@ -307,7 +313,7 @@ Description
       $$ [\lambda_{i_1} \cdots \lambda_{i_d}] \mapsto \det \begin{pmatrix} x_{i_1, 1} & \cdots & x_{i_1, d} \\ \vdots & & \vdots & \\ x_{i_d 1} & \cdots & x_{i_d d}\end{pmatrix}. $$
       
       The classical bracket ring $B_{n,d}$ is the image of this map.
-      This is the homogeneous coordinate ring of the Grassmannian of $(n-1)$-dimensional planes in $\mathbb{P}^{d-1}$ under its Pluecker embedding.
+      This is the homogeneous coordinate ring of the Grassmannian of $(n-1)$-dimensional planes in $\mathbb{P}^{d-1}$ under its Plücker embedding.
 Acknowledgement
   We thank all project contributors, the organizers of the 2023 Macaulay2 workshop in Minneapolis, IMA staff, and acknowledge support from the National Science Foundation grant DMS 2302476.
 References
@@ -330,7 +336,7 @@ Description
         x_{6,1}&x_{6,2}
         \end{pmatrix}.$$
       There are $6=\binom{4}{2}$ brackets, and the matrix $X$ represents a configuration of $6$ points on the projective line $\mathbb{P}^1.$
-      These brackets are not algebraically independent, as they satisfy the quadratic Pluecker relation,
+      These brackets are not algebraically independent, as they satisfy the quadratic Plücker relation,
       $$
       [1 2] [3 4] - [1 3] [2 4] + [1 4] [2 3] = 0.
       $$
@@ -341,7 +347,7 @@ doc ///
 Key
   bracketRing
 Headline
-  Constructor for @ofClass{BracketRing}@ 
+  Constructor for bracket rings
 Usage
   B = bracketRing(n, d)
   B = bracketRing(vectorSymbols, d)
@@ -429,6 +435,8 @@ restart
 installPackage("Brackets", RemakeAllDocumentation => true)
 needsPackage "Brackets"
 viewHelp "Brackets"
+
+
 
 restart
 needsPackage "Brackets"
