@@ -273,9 +273,41 @@ filterRegSeq = method()
 
 filterRegSeq (ZZ,Ideal,Module) := List => (n,I,M) ->
 (
-    ap = associatedPrimes M;
-    ap = select(ap,p -> (not isSubset(I,p)))
+    --ap:= associatedPrimes M;
+    --ap:= select(ap,p -> (not isSubset(I,p)))
+    
+    --Strategy of ordering these generators obtained from Eisenbud-Huneke-Vasconcelos.m2 in the
+    ---PrimaryDecomposition package.
+    G:= sort(flatten entries mingens I, f -> (sum degree f, #terms f));
+    k := coefficientRing ring I;
+    f := 1_k;
+    
+    i:=0;
+    while not isFilterRegElement(G#i,I,M,module ideal(0_R)) do (i=i+1;);
+    L:={G#i};
+    i=0;
+        
+    while (#L < n and i<#G) do (
+--	 if any(ap, p -> (G#i % p==0))
+    	if isFilterRegSeq(append(L,G#i),I,M) then (L=append(L,G#i);
+	    print L;
+	    );
+	i=i+1;
+	);
+    i=0;
+    while (#L<n and i<#G) do (
+	for j to (#G-1) do ( 
+	    if isFilterRegSeq(append(L,(G#i+f*G#j)),I,M) then (L=append(L,(G#i+f*G#j));
+		print L;
+		print "hi";
+		);
+	    if #L==n then return L;
+	    );
+	i=i+1;
+	);
+    L
 )
+
     
 
 
