@@ -234,9 +234,10 @@ randomGeneratingMorphism ModuleClass := generatingMorphism => o -> M ->
 --- I-filter regular sequences ---
 isFilterRegElement = method()
 
-isFilterRegElement (RingElement,Ideal,Module) := Boolean => (x,I,M) ->
+isFilterRegElement (RingElement,Ideal,Module,Module) := Boolean => (x,I,M,N) ->
 (
-    J:=radical(ann((M:x)/M));
+    T:=ker (x*id_(M/N));
+    J:=radical(ann(T));
     isSubset(I,J)
 )
 
@@ -244,12 +245,14 @@ isFilterRegSeq = method()
 
 isFilterRegSeq (BasicList,Ideal,Module) := Boolean => (L,I,M) ->
 (
+    if not isSubset(ideal(L),I) then error "isFilterRegSeq: The sequence is not contained in the ideal.";
     l:=#L;
-    isFRE := isFilterRegElement(L#0,I,M);
+    R:=ring I;
+    isFRE = isFilterRegElement(L#0,I,M,module ideal(0_R));
     N:=ideal(L#0)*M;
     i:=1;
     while (isFRE and i<l) do (
-	isFRE = isFilterRegElement(L#i,I,N);
+	isFRE = isFilterRegElement(L#i,I,M,N);
 	N=N+ideal(L#i)*M;
 	i=i+1;
 	);
@@ -264,6 +267,14 @@ isFilterRegSeq (BasicList,Ideal,Ring) := Boolean => (L,I,R) ->
 isFilterRegSeq (BasicList,Ideal,Ideal) := Boolean => (L,I,R) ->
 (
     isFilterRegSeq(L,I,module R)
+)
+
+filterRegSeq = method()
+
+filterRegSeq (ZZ,Ideal,Module) := List => (n,I,M) ->
+(
+    ap = associatedPrimes M;
+    ap = select(ap,p -> (not isSubset(I,p)))
 )
     
 
