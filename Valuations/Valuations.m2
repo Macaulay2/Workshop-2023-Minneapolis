@@ -13,13 +13,19 @@ newPackage("Valuations",
         DebuggingMode => false,
         HomePage => "https://github.com/Macaulay2/Workshop-2023-Minneapolis/tree/valuations",
         Configuration => {},
-        PackageExports => {"LocalRings", "SubalgebraBases"}
+        PackageExports => {"LocalRings", "SubalgebraBases", "InvariantRing"}
 --      PackageExports => {"SubalgebraBases"}
         )
 
 -- importFrom_"LocalRings" {"LocalRing"}
 -- importFrom_LocalRings {"LocalRing"}
 -- importFrom_SubalgebraBases {"Subring"}
+
+----- MOVE TO SubalgebraBases -> Subring
+ring Subring := A -> ambient A
+ring RingOfInvariants := A -> ambient A
+ring LocalRing := A -> A
+ambient LocalRing := A -> A
 
 export{"function",
        "valuation",
@@ -45,8 +51,8 @@ valuation Function := v -> (
     internalValuation(v, null, null)
     )
 
-ourSources := {Ring,Subring,LocalRing}
-ourTargets := {Ring,Subring,LocalRing}
+ourSources := {Ring,Subring,LocalRing,RingOfInvariants}
+ourTargets := {Ring,Subring,LocalRing,RingOfInvariants}
 
 for i in ourSources do (
     for j in ourTargets do (
@@ -69,7 +75,7 @@ internalValuation (Function, Thing, Thing) := (v, S, T) -> (
     )
 
 Valuation Thing := (v,t) -> (
-    if (v.domain === null) or (ring t) === v.domain then
+    if (v.domain === null) or (ring t) === ambient v.domain then
     -- Concerns with comparing things like ZZ and QQ
     -- Concerns with subrings and local rings, will need testing.
     v.function t
