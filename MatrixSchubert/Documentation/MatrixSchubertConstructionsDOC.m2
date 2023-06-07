@@ -110,18 +110,58 @@ doc ///
 
 doc ///
     Key
+    	(antiDiagInit, List)
+    	(antiDiagInit, Matrix)
+    	antiDiagInit
+    Headline
+    	Computes the (unique) antidiagonal initial ideal of an ASM ideal
+    Usage
+    	antiDiagInit(w)
+    	antiDiagInit(A)
+    Inputs
+         w:List
+	    or {\tt A} is a @TO Matrix@
+    Description
+    	Text
+	 Let Z = (z_(i,j)) be a generic matrix and R=k[Z] is a polynomial ring in the entries of Z over the ring k.  We call a term order 
+	 on R antidiagonal if the lead term of the determinant of each submatrix Z' of Z is the product of terms along the antidiagonal 
+	 of Z'. 
+	 
+	 This method relies on these theorems.  It computes the antidiagonal initial ideal of an alternating sign matrix ideal by directly forming 
+	 the ideal of the lead terms of the Fulton generators.  @UL {
+        {"[KM05]: Knutson and Miller, Gröbner geometry of Schubert polynomials (see ", arXiv "0110058", ")."},}@ tells us that the Fulton generators of each 
+	 Schubert determinantal ideal form a Gröbner basis, a result extended to alternating sign matrix ideals by  @UL {
+        {"[Knu]: Knutson, Frobenius splitting, point-counting, and degeneration (see ", arXiv "0911.4941", ")."},
+        }@ and by @UL {
+        {"[Wei]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},
+        }@.
+	 
+	 
+	 Example
+	 schubertDetIdeal({1,3,2})
+	 schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+
+///
+
+doc ///
+    Key
+    	(schubertDetIdeal, List)
     	(schubertDetIdeal, Matrix)
     	schubertDetIdeal
     Headline
-    	Computes Schubert determinantal ideal for a given permutation.
+    	Computes an alternating sign matrix ideal
     Usage
+    	schubertDetIdeal(w)
     	schubertDetIdeal(M)
     Inputs
-    	M:Matrix
+         w:List
+	    or {\tt M} is a @TO Matrix@
     Description
     	Text
-	 Given an alternating sign matrix or a permutation in 1-line notation, 
-	 outputs the Schubert determinantal ideal associated to that matrix.
+	 Given a permutation in 1-line notation or, more generally, a (partial) alternating sign matrix, 
+	 outputs the associated alternating sign matrix ideal (which is called a Schubert determinantal ideal 
+	     in the case of a permutation).  (The convention throughout this package is that the permuation matrix 
+	     of a pemutation w has 1's in positions (i,w(i)).)
 	Example
 	 schubertDetIdeal({1,3,2})
 	 schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
@@ -238,3 +278,23 @@ doc ///
 	 essentialBoxes(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 
 ///
+
+
+doc ///
+    Key
+        subwordComplex
+        (subwordComplex, List)
+    Headline
+    	to find the subword complex associated to w (i.e. SR-ideal of antiDiagInit)
+    Usage
+    	subwordComplex(w)
+    Inputs
+    	w:List
+    Description
+    	Text
+	    Given a permutation in 1-line notation, compute the subword complex associated to w (i.e. SR-ideal of antiDiagInit).
+	Example
+	    subwordComplex({2,5,4,1,3})
+
+	    
+///           

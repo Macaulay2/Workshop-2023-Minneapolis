@@ -41,8 +41,6 @@ export{
     "isPerm",
     "schubertPoly",
     "doubleSchubertPoly",
-    "entrywiseMinRankTable",
-    "entrywiseMaxRankTable",
     "permLength",
     "augmentedRotheDiagram",
     "isPatternAvoiding",
@@ -61,7 +59,12 @@ export{
     "matrixSchubertRegWPS",
     "lengthIncrSubset",
     "isASMIdeal",
+    "ASM",
+    "getASM",
     "isSchubertCM",
+    "ASMFullList",
+    "cohenMacaulayASMsList",
+    "nonCohenMacaulayASMsList",
     "longestIncrSeqRec",
     "rajCodeRec"
     }
@@ -75,6 +78,7 @@ load "./MatrixSchubert/Code/helpers.m2"
 load "./MatrixSchubert/Code/permutationMethods.m2"
 load "./MatrixSchubert/Code/MatrixSchubertConstructions.m2"
 load "./MatrixSchubert/Code/MatrixSchubertInvariants.m2"
+load "./MatrixSchubert/Code/lists.m2"
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 -- **DOCUMENTATION** --
@@ -185,7 +189,6 @@ apply(1..10,i->Tester(i));
 --Adam RajCode Testing--
 ------------------------------------
 
-
 rajTest = (w) -> (
     if(rajCode(w) != rajCodeRec(w)) then (
     	print(w);
@@ -205,6 +208,14 @@ randomTest = (n) -> (
 for i from 1 to 4 do (
     for w in permutations(toList (1..i)) do rajTest(w);
 );
+
+restart
+needsPackage "MatrixSchubert"
+I = schubertDetIdeal {2,1,6,3,5,4}
+isASMIdeal I
+I.cache.ASM
+getASM(I)
+
 
 ------------------------------------
 --Development Section
