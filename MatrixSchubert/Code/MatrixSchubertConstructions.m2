@@ -446,6 +446,7 @@ isASMIdeal Ideal := List => (I) -> (
             ASM := rankTableToASM matrix rankTable;
             ASMIdeal := schubertDetIdeal matrix ASM;
             isASM = I == sub(ASMIdeal, vars ring I);
+            if isASM then I.cache.ASM = ASM;
         }
         else {
             isASM = false;
@@ -455,6 +456,18 @@ isASMIdeal Ideal := List => (I) -> (
         isASM = false;
     };
     isASM
+)
+
+-------------------------------------------
+--INPUT: an ideal
+--OUTPUT: the ASM of an ideal
+--WANRING: assumes the ideal is an ASM ideal
+--TODO: docs and tests
+--TODO: input validation/type checking
+-------------------------------------------
+getASM = method()
+getASM Ideal := Matrix => (I) -> (
+    I.cache.ASM
 )
 
 ------------------------------------------
