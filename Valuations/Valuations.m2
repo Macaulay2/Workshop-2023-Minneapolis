@@ -36,6 +36,7 @@ export{"function",
 --------------------------------------------------------------------------------
 -------------------------------- Valuation Type --------------------------------
 --------------------------------------------------------------------------------
+
 Valuation = new Type of HashTable
 
 valuation = method()
@@ -77,6 +78,7 @@ Valuation Thing := (v,t) -> (
 --------------------------------------------------------------------------------
 --------------------------- Ordered QQ-module Types ----------------------------
 --------------------------------------------------------------------------------
+
 OrderedQQn = new Type of Module
 OrderedQQVector = new Type of Vector
 
@@ -123,6 +125,7 @@ OrderedQQVector ? OrderedQQVector := (a, b) -> (
 --------------------------------------------------------------------------------
 ------------------------- Built-in Valuation Functions -------------------------
 --------------------------------------------------------------------------------
+
 -- Trivial Valuation
 trivialValuation = valuation (x -> if x == 0 then infinity else 0)
 
@@ -189,6 +192,7 @@ localRingValuation LocalRing := R -> (
 --------------------------------------------------------------------------------
 -------------------------------- Documentation ---------------------------------
 --------------------------------------------------------------------------------
+
 beginDocumentation()
 
 doc ///
@@ -336,12 +340,24 @@ doc ///
 --------------------------------------------------------------------------------
 ------------------------------------ Tests -------------------------------------
 --------------------------------------------------------------------------------
+
 -- Trivial Valuation Tests
 TEST ///
 -- Everything should have valuation 0 except 0
-assert(trivialValuation 0 == infinity)
-assert(trivialValuation 5 == 0)
-assert(trivialValuation (-9/2) == 0)
+val = trivialValuation
+assert(val 0 == infinity)
+assert(val 5 == 0)
+assert(val (-9/2) == 0)
+///
+
+-- p-adic Valuation Tests
+TEST ///
+val = padicValuation(7)
+assert(val 0 == infinity)
+assert(val 7 == 1)
+assert(val (-7) == 1)
+assert(val (-9/7) == -1)
+assert(val (7/9) == 1)
 ///
 
 end
