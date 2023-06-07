@@ -38,26 +38,21 @@ NeuralCode.synonym = "neural code"
 
 neuralCode=method(List):= codeList -> (
     d := #(codeList#0);
-    x := symbol x;
     X:=new NeuralCode from {
 	symbol codes => codeList,
 	symbol dimension => d,
-	symbol ambientRing => ZZ/2[x_1..x_d],
 	symbol cache => new CacheTable
 	};
     X
     )
  
- dim NeuralCode := C -> C.dimension
- 
- ring NeuralCode :=  C -> C.ambientRing
+dim NeuralCode := C -> C.dimension
 
 
-isWellDefined NeuralCode := --Boolean =>
- X -> (
+isWellDefined NeuralCode := Boolean => X -> (
     --check keys
     K:=keys X;
-    expectedKeys := set{symbol codes, symbol dimension, symbol ambientRing};
+    expectedKeys := set{symbol codes, symbol dimension}; 
     if set K =!= expectedKeys then (
 	if debugLevel > 0 then (
 	    added := toList(K - expectedKeys);
@@ -120,9 +115,9 @@ neuralCodeOpp  (NeuralCode) := NeuralCode => C ->(
 
 neuralIdeal = method();
 
-neuralIdeal(NeuralCode) := C -> (
+neuralIdeal(NeuralCode,Ring) := Ideal => (C,R) -> (
     d:=dim C;
-    R:=ring C;
+    if numgens R =!= d then error "Expected ring of the same dimension as the neuralCode";
     oppC:=neuralCodeOpp(C);
     genList:=for i to #oppC-1 list (
     	prod:=1;
@@ -132,33 +127,48 @@ neuralIdeal(NeuralCode) := C -> (
     ideal(genList)
     )
 
+neuralIdeal NeuralCode := Ideal => C -> (
+    d:=dim C;
+    x:=getSymbol "x"; 
+    R:=(ZZ/2)(monoid[x_1..x_d]); 
+    neuralIdeal(C,R)
+    )
+
 canonicalForm = method();
 
-canonicalForm(Ideal) := I -> (
+canonicalForm Ideal := List => I -> (
     --this is from our old code, doesn't work yet, may not need pseudomonomial stuff actually
     if isSquarefreePseudomonomialIdeal I==true then (
     decomp := primaryDecomposition I;
     multipliedGens :=product(decomp, i->i);
-    R :=ring I;
+    R := ring I;
     d :=numgens R;
     booleanIdeal :=ideal(apply(d,i->(R_i*(1-R_i))));
     booleanR :=R/booleanIdeal;
     reducedGens :=apply(first entries gens multipliedGens,i->sub(i,booleanR));
-    almostGens :=unique apply(delete(sub(0,booleanR),reducedGens),i->(sub(i,R)));
+    noDuplicateGens :=delete(sub(0,booleanR),reducedGens);
+    almostGens :=unique apply(noDuplicateGens,i->(sub(i,R)));
     actualGens := for i in almostGens list (
 	isDivisible := false;
 	for j in almostGens do (
 	    if i%j==0 and i =!= j then (isDivisible=true; break));
 	if isDivisible==true then continue; i))
-    else print "Input must be a squarefree pseudomonomial ideal"
+    else error "Input must be a squarefree pseudomonomial ideal"
     --delete(,actualGens)
     --to factor:
     --apply(J_*,factor)
     --not working right now
     )
 
-canonicalForm(NeuralCode) := C -> (canonicalForm(neuralIdeal(C)))
+canonicalForm NeuralCode := List => C -> (
+    canonicalForm(neuralIdeal(C))
+    )
 
+canonicalForm(NeuralCode,Ring) := List => (C,R) -> (
+    canonicalForm(neuralIdeal(C,R))
+    )
+
+--make this an optional argument to canonicalForm instead
 factoredCanonicalForm = method()
 
 factoredCanonicalForm(Ideal):= I -> (
@@ -318,11 +328,12 @@ TEST ///
 -- **TEST2**
 TEST ///
     C=neuralCode("00","10");
-    I=neuralIdeal(C);
-    R=ring I;
+    R=ZZ/2[x_1,x_2];
+    I=neuralIdeal(C,R);
     cI=canonicalForm(I);
-    cC=canonicalForm(C);
-    assert(cI==cC) --issue: want to compare both to {x_2}, but it's in a different ring
+    cC=canonicalForm(C,R);
+    L={x_2};
+    assert((cI==cC) and (cI==L)) --issue: want to compare both to {x_2}, but it's in a different ring
 
 -- **TEST1**  This makes a pinch point.  We check that it has one minimal prime, that it has 3 variables, and that the singular locus is dimension 1 while the ambient object is dimension 2.  We also check that the ring we construct is a subring of A.
 --TEST ///
