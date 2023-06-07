@@ -89,6 +89,12 @@ orderedQQn(ZZ, List) := (n, monOrder) -> (
     ordMod.cache.Ring = R;
     ordMod
     )
+orderedQQn(PolynomialRing) := R -> (
+    n := numgens R;
+    ordMod := new OrderedQQn of OrderedQQVector from QQ^n;
+    ordMod.cache.Ring = R;
+    ordMod
+    )
 
 OrderedQQn == OrderedQQn := (N, M) -> (
     N.cache.Ring === M.cache.Ring
@@ -162,13 +168,22 @@ padicValuation ZZ := p -> (
 leadTermValuation = method()
 leadTermValuation PolynomialRing := R -> (
     monOrder := (options R).MonomialOrder;
-    orderedMod := orderedQQn(numgens R, monOrder);
+    orderedMod := orderedQQn(R);
     valFunc := f -> if f == 0_R then infinity else monomialToOrderedQQVector(leadTerm f, orderedMod);
     internalValuation(valFunc, R, orderedMod)
     )
 
 -- Lowest Term Valuation
-lowestTermValuation = valuation (f -> if f == 0 then infinity else (sort flatten entries monomials f)_0 )
+lowestTermValuation = method()
+lowestTermValuation PolynomialRing := R -> (
+    monOrder := (options R).MonomialOrder;
+    orderedMod := orderedQQn(R);
+    valFunc := f -> (
+        if f == 0_R then infinity
+        else monomialToOrderedQQVector((sort flatten entries monomials f)_0, orderedMod)
+        );
+    internalValuation(valFunc, R, orderedMod)
+    )
 
 -- Local Ring Valuation
 getMExponent = method()
@@ -266,12 +281,13 @@ doc ///
            This valuation returns the lowest (trailing) term of a polynomial with respect to the ring's term order.
        Example
            R = QQ[a,b,c, MonomialOrder => Lex];
-           v = lowestTermValuation;
+           vR = lowestTermValuation R;
            f = 13*a^2*b + a*c^3;
-           v f
+           vR f
            S = QQ[a,b,c, MonomialOrder => RevLex, Global => false];
+           vS = lowestTermValuation S;
            f = 13*a^2*b + a*c^3;
-           v f
+           vS f
      SeeAlso
          MethodFunction
      ///
