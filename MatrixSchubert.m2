@@ -41,8 +41,6 @@ export{
     "isPerm",
     "schubertPoly",
     "doubleSchubertPoly",
-    "entrywiseMinRankTable",
-    "entrywiseMaxRankTable",
     "permLength",
     "augmentedRotheDiagram",
     "isPatternAvoiding",
