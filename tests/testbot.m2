@@ -14,7 +14,8 @@
 -- containing Macaulay2 source code files to the load path. Terminate each
 -- directory name with a "/".
 path = join( { currentDirectory() | "A1-Brouwer/" }, path )
-
+print("Path:");
+print(path);
 -- Uncomment and edit the following lines to preload and check your package or
 -- to run a series of examples with every push on GitHub.
 --needsPackage "LocalRings"
@@ -25,6 +26,9 @@ path = join( { currentDirectory() | "A1-Brouwer/" }, path )
 -- The following lines automatically run every file in the "tests" directory.
 -- If you wish, you can change testDir to any other directory.
 testDir = currentDirectory() | "tests/"
+print("testDir:");
+print(testDir);
+
 
 testFiles = select(readDirectory testDir,
     file -> match("\\.m2$", file) and file != "testbot.m2")
