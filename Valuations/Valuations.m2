@@ -126,7 +126,7 @@ monomialToOrderedQQVector = method()
 monomialToOrderedQQVector (RingElement, OrderedQQn) := (monomial, orderedQQModule) -> (
     -- A function that takes a monomial and an ordered QQ-module and returns the
     -- exponent vector of the monomial as a vector in the passed QQ-module
-    exponentVector := vector flatten exponents leadTerm monomial;
+    exponentVector := vector flatten exponents monomial;
     modGens := gens orderedQQModule;
     modGens*exponentVector
     )
