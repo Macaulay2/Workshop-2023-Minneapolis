@@ -304,20 +304,20 @@ document{
 
 -- **TEST0**
 TEST ///
-  C=neuralCode{"100","010","110","101","011","111"};
+  C=neuralCode("100","010","110","101","011","111");
   I=neuralIdeal(C);
   assert(I == ideal((1-x_1)*(1-x_2)*(1-x_3),(1-x_1)*(1-x_2)*x_3))
 ///
 
 -- **TEST1**
 TEST ///
-    C=neuralCode{"00","10"};
+    C=neuralCode("00","10");
     I=neuralIdeal(C);
     assert(I==ideal((1-x_1)*x_2,x_1*x_2))
     
 -- **TEST2**
 TEST ///
-    C=neuralCode{"00","10"};
+    C=neuralCode("00","10");
     I=neuralIdeal(C);
     R=ring I;
     cI=canonicalForm(I);
