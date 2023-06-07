@@ -20,13 +20,41 @@ bezoutian (List) := (Matrix) => (Endo) -> (
 	); 
     );
     bezDet:= numerator (det(D));--take numerator to be polynomial (not rational fxn)
-    standBasis := basis (S/(ideal (leadTerm (ideal Endo))));
-    gBasis = generators gb (ideal (leadTerm (ideal Endo)));
+    RX:=kk[X_1..X_n];
+    RY:=kk[Y_1..Y_n];
+    mapxtoX:= (map(RX,S,toList(X_1..X_n)));
+    mapxtoY:=(map(RY,S,toList(Y_1..Y_n)));
+    standBasisX := basis (RX/(ideal (leadTerm (mapxtoX ideal Endo))));
+    standBasisY := basis (RY/(ideal (leadTerm (mapxtoY ideal Endo))));
+    id1 := (ideal apply(toList(0..n-1), i-> mapxtoX(Endo_i)));
+    id2 := (ideal apply(toList(0..n-1), i-> mapxtoY(Endo_i)));
+    promotedEndo :=sub(id1,R)+sub(id2,R);
+    Rquot:= R/promotedEndo;
+    sBXProm :=sub(standBasisX,Rquot);
+    sBYProm :=sub(standBasisY,Rquot);
+    --sBRquot := sBXProm**sBYProm;
+    bezDetProm := promote(bezDet, Rquot);
+    ------------------------
+    phi0 := map(kk,Rquot,(toList ((2*n):0)));
+    coeffsTuple := coefficients(bezDetProm);
+    presMons :=(coeffsTuple)_0;  
+    coeffs := (coeffsTuple)_1;
+    print class phi0((coeffs)_(2,0));
+    --will return matrix B
+    m:=#sBXProm;
+    B:=mutableMatrix id_(kk^m);
+    coefIndex:=0;
+    for i from 0 to m-1 do (
+        for j from 0 to m-1 do (
+            --sBXProm_
+            B_(i,j)=phi0((coeffs)_(coefIndex,0));
+        );
+    );
     return 1;
 );
 
-T = QQ[x];
-e = {x^4+x^3-x^2-x};
+T = QQ[x_1,x_2];
+e = {x_1^2+x_2,x_2^3+x_1};
 print bezoutian(e);
 -- Given an endomorphism of an affine space f=(f1,...,fn) given given as a sequence, and a closed point p of the target, return the local Bezoutian
 --localBezoutian = method()
