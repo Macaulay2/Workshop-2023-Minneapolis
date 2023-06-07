@@ -8,14 +8,6 @@ load "splitOffObviousHyperbolics.m2"
 rationalSimplify = method()
 
 rationalSimplify (Matrix) := (ZZ,Matrix) => (A) -> (
-    --matrix must be square
-    if numRows(A) != numColumns(A) then (
-	error "Matrix is not square.";
-	);
-    --matrix must be nonsingular
-    if det(A) == 0 then (
-	error "Matrix is singular.";
-	);
     --matrix must be symmetric
     if A != transpose(A) then (
         error "Matrix is not symmetric";
