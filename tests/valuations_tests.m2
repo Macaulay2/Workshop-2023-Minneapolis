@@ -1,4 +1,4 @@
 needsPackage "Valuations"
 
 v = padicValuation(7)
-v 294
+assert(v 294 == 2)
