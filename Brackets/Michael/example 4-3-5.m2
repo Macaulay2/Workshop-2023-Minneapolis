@@ -1,5 +1,5 @@
 restart
-debug needsPackage "Brackets"
+needsPackage "Brackets"
 -*
 
 The goal of this exercise is to prove that 4 lines in P^3 can have either 1, 2, or infinitely many transversals. 
@@ -11,7 +11,11 @@ The first part of this script is to be converted as the Grassmann strategy for t
 
 *-
 ----------------------------------------------------------------
-bracketRing (List, ZZ) := o -> (vectorSymbols, d) -> (
+TestBracketRing = new Type of AbstractGCRing
+-- constructor
+bracketRing = method(Options => {Strategy => GroebnerBasis})
+bracketRing AbstractGCRing := G -> error "not implemented"
+bracketRing (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     n := length vectorSymbols;
     if not (n >= d) then error("The first argument n in bracketRing(n, d) (representing the number of rows) is assumed to be at least the second argument d (representing the number of columns)");
     x := symbol x;
@@ -29,13 +33,13 @@ bracketRing (List, ZZ) := o -> (vectorSymbols, d) -> (
     if o#Strategy === GroebnerBasis then (
 	-- TODO: it's likely more efficient to apply forceGB to a known Groebner basis (Pluecker relations? van der Waerden syzygies?)
 	-- TODO: allow computing with SubalgebraBases instead of Groebner bases
-	G := groebnerBasis I;
+	--G := groebnerBasis I;
 	--ret.cache#gb = G;
-	ret.cache#syz = selectInSubring(1, G);
+	--ret.cache#syz = selectInSubring(1, G);
 	) 
     else if o#Strategy === Grassmannian then (
 	-- use the function "Grassmannian" to simplify construction of R, I, etc, above
-	
+	error "not implemented";
 	)
     else if o#Strategy === "vanDerWaerden" then (
 	error "not implemented";
@@ -47,11 +51,23 @@ bracketRing (List, ZZ) := o -> (vectorSymbols, d) -> (
     else error "Strategy option not recognized";
     ret
     )
-
+bracketRing (ZZ, ZZ) := o -> (n, d) -> bracketRing(toList(1..n), d, o)
+-- printing for BracketRing
+net BracketRing := B -> net((symbol B)_(B#numcols, B#numrows))
+-- getters for BracketRing
+numrows BracketRing := B -> B#numrows 
+numcols BracketRing := B -> B#numcols 
+ideal BracketRing := B -> B#ideal
+bracketRing BracketRing := o -> B -> B
+ZZ _ AbstractGCRing := (k, G) -> sub(k, ring G)
+matrix BracketRing := o -> B -> transpose genericMatrix(ring B,numcols B, numrows B)
 ----------------------------------------------------------------
 
+ZZ/3[x]
+
+
 I = Grassmannian(1,3)
-needsPackage "Brackets"
+
 B = bracketRing(4,2)
 apply(gens ring I, v -> (
     S := last baseName v;
@@ -59,10 +75,20 @@ apply(gens ring I, v -> (
     A_B
     )
     )
+----------------------------------------------------------------
+toBrackets = method()
+toBrackets(List) := (sequenceList) -> (
 
+    nn = #sequenceList;
+    bracketList = {};
+    for i = 0 to nn (
+        temp = toString(sequenceList_i);
+        bracketList = append(bracketList, " ")
+    );
+    bracketList;
+)
 
-
-
+----------------------------------------------------------------
 -- grassmann method for computing GCalgebra 
 G37 = Grassmannian(3,7) --ideal of Pluecker relations
 
