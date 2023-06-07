@@ -66,11 +66,11 @@ bracketRing (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     if o#Strategy === GroebnerBasis then (
 	-- TODO: it's likely more efficient to apply forceGB to a known Groebner basis (Plücker relations? van der Waerden syzygies?)
 	-- TODO: allow computing with SubalgebraBases instead of Groebner bases
-	-*
-    G := groebnerBasis I;
-	  ret.cache#gb = G;
-	  ret.cache#syz = selectInSubring(1, G); 
-  *-
+-*
+	G := groebnerBasis I;
+	ret.cache#gb = G;
+	ret.cache#syz = selectInSubring(1, G);
+*-
 	) 
     else if o#Strategy === Grassmannian then (
 	-- use the function "Grassmannian" to simplify construction of R, I, etc, above
@@ -307,6 +307,7 @@ Description
       Fix integers $n \ge d \ge 1,$ and let $X = (x_{i j})$ be an $n\times d$ matrix of distinct variables in the polynomial ring $k [x_{i j}]$ over a fixed field $k.$    
       Think of each row of $X$ is a point in the projective space $\mathbb{P}^{d-1}$ of dimension $(d-1)$ over $k,$ so that $X$ as represents a configuration of $n$ points in this projective space.
       Many interesting geometric properties of this point configuration can be expressed in terms of the maximal minors of $X.$
+      
       For notational convenience, it is common to write these minors in bracket notation.
       A bracket is an expression $[\lambda_1 \lambda_2 \ldots \lambda_d]$ representing the minor of $X$ whose rows are given by indices $1\le \lambda_1 < \lambda_2 < \ldots < \lambda_d \le n.$
     
@@ -449,3 +450,7 @@ end
 
 G = gc(a..f,3)
 Glu = G [l, u]
+
+restart
+needsPackage "Brackets"
+B = bracketRing(8,4)
