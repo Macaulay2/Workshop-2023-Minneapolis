@@ -17,7 +17,7 @@ newPackage("MultigradedBGG",
   )
 
 
---Not sure about all these exports--sort out later..
+--Not sure about all these exports--sort out later.
 exports {
     "addTateData",
     "dualRingToric",
@@ -60,7 +60,6 @@ exports {
 *-
 needsPackage "Polyhedra";
 load "DifferentialModules.m2";
-needsPackage "Complexes";
 ---
 ---
 ---
@@ -139,7 +138,7 @@ toricRR(Module,List) := (M,LL) ->(
     SE := S**E;
     --the line below is better for degrees,it overwrites S somehow...
     --SE := coefficientRing(S)[gens S|gens E, Degrees => apply(degrees S,d->d|{0}) | degrees E, SkewCommutative => gens E];
-    tr := sum(dim S, i-> SE_i*SE_(dim S+i));
+    tr := sum(dim S, i-> SE_(dim S+i)*SE_i);
     newf0 := sub(f0,SE)*tr;
     relationsMinSE := sub(relationsM,SE);
     newf0 = newf0 % relationsMinSE;
@@ -149,6 +148,25 @@ toricRR(Module,List) := (M,LL) ->(
     	differentialModule(chainComplex{map(E^dfneg1,E^df0, -g'),map(E^df0,E^df1, -g')}[1])
     	)
     )
+
+TEST ///
+restart
+loadPackage "NormalToricVarieties"
+load "MultigradedBGG.m2"
+S = ring hirzebruchSurface 3
+M = coker matrix{{x_0}}
+LL = {{0,0}, {1,0}}
+toricRR(M, LL)
+
+X = weightedProjectiveSpace {1,1,2}
+S = ring X
+M = coker matrix{{x_0, x_1^2, x_2}}
+F = res M
+F.dd
+presentation M
+flatten degrees target oo
+toricRR(M, {0,1,2,3})
+///
 
 TEST ///
 restart
@@ -165,6 +183,7 @@ tally degrees minimalPart F
 F.dd_1
 assert(D.dd^2 == 0)
 assert(isHomogeneous D)
+
 ///
 
 TEST ///
@@ -183,13 +202,13 @@ toricLL = method();
 --Input: N a (multi)-graded E-module.
 --Caveat: Assumes N is finitely generated.
 --Caveat 2:  arrows of toricLL(N) correspond to exterior multiplication (not contraction)
-toricLL Module := M ->(
-    N := coker presentation M;
-    E := ring N;
+toricLL(Module) := (N) ->(
+    E := ring(N);
     if not isSkewCommutative E then error "ring N is not skew commutative";
     if not E.?symmetric then E.symmetric = dualRingToric(E);
     S := E.symmetric;
-    bb := basis N;
+    N = coker presentation N;
+    bb := basis(N);
     b := (degrees source bb);
     homDegs := sort unique apply(b, i-> last i);
     inds := new HashTable from apply(homDegs, i-> i=> select(#b, j-> last(b#j) == i));
@@ -203,18 +222,52 @@ toricLL Module := M ->(
     --SE := coefficientRing(S)[gens S|gens E, Degrees => apply(degrees S,d->d|{0}) | degrees E, SkewCommutative => gens E];
     --why is this overwriting the definition of e_i?
     tr := sum(dim S, i-> SE_i*SE_(dim S+i));
-    f0 := gens image basis N;
+    f0 := gens image basis(N);
     newf0 := sub(f0,SE)*tr;
-    relationsNinSE := sub(relationsN,SE);
-    newf0 = newf0 % relationsNinSE;
+    relationsMinSE := sub(relationsN,SE);
+    newf0 = newf0 % relationsMinSE;
     newg := matrixContract(transpose sub(f0,SE),newf0);
     g' := sub(newg,S);
     --Now we have to pick up pieces of g' and put them in the right homological degree.
     --Note:  perhaps we want everything transposed??
-    if #homDegs == 1 then chainComplex map(S^0,FF#0,0) else (
-    	dual(chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1),transpose g'_(inds#i)^(inds#(i+1))))[-homDegs#0])
-    	)
+    if #homDegs == 1 then (chainComplex map(S^0,FF#0,0))[1] else (
+    --if #homDegs == 1 then chainComplex map(FF#0,S^0,0) else (
+    	--dual(chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1),transpose g'_(inds#(i))^(inds#(i+1))))[-homDegs#0])
+    	--dual(chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), g'_(inds#(i+1))^(inds#(i))))[-homDegs#0])
+    	dual(chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^((homDegs#0)+1)*g'_(inds#(i+1))^(inds#(i))))[-homDegs#0])
+	)
     )
+
+TEST///
+restart
+load "MultigradedBGG.m2"
+loadPackage "NormalToricVarieties"
+S = ring hirzebruchSurface 3;
+E = dualRingToric S;
+--rank 1 example
+toricLL(coker vars E)
+--we should get the (twisted) Koszul complex when we input E
+N = E^1
+toricLL(E^1)
+oo.dd
+N = coker matrix{{e_0, e_1}}
+toricLL(N)
+isHomogeneous oo
+oo.dd
+N' = ker matrix{{e_1}, {e_2}, {e_3}}
+toricLL(N')
+N'' = coker presentation N'
+toricLL(N'')
+///
+
+--Input: S-module generated in a single degree
+--Output: a ChainComplex L, the strongly linear strand of the minimal free resolution of M
+--stronglyLinearStrand(Module) := (M) ->(
+  --  generatingDegrees := flatten degrees target presentation M;
+  --  assert same generatingDegrees;
+    --d := generatingDegrees_0;
+ --   )
+
 
 
 -* The following commented-out code may be useful, but I can't tell if we'll need it yet.
@@ -526,30 +579,11 @@ makeConvex = L->(
 
 end;
 
-stronglyLinearStrand = method();
-stronglyLinearStrand Module := M -> (
-    S := ring M;
-    h := heft S;
-    if h === null then error("--ring M does not have heft vector");
-    if not same degrees M then error("--M needs to be generated in same degree");
-    degM := first degrees M;
-    degrange := unique prepend(degM, apply(degrees S, d -> d - degM));
-    RM := toricRR(M,degrange);
-    mat := RM.dd_0;
-    cols := positions(degrees source mat, x -> drop(x,-1) == degM)
-    N := ker mat_cols
-    toricLL ker mat_cols
-    
-    )
+
 --TESTS
 restart
 load "MultigradedBGG.m2"
 loadPackage "NormalToricVarieties"
-X = hirzebruchSurface 3;
-S = ring X;
-M = S^1/(ideal x_0)
-
-
 X = weightedProjectiveSpace {1,1,1}
 S = ring X
 E = dualRingToric S
