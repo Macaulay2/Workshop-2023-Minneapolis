@@ -14,9 +14,9 @@ newPackage("Valuations",
         HomePage => "https://github.com/Macaulay2/Workshop-2023-Minneapolis/tree/valuations",
         Configuration => {},
         PackageExports => {"LocalRings", "SubalgebraBases"}
---    	PackageExports => {"SubalgebraBases"}
+--      PackageExports => {"SubalgebraBases"}
         )
-    
+
 -- importFrom_"LocalRings" {"LocalRing"}
 -- importFrom_LocalRings {"LocalRing"}
 -- importFrom_SubalgebraBases {"Subring"}
@@ -33,6 +33,9 @@ export{"function",
        "codomain"
        }
 
+--------------------------------------------------------------------------------
+-------------------------------- Valuation Type --------------------------------
+--------------------------------------------------------------------------------
 
 Valuation = new Type of HashTable
 
@@ -68,39 +71,14 @@ internalValuation (Function, Thing, Thing) := (v, S, T) -> (
 Valuation Thing := (v,t) -> (
     if (v.domain === null) or (ring t) === v.domain then
     -- Concerns with comparing things like ZZ and QQ
-    -- Concerns with subrings and local rings
+    -- Concerns with subrings and local rings, will need testing.
     v.function t
     )
 
---local ring valuation
-getMExponent = method()
-getMExponent (Ideal, RingElement) := (m, x) -> (
-    numFactors := 0;
-    while x % m^(numFactors + 1) == 0 do (
-	numFactors = numFactors + 1
-	);
-    numFactors
-    )
+--------------------------------------------------------------------------------
+--------------------------- Ordered QQ-module Types ----------------------------
+--------------------------------------------------------------------------------
 
-localRingValuation = method()
-localRingValuation LocalRing := R -> (
-    m := R.maxIdeal;
-    S := ring m;
-    func := x -> (
-	if x == 0 then infinity
-	else getMExponent(m, sub(x, S))
-	);
-    valuation(func, R, ZZ)
-    )
-
---leading term valuation (max convention)
-leadTermValuation = valuation (x -> if x == 0 then infinity else leadMonomial x)
-
-lowestTermValuation = valuation (f -> if f == 0 then infinity else (sort flatten entries monomials f)_0 )
-
-
-
--- Ordered QQn
 OrderedQQn = new Type of Module
 OrderedQQVector = new Type of Vector
 
@@ -144,13 +122,16 @@ OrderedQQVector ? OrderedQQVector := (a, b) -> (
     else symbol ==
     )
 
+--------------------------------------------------------------------------------
+------------------------- Built-in Valuation Functions -------------------------
+--------------------------------------------------------------------------------
+
 -- Trivial Valuation
---trivialValuation = symbol trivialValuation
 trivialValuation = valuation (x -> if x == 0 then infinity else 0)
 
-
--- padic Valuation
-getExponent = (p, x) -> (
+-- p-adic Valuation
+countPrimeFactor = (p, x) -> (
+    -- Returns the number of times that p divides x
     numFactors := 0;
     while x % p == 0 do (
         x = x // p;
@@ -161,16 +142,15 @@ getExponent = (p, x) -> (
 
 padicValuation = method()
 padicValuation ZZ := p -> (
-    if not isPrime p
-    then error "expected a prime integer";
+    if not isPrime p then error "expected a prime integer";
     func := x -> (
         if x == 0 then infinity
-        else getExponent(p, numerator x_QQ) - getExponent(p, denominator x_QQ)
+        else countPrimeFactor(p, numerator x_QQ) - countPrimeFactor(p, denominator x_QQ)
         );
     valuation func
     )
 
---leading term valuation (max convention)
+-- Leading Term Valuation (max convention)
 leadTermValuation = method()
 leadTermValuation PolynomialRing := R -> (
     monOrder := (options R).MonomialOrder;
@@ -183,11 +163,36 @@ leadTermValuation PolynomialRing := R -> (
     internalValuation(valFunc, R, orderedMod)
     )
 
+-- Lowest Term Valuation
 lowestTermValuation = valuation (f -> if f == 0 then infinity else (sort flatten entries monomials f)_0 )
 
--- localRingValuation = valuation (f -> if f == 0 then infinity else
+-- Local Ring Valuation
+getMExponent = method()
+getMExponent (Ideal, RingElement) := (m, x) -> (
+    numFactors := 0;
+    n := m;
+    while x % n == 0 do (
+        numFactors = numFactors + 1;
+        n = n*m;
+        );
+    numFactors
+    )
 
----Documentation
+localRingValuation = method()
+localRingValuation LocalRing := R -> (
+    m := R.maxIdeal;
+    S := ring m;
+    func := x -> (
+        if x == 0 then infinity
+        else getMExponent(m, sub(x, S))
+        );
+    valuation(func, R, ZZ)
+    )
+
+--------------------------------------------------------------------------------
+-------------------------------- Documentation ---------------------------------
+--------------------------------------------------------------------------------
+
 beginDocumentation()
 
 doc ///
@@ -272,14 +277,14 @@ doc ///
          valuation
          (valuation, Function)
          (valuation, Function, Ring, Ring)
-	 (valuation, Function, Ring, LocalRing)
-	 (valuation, Function, Ring, Subring)
-	 (valuation, Function, LocalRing, Ring)
-	 (valuation, Function, LocalRing, LocalRing)
-	 (valuation, Function, LocalRing, Subring)
-	 (valuation, Function, Subring, Ring)
-	 (valuation, Function, Subring, LocalRing)
-	 (valuation, Function, Subring, Subring)
+         (valuation, Function, Ring, LocalRing)
+         (valuation, Function, Ring, Subring)
+         (valuation, Function, LocalRing, Ring)
+         (valuation, Function, LocalRing, LocalRing)
+         (valuation, Function, LocalRing, Subring)
+         (valuation, Function, Subring, Ring)
+         (valuation, Function, Subring, LocalRing)
+         (valuation, Function, Subring, Subring)
      Headline
          Constructs a user defined valuation object
      Usage
@@ -287,12 +292,8 @@ doc ///
          v = valuation(f, S, T)
      Inputs
          f:Function
-         S:Ring
-         S:LocalRing
-         S:Subring
-         T:Ring
-         T:LocalRing
-         T:Subring
+         S:{Ring,LocalRing,Subring}
+         T:{Ring,LocalRing,Subring}
      Outputs
          v:Valuation
             user defined valuation function
@@ -306,6 +307,85 @@ doc ///
           MethodFunction
 ///
 
-TEST ///
-     assert(trivialValuation 5 == 0)
+doc ///
+     Key
+        leadTermValuation
+        (leadTermValuation, PolynomialRing)
+     Headline
+        The valuation which returns the exponent of the lead term of an element of an ordered ring
+     Usage
+         v = leadTermValuation R
+     Inputs
+         R:PolynomialRing
+     Outputs
+         v:Valuation
+             the lead term valuation
+     Description
+       Text
+           This valuation returns the exponent vector of the lead term of a polynomial with respect to the ring's term order.
+           The valuation returns vectors in an \textit{ordered $\QQ$-module}, which respects the monomial order of the
+           given @TO "PolynomialRing"@.
+       Example
+           R = QQ[a,b,c, MonomialOrder => Lex];
+           v = leadTermValuation R;
+           f = 13*a^2*b + a*c^3;
+           g = 5*a^2*c + b^3;
+           v f
+           v g
+           v f > v g
+     SeeAlso
+         valuation
 ///
+
+--------------------------------------------------------------------------------
+------------------------------------ Tests -------------------------------------
+--------------------------------------------------------------------------------
+
+-- Trivial Valuation Tests
+TEST ///
+-- Everything should have valuation 0 except 0
+val = trivialValuation
+assert(val 0 == infinity)
+assert(val 5 == 0)
+assert(val (-9/2) == 0)
+///
+
+-- p-adic Valuation Tests
+TEST ///
+val = padicValuation(7)
+assert(val 0 == infinity)
+assert(val 7 == 1)
+assert(val (-7) == 1)
+assert(val (-9/7) == -1)
+assert(val (7/9) == 1)
+///
+
+-- Leading Term Valuation Tests
+TEST///
+R = QQ[x,y]
+val = leadTermValuation(R)
+assert(val(x) < val(y^2))
+///
+TEST///
+R = QQ[x,y, MonomialOrder=>Lex]
+val = leadTermValuation(R)
+assert(val(x) > val(y^2))
+///
+
+end
+
+
+--------------------------------------------------------------------------------
+-------------------------------- Dev Functions ---------------------------------
+--------------------------------------------------------------------------------
+
+buildPackage = x ->(
+    uninstallPackage("Valuations");
+    installPackage("Valuations", RunExamples => false);
+    )
+
+testPackage = x -> (
+    uninstallPackage("Valuations");
+    installPackage("Valuations");
+    check Valuations;
+    )
