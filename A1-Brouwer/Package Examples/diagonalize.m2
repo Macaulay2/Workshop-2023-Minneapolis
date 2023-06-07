@@ -1,4 +1,3 @@
-needsPackage "RationalPoints2"
 --diagonalize method
 --given a symmetric invertible matrix, this function outputs a diagonal matrix congruent to original matrix
 diagonalize = method()
@@ -15,13 +14,14 @@ diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
                     break;
                 );
             );
-            if A_(col,col)==0 then (error "Error: Matrix was singular"; return A;); --if diagonal entry is still zero, then matrix was non-invertible
         );
-        --entry in A_(col,col) is non-zero at this point
-         for row from (col+1) to (n-1) do (
-            temp:=A_(row,col);
-            rowAdd(A,row,-temp/A_(col,col),col); --more row reduction make every entry below A_(col,col) is zero
-            columnAdd(A,row,-temp/A_(col,col),col); --column reduction to keep reduced matrix congruent
+        --if non-zero entry at or below A_(col,col) was found we use it to clear the column below
+        if (A_(col,col)!=0) then (
+            for row from (col+1) to (n-1) do (
+                temp:=A_(row,col);
+                rowAdd(A,row,-temp/A_(col,col),col); --more row reduction make every entry below A_(col,col) is zero
+                columnAdd(A,row,-temp/A_(col,col),col); --column reduction to keep reduced matrix congruent
+            );
         );
 
     );
