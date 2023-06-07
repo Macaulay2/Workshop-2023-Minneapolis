@@ -473,9 +473,9 @@ isMinRankTable Matrix := Boolean => (A) -> (
     for i from 0 to a-1 do (    
         for j from 0 to a-1 do (
             if (i==0 and j==0 and not(AList#i#j == 0 or AList#i#j == 1)) then return false
-            else if (i == 0 and j != 0 and ((not(AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1) or not(AList#i#j == 0 or AList#i#j == 1)))) then return false
-            else if (i != 0 and j == 0 and ((not(AList#i#j-AList#(i-1)#j == 0 or AList#i#j-AList#(i-1)#j == 1) or not(AList#i#j == 0 or AList#i#j == 1)))) then return false
-            else if (i != 0 and j != 0 and ((not((AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1) or not(AList#i#j-AList#(i-1)#j == 0 or AList#i#j-AList#(i-1)#j == 1))))) then return false;
+            else if (i == 0 and j != 0 and (not(AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1) or not(AList#i#j == 0 or AList#i#j == 1))) then return false
+            else if (i != 0 and j == 0 and (not(AList#i#j-AList#(i-1)#j == 0 or AList#i#j-AList#(i-1)#j == 1) or not(AList#i#j == 0 or AList#i#j == 1))) then return false
+            else if (i != 0 and j != 0 and (not(AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1) or not(AList#i#j-AList#(i-1)#j == 0 or AList#i#j-AList#(i-1)#j == 1))) then return false;
         );
     );
 
