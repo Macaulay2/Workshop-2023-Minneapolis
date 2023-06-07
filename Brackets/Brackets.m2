@@ -42,7 +42,7 @@ BracketRing = new Type of AbstractGCRing
 -- constructor
 bracketRing = method(Options => {Strategy => GroebnerBasis})
 bracketRing AbstractGCRing := G -> error "not implemented"
-bracketRing (List, ZZ) := o -> (vectorSymbols, d) -> (
+bracketRing (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     n := length vectorSymbols;
     if not (n >= d) then error("The first argument n in bracketRing(n, d) (representing the number of rows) is assumed to be at least the second argument d (representing the number of columns)");
     x := symbol x;
@@ -133,6 +133,7 @@ Array _ AbstractGCRing := (A, R) -> (
     B := bracketRing R;
     if not(B#numcols == #A0) then error "not enough symbols in bracket";
     A1 := sort toList A0;
+    if any(A1, s -> instance(s, Symbol)) then A1 = apply(A1, g -> (g_R)#RingElement);
     assert(
 	-- checking that the input is valid
 	-- TODO: include better error messages
@@ -306,11 +307,11 @@ Description
       $$ [\lambda_{i_1} \cdots \lambda_{i_d}] \mapsto \det \begin{pmatrix} x_{i_1, 1} & \cdots & x_{i_1, d} \\ \vdots & & \vdots & \\ x_{i_d 1} & \cdots & x_{i_d d}\end{pmatrix}. $$
       
       The classical bracket ring $B_{n,d}$ is the image of this map.
-      This is the homogeneous coordinate ring of the Grassmannian of $(n-1)$-dimensional planes in $\mathbb{P}^{d-1}$ under its Pl&#252cker embedding.
+      This is the homogeneous coordinate ring of the Grassmannian of $(n-1)$-dimensional planes in $\mathbb{P}^{d-1}$ under its Pluecker embedding.
 Acknowledgement
   We thank all project contributors, the organizers of the 2023 Macaulay2 workshop in Minneapolis, IMA staff, and acknowledge support from the National Science Foundation grant DMS 2302476.
 References
-  Sturmfels, Bernd. <i>Algorithms in invariant theory</i>. Springer Science & Business Media, 2008.
+  Sturmfels, Bernd. {\it Algorithms in invariant theory}. Springer Science & Business Media, 2008.
 ///
 
 doc ///
@@ -329,58 +330,50 @@ Description
         x_{6,1}&x_{6,2}
         \end{pmatrix}.$$
       There are $6=\binom{4}{2}$ brackets, and the matrix $X$ represents a configuration of $6$ points on the projective line $\mathbb{P}^1.$
-      These brackets are not algebraically independent, as they satisfy the quadratic Pl\"{u}cker relation,
+      These brackets are not algebraically independent, as they satisfy the quadratic Pluecker relation,
       $$
       [1 2] [3 4] - [1 3] [2 4] + [1 4] [2 3] = 0.
       $$
-      Some basic syntax for working with objects of class BracketRing is illustrated below.
+      Some basic syntax for working with objects of class BracketRing is illustrated in the documentation page @TO bracketRing@.
 ///
 
--*
 doc ///
-  Key
-     bracketRing
-     (bracketRing, BracketRing)
-     (bracketRing, GCAlgebra)
-     (bracketRing, List, ZZ)
-     (bracketRing, ZZ, ZZ)
-  Headline
-    Constructors for the bracket rings
-  Usage
-    B = bracketRing(n,d)
-  Inputs
-    n:ZZ         -- positive
-    M:Matrix     -- which is square
-    Limit => ZZ  -- as an @TO Option@
-     multiline descriptions
-     are sometimes useful
-  Outputs
-    x:Matrix
-      A block diagonal matrix with {\tt n}
-      copies of {\tt M} along the diagonal
-  Description
-   Text
-     Each paragraph of text begins with "Text".  The following
-     line starts a sequence of Macaulay2 example input lines.
-
-     The output in the following example was automatically generated at the time
-     of package installation.
-   Example
-     B = bracketRing(6, 3)
-     T = [1 4 5]_B * [1 5 6]_B * [2 3 4]_B
-
-   Example
-     M = matrix"1,2;3,4";
-     simpleDocFrob(3,M)
-   Text
-     @SUBSECTION "A new section"@
-     See @ TO "docExample" @ for the code used to create this documentation.
-     SeeAlso
-       matrix
-       "Macaulay2Doc :: directSum(List)"
-   ///
-
-*-
+Key
+  bracketRing
+Headline
+  Constructor for @ofClass{BracketRing}@ 
+Usage
+  B = bracketRing(n, d)
+  B = bracketRing(vectorSymbols, d)
+  B = bracketRing B'
+  B = bracketRing G
+Inputs
+  B':BracketRing
+  G:GCAlgebra
+  vectorSymbols:List
+  n:ZZ
+  d:ZZ
+Outputs
+  B:BracketRing
+Description
+  Text
+    To construct the bracket ring $B_{n,d}$ it is enough to specify two integers.
+    In that case, each bracket will contain $n$ symbols which are integers between $1$ and $d.$
+  Example
+    B = bracketRing(6, 3)
+    T = [1 4 5]_B * [1 5 6]_B * [2 3 4]_B
+  Text
+    One may also provide @ ofClass{VisibleList} @ of $n$ symbols.
+  Example
+    B2 = bracketRing(a..f, 3)
+  Text
+    Additionally, brackets can be interpreted as the top-degree elements of the Grassmann-Cayley algebra.
+  Example
+    G = gc(a..f, 3)
+    B3 = bracketRing G
+  Text
+    See also @TO BracketRing@.
+///
 
 -* Test section *-
 TEST /// -* Sturmfels Example 3.1.10 *-
@@ -402,8 +395,6 @@ assert(net D == "2*[bde]*[acf]-2*[cdf]*[abe]")
 ///
 
 TEST /// -* Desargues' Theorem*-
-restart
-loadPackage "Brackets"
 G = gc(a..f,3)
 abLine = (a * b)_G
 deLine = (d * e)_G
@@ -430,7 +421,7 @@ end--
 
 -* Development section *-
 restart
-loadPackage "Brackets"
+needsPackage "Brackets"
 check "Brackets"
 
 uninstallPackage "Brackets"
