@@ -66,9 +66,11 @@ bracketRing (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     if o#Strategy === GroebnerBasis then (
 	-- TODO: it's likely more efficient to apply forceGB to a known Groebner basis (Plücker relations? van der Waerden syzygies?)
 	-- TODO: allow computing with SubalgebraBases instead of Groebner bases
-	-*G := groebnerBasis I;
-	ret.cache#gb = G;
-	ret.cache#syz = selectInSubring(1, G); *-
+	-*
+    G := groebnerBasis I;
+	  ret.cache#gb = G;
+	  ret.cache#syz = selectInSubring(1, G); 
+  *-
 	) 
     else if o#Strategy === Grassmannian then (
 	-- use the function "Grassmannian" to simplify construction of R, I, etc, above
