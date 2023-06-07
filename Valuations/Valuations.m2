@@ -122,6 +122,14 @@ OrderedQQVector ? OrderedQQVector := (a, b) -> (
     else symbol ==
     )
 
+monomialToOrderedQQVector = method()
+monomialToOrderedQQVector (RingElement, OrderedQQn) := (monomial, orderedQQModule) -> (
+    -- A function that takes a monomial and an ordered QQ-module and returns the
+    -- exponent vector of the monomial as a vector in the passed QQ-module
+    exponentVector := vector flatten exponents leadTerm monomial;
+    modGens := gens orderedQQModule;
+    modGens*exponentVector
+    )
 --------------------------------------------------------------------------------
 ------------------------- Built-in Valuation Functions -------------------------
 --------------------------------------------------------------------------------
@@ -155,11 +163,7 @@ leadTermValuation = method()
 leadTermValuation PolynomialRing := R -> (
     monOrder := (options R).MonomialOrder;
     orderedMod := orderedQQn(numgens R, monOrder);
-    valFunc := p -> (
-        expV := vector flatten exponents leadTerm p;
-        B := gens orderedMod;
-        B*expV
-        );
+    valFunc := f -> if f == 0_R then infinity else monomialToOrderedQQVector(leadTerm f, orderedMod);
     internalValuation(valFunc, R, orderedMod)
     )
 
