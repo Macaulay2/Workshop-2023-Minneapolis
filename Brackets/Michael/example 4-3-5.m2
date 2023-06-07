@@ -30,7 +30,7 @@ bracketRing (List, ZZ) := o -> (vectorSymbols, d) -> (
 	-- TODO: it's likely more efficient to apply forceGB to a known Groebner basis (Pluecker relations? van der Waerden syzygies?)
 	-- TODO: allow computing with SubalgebraBases instead of Groebner bases
 	G := groebnerBasis I;
-	ret.cache#gb = G;
+	--ret.cache#gb = G;
 	ret.cache#syz = selectInSubring(1, G);
 	) 
     else if o#Strategy === Grassmannian then (
