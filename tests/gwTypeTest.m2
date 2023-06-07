@@ -1,5 +1,4 @@
-print(currentDirectory());
-load (currentFileDirectory|"A1-Brouwer/GW-type.m2")
+load ("../A1-Brouwer/GW-type.m2")
 
 M = matrix(QQ,{{1,0},{0,1}});
 beta = gwClass(M);
