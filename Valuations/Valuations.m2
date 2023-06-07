@@ -360,6 +360,18 @@ assert(val (-9/7) == -1)
 assert(val (7/9) == 1)
 ///
 
+-- Leading Term Valuation Tests
+TEST///
+R = QQ[x,y]
+val = leadTermValuation(R)
+assert(val(x) < val(y^2))
+///
+TEST///
+R = QQ[x,y, MonomialOrder=>Lex]
+val = leadTermValuation(R)
+assert(val(x) > val(y^2))
+///
+
 end
 
 uninstallPackage("Valuations")
