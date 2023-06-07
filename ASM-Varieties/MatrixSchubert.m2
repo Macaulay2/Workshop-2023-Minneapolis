@@ -727,9 +727,9 @@ isMinRankTable Matrix := Boolean => (A) -> (
     for i from 0 to a-1 do (    
         for j from 0 to a-1 do (
             if (i==0 and j==0 and not(AList#i#j == 0 or AList#i#j == 1)) then return false
-            else if (i == 0 and j != 0 and (not(AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1) or not(AList#i#j == 0 or AList#i#j == 1))) then return false
-            else if (i != 0 and j == 0 and (not(AList#i#j-AList#(i-1)#j == 0 or AList#i#j-AList#(i-1)#j == 1) or not(AList#i#j == 0 or AList#i#j == 1))) then return false
-            else if (i != 0 and j != 0 and (not((AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1) or not(AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1)))) then return false;
+            else if (i == 0 and j != 0 and ((not(AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1) or not(AList#i#j == 0 or AList#i#j == 1)))) then return false
+            else if (i != 0 and j == 0 and ((not(AList#i#j-AList#(i-1)#j == 0 or AList#i#j-AList#(i-1)#j == 1) or not(AList#i#j == 0 or AList#i#j == 1)))) then return false
+            else if (i != 0 and j != 0 and ((not((AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1) or not(AList#i#j-AList#(i-1)#j == 0 or AList#i#j-AList#(i-1)#j == 1))))) then return false;
         );
     );
 
@@ -1382,6 +1382,19 @@ L = {
     matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
 }
 assert all (L, i -> schubertCodim i == codim schubertDetIdeal i)
+///
+
+TEST ///
+-- isMinRankTable
+T1 = matrix {{0,1,1},{1,1,2},{1,2,3}}
+T2 = matrix {{1,1,1,1,1},{1,2,2,2,3},{1,2,2,2,3},{1,2,2,3,3},{1,2,3,3,3}}
+F1 = matrix {{1,0,1,0},{0,1,0,-1},{2,2,0,0},{3,5,8,0}}
+F2 = matrix {{1,1,1,1,1},{1,2,2,2,0},{1,2,2,2,3},{1,2,2,3,3},{1,2,3,3,3}}
+
+assert(isMinRankTable(T1))
+assert(isMinRankTable(T2))
+assert(not isMinRankTable(F1))
+assert(not isMinRankTable(F2))
 ///
 
 end---------------------------------------------------------------
