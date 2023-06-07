@@ -27,13 +27,16 @@ print(path);
 -- If you wish, you can change testDir to any other directory.
 testDir = currentDirectory() | "tests/"
 print("testDir:");
-print(testDir);
+print readDirectory(testDir | "../");
 
 
 testFiles = select(readDirectory testDir,
     file -> match("\\.m2$", file) and file != "testbot.m2")
 printerr("Found ", toString(#testFiles), " test file(s) matching '", testDir, "*.m2'.")
 TEST(testFiles / (filename -> testDir | "/" | filename), FileName => true)
+
+print("test files:");
+print(testFiles);
 
 -- workaround for https://github.com/Macaulay2/M2/issues/2835
 importFrom_Core {"PackageIsLoaded"}
