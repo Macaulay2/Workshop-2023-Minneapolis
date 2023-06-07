@@ -1,4 +1,4 @@
-load ("A1-Brouwer/GW-type.m2")
+load ("./A1-Brouwer/GW-type.m2")
 print(currentDirectory());
 M = matrix(QQ,{{1,0},{0,1}});
 beta = gwClass(M);
