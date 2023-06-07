@@ -14,7 +14,9 @@ newPackage(
     )
 
 export {"Subring",
-    "subring"}
+    "subring",
+    "presentationIdeal",
+    "toQuotientRing"}
 
 protect symbol ambientRing --Take this out in the future
 
@@ -39,6 +41,20 @@ subring Matrix := genMatrix -> (
 
 subring List := genList -> (
     subring matrix {genList}
+    )
+
+presentationIdeal = method()
+presentationIdeal subring := S -> (
+    P := presentationRing S;
+    f := presentationMap S;
+    return ker f; --kernel is cached automatically
+    )
+
+toQuotientRing = method()
+toQuotientRing subring := S -> (
+    P := presentationRing S;
+    I := presentationIdeal S;
+    return P/I;
     )
 
 -- beginDocumentation()
