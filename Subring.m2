@@ -15,8 +15,25 @@ newPackage(
 
 export {"Subring"}
 
+Subring = new Type of HashTable
+
 -- a method to create subrings
-method subring
+subring = method()
+subring Matrix := genMatrix -> (
+    
+    new Subring from {
+	generators => genMatrix,
+	ambientRing => ring genMatrix
+	-- presentation ring: one variable for each generator
+	-- presentation map: presentation ring --> ambient ring 
+	-- presentation ideal?? -- probably compute into cache 
+	cache => new CacheTable
+	}
+    )
+
+subring List := genList -> (
+    subring matrix {genList}
+    )
 
 beginDocumentation()
 
