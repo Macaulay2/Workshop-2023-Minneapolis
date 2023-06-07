@@ -62,7 +62,8 @@ export{
     "lengthIncrSubset",
     "isASMIdeal",
     "isSchubertCM",
-    "ASMFullList"
+    "ASMFullList",
+    "cohenMacaulayASMsList"
     }
     
 ------------------------------------------------------------------------------
