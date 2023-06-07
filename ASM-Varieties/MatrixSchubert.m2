@@ -58,7 +58,9 @@ export{
     "schubertCodim",
     "matrixSchubertRegADI",
     "matrixSchubertRegWPS",
-    "lengthIncrSubset"
+    "lengthIncrSubset",
+    "isASMIdeal",
+    "isSchubertCM"
     }
 
 -- Utility routines --
@@ -144,14 +146,11 @@ findIndices(List, List) := (L, Bs) -> (for ell in L list position(Bs, b -> (b ==
 --TODO: add docs and tests
 -----------------------------------
 variableIndex = method()
-variableIndex IndexedVariable := Sequence => (elem) -> (
-    --convert to string, parse, and select index, convert back
-    value replace(".*_+", "", toString elem)
-)
 variableIndex RingElement := Sequence => (elem) -> (
     --convert to string, parse, and select index, convert back
     value replace(".*_+", "", toString elem)
 )
+-- indexOfVariable = v -> ( i:= index v; last toList R.generatorSymbols#i )  -- need `debug Core` to use `R.generatorSymbols`
 
 -----------------------------------------------
 -----------------------------------------------
@@ -278,7 +277,23 @@ for i from 0 to m-1 do (
     if (not(isSubset(sort unique colPartialSum, {0,1}))) then return false;
     );
 return true
-); 
+)
+
+
+----------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation
+--OUTPUT: ANTIdiagonal initial ideal of Schubert determinantal ideal for w
+--WARNING: This method does not like the identity permutation
+----------------------------------------
+antiDiagInit = method()
+antiDiagInit Matrix := monomialIdeal => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    monomialIdeal leadTerm schubertDetIdeal A
+    );
+antiDiagInit List := monomialIdeal => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
+    monomialIdeal leadTerm schubertDetIdeal w
+    );
 
 ----------------------------------------
 --Computes rank matrix of an ASM
@@ -321,11 +336,12 @@ rotheDiagram = method()
 rotheDiagram Matrix := List => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     n := numrows A;
-    listEntries := flatten table(n,n, (i,j)->(i,j));
+    m := numcols A;
+    listEntries := flatten table(n,m, (i,j)->(i,j));
     ones := select(listEntries, i-> A_i == 1);
     seen := new MutableList;
     for one in ones do(
-	for i from one_0 to n-1 do(
+	for i from one_0 to m-1 do( --death rays to the right
 	    if (A_(i,one_1)==-1) then break;
 	    seen#(#seen) = (i,one_1);
 	    );
@@ -423,6 +439,25 @@ fultonGens List := List => (w) -> (
     (schubertDetIdeal w)_*
     );
 
+----------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation or an ASM ideal
+--OUTPUT: whether or not R/I_A is CM
+---------------------------------------
+isSchubertCM = method()
+isSchubertCM Matrix := Boolean => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    R:=ring(antiDiagInit A);
+    codim(antiDiagInit A)==pdim(comodule (antiDiagInit A))
+    );
+
+isSchubertCM List := Boolean => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
+    print "We know from a theorem of Fulton that the quotient by any Schubert determinantal ideal is actually Cohen--Macaulay!";
+    true
+    );
+
+isSchubertCM(matrix{{0,1,0},{1,-1,1},{0,1,0}})
+
 ----------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: single Grothendieck polynomials
@@ -487,20 +522,7 @@ doubleSchubertPoly(List) := (w) -> (
 --TODO: add tests
 --TODO: double grothendieck. Problem: can't rename variables. use divided differences instead
 
-----------------------------------------
---INPUT: a list w corresponding to a permutation in 1-line notation
---OUTPUT: ANTIdiagonal initial ideal of Schubert determinantal ideal for w
---WARNING: This method does not like the identity permutation
-----------------------------------------
-antiDiagInit = method()
-antiDiagInit Matrix := monomialIdeal => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    monomialIdeal leadTerm schubertDetIdeal A
-    );
-antiDiagInit List := monomialIdeal => (w) -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    monomialIdeal leadTerm schubertDetIdeal w
-    );
+
 
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation or a partial ASM
@@ -644,9 +666,7 @@ schubertDecomposition Ideal := List => (I) -> (
 
 -------------------------------------------
 --INPUT: an ideal
---OUTPUT: whether the ideal is an ASM ideal
---WARNING: Might not be right depending on if {2,1,6,3,5,4} is ASM.
---         If it is, then buggy; else, we are good.
+--OUTPUT: whether the ideal is an intersection of Schubert determinantal ideals
 --TODO: docs and tests
 --TODO: input validation/type checking
 -------------------------------------------
@@ -662,6 +682,35 @@ isIntersectionSchubIdeals Ideal := List => (I) -> (
     };
     isIntersection
 )
+
+-------------------------------------------
+--INPUT: an ideal
+--OUTPUT: whether the ideal is an ASM ideal
+--TODO: docs and tests
+--TODO: input validation/type checking
+-------------------------------------------
+isASMIdeal = method()
+isASMIdeal Ideal := List => (I) -> (
+    isASM := true;
+    if (I == radical(I)) then {
+        schubDecomp := schubertDecomposition I;
+        if (isASM = I == intersect apply(schubDecomp/schubertDetIdeal, J -> sub(J, vars ring I))) then {
+            permMatrices := (schubDecomp / permToMatrix);
+            rankTable := rankTableFromMatrix matrix entrywiseMaxRankTable permMatrices;
+            ASM := rankTableToASM matrix rankTable;
+            ASMIdeal := schubertDetIdeal matrix ASM;
+            isASM = I == sub(ASMIdeal, vars ring I);
+        }
+        else {
+            isASM = false;
+        }
+    }
+    else {
+        isASM = false;
+    };
+    isASM
+)
+
 ------------------------------------------
 --INPUT: a square matrix M
 --OUTPUT: whether M is a valid rank table.
@@ -812,7 +861,6 @@ rajCode List := ZZ => (w) -> (
 	maxLengthIncr := 1;
 	fVal := w_k;
 	subPerm := w_{k+1..#w-1};
-	
 	for l in delete({},subsets(subPerm)) do (
 	    testPerm := {fVal} | l;
 	    maxLengthIncr = max(maxLengthIncr,lengthIncrSubset(testPerm));
@@ -1366,28 +1414,29 @@ subwordComplex M
 betti res diagLexInit M
 betti res antiDiagInit M
 
+
+A = matrix{{0,-1,0,1,1},{1,-1,1,-1,1},{0,1,1,0,-1},{1,1,-1,1,-1},{-1,1,0,0,1}}
+n = numrows A
+m = numcols A
+rowCheck = new MutableList
+colCheck = new MutableList
+for i from 0 to n-1 do(
+    partialSums = for i from 0 to m-1 list(sum(delete(0, flatten entries A_{i})));
+    rowCheck#(#rowCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
+    );
+for i from 0 to m-1 do(
+    partialSums = for i from 0 to n-1 list(sum(delete(0, flatten entries A^{i})));
+    rowCheck#(#colCheck) = (((unique sort partialSums) == {0,1}) or ((unique sort partialSums) == {0}) or ((unique sort partialSums) == {1}));
+    );
+(toList rowCheck == toList(#rowCheck:true)) and (toList colCheck == toList(#colCheck:true))
+)
+
+
+
 -----------------------------------------
 --Adam's Testing for matrixSchubertReg --
 -----------------------------------------
 
-
-Tester (n) -> (
-
-    S = apply(permutations(n),S->apply(S,i->i+1));
-    assert(apply(S,i->matrixSchubertRegADI(i))==apply(S,i->matrixSchubertRegWPS(i)))
-);
-
-Tester (n) -> (
-
-    S = apply(permutations(n),S->apply(S,i->i+1));
-    assert(apply(S,i->matrixSchubertRegADI(i))==apply(S,i->matrixSchubertRegWPS(i)))
-);
-
-Tester (n) -> (
-
-    S = apply(permutations(n),S->apply(S,i->i+1));
-    assert(apply(S,i->matrixSchubertRegADI(i))==apply(S,i->matrixSchubertRegWPS(i)))
-);
 
 Tester (n) -> (
 
@@ -1433,3 +1482,5 @@ restart
 needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
+
+
