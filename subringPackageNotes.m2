@@ -193,3 +193,12 @@ RingElement % Subring := (f, S) -> (
 -- functions to:
     -- compute presentation map/presentation ring
     -- kernel of presentation map (slow)
+    
+ -- tensor ring should go in cache
+ 
+ -- Subring then refactor
+ 
+ -- SAGBI should load Subring package.
+ 
+ -- mirror functionnality of Rings
+ -- matrices in presentation ring (reduce? designn decisionn - could be sslow.)
