@@ -89,16 +89,15 @@ OrderedQQn = new Type of Module
 OrderedQQVector = new Type of Vector
 
 orderedQQn = method()
-orderedQQn(ZZ, List) := (n, monOrder) -> (
-    R := QQ[Variables => n, MonomialOrder => monOrder];
-    ordMod := new OrderedQQn of OrderedQQVector from QQ^n;
-    ordMod.cache.Ring = R;
-    ordMod
-    )
 orderedQQn(PolynomialRing) := R -> (
     n := numgens R;
     ordMod := new OrderedQQn of OrderedQQVector from QQ^n;
     ordMod.cache.Ring = R;
+    ordMod
+    )
+orderedQQn(ZZ, List) := (n, monOrder) -> (
+    R := QQ[Variables => n, MonomialOrder => monOrder];
+    ordMod := orderedQQn R;
     ordMod
     )
 
