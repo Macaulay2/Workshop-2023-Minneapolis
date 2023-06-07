@@ -153,6 +153,7 @@ rajCode List := ZZ => (w) -> (
     	
 	rajCodeVec = append(rajCodeVec,(#subPerm+1 - maxLengthIncr));
     );
+    rajCodeVec = append(rajCodeVec,0);
     return rajCodeVec;
 );
 
@@ -189,3 +190,53 @@ lengthIncrSubset = (w) -> (
    );
    return #w;
 );
+
+
+------------------------------------------
+--INPUT: longestIncrSeqRec, takes a permutation in one line notation
+--OUTPUT: returns the length of the longest consecutive permutation
+--        which starts at the beginning of the permutation
+--TO DO: Thoroughly test and document
+------------------------------------------
+longestIncrSeqRec = method()
+longestIncrSeqRec (ZZ,ZZ,List) := ZZ => (preVal,prevSZ,w) -> (
+    
+    if w == {} then return prevSZ;
+    
+    longestSZ := prevSZ;
+    currSZ := prevSZ;
+    currVal := preVal;
+    
+    for i from 0 to #w-1 do (
+
+    	
+    	currVal = w_i;
+	if (currVal < preVal) then currSZ = longestIncrSeqRec(preVal,prevSZ,w_{i+1..#w-1})
+	else currSZ = longestIncrSeqRec(currVal,prevSZ+1,w_{i+1..#w-1});
+	longestSZ = max(longestSZ,currSZ);
+    );
+    return longestSZ;
+);
+
+
+longestIncrSeqRec = memoize longestIncrSeqRec ;
+
+
+------------------------------------------
+--INPUT: rajCode, takes a permutation in one line notation
+--OUTPUT: returns the rajCode of the permutation
+------------------------------------------
+
+
+rajCodeRec = method()
+rajCodeRec List := ZZ => (w) -> (
+    
+    if not (isPerm w) then error ("Expecting a permutation.");
+    
+    rajCodeVec := {};
+    for k from 0 to #w-1 do (
+    	rajCodeVec = append(rajCodeVec,(#w-k) - longestIncrSeqRec(w_k,1,w_{k+1..#w-1}));
+    );
+    return rajCodeVec;
+);
+

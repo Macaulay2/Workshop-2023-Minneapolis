@@ -61,7 +61,9 @@ export{
     "matrixSchubertRegWPS",
     "lengthIncrSubset",
     "isASMIdeal",
-    "isSchubertCM"
+    "isSchubertCM",
+    "longestIncrSeqRec",
+    "rajCodeRec"
     }
     
 ------------------------------------------------------------------------------
@@ -179,7 +181,30 @@ TesterPermTime = (w) -> (
 
 apply(1..10,i->Tester(i));
 
+------------------------------------
+--Adam RajCode Testing--
+------------------------------------
 
+
+rajTest = (w) -> (
+    if(rajCode(w) != rajCodeRec(w)) then (
+    	print(w);
+	exit ;	
+    );
+);
+
+randomTest = (n) -> (
+  
+    w= random toList(1..n);
+    rajTest(w)
+--    print elapsedTime rajCode(w);
+    print elapsedTime rajCodeRec(w);
+    << endl;
+);
+
+for i from 1 to 4 do (
+    for w in permutations(toList (1..i)) do rajTest(w);
+);
 
 ------------------------------------
 --Development Section
