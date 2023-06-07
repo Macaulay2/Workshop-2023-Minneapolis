@@ -216,6 +216,7 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
 	    );
 	canonical = join(M,L);
 	);
+--    C.cache#iCF = canonical;
     canonical
     )
 
