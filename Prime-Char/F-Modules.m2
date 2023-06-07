@@ -162,11 +162,11 @@ localCohomology ( ZZ, Ideal, Ring ) := FModule => ( i, I, R ) ->
     makeFModule generatingMorphism E
 )
   
-generatingRoot = method()
+root = method()
 
-generatingRoot FModule := GeneratingMorphism => ( cacheValue symbol generatingRoot )( MM ->
+root FModule := Module => ( cacheValue symbol root )( M ->
 (
-    g := MM#generatingMorphism;
+    g := M#generatingMorphism;
     K := ker g;
     if K == 0  then 
     (    
@@ -174,9 +174,8 @@ generatingRoot FModule := GeneratingMorphism => ( cacheValue symbol generatingRo
             print "generatingRoot: generating morphism is already injective"; 
         return g
     );
-    M = source g;
     g1 := (FF g)*g;
-    K1 :=  ker g1;
+    K1 := ker g1;
     counter := 1;
     if debugLevel > 1 then 
         print( "generatingRoot: computed kernel #"  | toString counter );
@@ -189,7 +188,7 @@ generatingRoot FModule := GeneratingMorphism => ( cacheValue symbol generatingRo
         if debugLevel > 1 then 
             print( "generatingRoot: computed kernel #" | toString counter )
     );   
-    generatingMorphism map( FF( M/K ), M/K, matrix g )
+    (source g)/K
 ))
            
 ZZ == FModule := ( n, M ) -> M == n
@@ -198,16 +197,16 @@ FModule == ZZ := ( M, n ) ->
 (
     if n =!= 0 then error "Attempted to compare an FModule to nonzero integer";
     -- check that generating root == 0
-    generatingRoot( M ) == 0
+    root( M )  == 0
 )
 
 cohomDim = method()
 
 cohomDim Ideal := ZZ => I ->
 (
-    R:=ring I;
-    n:=#(trim I)_*;
-    while localCohomology(n,I,R)==0 do (n=n-1);
+    R := ring I;
+    n := #(trim I)_*;
+    while localCohomology( n, I, R) == 0 do n = n-1;
     n
 )
 
@@ -225,7 +224,7 @@ randomGeneratingMorphism ModuleClass := generatingMorphism => o -> M ->
     d := o.Degree;
     H = toList apply( n, i -> homomorphism H_{i} );
     R := ring M;
-    coeff := flatten entries random( R^{n:d}, R^{d} );    
+    coeff := flatten entries random( R^{n:d}, R^1 );    
     generatingMorphism sum( coeff, H, ( x, y ) -> x*y )    
 )
 
