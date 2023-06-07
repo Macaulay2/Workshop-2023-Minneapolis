@@ -19,8 +19,8 @@ path = join( { currentDirectory() | "A1-Brouwer/" }, path )
 -- to run a series of examples with every push on GitHub.
 --needsPackage "LocalRings"
 --check LocalRings
-load "A1-Brouwer/GW-type.m2"
-capture get "A1-Brouwer/GW-type.m2"
+-- load "A1-Brouwer/GW-type.m2"
+-- capture get "A1-Brouwer/GW-type.m2"
 
 -- The following lines automatically run every file in the "tests" directory.
 -- If you wish, you can change testDir to any other directory.
