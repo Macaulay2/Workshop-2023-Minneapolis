@@ -72,10 +72,23 @@ bracketRing (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
 	ret.cache#syz = selectInSubring(1, G);
 *-
 	) 
+   
     else if o#Strategy === Grassmannian then (
 	-- use the function "Grassmannian" to simplify construction of R, I, etc, above
-	error "not implemented";
+	    G := Grassmannian(d - 1, #vectorSymbols - 1);
+      B := bracketRing(#vectorSymbols, d);
+      GB := apply(
+        gens ring G, 
+        v -> (
+            S := last baseName v;
+            A := [new Array from apply(S, i -> i + 1)];
+            A_B;
+            )
+        );
+      ret.cache#gb = GB;
+	    --ret.cache#syz = selectInSubring(1, GB);
 	)
+
     else if o#Strategy === "vanDerWaerden" then (
 	error "not implemented";
 	)
