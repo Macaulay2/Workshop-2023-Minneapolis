@@ -143,7 +143,7 @@ rajCode List := ZZ => (w) -> (
     
     rajCodeVec := {};
     for k from 0 to #w-1 do (
-    	rajCodeVec = append(rajCodeVec,(#w-k) - longestIncrSeqRec(w_k,1,w_{k+1..#w-1}));
+    	rajCodeVec = append(rajCodeVec,(#w-k) - longestIncrSeq(w_k,1,w_{k+1..#w-1}));
     );
     return rajCodeVec;
 );
@@ -164,7 +164,7 @@ rajIndex List := ZZ => (w) -> (
 
 
 ------------------------------------------
---INPUT: longestIncrSeqRec, takes a previous value, a previous size, and a permutation in one line notation
+--INPUT: longestIncrSeq, takes a previous value, a previous size, and a permutation in one line notation
 --OUTPUT: returns the length of the longest consecutive permutation plus the previous size
 --        that starts at the beginning of the permutation and has the elements of the sequence larger than the previous value
 --TO DO: Document
@@ -181,8 +181,8 @@ longestIncrSeq = (preVal,prevSZ,w) -> (
 
     	
     	currVal = w_i;
-	if (currVal < preVal) then currSZ = longestIncrSeqRec(preVal,prevSZ,w_{i+1..#w-1})
-	else currSZ = longestIncrSeqRec(currVal,prevSZ+1,w_{i+1..#w-1});
+	if (currVal < preVal) then currSZ = longestIncrSeq(preVal,prevSZ,w_{i+1..#w-1})
+	else currSZ = longestIncrSeq(currVal,prevSZ+1,w_{i+1..#w-1});
 	longestSZ = max(longestSZ,currSZ);
     );
     return longestSZ;
