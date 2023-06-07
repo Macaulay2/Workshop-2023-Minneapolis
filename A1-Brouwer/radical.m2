@@ -29,7 +29,7 @@ truncateRadical(Matrix, InExactFieldFamily):=(GrothendieckWittClass)=> (A, k) ->
             );
             return gwClass(truncatedMatrix);
         );
-    )
+    );
     else (return gwClass(truncatedMatrix));
 );
 
