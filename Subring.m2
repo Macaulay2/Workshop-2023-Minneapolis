@@ -13,27 +13,37 @@ newPackage(
     DebuggingMode => true
     )
 
+
 export {"Subring",
     "subring",
     "presentationIdeal",
     "toQuotientRing"}
-
-protect symbol ambientRing --Take this out in the future
-
-veryLocalVar:=3;
 
 Subring = new Type of HashTable
 
 -- a method to create subrings
 subring = method()
 subring Matrix := genMatrix -> (
-    localBar:=3;
+    
+    -- compute presentation ring
+    R := ring genMatrix;
+    nGens := numgens source genMatrix;
+    k := coefficientRing R;
+    P := k[x_1..x_nGens];
+    
+    -- compute presentation map 
+    f := map(R, P, genMatrix);
+    
     new Subring from {
 	generators => genMatrix,
-	ambientRing => ring genMatrix,
-	"otherKey" => 3,
+	ambientRing => R,
+	
 	-- presentation ring: one variable for each generator
-	-- presentation map: presentation ring --> ambient ring 
+	presentationRing => P,
+      
+	-- presentation map: presentation ring --> ambient ring
+	presentationMap => f,
+	 
 	-- presentation ideal?? -- probably compute into cache 
 	cache => new CacheTable
 	}
@@ -42,6 +52,7 @@ subring Matrix := genMatrix -> (
 subring List := genList -> (
     subring matrix {genList}
     )
+
 
 presentationIdeal = method()
 presentationIdeal subring := S -> (
@@ -56,6 +67,33 @@ toQuotientRing subring := S -> (
     I := presentationIdeal S;
     return P/I;
     )
+
+
+-- given a subring S, output presentation ring P (one variable for each generator)
+-*presentationRing = S -> (
+    nGens = numgens source S#generators;
+    k = coefficientRing S#ambientRing;
+    P = k[x_1..x_nGens]    
+    )
+
+-- given a subring S, output presentation map f:P->R whose image is S
+presentationMap = S -> (
+    P = presentationRing S;
+    f = map(R, P, S#generators)
+    )
+
+
+-- tests
+R = QQ[x,y]
+
+S = subring {x^2, x*y, y^2}
+
+P = presentationRing S
+
+f = presentationMap S
+-*
+
+
 
 -- beginDocumentation()
 -*
