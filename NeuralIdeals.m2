@@ -27,7 +27,10 @@ export{--types
     "neuralIdeal",
     "canonicalForm",
     "iterCanonicalForm",
-    "factoredCanonicalForm"}
+    "factoredCanonicalForm",
+    "codeSupport",
+    --Symbols
+    "codes"}
 
 protect codes
 protect dimension
@@ -229,13 +232,13 @@ iterCanonicalForm(NeuralCode) := C -> (
 codeSupport = method();
 codeSupport(NeuralCode) := C -> (
     fullSupport := {};
-    for c in C.codes do (
-	cSupport := for i to #c-1 when c#i == 1 list i;
+    L := C.codes;
+    for c in L do (
+	cSupport := for i to #c-1 list (if value(c#i) == 0 then continue; i+1);
 	fullSupport = append(fullSupport, cSupport);
 	);
     fullSupport
     )
-
 
 beginDocumentation()
 
