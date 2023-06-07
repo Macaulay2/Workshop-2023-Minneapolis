@@ -13,14 +13,14 @@
 -- Uncomment and edit the following line to add your project directories
 -- containing Macaulay2 source code files to the load path. Terminate each
 -- directory name with a "/".
---path = join( { currentDirectory() | "src/singularities/", ... }, path )
+path = join( { currentDirectory() | "../Valuations"}, path )
 
 -- Uncomment and edit the following lines to preload and check your package or
 -- to run a series of examples with every push on GitHub.
---needsPackage "LocalRings"
---check LocalRings
---load "tests/example.m2"
---capture get "tests/example.m2"
+needsPackage "Valuations"
+check Valuations
+load "tests/valuations_tests.m2"
+capture get "tests/valuations_tests.m2"
 
 -- The following lines automatically run every file in the "tests" directory.
 -- If you wish, you can change testDir to any other directory.
