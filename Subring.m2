@@ -8,15 +8,15 @@ newPackage(
         {Name => "Trevor K. Karn", Email => "karnx018@umn.edu"},
         {Name => "Miranda Moore", Email => "moor2340@umn.edu"},
         {Name => "Christopher O'Neill", Email => "cdoneill@sdsu.edu"}},
-    Headline => "an example Macaulay2 package",
+    Headline => "a package for subrings",
     Keywords => {"Documentation"},
-    DebuggingMode => false
+    DebuggingMode => true
     )
 
-export {"firstFunction"}
+export {"Subring"}
 
-firstFunction = method(TypicalValue => String)
-firstFunction ZZ := String => n -> if n == 1 then "Hello World!" else "D'oh!"
+-- a method to create subrings
+method subring
 
 beginDocumentation()
 

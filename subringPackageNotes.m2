@@ -161,3 +161,35 @@ RingElement % Subring := (f, S) -> (
 --Check how subrings are handled by monomial algebras
 --Decide what should be in the hastable of a subring type
 --Create a subring type in the subring package that can be available independently of other packages
+
+
+
+
+
+-------------------------------------
+
+-- Design notes 6 June
+
+-- Subring is a hash table in classes.m2 inside of SubalgebraBases
+-- presentation should return a matrix
+
+-- presentation B -- B should be a Subring object, subring of A
+--   [f1, f2]
+--  1      1
+-- A <--- C 
+
+-- presentationRing (c.f. PresRing in SubalgebraBases) (not subduction quotient)
+
+
+-- 7 June (half-day)
+
+-- projections
+
+-- goal for AM: add Subring to Subring.m2, do some documentation, examples
+
+
+-- questions - subring?
+
+-- functions to:
+    -- compute presentation map/presentation ring
+    -- kernel of presentation map (slow)
