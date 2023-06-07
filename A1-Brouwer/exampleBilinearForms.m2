@@ -61,3 +61,17 @@ Nclass = gwClass(N)
 diagonalForm(Mclass)
 diagonalForm(Nclass)
 
+
+
+h1 = matrix(RR,{{1,0},{0,-1}});
+hyp1 = gwClass(h1);
+diagonalForm(hyp1)
+
+h1an = matrix(RR,{{0,0,1},{0,2,0},{1,0,0}})
+
+hyp1an = gwClass(h1an)
+diagonalForm(hyp1an)
+
+h2 = matrix(RR,{{0,0,0,1},{0,0,1,0},{0,1,0,0},{1,0,0,0}});
+hyp2 = gwClass(h2);
+diagonalForm(hyp2)
