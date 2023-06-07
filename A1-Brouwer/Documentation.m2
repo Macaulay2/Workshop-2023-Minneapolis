@@ -1,8 +1,8 @@
 --Type: GrothendieckWittClass
 
-    (1). Matrix -->> GrothendieckWittClass
+    (1). Matrix -> GrothendieckWittClass
                 gwClass (Matrix)
-         Matrix <<-- GrothendieckWittClass 
+         Matrix <- GrothendieckWittClass 
                 (GrothendieckWittClass).matrix
     (2). Methods:
         (a). baseField (GrothendieckWittClass) -> (Ring)
