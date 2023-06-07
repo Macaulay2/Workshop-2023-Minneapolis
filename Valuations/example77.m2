@@ -17,7 +17,7 @@ I = ker m
 
 needsPackage "Tropical"
 needsPackage "gfanInterface"
-
+needsPackage "Binomials"
 
 primeConesOfIdeal = I -> (F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
     r:=rays(F);
@@ -27,7 +27,7 @@ primeConesOfIdeal = I -> (F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true)
     L:= for i from 0 to #cns-1 list (J = gfanBuchberger(I, "w" => -1*(inCns#i));
         H = gfanInitialForms(J, -1*(inCns#i), "ideal" =>true);
         K = H_1;
-        if isPrime(ideal(K)) then K);
+        if binomialIsPrime(ideal(K)) then K);
     return delete(null,L))
 
 primeConesOfIdeal I
