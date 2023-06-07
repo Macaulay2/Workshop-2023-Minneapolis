@@ -61,6 +61,8 @@ export{
     "matrixSchubertRegWPS",
     "lengthIncrSubset",
     "isASMIdeal",
+    "ASM",
+    "getASM",
     "isSchubertCM",
     "ASMFullList",
     "cohenMacaulayASMsList"
@@ -182,7 +184,12 @@ TesterPermTime = (w) -> (
 
 apply(1..10,i->Tester(i));
 
-
+restart
+needsPackage "MatrixSchubert"
+I = schubertDetIdeal {2,1,6,3,5,4}
+isASMIdeal I
+I.cache.ASM
+getASM(I)
 
 ------------------------------------
 --Development Section
