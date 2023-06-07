@@ -3,8 +3,8 @@ newPackage(
 Version => "1.00",
 Date => "June 5, 2023",
 Authors => {{Name => "Hugh Geller"},{Name => "Rebecca R.G."}},
-Headline => "neural ideals",
-Keywords => {"Commutative Algebra"},
+Headline => "canonical forms of neural ideals",
+Keywords => {"Commutative Algebra", "Squarefree monomial ideals"},
 DebuggingMode => false,
 PackageImports => {"PrimaryDecomposition","PseudomonomialPrimaryDecomposition"},
 Reload => false
