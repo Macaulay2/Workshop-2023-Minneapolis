@@ -121,6 +121,7 @@ neuralIdeal = method();
 neuralIdeal(NeuralCode,Ring) := Ideal => (C,R) -> (
     d:=dim C;
     if numgens R =!= d then error "Expected ring of the same dimension as the neuralCode";
+    --add error if ring is not characteristic 2
     oppC:=neuralCodeOpp(C);
     genList:=for i to #oppC-1 list (
     	prod:=1;
@@ -137,10 +138,9 @@ neuralIdeal NeuralCode := Ideal => C -> (
     neuralIdeal(C,R)
     )
 
-canonicalForm = method();
+canonicalForm = method(Options => {Factor => false});
 
-canonicalForm Ideal := List => I -> (
-    --this is from our old code, doesn't work yet, may not need pseudomonomial stuff actually
+canonicalForm Ideal := List => opts -> I -> (
     if isSquarefreePseudomonomialIdeal I==true then (
     decomp := primaryDecomposition I;
     multipliedGens :=product(decomp, i->i);
@@ -155,20 +155,19 @@ canonicalForm Ideal := List => I -> (
 	isDivisible := false;
 	for j in almostGens do (
 	    if i%j==0 and i =!= j then (isDivisible=true; break));
-	if isDivisible==true then continue; i))
+	if isDivisible==true then continue; 
+	if opts.Factor == true then factor(i) else i
+	);
+    )
     else error "Input must be a squarefree pseudomonomial ideal"
-    --delete(,actualGens)
-    --to factor:
-    --apply(J_*,factor)
-    --not working right now
     )
 
-canonicalForm NeuralCode := List => C -> (
-    canonicalForm(neuralIdeal(C))
+canonicalForm NeuralCode := List => opts -> C -> (
+    canonicalForm(neuralIdeal(C),Factor => opts.Factor)
     )
 
 canonicalForm(NeuralCode,Ring) := List => (C,R) -> (
-    canonicalForm(neuralIdeal(C,R))
+    canonicalForm(neuralIdeal(C,R),Factor => opts.Factor)
     )
 
 --make this an optional argument to canonicalForm instead
