@@ -55,7 +55,10 @@ export{
     "rankTableToASM",
     "schubertReg",
     "rankTableFromMatrix",
-    "schubertCodim"
+    "schubertCodim",
+    "matrixSchubertRegADI",
+    "matrixSchubertRegWPS",
+    "lengthIncrSubset"
     }
 
 -- Utility routines --
@@ -503,7 +506,7 @@ antiDiagInit List := monomialIdeal => (w) -> (
 --INPUT: a list w corresponding to a permutation in 1-line notation or a partial ASM
 --OUTPUT: the Castlenuovo-Mumford regularity of I_A or I_w
 ----------------------------------------
-schubertReg = method()
+schubertReg= method()
 schubertReg Matrix := ZZ => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     regularity(antiDiagInit A)
@@ -784,6 +787,7 @@ lengthIncrSubset = (w) -> (
    
    if (w == {}) then return 0;
    
+   i := 1;
    preVal := w_0;
    for i from 1 to #w-1 do (
        if (preVal > w_i) then return i;
@@ -814,7 +818,7 @@ rajCode List := ZZ => (w) -> (
 	    maxLengthIncr = max(maxLengthIncr,lengthIncrSubset(testPerm));
 	);
     	
-	rajCodeVec := rajCodeVec | {#subPerm+1 - maxLengthIncr};
+	rajCodeVec = append(rajCodeVec,(#subPerm+1 - maxLengthIncr));
     );
     return rajCodeVec;
 );
@@ -834,6 +838,45 @@ rajIndex List := ZZ => (w) -> (
 );
 
 
+------------------------------------------
+--INPUT: matrixSchubertReg, takes a permutation or an ASM 
+--       and an optional strategy computation argument. The
+--       strategy options are ADI (computes the antiDiagonalInitial
+--       ideal and then computes the Castelnuovo-Mumford regularity)
+--       and PSW (computes the Castelnuovo-Mumford regularity of the
+--       matrix Schubert variety using Theorem 1.1 of Pechenki-Speyer-Weigandt)
+--OUTPUT: returns the Castelnuovo-Mumford reguarity of the matrix 
+--        Schubert variety
+------------------------------------------
+
+matrixSchubertRegADI = method()
+matrixSchubertRegADI List := ZZ => (w) -> (
+    if not (isPerm w) then error ("Expecting a permutation.");
+    
+    I := antiDiagInit w;
+    if I == 0 then return 0;
+    return regularity(I) -1;
+    
+);
+
+matrixSchubertRegWPS = method()
+matrixSchubertRegWPS List := ZZ => (w) -> (
+
+     if not (isPerm w) then error ("Expecting a permutation.");
+     
+     return rajIndex(w) - permLength(w);
+         
+);
+
+-*
+matrixSchubertReg() = method(
+    Options => {
+	Strategy => ADI
+	}    
+)
+
+matrixSchubertReg (List) := opts -> 
+*-
 
 ---------------------------------
 ---------------------------------
@@ -1322,6 +1365,59 @@ netList fultonGens M
 subwordComplex M
 betti res diagLexInit M
 betti res antiDiagInit M
+
+-----------------------------------------
+--Adam's Testing for matrixSchubertReg --
+-----------------------------------------
+
+
+Tester (n) -> (
+
+    S = apply(permutations(n),S->apply(S,i->i+1));
+    assert(apply(S,i->matrixSchubertRegADI(i))==apply(S,i->matrixSchubertRegWPS(i)))
+);
+
+Tester (n) -> (
+
+    S = apply(permutations(n),S->apply(S,i->i+1));
+    assert(apply(S,i->matrixSchubertRegADI(i))==apply(S,i->matrixSchubertRegWPS(i)))
+);
+
+Tester (n) -> (
+
+    S = apply(permutations(n),S->apply(S,i->i+1));
+    assert(apply(S,i->matrixSchubertRegADI(i))==apply(S,i->matrixSchubertRegWPS(i)))
+);
+
+Tester (n) -> (
+
+    S = apply(permutations(n),S->apply(S,i->i+1));
+    assert(apply(S,i->matrixSchubertRegADI(i))==apply(S,i->matrixSchubertRegWPS(i)))
+);
+
+TesterPerm = (w) -> (
+    assert(matrixSchubertRegADI(w)==matrixSchubertRegWPS(w));
+);
+
+NTests = 50;
+NMax = 8;
+for i from 1 to NTests do (
+    w = random toList (1..(random(1,NMax)));
+    TesterPerm(w);
+    << "Finished test #" << i << << ", perm size: " << length(w) << endl;
+);
+
+randomPerm = (Len) -> (
+    return random toList (1..random(1,Len));
+);
+
+TesterPermTime = (w) -> (
+    elapsedTime matrixSchubertRegWPS w;
+--    elapsedTime matrixSchubertRegADI w;
+    << endl;
+);
+
+apply(1..10,i->Tester(i));
 
 
 
