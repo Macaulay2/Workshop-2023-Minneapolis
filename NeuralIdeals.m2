@@ -183,9 +183,9 @@ factoredCanonicalForm(NeuralCode) := C -> (apply(canonicalForm(neuralIdeal(C)),f
 
 
 iterCanonicalForm = method();
-iterCanonicalForm(NeuralCode) := C -> (
+iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
     d := dim C;
-    R := ring C;
+    if numgens R =!= d then error "Expected ring of the same dimension as the neuralCode";
     initCode := C.codes#0;
     canonical := {};
     for i to d-1 do (
@@ -227,6 +227,13 @@ iterCanonicalForm(NeuralCode) := C -> (
 	canonical = join(M,L);
 	);
     canonical
+    )
+
+iterCanonicalForm(NeuralCode) := List => C -> (
+    d:=dim C;
+    x:=getSymbol "x"; 
+    R:=(ZZ/2)(monoid[x_1..x_d]); 
+    iterCanonicalForm(C,R)
     )
 
 codeSupport = method();
