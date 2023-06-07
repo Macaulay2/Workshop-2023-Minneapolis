@@ -256,7 +256,10 @@ map(ZZdFactorization, ZZdFactorization, ZZdFactorizationMap) := ZZdFactorization
 
 
 ZZdFactorizationMap _ ZZ := Matrix => (f,i) -> (
-    if f.map#?i then f.map#i else map((target f)_(i + degree f), (source f)_i, 0))
+    --f.map#(i%(source f).period))
+    if i%((source f).period)==0 then return f.map#((source f).period);
+    if f.map#?i then f.map#i else f.map#(i%(source f).period))
+	--map((target f)_(i + degree f), (source f)_i, 0))
 ZZdFactorizationMap ^ ZZ := ZZdFactorizationMap => (f,n) -> (
     (lo,hi) := (0,(source f).period);
     df := degree f;
