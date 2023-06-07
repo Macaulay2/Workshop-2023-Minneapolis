@@ -179,7 +179,7 @@ generatingRoot FModule := GeneratingMorphism => ( cacheValue symbol generatingRo
     K1 :=  ker g1;
     counter := 1;
     if debugLevel > 1 then 
-        print "generatingRoot: computed kernel "; --  | ( toString counter );
+        print( "generatingRoot: computed kernel #"  | toString counter );
     while K1 != K do
     (
         K = K1;
@@ -187,7 +187,7 @@ generatingRoot FModule := GeneratingMorphism => ( cacheValue symbol generatingRo
         K1 = ker g1;
         counter = counter + 1;
         if debugLevel > 1 then 
-            print "generatingRoot: computed kernel " -- | ( toString counter )
+            print( "generatingRoot: computed kernel #" | toString counter )
     );   
     generatingMorphism map( FF( M/K ), M/K, matrix g )
 ))
