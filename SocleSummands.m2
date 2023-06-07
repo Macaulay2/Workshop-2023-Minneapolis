@@ -15,6 +15,7 @@ export {
     "socleSummandsSemigroup",
     "isBurch",
     "burchIndex",
+    "almostKoszul",
     --
     "Boundaries"
 
@@ -30,6 +31,28 @@ export {
 --    (5, ideal"a4,b4,c4,ab3, b2c2"),
     (5, ideal"a4,a3b,b3,abc2,c5")}
 )
+ almostKoszul = method()
+ almostKoszul (Ring, ZZ) := Ring => (kk, a)-> (
+    --A series of examples discovered by Jan-Erik Roos:
+    --
+    --If kk = QQ then the resolution of kk over the output
+    --ring has linear resolution for a steps but 1 quadratic syzygy
+    --at the a+1-st step. 
+    --It also seems to have the first socle summand
+    --at the a+1-st step!
+    --These phenomena are also visible with kk = ZZ/32003, at
+    --least for moderate size a.
+    x := symbol x; 
+    y := symbol y;
+    z := symbol z; 
+    u := symbol u; 
+    v := symbol v; 
+    w := symbol w;
+    S := kk[x,y,z,u,v,w];
+    I := ideal (x^2,x*y,y*z,z^2,z*u,u^2,u*v,v*w,w^2,
+           x*z+a*z*w-u*w,z*w+x*u+(a-2)*u*w);
+    S/I
+       )
 
 socle = method()
 socle Ring := R -> (
@@ -193,6 +216,43 @@ Description
     Produces a hashTable of monomial ideals in ZZ/101[a,b,c]
   Example
     summandExamples
+///
+doc ///
+Key
+ almostKoszul
+Headline
+ Examples discovered by Jan-Erik Roos
+Usage
+ R = alomostKoszul(kk,a)
+Inputs
+ kk:Ring
+  the field over which R will be defined
+ a: ZZ
+  length of the linear part of the resolution of kk over R
+Outputs
+ R:Ring
+Description
+  Text
+   A standard graded ring R is Koszul if the
+   minimal R-free resolution F of its residue field kk
+   is linear. Roos' examples, which are 2-dimensional rings of
+   depth 0 in 6 variables, show that it is not enough to require
+   that F be linear for a steps, no matter how large a is.
+   
+   The examples are also remarkable in that (as far as we could check)
+   the (a+1)-st syzygy, and all subsequent syzygies
+   of kk have socle summands, but none before the (a+1)-st do.
+   This shows that the the socle summands do NOT all come from the
+   Koszul complex, but leaves open the conjecture that 
+   (with the one exception) the socle summand persist once they start.
+  Example
+   R = almostKoszul(ZZ/32003, 3)
+   F = res (coker vars R, LengthLimit => 4)
+   betti F
+   socleSummands F
+References
+SeeAlso
+   socleSummands
 ///
 
 doc ///
@@ -362,41 +422,36 @@ Description
    set Boundaries => False. 
   
    socleSummandsSemigroup of an ideal computes the semigroup 
-   of the residue field. 
+   of the residue field. The different kinds of behavior that
+   we have seen are illustrated in the 3-variable case by the
+   5 examples in the HashTabel summandExamples:
   Example
-   S = ZZ/101[a,b,c]
-   I = ideal"a4,a3b,b3,abc2,c5"
+   netList (L = for i from 1 to 5 list(
+   I = summandExamples#i;
    socleSummandsSemigroup(I,7)
-  Example
-   S = ZZ/101[a,b,c]
-   I = ideal "a4,a3b,b3,a2c2,c5"
-   socleSummandsSemigroup(I,7)
-  Example
-   S = ZZ/101[a,b,c]
-   I = ideal "a4,a3b,b3,a2c2,c5"
-   R = S/I
-   F = res(cokernel random(R^1,R^{-1}), LengthLimit => 7)
-   socleSummandsSemigroup(F)
+   ))
+  Text
+   Though resolutions may not have any socle summands, as in the first case above,
+   the cycles in the Koszul complex always have them, at least in the last place.
+   The cycles of the Koszul complex are more interesting in this regard than the 
+   boundaries!
   Example
    S = ZZ/101[a,b,c] 
    I = ideal "a4,a3b,b3,a2c2,c5"
    R = S/I
    F = koszul(matrix{{a,b,c}})
    socleSummandsSemigroup(F, Boundaries => false)
-
+   socleSummandsSemigroup(F, Boundaries => true)   
 ///
 
 
 -* Test section *-
 TEST///
-elapsedTime L = netList for i from 1 to 6 list(
+elapsedTime netList (L = for i from 1 to 5 list(
 I = summandExamples#i;
 socleSummandsSemigroup(I,7)
-)
-assert (L == {{0}, {0,2,3}, {0,3,4,5}, {0,4,5,6,7}})
-///
-TEST///
-S = ZZ/101[x,y,u
+))
+assert (L == {{0}, {0,2,3}, {0,3,4,5}, {0,4,5,6,7}, {0,4,6,7}})
 ///
 
 end--
@@ -405,7 +460,7 @@ uninstallPackage "SocleSummands"
 restart
 installPackage "SocleSummands"
 loadPackage("SocleSummands", Reload => true)
-
+check "SocleSummands"
 restart
 needsPackage "DGAlgebras"
 needsPackage "MonomialOrbits"
@@ -505,3 +560,19 @@ S = ZZ/101[a..c]
 code methods toLis
 orbitRepresentatives(S,{0,3})
 
+k = ZZ/32003
+S = k[x,y,z,u,v,w]
+a = 7
+use S
+I = trim ideal (x^2,x*y,y*z,z^2,z*u,u^2,u*v,v*w,w^2,
+x*z+a*z*w-u*w,z*w+x*u+(a-2)*u*w)
+betti res I
+elapsedTime socleSummandsSemigroup(I, 8)
+
+--$x^2,xy,yz,z^2,zu,u^2,uv,$ $vw,w^2$ and the two quadratic polynomials
+--$xz+\alpha zw-uw$  and $zw+xu+(\alpha-2)uw$. In this
+
+
+R = S/I
+betti res (coker vars R, LengthLimit => 8, DegreeLimit => 4)
+sparseSpecialization
