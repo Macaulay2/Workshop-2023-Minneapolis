@@ -112,7 +112,7 @@ eulerMF = f -> (koszulMFf(ideal jacobian f , f))
 end--
 
 restart
-needs "shift.m2"
+needs "MF_functions.m2"
 
 --tests
 
