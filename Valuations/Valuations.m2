@@ -374,6 +374,18 @@ assert(val(x) > val(y^2))
 
 end
 
-uninstallPackage("Valuations")
-installPackage("Valuations")
-check Valuations
+
+--------------------------------------------------------------------------------
+-------------------------------- Dev Functions ---------------------------------
+--------------------------------------------------------------------------------
+
+buildPackage = x ->(
+    uninstallPackage("Valuations");
+    installPackage("Valuations", RunExamples => false);
+    )
+
+testPackage = x -> (
+    uninstallPackage("Valuations");
+    installPackage("Valuations");
+    check Valuations;
+    )
