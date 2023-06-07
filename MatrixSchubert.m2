@@ -61,7 +61,8 @@ export{
     "matrixSchubertRegWPS",
     "lengthIncrSubset",
     "isASMIdeal",
-    "isSchubertCM"
+    "isSchubertCM",
+    "ASMFullList"
     }
     
 ------------------------------------------------------------------------------
@@ -73,6 +74,7 @@ load "./MatrixSchubert/Code/helpers.m2"
 load "./MatrixSchubert/Code/permutationMethods.m2"
 load "./MatrixSchubert/Code/MatrixSchubertConstructions.m2"
 load "./MatrixSchubert/Code/MatrixSchubertInvariants.m2"
+load "./MatrixSchubert/Code/lists.m2"
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 -- **DOCUMENTATION** --
