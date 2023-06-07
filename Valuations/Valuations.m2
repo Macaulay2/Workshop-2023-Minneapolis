@@ -273,11 +273,14 @@ doc ///
 
 doc ///
      Key
-        "lowestTermValuation"
+        lowestTermValuation
+        (lowestTermValuation, PolynomialRing)
      Headline
         The valuation which returns the lowest term of an element of an ordered ring
      Usage
          v = lowestTermValuation
+     Inputs
+         R:PolynomialRing
      Outputs
          v:Valuation
              the lowest term valuation
