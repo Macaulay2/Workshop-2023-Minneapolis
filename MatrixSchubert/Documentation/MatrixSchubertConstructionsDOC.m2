@@ -238,3 +238,23 @@ doc ///
 	 essentialBoxes(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 
 ///
+
+
+doc ///
+    Key
+        subwordComplex
+        (subwordComplex, List)
+    Headline
+    	to find the subword complex associated to w (i.e. SR-ideal of antiDiagInit)
+    Usage
+    	subwordComplex(w)
+    Inputs
+    	w:List
+    Description
+    	Text
+	    Given a permutation in 1-line notation, compute the subword complex associated to w (i.e. SR-ideal of antiDiagInit).
+	Example
+	    subwordComplex({2,5,4,1,3})
+
+	    
+///           
