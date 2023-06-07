@@ -9,14 +9,16 @@ wittDecompGeneral (Matrix) := (ZZ,ZZ,Matrix) => (A)->(
     n=numRows(A);
     k:=ring A;
     D:=diagonalize(A);
-    nonZeroDVals := new MutableList;
-    for i from 0 to n-1 do (if (D_(i,i)!=0) then (append(nonZeroDVals,D_(i,i))));
-    dimReg:=length(toList nonZeroDVals) ;
-    regPart := mutableMatrix matrix(toList(dimReg:toList(dimReg:0/1)));
-    for i from 0 to dimReg-1 do (regPart_(i,i)=nonZeroDVals_i);
-    regWittDecomp := wittDecomp(regPart);
-    return (n-dimReg, regWittDecomp_0,regWittDecomp_1);
+    nonZeroDvals:=new MutableList from {};
+    for i from 0 to n-1 do (
+        if (D_(i,i)!=0) then (nonZeroDvals = append(nonZeroDvals,D_(i,i));)
+    );
+    dimReg:=#nonZeroDvals;
+    if dimReg!=0 then (
+        regPart := mutableMatrix matrix(toList(dimReg:toList(dimReg:0/1)));
+        for i from 0 to dimReg-1 do (regPart_(i,i)=nonZeroDvals#i);
+        regWittDecomp := wittDecomp(matrix regPart);
+        return (n-dimReg, regWittDecomp_0,regWittDecomp_1);
+    );
+    return (n,0,matrix{{}});
 )
-
-A=matrix{{0/1,0},{0,1}};
-print wittDecompGeneral(A);
