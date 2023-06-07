@@ -64,7 +64,8 @@ export{
     "ASM",
     "getASM",
     "isSchubertCM",
-    "ASMFullList"
+    "ASMFullList",
+    "cohenMacaulayASMsList"
     }
     
 ------------------------------------------------------------------------------
