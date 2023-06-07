@@ -168,15 +168,26 @@ generatingRoot FModule := GeneratingMorphism => ( cacheValue symbol generatingRo
 (
     g := MM#generatingMorphism;
     K := ker g;
-    if K == 0  then return g;
+    if K == 0  then 
+    (    
+        if debugLevel > 1 then 
+            print "generatingRoot: generating morphism is already injective"; 
+        return g
+    );
     M = source g;
     g1 := (FF g)*g;
     K1 :=  ker g1;
+    counter := 1;
+    if debugLevel > 1 then 
+        print "generatingRoot: computed kernel "; --  | ( toString counter );
     while K1 != K do
     (
         K = K1;
         g1 = (FF g1)*g;
-        K1 = ker g1
+        K1 = ker g1;
+        counter = counter + 1;
+        if debugLevel > 1 then 
+            print "generatingRoot: computed kernel " -- | ( toString counter )
     );   
     generatingMorphism map( FF( M/K ), M/K, matrix g )
 ))
@@ -199,6 +210,26 @@ cohomDim Ideal := ZZ => I ->
     while localCohomology(n,I,R)==0 do (n=n-1);
     n
 )
+
+----------------------------------------------------------------------------------------------
+-- Generating random generating morphisms and FModules
+----------------------------------------------------------------------------------------------
+
+randomGeneratingMorphism = method( Options=> { Degree => 1 } )
+
+-- produces a random generating morphism M --> F(M)
+randomGeneratingMorphism ModuleClass := generatingMorphism => o -> M ->
+(
+    H := Hom( M, FF M );
+    n := numgens H;
+    d := o.Degree;
+    H = toList apply( n, i -> homomorphism H_{i} );
+    R := ring M;
+    coeff := flatten entries random( R^{n:d}, R^{d} );    
+    generatingMorphism sum( coeff, H, ( x, y ) -> x*y )    
+)
+
+----------------------------------------------------------------------------------------------
 
 --- I-filter regular sequences ---
 isFilterRegElement = method()
