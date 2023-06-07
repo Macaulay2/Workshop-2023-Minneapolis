@@ -138,29 +138,20 @@ isVexillary List := Boolean => (perm) -> (
 
 rajCode = method()
 rajCode List := ZZ => (w) -> (
-
+    
     if not (isPerm w) then error ("Expecting a permutation.");
-   
+    
     rajCodeVec := {};
-    for k from 0 to #w-2 do (
-	maxLengthIncr := 1;
-	fVal := w_k;
-	subPerm := w_{k+1..#w-1};
-	for l in delete({},subsets(subPerm)) do (
-	    testPerm := {fVal} | l;
-	    maxLengthIncr = max(maxLengthIncr,lengthIncrSubset(testPerm));
-	);
-    	
-	rajCodeVec = append(rajCodeVec,(#subPerm+1 - maxLengthIncr));
+    for k from 0 to #w-1 do (
+    	rajCodeVec = append(rajCodeVec,(#w-k) - longestIncrSeqRec(w_k,1,w_{k+1..#w-1}));
     );
-    rajCodeVec = append(rajCodeVec,0);
     return rajCodeVec;
 );
-
 
 ------------------------------------------
 --INPUT: rajIndex, takes a permutation in one line notation
 --OUTPUT: returns the rajIndex of the permutation
+--TO DO: document
 ------------------------------------------
 rajIndex = method()
 rajIndex List := ZZ => (w) -> (
@@ -171,35 +162,14 @@ rajIndex List := ZZ => (w) -> (
     
 );
 
-------------------------------------------
---INPUT: lengthIncrSeq, takes a permutation in one line notation
---OUTPUT: returns the length of the longest consecutive permutation
---        which starts at the beginning of the permutation
---TO DO: Thoroughly test and document
-------------------------------------------
-
-lengthIncrSubset = (w) -> (
-   
-   if (w == {}) then return 0;
-   
-   i := 1;
-   preVal := w_0;
-   for i from 1 to #w-1 do (
-       if (preVal > w_i) then return i;
-       preVal = w_i;
-   );
-   return #w;
-);
-
 
 ------------------------------------------
---INPUT: longestIncrSeqRec, takes a permutation in one line notation
---OUTPUT: returns the length of the longest consecutive permutation
---        which starts at the beginning of the permutation
---TO DO: Thoroughly test and document
+--INPUT: longestIncrSeqRec, takes a previous value, a previous size, and a permutation in one line notation
+--OUTPUT: returns the length of the longest consecutive permutation plus the previous size
+--        that starts at the beginning of the permutation and has the elements of the sequence larger than the previous value
+--TO DO: Document
 ------------------------------------------
-longestIncrSeqRec = method()
-longestIncrSeqRec (ZZ,ZZ,List) := ZZ => (preVal,prevSZ,w) -> (
+longestIncrSeq = (preVal,prevSZ,w) -> (
     
     if w == {} then return prevSZ;
     
@@ -218,25 +188,8 @@ longestIncrSeqRec (ZZ,ZZ,List) := ZZ => (preVal,prevSZ,w) -> (
     return longestSZ;
 );
 
-
-longestIncrSeqRec = memoize longestIncrSeqRec ;
-
-
-------------------------------------------
---INPUT: rajCode, takes a permutation in one line notation
---OUTPUT: returns the rajCode of the permutation
-------------------------------------------
+longestIncrSeq = memoize longestIncrSeq ;
 
 
-rajCodeRec = method()
-rajCodeRec List := ZZ => (w) -> (
-    
-    if not (isPerm w) then error ("Expecting a permutation.");
-    
-    rajCodeVec := {};
-    for k from 0 to #w-1 do (
-    	rajCodeVec = append(rajCodeVec,(#w-k) - longestIncrSeqRec(w_k,1,w_{k+1..#w-1}));
-    );
-    return rajCodeVec;
-);
+
 

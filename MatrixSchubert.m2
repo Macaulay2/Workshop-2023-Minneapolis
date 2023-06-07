@@ -57,16 +57,13 @@ export{
     "schubertCodim",
     "matrixSchubertRegADI",
     "matrixSchubertRegWPS",
-    "lengthIncrSubset",
     "isASMIdeal",
     "ASM",
     "getASM",
     "isSchubertCM",
     "ASMFullList",
     "cohenMacaulayASMsList",
-    "nonCohenMacaulayASMsList",
-    "longestIncrSeqRec",
-    "rajCodeRec"
+    "nonCohenMacaulayASMsList"
     }
     
 ------------------------------------------------------------------------------
