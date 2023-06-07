@@ -75,7 +75,7 @@ internalValuation (Function, Thing, Thing) := (v, S, T) -> (
     )
 
 Valuation Thing := (v,t) -> (
-    if (v.domain === null) or (ring t) === ambient v.domain then
+    if (v.domain === null) or (ring t) === v.domain then
     -- Concerns with comparing things like ZZ and QQ
     -- Concerns with subrings and local rings, will need testing.
     v.function t
