@@ -281,9 +281,76 @@ factor GCExpression := o -> g -> (
     apply(toList F, fi -> (fi#0^(fi#1))_G)
     )
 
-matrix (AbstractGCRing, List) := o -> (G, L) -> (
+GCMatrix = new Type of HashTable
+
+matrix (AbstractGCRing, List) := o -> (B, L) -> (
     listM := for i from 0 to (#L-1) list(apply(L#i, t-> t#RingElement));
-    matrix listM)
+    new GCMatrix from {matrix => matrix listM, bracketRing => B }
+    )
+
+net GCMatrix := M -> (
+    L := entries  M#matrix;
+    B := M#bracketRing;
+    T := applyTable(L, t->t_B);
+    netList(toList T,HorizontalSpace=>1, Boxes=>{false,{0, length T_0}}))
+
+GCMatrix + GCMatrix := (M1, M2) -> (
+    B := M1#bracketRing;
+    M:=M1#matrix + M2#matrix;
+    new GCMatrix from {matrix => M, bracketRing => B}
+    )
+
+GCMatrix * GCMatrix := (M1, M2) -> (
+    B := M1#bracketRing;
+    M:=M1#matrix *  M2#matrix;
+    new GCMatrix from {matrix => M, bracketRing => B}
+    )
+
+RingElement * GCMatrix := (r, M) -> (
+    new GCMatrix from {matrix => (r * M#matrix), bracketRing => M#bracketRing})
+
+GCMatrix * RingElement := (M, r) -> (
+    new GCMatrix from {matrix => (r * M#matrix), bracketRing => M#bracketRing})
+
+det GCMatrix := o -> M -> (det M#matrix)_(M#bracketRing)
+
+GCExpression * GCMatrix := (e, M) -> (
+    mat := M#matrix;
+    r := e#RingElement;
+    new GCMatrix from {matrix => r*mat, bracketRing => M#bracketRing}
+    )
+
+GCMatrix * GCExpression := (M, e) -> (
+    mat := M#matrix;
+    r := e#RingElement;
+    new GCMatrix from {matrix => r*mat, bracketRing => M#bracketRing}
+    )
+
+transpose GCMatrix := M -> (
+    new GCMatrix from {matrix => transpose M#matrix, bracketRing => M#bracketRing}
+    )
+
+GCMatrix_ZZ := (M, n) -> (
+    new GCMatrix from {matrix =>matrix(M#matrix)_n, bracketRing => M#bracketRing}
+    )
+
+GCMatrix^ZZ := (M, n) -> (
+    new GCMatrix from {matrix =>matrix(M#matrix)^n, bracketRing => M#bracketRing}
+    )
+
+GCMatrix_List := (M, L) -> (
+    new GCMatrix from {matrix =>matrix(M#matrix)_L, bracketRing => M#bracketRing}
+    )
+ 
+ GCMatrix^List := (M, L) -> (
+    new GCMatrix from {matrix =>matrix(M#matrix)^L, bracketRing => M#bracketRing}
+    )
+
+entries GCMatrix := M -> (
+    L := entries  M#matrix;
+    B := M#bracketRing;
+    T := applyTable(L, t->t_B))
+ 
 
 -* Documentation section *-
 beginDocumentation()
