@@ -315,7 +315,7 @@ Description
    F = res (coker vars R, LengthLimit =>6)
    betti F
 References
-  Unpublished paper by Jan-Erik Roos. See announcement: J.E.Roos, Commutative non Koszul algebras
+ J.E.Roos, Commutative non Koszul algebras
   having a linear resolution of arbitrarily high order.
   Applications to torsion in loop space homology,
   C. R. Acad. Sci. Paris 316 (1993),1123-1128.
@@ -392,6 +392,13 @@ I=roosTable#68
 S=ring I
 assert(depth (S/I) == 1)
 ///
+
+TEST///
+I=roosIsotopes#"59va"
+F=res (ideal vars ((ring I)/I), LengthLimit => 6);
+assert(betti F == new BettiTally from {(0,{0},0) => 1, (1,{1},1) => 4, (2,{2},2) => 12, (3,{3},3) => 33, (4,{4},4) => 87, (5,{5},5) => 225, (6,{6},6) => 576, (6,{7},7) => 1})
+///
+
 
 TEST///
    R = almostKoszul(ZZ/32003, 2)
