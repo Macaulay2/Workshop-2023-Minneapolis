@@ -142,7 +142,7 @@ canonicalForm = method(Options => {Factor => false});
 
 canonicalForm Ideal := List => opts -> I -> (
     if isSquarefreePseudomonomialIdeal I==true then (
-    decomp := primaryDecomposition I;
+    decomp := primaryDecompositionPseudomonomial I;
     multipliedGens :=product(decomp, i->i);
     R := ring I;
     d :=numgens R;
@@ -280,7 +280,7 @@ document{
   TEX "A method which computes the canonical form of a given squarefree pseudomonomial ideal or neural code.",
   Usage => "canonicalForm(Ideal) or canonicalForm(NeuralCode)",
   Inputs => {"Squarefree pseudomonomial ideal or NeuralCode"},
-  Outputs => {"The canonical form"},
+  Outputs => {"A list of generators of the canonical form"},
   TEX "We compute an example",
   EXAMPLE lines ///
   C=neuralCode("000","001");
