@@ -108,6 +108,16 @@ ideal "x2,y2,z2,u2,xy,xz,xu,yz,yu,zu"
 new HashTable from for i from 1 to 83 list i => L#(i-1)
 )
 
+higherDepthIndices = splice {1..6, 8..10, 23, 26, 27, 50, 52, 68};
+depthZeroIndices = (lst = toList(1..83);
+     for i in higherDepthIndices do lst=delete(i,lst);
+     lst
+     )
+
+higherDepthTable = new HashTable from for i in higherDepthIndices list i=> (roosTable#i); 
+depthZeroTable = new HashTable from for i in depthZeroIndices list i=> (roosTable#i);
+
+
 onedimIrrationalPoincare = (degs1 := {18,24,25,26,28,30,33}; --this example is from froberg-roos 2000, lofwall-lundqvist-roos
     ker map(QQ[t], QQ[x_1 .. x_7, Degrees => degs1], apply(degs1, a -> t^a))
 )
@@ -115,8 +125,6 @@ onedimIrrationalPoincare = (degs1 := {18,24,25,26,28,30,33}; --this example is f
 twodimIrrationalPoincare = (degs2 := {{36,0}, {33,3}, {30,6}, {28,8}, {26,10}, {25,11}, {24,12}, {18,18}, {0,36}};
     ker map(QQ[t,s], QQ[x_1 .. x_9, Degrees => degs2], apply(degs2, a -> t^(a#0)*s^(a#1)))
     )
-
-
 
       -* Documentation section *-
       
@@ -141,7 +149,7 @@ Description
     roosTable
 ///
 doc ///
-
+///
 
 
 -* Test section *-
