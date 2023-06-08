@@ -318,6 +318,18 @@ polarizePseudomonomial = method();
 
 polarizePseudomonomial(RingElement) := P -> (
     if isPseudomonomial(P) == false then error "Expected input to be a Pseudomonomial";
+    st := sigmaTau(P);
+    sigma := st_0;
+    tau := st_1;
+    R := ring P;
+    d := numgens R;
+    x := getSymbol "x";
+    y := getSymbol "y";
+    S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
+    mon := 1;
+    for i in sigma do mon = mon*x_i;
+    for i in tau do mon = mon*y_i;
+    mon
     )
 
 
