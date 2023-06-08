@@ -33,24 +33,25 @@ ring SimplicialModule := Ring => C -> C.ring
 
 --H1 is the face maps, H2 is the degeneracy maps
 simplicialModule = method(Options => {Base=>0})
-simplicialModule(HashTable,HashTable,ZZ) := SimplicialModule => opts -> (H1,H2,d) -> (
+simplicialModule(Complex,HashTable,HashTable,ZZ) := SimplicialModule => opts -> (C,H1,H2,d) -> (
     spots := sort keys H1;
     if #spots === 0 then
       error "expected at least one map";
-    R := ring H1#(spots#0);
+    R := ring C;
     moduleList := new MutableHashTable;
-    for b in select(spots,l->l_2==0) do (
-	if not moduleList#?(b_0-1,b_1) then moduleList#(b_0-1,b_1) = target H1#(b_0,b_1,0);
+    for b to d do (
+	for k to length C do (
+	moduleList#(b,k) = directSum toList(binomial(b,k):C_k);
 	);
-    
+	);
     S := new SimplicialModule from {
 	symbol ring => R,
 	symbol topDegree => d,
 	symbol module => new HashTable from moduleList,
 	symbol cache => new CacheTable
 	};
-    S.dd = map(S,S,maps_0,Degree=>-1);
-    S.ss = map(S,S,maps_1,Degree=>1);
+    S.dd = map(S,S,H1,Degree=>-1);
+    S.ss = map(S,S,H2,Degree=>1);
     S
     )
 
@@ -63,20 +64,18 @@ simplicialModule(Complex,ZZ) := SimplicialModule => opts -> (C,d) -> (
 	 degenmapHash := hashTable flatten flatten for n from 1 to d list (
 	     for k from 0 to n list (
 		 for i from 0 to n list (
-		     (n,k,i) => --placeholder for degeneracy maps
+		     (n,i) => --placeholder for degen maps output
 		     );
 		 );
 	     );
-	 facemapHash1 := hashTable flatten flatten for n from 1 to d list (
+	 facemapHash := hashTable flatten flatten for n from 1 to d list (
 	     for k from 0 to n list (
-		 for i from 1 to n list (
-		     (n,k,i) => --placeholder for face maps
+		 for i from 0 to n list (
+		     (n,i) => --placeholder for face maps output
 		     );
 		 );
 	     );
-	 facemapHash2 := hashTable flatten for n from 1 to d list (
-	     (n,0) => --placeholder for 0th face map
-	 return simplicialModule(MapHash,d)
+	 return simplicialModule(C,facemapHash,degenmapHash,d)
 	 );
      )
  
@@ -164,8 +163,8 @@ map(SimplicialModule, SimplicialModule, List) := SimplicialModuleMap => opts -> 
     -- Check: it is a table of ComplexMap
     R := ring tar;
     if R =!= ring src then error "expected complexes over the same ring";
-    if not isTable maps then error "expected a table of ComplexMaps";
-    -- check: all entries which are ComplexMaps have the same homological degree
+    if not isTable maps then error "expected a table of SimplicialModuleMaps";
+    -- check: all entries which are SimplicialModuleMaps have the same homological degree
     deg := if opts.Degree === null 
            then null
            else if instance(opts.Degree, ZZ) then 
@@ -181,7 +180,7 @@ map(SimplicialModule, SimplicialModule, List) := SimplicialModuleMap => opts -> 
     if deg === null then deg = (if #degs == 1 then degs#0 else 0);
     -- At this point, we need to create (block) matrices for each component of the complex.
     mapHash = hashTable for i from lo to hi list i => (
-        newmaps := applyTable(maps, f -> if instance(f,ZZdFactorizationMap) then f_i else f);
+        newmaps := applyTable(maps, f -> if instance(f,SimplicialModuleMap) then f_i else f);
         h := map(tar_(i+deg), src_i, matrix newmaps);
         if h == 0 then continue else h
         );
