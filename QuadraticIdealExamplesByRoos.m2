@@ -20,7 +20,7 @@ export {
 
 
 roosTable = (S = ZZ/101[x,y,z,u];
-L = {
+L= {
 sub(ideal "0",S),
 ideal "x2",
 ideal "x2, y2",
@@ -117,13 +117,16 @@ depthZeroIndices = (lst = toList(1..83);
 higherDepthTable = new HashTable from for i in higherDepthIndices list i=> (roosTable#i); 
 depthZeroTable = new HashTable from for i in depthZeroIndices list i=> (roosTable#i);
 
+---TO DO: write function that outputs the depth zero ones, as described in the tables
+
+----need to export and document the following two functions
 
 onedimIrrationalPoincare = (degs1 := {18,24,25,26,28,30,33}; --this example is from froberg-roos 2000, lofwall-lundqvist-roos
-    ker map(QQ[t], QQ[x_1 .. x_7, Degrees => degs1], apply(degs1, a -> t^a))
+    ker map(QQ[t], QQ[w_1 .. w_7, Degrees => degs1], apply(degs1, a -> t^a))
 )
 
 twodimIrrationalPoincare = (degs2 := {{36,0}, {33,3}, {30,6}, {28,8}, {26,10}, {25,11}, {24,12}, {18,18}, {0,36}};
-    ker map(QQ[t,s], QQ[x_1 .. x_9, Degrees => degs2], apply(degs2, a -> t^(a#0)*s^(a#1)))
+    ker map(QQ[t,s], QQ[w_1 .. w_9, Degrees => degs2], apply(degs2, a -> t^(a#0)*s^(a#1)))
     )
 
       -* Documentation section *-
@@ -147,8 +150,6 @@ Description
     quadratic ideals of embedding dimension four in characteristic zero.
   Example
     roosTable
-///
-doc ///
 ///
 
 
