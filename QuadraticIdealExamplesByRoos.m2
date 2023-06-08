@@ -174,7 +174,12 @@ doc ///
 Key
  "QuadraticIdealExamplesByRoos"
 Headline
- "Examples of Quadratic Ideals with Embedding Dimension Four by Jan-Erik Roos"
+ Examples of Quadratic Ideals with Embedding Dimension Four by Jan-Erik Roos
+Description
+  Text
+    Quadratic ideals based on Main Theorem and Tables in "Homological properties of the homology algebra 
+    of the Koszul complex of a local ring: Examples and questions" by Jan-Erik Roos, 
+    Journal of Algebra 465 (2016) 399-436.
 Subnodes
  "roosTable"
  "higherDepthTable"
@@ -295,4 +300,4 @@ H5 = new HashTable from {42 => H0#42, 34 => H0#34, 55 => H0#55, 60 => H0#60}
 elapsedTime applyPairs(H5, (i,I) -> (i, socleSummandsSemigroup(I,9)))
 
 
-
+---68,78,81 have different socle summand semigroups than their isotopes
