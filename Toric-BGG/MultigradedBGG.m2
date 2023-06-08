@@ -150,6 +150,8 @@ toricRR(Module,List) := (N,LL) ->(
     	)
     )
 
+
+
 TEST ///
 restart
 loadPackage "NormalToricVarieties"
@@ -158,6 +160,14 @@ S = ring hirzebruchSurface 3
 M = coker matrix{{x_0}}
 LL = {{0,0}, {1,0}}
 toricRR(M, LL)
+
+S = ring weightedProjectiveSpace {1,1,1}
+N = coker map(S^1, (S^{-2})^3, matrix{{x_0^2, x_1^2, x_2^2}})
+isHomogeneous N
+M = coker map(N**(S^{1}) ++ N**(S^{2}), N^1, matrix {{x_0}, {x_1*x_2}})
+isHomogeneous M
+basis M
+toricRR(M, {-2,-1, 0,1})
 
 X = weightedProjectiveSpace {1,1,2}
 S = ring X
@@ -224,6 +234,7 @@ actualdifferential = map(E^-{{-1, 2, 5}, {0, 2, 5}, {0, 2, 5}, {-4, 3, 5}, {-1, 
 assert(RM.dd_0 == actualdifferential)
 ///
 
+
 --I think toricLL doesn't work and needs to be debugged.
 toricLL = method();
 --Input: N a (multi)-graded E-module.
@@ -241,7 +252,8 @@ toricLL(Module) := (N) ->(
     inds := new HashTable from apply(homDegs, i-> i=> select(#b, j-> last(b#j) == i));
     sBasis := new HashTable from apply(homDegs, i-> i => (bb)_(inds#i));
     FF := new HashTable from apply(homDegs, i ->(
-	    i => S^(apply((degrees sBasis#i)_1, j-> drop(j,-1)))
+	    --i => S^(apply((degrees sBasis#i)_1, j-> drop(j,-1)))
+	    i => S^(apply((degrees sBasis#i)_1, j-> -drop(j,-1)))
 	    )
 	);
     relationsN := presentation N;
@@ -250,9 +262,13 @@ toricLL(Module) := (N) ->(
     --why is this overwriting the definition of e_i?
     tr := sum(dim S, i-> SE_i*SE_(dim S+i));
     f0 := gens image basis(N);
+    f0 = f0 % relationsN;
     newf0 := sub(f0,SE)*tr;
-    relationsMinSE := sub(relationsN,SE);
-    newf0 = newf0 % relationsMinSE;
+    relationsNinSE := sub(relationsN,SE);
+    newf0 = newf0 % relationsNinSE;
+    --newf0 := sub(f0,SE)*tr;
+    --relationsNinSE := sub(relationsN,SE);
+    --newf0 = newf0 % relationsNinSE;
     newg := matrixContract(transpose sub(f0,SE),newf0);
     g' := sub(newg,S);
     --Now we have to pick up pieces of g' and put them in the right homological degree.
@@ -261,7 +277,8 @@ toricLL(Module) := (N) ->(
     --if #homDegs == 1 then chainComplex map(FF#0,S^0,0) else (
     	--dual(chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1),transpose g'_(inds#(i))^(inds#(i+1))))[-homDegs#0])
     	--dual(chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), g'_(inds#(i+1))^(inds#(i))))[-homDegs#0])
-    	dual(chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^((homDegs#0)+1)*g'_(inds#(i+1))^(inds#(i))))[-homDegs#0])
+    	--dual(chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^((homDegs#0)+1)*g'_(inds#(i+1))^(inds#(i))))[-homDegs#0])
+	chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^(homDegs#0)*g'_(inds#(i+1))^(inds#(i))))[-homDegs#0]
 	)
     )
 
@@ -271,16 +288,52 @@ load "MultigradedBGG.m2"
 loadPackage "NormalToricVarieties"
 S = ring hirzebruchSurface 3;
 E = dualRingToric S;
+--silly rank 1 example
+toricLL(coker vars E)
+--applying LL to a rank 1 free module should give a Koszul complex (up to a degree twist)
+C1 = toricLL(E^1)
+isHomogeneous C1
+(C1.dd)^2 == 0
+C1.dd
+(dual C1).dd
+--how about a cyclic but non-free module:
+C2 = toricLL(coker matrix{{e_0, e_1}})
+isHomogeneous C2
+(C2.dd)^2 == 0
+C2.dd
+isHomogeneous oo
+--let's try it with a non-cyclic module
+S = ring weightedProjectiveSpace {1,1,1,1}
+E = dualRingToric S
+N = module ideal(e_0, e_1*e_3)
+presentation N
+C3 = toricLL(module ideal(e_0, e_1*e_3))
+isHomogeneous C3
+(C3.dd)^2 == 0
+C3.dd
+C3_(-1)
+
+N = coker matrix{{e_0, e_1}}
+C = toricLL(N)
+isHomogeneous oo
+(toricLL(N)).dd
+degrees C_0
+degrees C_1
+degrees C_2
+
+
+
 --rank 1 example
 toricLL(coker vars E)
+isHomogeneous oo
 --we should get the (twisted) Koszul complex when we input E
 N = E^1
 toricLL(E^1)
-oo.dd
-N = coker matrix{{e_0, e_1}}
-toricLL(N)
 isHomogeneous oo
-oo.dd
+
+
+
+
 N' = ker matrix{{e_1}, {e_2}, {e_3}}
 toricLL(N')
 N'' = coker presentation N'
