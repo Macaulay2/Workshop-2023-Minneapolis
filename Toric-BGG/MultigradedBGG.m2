@@ -58,6 +58,9 @@ exports {
     "unfold"
     }
 *-
+
+
+
 needsPackage "Polyhedra";
 load "DifferentialModules.m2";
 ---
@@ -96,7 +99,7 @@ dualRingToric PolynomialRing := opts -> S ->(
     	degs = apply(degrees S,d-> (-d)|{-1});
 	e := opts.SkewVariable;
     	ee := apply(#gens S, i-> e_i);
-    	return kk[ee,Degrees=>degs,SkewCommutative=>true]
+    	return kk[ee,Degrees=>degs,SkewCommutative=>true, MonomialOrder => Lex]
 	); 
     if isSkewCommutative S == true then(
     	degs = apply(degrees S, d-> drop(-d,-1));
@@ -158,14 +161,16 @@ M = coker matrix{{x_0}}
 LL = {{0,0}, {1,0}}
 RM = toricRR(M, LL)
 
-S = ring weightedProjectiveSpace {1,1,1}
-N = coker map(S^1, (S^{-2})^3, matrix{{x_0^2, x_1^2, x_2^2}})
-assert isHomogeneous N
-M = coker map(N**(S^{1}) ++ N**(S^{2}), N^1, matrix {{x_0}, {x_1*x_2}})
-assert isHomogeneous M
-basis M
-toricRR(M, {-2,-1, 0,1})
+S = ring weightedProjectiveSpace {1,1,1,1}
+N = coker map(S^1, (S^{-2})^4, matrix{{x_0^2, x_1^2, x_2^2, x_3^2}})
+isHomogeneous N
+M = coker map(N**(S^{2}) ++ N**(S^{1}), N**(S^{1}) ++ N ++ N ++ N, matrix {{x_0, 0, 0, x_1*x_3}, {0, x_3, x_1, -x_0}})
+isHomogeneous M
 
+basis M
+LL = {-2,-1, 0,1}
+toricRR(M, {-2,-1, 0,1})
+oo.dd
 X = weightedProjectiveSpace {1,1,2}
 S = ring X
 M = coker matrix{{x_0, x_1^2, x_2}}
@@ -192,6 +197,7 @@ F.dd_1
 assert(D.dd^2 == 0)
 assert(isHomogeneous D)
 ///
+
 
 TEST ///
 restart
@@ -260,6 +266,30 @@ toricLL Module := N -> (
 	)
     )
 
+stronglyLinearStrand = method();
+stronglyLinearStrand Module := M -> (
+S := ring M;
+h := heft S;
+if h === null then error("--ring M does not have heft vector");
+if not same degrees M then error("--M needs to be generated in same degree");
+degM := first degrees M;
+degrange := unique prepend(degM, apply(degrees S, d -> d - degM));
+RM := toricRR(M,degrange);
+mat := RM.dd_0;
+cols := positions(degrees source mat, x -> drop(x,-1) == degM);
+N := ker mat_cols;
+toricLL ker mat_cols
+)
+
+TEST///
+restart
+load "MultigradedBGG.m2"
+loadPackage "NormalToricVarieties"
+S = ring hirzebruchSurface 3;
+M = coker vars S;
+stronglyLinearStrand(M)
+///
+
 TEST///
 restart
 load "MultigradedBGG.m2"
@@ -272,7 +302,6 @@ C3 = toricLL(module ideal(e_0, e_1*e_3))
 C3.dd
 C4 = toricLL(module ideal(e_2, e_1*e_3))
 C4.dd
-
 
 --silly rank 1 example
 toricLL(coker vars E)
