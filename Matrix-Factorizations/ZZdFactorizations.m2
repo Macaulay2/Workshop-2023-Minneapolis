@@ -396,13 +396,13 @@ Matrix ** ZZdFactorization := ZZdFactorizationMap => (f, C) -> (
     )
 
 ZZdFactorization ** Ring := ZZdFactorization => (C,R) -> (
-    (lo,hi) := (0,C.period-1);
+    (lo,hi) := (0,C.period);
     moduleHash := hashTable for i from lo to hi list i => C_i ** R;
     if lo === hi then 
         return complex(moduleHash#lo, Base=>lo);
-    mapHash := hashTable for i from lo+1 to hi+1 list i => 
+    mapHash := hashTable for i from lo+1 to hi list i => 
         map(moduleHash#(i-1), moduleHash#i, (cover dd^C_i) ** R);
-    complex mapHash
+    ZZdfactorization mapHash
     )
 Ring ** ZZdFactorization := ZZdFactorization => (R,C) -> C ** R
 
