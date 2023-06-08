@@ -65,7 +65,8 @@ export{
     "cohenMacaulayASMsList",
     "nonCohenMacaulayASMsList",
     "lastDescent",
-    "firstDescent"
+    "firstDescent",
+    "indexOfVariable" -- todo, figure out a way to test this without exporting it
     }
     
 ------------------------------------------------------------------------------
