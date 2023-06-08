@@ -16,24 +16,52 @@ entryCalculator = (mu,j) -> (
 
 ABuilder = (n,k) -> table(sort compositions(k+1,n-k),0..n,entryCalculator)
 
-RowOfId = (n,l) -> splice {l:0,1,(n-1-l):0}    
+rowOfId = (n,l) -> splice {l:0,1,(n-1-l):0}    
 
-FaceMap = (n,k,i) -> (
+-* Not working yet
+faceMapCase0 = (n,len) -> (
+    -- If bounded => true then do this
+    -- TODO implement option toggle for bounded complexes
+    topDeg = sum(len+1,i->binomial(n,i));
+    offset = 0 -- keeps track of where we are
+    for k to len list (
+    -- First loop over the vertical strips of columns
+    -- Create appropriately sized 
+	for row to topDeg-1 list (
+	-- for fixed k, loop over the rows of the matrix
+    	    	effectiveRow = row-offset;
+		if effectiveRow<binomial(n,k) then splice {row:0,2,(binomial(n,k)-1-row):0}
+    	    	-- Put in symbol for differential
+		else if (condition) then splice {row:0,1, (binomial(n,k)-1-row):0}
+    	    	-- Put in symbol for identity
+		else 
+		-- put in zeros
+    )
+*-
+
+faceMapCasen = (n,k) -> (
+    Abigvector = apply(ABuilder(n,k), row->row_n);
+    Asmallvector = apply(ABuilder(n-1,k), row->row_(n-1));
+    onePos = positions(Abigvector, i -> i==1);
+    outputMat = onePos / (l -> rowOfId(binomial(n,k),l))
+    )
+ 
+faceMapCase1 = (n,k,i) -> (
     Abigvector = apply(ABuilder(n,k), row->row_i);
     Asmallvector = apply(ABuilder(n-1,k), row->row_(i-1));
-    myIndices = 0..(binomial(n,k)-1);
-    filter = partition(myInd -> Abigvector#myInd,myIndices);
-    outputMat = new MutableList from filter#0 / (l -> rowOfId(binomial(n,k),l));
+    zeroPos = positions(Abigvector, i -> i==0);
+    onePos = positions(Abigvector, i -> i==1);
+    outputMat = new MutableList from zeroPos / (l -> rowOfId(binomial(n,k),l));
     sumPositions = positions(Asmallvector, i->i>=1);
     for l to #sumPositions-1 do (
 	myIndex = sumPositions_l;
-	outputMat#myIndex = outputMat#myIndex + (rowOfId(binomial(n,k),(filter#1)#l));
+	outputMat#myIndex = outputMat#myIndex + (rowOfId(binomial(n,k),onePos#l));
     );
     toList outputMat
 )
 
    
-DegenMap = (n, k, i) -> (
+degenMap = (n, k, i) -> (
     idSize = binomial(n-1,k);
     zeroes = new List from (binomial(n-1,k)) : 0;
     A = ABuilder(n,k);
