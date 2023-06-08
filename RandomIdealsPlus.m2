@@ -5,11 +5,12 @@ newPackage(
 	 AuxiliaryFiles => false,
          Authors => {{ Name => "", Email => "", HomePage => ""}},
 	 Headline => "Creating random ideals for experiments",
-	 PackageExports => {"DGAlgebras", "RandomIdeals"},
+	 PackageExports => {"DGAlgebras", "RandomIdeals", "MonomialOrbits"},
          DebuggingMode => false )
 export {
     "mixedIdeal",
-    "mixedIdealList"
+    "mixedIdealList",
+    "randomMonomialIdealHilbertFunction"
 }
 
 -* Code section *-
@@ -27,6 +28,14 @@ mixedIdealList(Ring, ZZ, List, List) := List => (A, Num, Bdegs, Mdegs) -> (
     for i from 1 to Num list (
 	trim(randomBinomialIdeal(Bdegs,A)+randomMonomialIdeal(Mdegs,A))
 	)
+    )
+
+randomMonomialIdealHilbertFunction = method()
+randomMonomialIdealHilbertFunction (Ring, List) := MonomialIdeal => (S, hf) -> (
+    idealsL := hilbertRepresentatives(S, hf);
+    ranN := random(0,#hf-1);
+    I := idealsL#ranN;
+    I + ((ideal vars  S)^(#hf + 1))
     )
 
 
@@ -94,6 +103,28 @@ Description
     I = mixedIdealList(R,3,Blist, Mlist)
 ///
 
+doc ///
+Key
+  randomMonomialIdealHilbertFunction
+Headline
+ Gives a random Artin monomial ideal with a given Hilbert function.
+Usage
+  I  = randomMonomialIdealHilbertFunction(S,hf)
+Inputs
+ S: Ring
+ hf: List
+Outputs
+ I: MonomialIdeal
+Description
+  Text
+    This function provides a random monomial ideal given a specified Hilbert function $\text{HF}$  in the
+    form of a list $\{\text{HF}(1),\ldots,\text{HF}(d)\}$. It is assumed that $\text{HF}(n)=0$ for
+    $n>d$.
+  Example
+    S = ZZ/101[a,b,c,d]
+    hf = {4,7,10}
+    I = randomMonomialIdealHilbertFunction(S, hf)
+///
 
 
 
