@@ -289,34 +289,3 @@ elapsedTime applyPairs(H5, (i,I) -> (i, socleSummandsSemigroup(I,9)))
 
 
 
-
----isotopes:
-restart
-
-roosIsotopes = (
-    S = QQ[x,y,z,u];
-    L = {
-	"46va" => ideal "xz + u2, xy,xu,x2,zu + y2 + z2", ---46va
-        "57v2" => ideal "x2+y2+z2,xy,xu,yz,zu,xz+u2", ----57v2
-        "59va" => ideal "x2-y2,xy,yz,zu,xz+u2,xu", ----59va
-        "62va" => ideal "x2+yz+u2,yu,zu,xy,z2,xu", ---62va
-        "63v4" => ideal "y2,xz+yu,zu,xy,z2,xu", ---63v4
-        "63v8" => ideal "x2,xy,xu,yu,z2,xz+u2,y2+z2+zu",------63v8
-        "63ne" => ideal "x2,xy,xz+u2,xu,y2+z2,zu", ----63ne
-        "66v5" => ideal "xy,xz+u2,xu,yu,zu,z2",----66v5
-        "68v" => ideal "x2,xy,xz,xu,u2,y2+z2+zu",----68v
-        "71v16" => ideal "x2,y2+z2,xy,yz,zu,xz+u2,xu", ----71v16
-        "71v4" => ideal "x2+u2,xy,xu,y2,yz,z2,zu",----71v4
-        "71v7" => ideal "x2,y2,z2,xz+u2,xu,yz,zu",----71v7
-        "71v5" => ideal "x2+xy,x2+yz,xy+y2,z2,z2,xu,zu,xz+u2",---71v5
-        "72v1" => ideal "xu+u2,x2+xy,y2+xu,y2+yz,y2+yz,yu+zu,z2+xu,zu+u2",---72v1
-        "72v2e" => ideal "yz,x2+xy,xz+yu,xu,z2,zu,x2+u2", ---72v2e
-        "75v1" => ideal "y2,xz,yz+xu,z2,yu,zu,u2",----75v1
-        "75v2" => ideal "xy,xz+u2,xu,yz+u2,yu,zu,z2",---75v2
-        "78v1" => ideal "x2,y2,z2,u2,xy,xz,xu,yu",----78v1
-        "78v2e" => ideal "xu,yu+xz,yz,x2,y2,z2+xy,u2,zu", ---78v2e
-        "78v3v" => ideal "xu,yu+xz,yz,x2,y2,z2+xz,u2,zu",----78v3v
-        "81va" => ideal "x2,y2,z2,u2,xy,xz,xu,yu,zu"---81va
-        };
-    new HashTable from L
-    )
