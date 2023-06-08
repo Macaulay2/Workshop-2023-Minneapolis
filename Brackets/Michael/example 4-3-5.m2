@@ -101,6 +101,13 @@ toBrackets(List) := (sequenceList) -> (
 )
 *-
 ----------------------------------------------------------------
+
+G[u,v][x,y]
+
+
+
+
+----------------------------------------------------------------
 -- grassmann method for computing GCalgebra 
 G37 = Grassmannian(3,7) --ideal of Pluecker relations
 
