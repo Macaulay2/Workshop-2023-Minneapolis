@@ -309,7 +309,7 @@ doc ///
     Headline
     	to find the ASM associated to a given rank table
     Usage
-    	rankTableToASM(M)
+    	rankTableToASM M
     Inputs
     	M:Matrix
     Description
@@ -322,3 +322,22 @@ doc ///
 	    rankTableToASM(B)
    
 ///           
+
+doc ///
+    Key
+        rankTableFromMatrix
+        (rankTableFromMatrix, Matrix)
+    Headline
+    	to find the minimal rank table which is associated to a unique ASM, given a square integer matrix
+    Usage
+    	rankTableFromMatrix M
+    Inputs
+    	M:Matrix
+    Description
+    	Text
+	    	Given a square integer matrix, return the associated valid minimal rank table which is associated to a unique ASM.
+	Example
+	    A = matrix {{1,0,0},{0,23,24},{23,24,25}}
+	    rankTableToASM(A)
+   
+///   
