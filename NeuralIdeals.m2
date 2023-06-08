@@ -247,13 +247,18 @@ canonicalCode = method();
 canonicalCode List := NeuralCode => L -> (
     R := ring L#0;
     d := numgens R;
-    codeList := allCodeWords(d);
-    for i in codeList list (
-	validCode := false;
-	for i in L do (
-	    
-	    )
-	)
+    allCodeList := allCodeWords(d);
+    codeList := for i in allCodeList list (
+	validCode := true;
+	for j in L do (
+	    if sub(j,matrix{apply(d,k->value(i#k))})=!= 0 then (
+		validCode = false;
+		break
+		);
+	    );
+	if validCode == true then i
+	);
+    neuralCode(codeList)
     )
 
 ----The following function is an internal function from the PseudomonomialPrimaryDecomposition package by Alan Veliz-Cuba
