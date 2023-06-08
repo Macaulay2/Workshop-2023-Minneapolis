@@ -320,7 +320,7 @@ randomElementInIdeal ( ZZ, RR, Ideal ) := RingElement => o -> ( deg, density, I 
     else sum random( toList( 1..deg ), I, Density => density )
 )
 
-randomFilterRegSeg = method( 
+randomFilterRegSeq = method( 
     Options => 
     { 
         Tries => infinity, 
@@ -329,7 +329,7 @@ randomFilterRegSeg = method(
     } 
 )
 
-randomFilterRegSeg ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) -> 
+randomFilterRegSeq ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) -> 
 (
     L := {};
     G := (trim I)_*;
@@ -355,8 +355,46 @@ randomFilterRegSeg ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) ->
     if #L < n then error "randomFilterRegSeg: could not find a sequence of the desired length; try increasing Tries or MaxDegree";
     L
 )
+
+randomFilterRegSeq (ZZ,Ideal,Ring):= List => o -> (n,I,R) ->
+(
+    randomFilterRegSeq(n,I,R^1);
+)
     
 
 
+----------------------------------------------------------------------------------------------
 
+-- generates limit closure and lower limit ideal
+
+
+ascendingIdealEquality = method( Options => {MaxTries => infinity})
+-----this function should eventually check to make sure the chain of ideals is ascending
+
+-----this function specifically finds the FIRST spot that we retain equlaity and returns
+-----the union of ideals up to that spot (equivalently the ideal at that spot)
+ascnedingIdealEquality (Function) := Ideal => o -> f ->
+(
+    i:=1;
+    isEqual = false;
+    while (not isEqual and i<o.MaxTries) do (
+	isEqual = (f(i)==f(i+1));
+	i=i+1;
+	);
+    if not isEqual then error "ascnedingIdealEquality: Reached maximum limit of tries.";
+    f(i)
+)
+
+limitClosure = method()
+limitClosure(BasicList) := Ideal => L ->
+(
+    ascnedingIdealEquality(j -> (ideal(apply(L,x->x^(p^j)):ideal(product(apply(L,x->x^(p^j-1))))))
+)
+
+lowerLimit = method()
+lowerLimit(BasicList) := Ideal => L ->
+(
+    LC:=limitClosure(drop(L,-1));
+    ascnedingIdealEquality( j -> ideal(LC:(L#(-1)^j)))
+)
     
