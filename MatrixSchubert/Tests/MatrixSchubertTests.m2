@@ -67,6 +67,21 @@ assert(schubertDetIdeal({1,3,2}) == ideal(z_(1,1)*z_(2,2)-z_(1,2)*z_(2,1)));
 *-
 
 TEST ///
+--variableIndex
+R = QQ[x_1..x_5]
+assert(indexOfVariable x_1 == 1)
+
+R = QQ[x_1..x_3,y_3..y_5]
+assert(indexOfVariable y_4 == 4)
+
+R = QQ[x_(1,1)..x_(4,4)]
+assert(indexOfVariable x_(2,3) == (2,3))
+
+R = QQ[x_{1,1}..x_{4,4}]
+assert(indexOfVariable x_{2,3} == {2,3})
+///
+
+TEST ///
 --composePerms
 assert(composePerms({2,3,4,1}, {4,3,2,1}) == {1,4,3,2})
 assert(composePerms({4,3,2,1}, {4,3,2,1}) == {1,2,3,4})

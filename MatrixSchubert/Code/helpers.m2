@@ -31,11 +31,17 @@ findIndices(List, List) := (L, Bs) -> (for ell in L list position(Bs, b -> (b ==
 --INPUT: an indexed variable
 --OUTPUT: the index of the variable
 --TODO: add docs and tests
+--SUGGESTION: (from Anton) `indexOfVariable = v -> ( i:= index v; last toList R.generatorSymbols#i )`  -- need `debug Core` to use `R.generatorSymbols`
+--SUGGESTION: (from Ayah) `(expression(x_1))#1`
+--SUGGESTION: (from Mahrud) `last baseName x_(1,2)`
 -----------------------------------
-variableIndex = method()
-variableIndex RingElement := Sequence => (elem) -> (
-    --convert to string, parse, and select index, convert back
-    value replace(".*_+", "", toString elem)
+indexOfVariable = method()
+indexOfVariable RingElement := Sequence => (elem) -> (
+    last baseName elem
 )
--- indexOfVariable = v -> ( i:= index v; last toList R.generatorSymbols#i )  -- need `debug Core` to use `R.generatorSymbols`
-
+indexOfVariable RingElement := List => (elem) -> (
+    last baseName elem
+)
+indexOfVariable RingElement := ZZ => (elem) -> (
+    last baseName elem
+)
