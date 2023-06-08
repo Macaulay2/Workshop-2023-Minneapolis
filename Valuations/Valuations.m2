@@ -226,7 +226,6 @@ doc ///
          Constructs the trivial valuation
      Usage
          v = trivialValuation
-
      Outputs
          v:Valuation
              the trivial valuation
@@ -287,6 +286,7 @@ doc ///
      Description
        Text
            This valuation returns the lowest (trailing) term of a polynomial with respect to the ring's term order.
+	   The valuation returns a value in an ordered module. For more details see @TO "Ordered modules"@.
        Example
            R = QQ[a,b,c, MonomialOrder => Lex];
            vR = lowestTermValuation R;
@@ -352,7 +352,7 @@ doc ///
        Text
            This valuation returns the exponent vector of the lead term of a polynomial with respect to the ring's term order.
            The valuation returns vectors in an \textit{ordered $\QQ$-module}, which respects the monomial order of the
-           given @TO "PolynomialRing"@.
+           given @TO "PolynomialRing"@. For more details see @TO "Ordered modules"@.
        Example
            R = QQ[a,b,c, MonomialOrder => Lex];
            v = leadTermValuation R;
@@ -394,6 +394,37 @@ doc ///
      SeeAlso
          MethodFunction
      ///
+
+doc ///
+     Key
+    	"Ordered modules"
+     Headline
+         Overview of the ordered module $\QQ^n$
+     Description
+       Text
+           Many standard valuations take values in a totally ordered subgroup $\Gamma \subseteq \QQ^n$.
+	   These standard valuations implement the \textit{OrderedQQn} object, whose order is based on the
+	   monomial order of a given ring $R$.
+	   The values in $\QQ^n$ are compared using the monomial order of $R$.
+       Example
+           R = QQ[x,y];
+	   I = ideal(x,y);
+	   v = leadTermValuation R;
+	   a = v(x)
+	   b = v(y)
+	   c = v(x+y)
+	   a > b
+	   a == c
+       Text
+       	   In the future, this object will be implemented at a deeper level.
+	   A @TO "Module"@ object does not naturally contain a monomial order. 
+	   We aim to implemenet this like we see in the object @TO "Ring"@. 
+     SeeAlso
+     	 leadTermValuation
+	 lowestTermValuation
+    
+
+///
 
 --------------------------------------------------------------------------------
 ------------------------------------ Tests -------------------------------------
