@@ -618,3 +618,27 @@ rankTableFromMatrix Matrix := Matrix => (A) -> (
     matrix rankTable
 );
 
+--------------------------------------------
+-- INPUT: a list of permutations or ASMs
+-- OUTPUT: the intersection of the ideals 
+-- TODO: tests and documentation
+--------------------------------------------
+schubIntersect = method()
+schubIntersect List := Ideal => (L) -> (
+    if (#L == 0) then error("Please enter a nonempty list.");
+    ll := L/schubertDetIdeal;
+    intersect apply(ll, J -> sub(J, vars ring ll#0))
+);
+
+--------------------------------------------
+-- INPUT: a list of permutations or ASMs
+-- OUTPUT: the sum of the ideals 
+-- TODO: tests and documentation
+--------------------------------------------
+schubAdd = method()
+schubAdd List := Ideal => (L) -> (
+    if (#L == 0) then error("Please enter a nonempty list.");
+    listPermM := L / permToMatrix;
+    rankM := entrywiseMinRankTable(listPermM);
+    schubertDetIdeal rankTableToASM(rankM)
+);
