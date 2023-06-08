@@ -46,6 +46,8 @@ export{
     "augmentedRotheDiagram",
     "isPatternAvoiding",
     "isVexillary",
+    "isCDG",
+    "isCartwrightSturmfels",
     "schubertDecomposition",
     "isIntersectionSchubIdeals",
     "rajCode",

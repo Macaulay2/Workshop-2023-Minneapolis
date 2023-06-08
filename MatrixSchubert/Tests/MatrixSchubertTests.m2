@@ -102,6 +102,14 @@ assert(not isVexillary({7,2,5,8,1,3,6,4}));
 assert(isVexillary({1,6,9,2,4,7,3,5,8}));
 ///
 
+TEST ///
+--isCDG
+assert(isCDG({5,4,3,2,1}));
+
+--isCartwrightSturmfels
+assert(isCartwrightSturmfels({5,4,3,2,1}));
+///
+
 TEST /// 
 -- permLength 
 

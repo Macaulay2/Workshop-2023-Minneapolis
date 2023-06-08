@@ -70,6 +70,52 @@ doc ///
             isVexillary(v)
 ///
 
+doc ///
+    Key
+        (avoidsAllPatterns, List, List)
+        avoidsAllPatterns
+    Headline
+        whether a permutation avoids all of the given patterns
+    Usage
+        avoidsAllPatterns(perm, patterns)
+    Inputs
+        perm:List
+        patterns:List
+    Description
+        Text
+            This is filler text.
+///
+
+doc ///
+    Key
+        (isCartwrightSturmfels, List)
+        isCartwrightSturmfels
+    Headline
+        whether a permutation is CartwrightSturmfels
+    Usage
+        isCartwrightSturmfels(perm)
+    Inputs
+        perm:List
+    Description
+        Text
+            This is filler text.
+///
+
+doc ///
+    Key
+        (isCDG, List)
+        isCDG
+    Headline
+        whether a permutation is CDG
+    Usage
+        isCDG(perm)
+    Inputs
+        perm:List
+    Description
+        Text
+            This is filler text.
+///
+
 
 doc ///
     Key
