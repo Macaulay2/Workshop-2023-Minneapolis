@@ -123,6 +123,9 @@ G = gc(a .. h,4)
 
 R = G [u,v] -- algebra with indeterminants u and v over GCalgebra G
 
+gens R_G
+
+
 l1 = (a * b)_G; --
 l2 = (c * d)_G;
 l3 = (e * f)_G;
