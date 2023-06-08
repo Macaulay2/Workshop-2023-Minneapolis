@@ -170,37 +170,6 @@ doc ///
 	 schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 
 ///
-
-doc ///
-    Key
-        (composePerms, List, List)
-        composePerms
-    Headline
-        computes the composition of two permutations
-    Usage
-        composePerms(u,v)
-    Inputs
-        u:List
-        v:List
-    Description
-        Text
-            Computes the composition of two permutations, u and v, as u*v.
-            Note that the permutations must be written as a list in one-line notation.
-        Example
-            u = {2,3,4,1}
-            v = {4,3,2,1}
-            composePerms(u,v)
-
-            u = {1,2,3,4,5}
-            v = {3,5,2,1,4}
-            composePerms(u,v)
-
-            u = {3,5,2,1,4}
-            v = {1,2,3,4,5}
-            composePerms(u,v)
-///
-
-
 doc ///
     Key
         (schubertDecomposition, Ideal)

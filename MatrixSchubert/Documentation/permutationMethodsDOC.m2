@@ -154,24 +154,34 @@ doc ///
             permToMatrix v
 ///
 
+
 doc ///
     Key
         (composePerms, List, List)
         composePerms
     Headline
-       composes 2 permutations in 1-line notation
+        computes the composition of two permutations
     Usage
-        composePerms(w,v)
+        composePerms(u,v)
     Inputs
-        w:List
-	v:List
+        u:List
+        v:List
     Description
         Text
-            Given 2 permutations w and v of the same length in 1-line notation, computes the product wv
+            Computes the composition of two permutations, u and v, as u*v.
+            Note that the permutations must be written as a list in 1-line notation and must both be permutations of (the same) n letters.
         Example
-            w = {7,2,5,8,1,3,6,4,9}
-            v = {1,6,9,2,4,7,3,5,8}
-            composePerms(w,v)
+            u = {2,3,4,1}
+            v = {4,3,2,1}
+            composePerms(u,v)
+
+            u = {1,2,3,4,5}
+            v = {3,5,2,1,4}
+            composePerms(u,v)
+
+            u = {3,5,2,1,4}
+            v = {1,2,3,4,5}
+            composePerms(u,v)
 ///
 
 
@@ -196,7 +206,7 @@ doc ///
 	    rajCode w
 	    
             v = {1,6,9,2,4,7,3,5,8}
-           rajCode v
+            rajCode v
 ///
 
 doc ///
@@ -270,42 +280,4 @@ doc ///
 ///
 
 
-doc ///
-    Key
-        (rajCode, List)
-        rajCode
-    Headline
-        to return the rajCode of a permutation in 1-line notation.
-    Usage
-        rajCode(perm)
-    Inputs
-        perm:List
-    Description
-        Text
-            Given a permutation, returns the rajCode of the permutation.
-            For the definition of rajCode see CASTELNUOVO–MUMFORD REGULARITY OF MATRIX SCHUBERT VARIETIES by OLIVER PECHENIK, DAVID E SPEYER, AND ANNA WEIGANDT, https://arxiv.org/pdf/2111.10681.
-        Example
-            w = {2,5,4,1,3}
-            rajCode(w)
-///
 
-
-
-doc ///
-    Key
-        (rajIndex, List)
-        rajIndex
-    Headline
-        to return the length of a permutation in 1-line notation.
-    Usage
-        rajCode(perm)
-    Inputs
-        perm:List
-    Description
-        Text
-            Given a permutation, returns the rajIndex of the permutation.
-            For the definition of rajIndex see CASTELNUOVO–MUMFORD REGULARITY OF MATRIX SCHUBERT VARIETIES by OLIVER PECHENIK, DAVID E SPEYER, AND ANNA WEIGANDT, https://arxiv.org/pdf/2111.10681.
-        Example
-            w = {2,5,4,1,3}
-            rajIndex(w)
-///
