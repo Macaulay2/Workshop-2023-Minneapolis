@@ -151,9 +151,15 @@ N = F.period
 dF = dd^F
 dG = dd^G
 
+adjoinRoot = (d,Q) -> (S1 := Q[t];
+    factored := factor(t^(d)-1);
+    cyclo := (factored#(#factored-1))#0;
+    S := S1/(cyclo)
+    )
+
 --dTensor = method(Options => {RootOfUnity=>false})
 dTensor = method()
-dTensor(ZZdFactorization, ZZdFactorization) := (F,G) -> (
+dTensor(ZZdFactorization, ZZdFactorization,RingElement) := (F,G,t) -> (
     --put in check for F.period = G.period
     N := F.period;
     dF := dd^F;
@@ -161,12 +167,25 @@ dTensor(ZZdFactorization, ZZdFactorization) := (F,G) -> (
     M := for k to N-1 list(
 	for i to N-1 list(
 	    for j to N-1 list(
-		if i == j then (id_(F_i))**(dG_(k-i+1))		
+		if i == j then (t^i*id_(F_i))**(dG_(k-i+1))		
 		else if (j == (i+1)%N) then (dF_(i+1))**(id_(G_((k-i)%N)))
 		else 0
 	    )));
     ZZdfactorization(for i to #M-1 list matrix M_i)
 )
+-*dTensor(ZZdFactorization,ZZdFactorization,Symbol) := (F,G,t) -> (S1 := ring(F)[t];
+    factored := factor(t^(F.period)-1);
+    cyclo := (factored#(#factored-1))#0;
+    S := S1/(cyclo);
+    dTensor(F**S,G**S,t)
+    )*-
+
+--this gives a trivial d-fold factorization of a monomial
+trivialFactorization = method()
+trivialFactorization(RingElement) := f -> (if not(#(terms f)==1) then error "Expected ring element to be monomial";
+    theDiffs = (flatten((toList factor(f))/(i->toList(i#1:i#0))))/(j->matrix{{j}});
+    ZZdfactorization theDiffs
+    )
 
 T = dTensor(F,G)
 dd^T
@@ -196,3 +215,11 @@ flatten F
 
 K = koszulMFf({a,b,c,d}, a^3 + b^3 +c^3 +d^3)
 dd^K
+
+--test with larger tensor
+Q=QQ[x_1..x_3];
+F = ZZdfactorization {matrix{{x_1}},matrix{{x_2}},matrix{{x_3}}}; -- defining two trivial factorizations
+G = ZZdfactorization {matrix{{x_2}},matrix{{x_2}},matrix{{x_3}}};
+S = adjoinRoot(3,Q);
+T = dTensor(F**S,G**S,t)
+(dd^T_1)*(dd^T_2)*(dd^T_3)
