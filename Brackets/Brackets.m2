@@ -466,6 +466,53 @@ Description
     See also @TO BracketRing@.
 ///
 
+
+
+doc ///
+Key 
+  Bracket
+Description
+  Text
+    In a BracketRing, a Bracket represents a maximal minor of the matrix of coordinates of a configuration of points in a projective space. The example below illustrates this for a configuration of 5 points in the projective space $\mathbb{P}^2$.
+  Example
+    B = bracketRing(5,3)
+    [1 2 3]_B
+    X = matrix B
+    toBracketPolynomial(det X^{0,1,2},B)
+  Text
+    See also @TO BracketRing@ and @TO toBracketPolynomial@.
+
+///
+
+
+
+doc ///
+Key
+  toBracketPolynomial
+Headline
+  Represent an invariant polynomial as a polynomial in brackets
+Usage
+  g = toBracketPolynomial(f,B)
+Inputs
+  f:RingElement
+  B:BracketRing
+Outputs
+  g:GCExpression
+Description
+  Text
+    A polynomial invariant under the action of the special linear group may be represented by a polynomial in brackets. See @TO Bracket@ for more details. Groebner basis methods allow one to compute such a representation. Below is a simple example.
+  Example
+    B = bracketRing(3, 2)
+    X = matrix B
+    f = (det X^{1,2}) - (det X^{0,2}) + (det X^{0,1})
+    toBracketPolynomial(f,B)
+  Text
+    Such a representation is not unique. It may be checked that two bracket polynomials are equal through their normal form with respect to a Groebner basis. See @TO normalForm@ for a further explanation. 
+
+    See also @TO BracketRing@.
+///
+
+
 -* Test section *-
 TEST /// -* Sturmfels Example 3.1.10 *-
 B = bracketRing(6, 3)
