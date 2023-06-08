@@ -88,6 +88,8 @@ subringGenerators = method()
 subringGenerators Subring := S -> S#generators
 ambient Subring := S -> S#ambient
 
+
+-- format printing of Subring type
 net Subring := S -> (
     R := ambient S;
     P := presentationRing S;
