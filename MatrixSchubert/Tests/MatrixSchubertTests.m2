@@ -52,19 +52,27 @@ A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}};
 assert(isPartialASM A)
 assert(sort essentialBoxes(A) == {(1,3),(2,1),(3,2)})
 ///
--*
+
 --test for schubertDetIdeal
 --TODO: Figure out how to make this test stop failing
 --TODO: make more complicated tests
 TEST ///
 --Example 15.4 from Miller-Sturmfels
-assert(schubertDetIdeal({1,2,3}) == ideal{});
-assert(schubertDetIdeal({2,1,3})) == (ideal(z_(1,1)));
-assert(schubertDetIdeal({2,3,1}) == ideal {z_(1,1),z_(1,2)});
-assert(schubertDetIdeal({3,2,1}) == ideal{z_(1,1),z_(1,2),z_(2,1)});
-assert(schubertDetIdeal({1,3,2}) == ideal(z_(1,1)*z_(2,2)-z_(1,2)*z_(2,1)));
+I = schubertDetIdeal({1,2,3});
+assert(I == ideal(0_(ring I)));
+
+I = schubertDetIdeal({2,1,3});
+assert(I == ideal((z_(1,1))_(ring I)));
+
+I = schubertDetIdeal({2,3,1});
+assert(I == ideal((z_(1,1))_(ring I), (z_(2,1))_(ring I)));
+
+I = schubertDetIdeal({3,2,1});
+assert(I == ideal((z_(1,1))_(ring I), (z_(1,2))_(ring I), (z_(2,1))_(ring I)));
+
+I = schubertDetIdeal({1,3,2});
+assert(I == ideal((z_(1,1))_(ring I) * (z_(2,2))_(ring I) - (z_(1,2))_(ring I) * (z_(2,1))_(ring I)));
 ///
-*-
 
 TEST ///
 --variableIndex
