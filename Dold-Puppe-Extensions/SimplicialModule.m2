@@ -31,16 +31,18 @@ topDegree SimplicialModule := ZZ => S -> S.topDegree
 
 ring SimplicialModule := Ring => C -> C.ring
 
+--H1 is the face maps, H2 is the degeneracy maps
 simplicialModule = method(Options => {Base=>0})
-simplicialModule(HashTable,ZZ) := SimplicialModule => opts -> (H,d) -> (
-    spots := sort keys H;
+simplicialModule(HashTable,HashTable,ZZ) := SimplicialModule => opts -> (H1,H2,d) -> (
+    spots := sort keys H1;
     if #spots === 0 then
       error "expected at least one map";
-    R := ring maps#(spots#0);
+    R := ring H1#(spots#0);
     moduleList := new MutableHashTable;
     for b in select(spots,l->l_2==0) do (
-	if not moduleList#?(b_0-1,b_1) then moduleList#(b_0-1,b_1) = target H#(b_0,b_1,0);
+	if not moduleList#?(b_0-1,b_1) then moduleList#(b_0-1,b_1) = target H1#(b_0,b_1,0);
 	);
+    
     S := new SimplicialModule from {
 	symbol ring => R,
 	symbol topDegree => d,
@@ -52,18 +54,28 @@ simplicialModule(HashTable,ZZ) := SimplicialModule => opts -> (H,d) -> (
     S
     )
 
+
 simplicialModule(Complex,ZZ) := SimplicialModule => opts -> (C,d) -> (
     --C is a chain complex, output is the Dold-Kan image of C in the category of simplicial modules
      if not instance(opts.Base, ZZ) then
       error "expected Base to be an integer";
      if instance(C,Complex) then (
-	 mapHash := hashTable flatten flatten for n from 1 to d list (
+	 degenmapHash := hashTable flatten flatten for n from 1 to d list (
 	     for k from 0 to n list (
 		 for i from 0 to n list (
-		     (n,k,i) => --placeholder for degeneracy/face maps
+		     (n,k,i) => --placeholder for degeneracy maps
 		     );
 		 );
 	     );
+	 facemapHash1 := hashTable flatten flatten for n from 1 to d list (
+	     for k from 0 to n list (
+		 for i from 1 to n list (
+		     (n,k,i) => --placeholder for face maps
+		     );
+		 );
+	     );
+	 facemapHash2 := hashTable flatten for n from 1 to d list (
+	     (n,0) => --placeholder for 0th face map
 	 return simplicialModule(MapHash,d)
 	 );
      )
