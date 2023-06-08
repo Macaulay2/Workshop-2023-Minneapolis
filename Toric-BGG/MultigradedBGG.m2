@@ -58,8 +58,6 @@ exports {
     "unfold"
     }
 *-
-
-
 needsPackage "Polyhedra";
 load "DifferentialModules.m2";
 ---
@@ -132,11 +130,11 @@ toricRR(Module,List) := (M,LL) ->(
     E := S.exterior;
     relationsM := presentation M;
     -- this used to say "gens image presentation M"... just in case a bug arises
-    f0 := gens image basis(LL_0,M);
-    scan(#LL-1,i-> f0 = f0 | gens image basis(LL_(i+1),M));
-    df0 := apply(degrees source f0,i-> (-1)*i|{0});
-    df1 := apply(degrees source f0,i-> (-1)*i|{1});
-    dfneg1 := apply(degrees source f0,i-> (-1)*i|{-1});
+    f0 := matrix {for d in LL list gens image basis(d,M)};
+    wEtwist := append(-sum degrees S, -numgens S);
+    df0 := apply(degrees source f0, d -> (-d | {0}) + wEtwist);
+    df1 := apply(degrees source f0, d -> (-d | {1}) + wEtwist);
+    dfneg1 := apply(degrees source f0, d -> (-d | {-1}) + wEtwist);
     SE := S**E;
     --the line below is better for degrees,it overwrites S somehow...
     --SE := coefficientRing(S)[gens S|gens E, Degrees => apply(degrees S,d->d|{0}) | degrees E, SkewCommutative => gens E];
@@ -146,7 +144,9 @@ toricRR(Module,List) := (M,LL) ->(
     newf0 = newf0 % relationsMinSE;
     newg := matrixContract(transpose sub(f0,SE),newf0);
     g' := sub(newg,E);
-    differentialModule(chainComplex{map(E^dfneg1,E^df0, g'),map(E^df0,E^df1, g')}[1])
+    if E^df0 == E^0 then chainComplex map(E^0, E^0, 0) else (
+    	differentialModule(chainComplex{map(E^dfneg1,E^df0, -g'),map(E^df0,E^df1, -g')}[1])
+    	)
     )
 
 
@@ -195,8 +195,16 @@ assert(D.dd^2 == 0)
 assert(isHomogeneous D)
 ///
 
-
-
+TEST ///
+restart
+load "MultigradedBGG.m2"
+kk = ZZ/101
+-- ring of hirzebruchSurface 3
+S = kk[x_0, x_1, x_2, x_3, Degrees =>{{1,0},{-3,1},{1,0},{0,1}}]
+M = S^{{2,-4}}
+degrange := unique prepend((degrees M)_0, apply(degrees S, d -> (degrees M)_0 + d));
+toricRR(M,degrange)
+///
 
 
 --I think toricLL doesn't work and needs to be debugged.
