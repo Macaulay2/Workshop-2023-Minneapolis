@@ -113,6 +113,13 @@ assert(permLength {8,7,6,5,4,3,2,1} == 28)
 ///
 
 TEST ///
+-- rotheDiagram
+
+assert(sort rotheDiagram matrix{{0,0,1,0,0},{1,0,-1,0,0},{0,1,0,0,0},{0,0,1,0,0}} == sort {(1,1),(1,2),(2,3),(2,4),(2,5)})
+assert(sort rotheDiagram {2,6,5,1,4,3} == sort {(1,1),(2,1),(2,3),(2,4),(2,5),(3,1),(3,3),(3,4),(5,3)})
+///
+
+TEST ///
 -- augmentedRotheDiagram 
 
 assert(sort augmentedRotheDiagram {2,1,5,4,3} == sort {((1,1),0), ((3,3),2),((3,4),2), ((4,3),2)})
