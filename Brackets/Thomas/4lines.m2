@@ -1,7 +1,7 @@
 restart
 loadPackage("Brackets",FileName=>"../Brackets.m2")
-G = gc(a .. h,4,CoefficientRing => QQ[u,v])
---G = gc(a .. h,4,CoefficientRing => QQ[u,v],Strategy => Grassmannian)
+--G = gc(a .. h,4,CoefficientRing => QQ[u,v])
+G = gc(a..h,4,CoefficientRing => QQ[u,v],Strategy => Grassmannian)
 B = bracketRing G
 
 l1 = (a * b)_G;
@@ -18,6 +18,8 @@ l = exp3 * t
 q = l*(g*h)_G
 qe = q#RingElement
 p = flatten entries last coefficients(qe,Variables => {u_(ring qe),v_(ring qe)})
-(p#1^2 - 4*p#0*p#2)_B
+q1 = (p#1^2 - 4*p#0*p#2)_B
+
+normalForm(q1)
 
 
