@@ -123,14 +123,15 @@ toricRR = method();
 --Output:  The differenial module RR(M) in degrees from LL,
 --         presented as a complex in homological degrees -1, 0 ,1
 --         and with the same differential in both spots.
-toricRR(Module,List) := (M,LL) ->(
-    S := ring(M);
+toricRR(Module,List) := (N,LL) ->(
+    M = coker presentation N;
+    S := ring M;
     if not isCommutative S then error "ring M is not commutative";
     if not S.?exterior then S.exterior = dualRingToric(S);
     E := S.exterior;
     relationsM := presentation M;
     -- this used to say "gens image presentation M"... just in case a bug arises
-    f0 := matrix {for d in LL list gens image basis(d,M)};
+    f0 := matrix {for d in unique LL list gens image basis(d,M)};
     wEtwist := append(-sum degrees S, -numgens S);
     df0 := apply(degrees source f0, d -> (-d | {0}) + wEtwist);
     df1 := apply(degrees source f0, d -> (-d | {1}) + wEtwist);
@@ -183,7 +184,6 @@ tally degrees minimalPart F
 F.dd_1
 assert(D.dd^2 == 0)
 assert(isHomogeneous D)
-
 ///
 
 TEST ///
@@ -193,8 +193,35 @@ kk = ZZ/101
 -- ring of hirzebruchSurface 3
 S = kk[x_0, x_1, x_2, x_3, Degrees =>{{1,0},{-3,1},{1,0},{0,1}}]
 M = S^{{2,-4}}
-degrange := unique prepend((degrees M)_0, apply(degrees S, d -> (degrees M)_0 + d));
-toricRR(M,degrange)
+L = unique apply(((ideal 1_S)_* | (ideal {x_0..x_3})_* | ((ideal {x_0..x_3})^2)_*)/degree, x -> x + {-2,4})
+RM = toricRR(M,L)
+assert(RM.dd^2 == 0)
+assert(isHomogeneous RM)
+///
+
+TEST ///
+restart
+load "MultigradedBGG.m2"
+kk = ZZ/101
+-- ring of hirzebruchSurface 3
+S = kk[x_0, x_1, x_2, x_3, Degrees =>{{1,0},{-3,1},{1,0},{0,1}}]
+M = S^1/(ideal {x_0^2, x_1^2, x_2^2, x_3^2})
+L = unique ((ideal 1_S)_* | (ideal {x_0..x_3})_* | ((ideal {x_0..x_3})^2)_* | ((ideal {x_0..x_3})^3)_* | {x_0*x_1*x_2*x_3})/degree
+RM = toricRR(M,L)
+assert(RM.dd^2 == 0)
+assert(isHomogeneous RM)
+E = ring RM
+actualmatrix = matrix {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {e_0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {e_2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {e_1, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {e_3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, e_2, e_0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, e_1, 0, e_0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, e_1, e_2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, e_3, 0, 0, e_0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, e_3, 0, e_2, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, e_3, e_1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, e_1, e_2, e_0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, e_3, 0, 0,
+	e_2, e_0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, e_3, 0, e_1, 0, e_0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, e_3, 0, e_1, e_2, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, e_3, e_1, e_2, e_0, 0}}
+actualdifferential = map(E^-{{-1, 2, 5}, {0, 2, 5}, {0, 2, 5}, {-4, 3, 5}, {-1, 3, 5}, {1, 2, 5}, {-3, 3, 5}, {-3, 3, 5}, {0, 3, 5}, {0, 3, 5}, {-4, 4, 5}, {-2, 3, 5}, {1, 3, 5}, {-3, 4, 5}, {-3,
+	    4, 5}, {-2, 4, 5}},
+    E^-{{-1, 2, 4}, {0, 2, 4}, {0, 2, 4}, {-4, 3, 4}, {-1, 3, 4}, {1, 2, 4}, {-3, 3, 4}, {-3, 3, 4}, {0, 3, 4}, {0, 3, 4}, {-4, 4, 4}, {-2, 3, 4}, {1, 3, 4}, {-3, 4, 4}, {-3,
+      	    4, 4}, {-2, 4, 4}}, actualmatrix)
+assert(RM.dd_0 == actualdifferential)
 ///
 
 --I think toricLL doesn't work and needs to be debugged.
