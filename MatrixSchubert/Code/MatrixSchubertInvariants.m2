@@ -42,3 +42,27 @@ matrixSchubertReg() = method(
 
 matrixSchubertReg (List) := opts -> 
 *-
+
+----------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation or a partial ASM
+--OUTPUT: the Castlenuovo-Mumford regularity of I_A or I_w
+----------------------------------------
+schubertReg= method()
+schubertReg Matrix := ZZ => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    regularity(antiDiagInit A)
+    );
+schubertReg List := ZZ => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
+     regularity(antiDiagInit w)
+    );
+
+schubertCodim = method() 
+schubertCodim Matrix := ZZ => A -> (
+    if not (isPartialASM A) then error("The input must be a partial alternating sign matrix");
+    codim antiDiagInit A
+)
+schubertCodim List := ZZ => (w) -> (
+    if not (isPerm w) then error("The input must be a permutation in one line notation");
+    permLength w
+)
