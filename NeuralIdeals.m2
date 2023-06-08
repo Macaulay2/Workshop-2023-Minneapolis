@@ -329,9 +329,10 @@ polarizePseudomonomial(RingElement,Ring) := RingElement => (P,R) -> (
     d := numgens R;
     y := getSymbol "y";
     S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
-    mon := 1;
-    for i in sigma do mon = mon*x_i;
-    for i in tau do mon = mon*y_i;
+    use S;
+    mon := 1_S;
+    for i in sigma do mon = mon*S_(i-1);
+    for i in tau do mon = mon*S_(d+i-1);
     mon
     )
 
