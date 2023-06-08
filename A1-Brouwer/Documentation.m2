@@ -46,3 +46,59 @@
     (8). wittDecompInexact (Matrix, InexactFieldFamily) -> (ZZ, Matrix)
             -InexactFieldFamily must be RR or CC
             -Returns the Witt Index of q and the matrix representing q_a on V_a as \pm I, after changing basis.
+
+
+
+
+
+            ---------------------------- documentation starts here-------------
+
+beginDocumentation()
+
+document {
+	Key => {(diagonalize, Matrix), diagonalize},
+	Usage => "diagonalize(M)",
+	Inputs => {"M"},
+	Outputs => { Matrix => { "a diagonal matrix congruent to", TT "M" }},
+	PARA {"Given a symmetric matrix ", TT "M", " over any field, this command gives a diagonal matrix congruent to", TT "M","."},
+	EXAMPLE lines ///
+		 R = QQ[x,y]
+		 F = {y^2-x^2-1,x-y^2+4*y-2}
+		 I = ideal F
+		 regularRep(y,I)
+		 S = R/I
+		 regularRep(y)
+	 	 ///,
+     	}
+
+document {
+        Key => {(diagonalizeOverInt, Matrix), diagonalizeOverInt},
+	Usage => "diagonalizeOverInt(M)",
+	Inputs => {"M"},
+	Outputs => { Matrix => { "a diagonal matrix congruent to ", TT "M", "." }},
+	PARA {"Given a symmetric matrix ", TT "M", " over the integers, this command gives a diagonal matrix congruent to", TT "M","."},
+	EXAMPLE lines ///
+		 R = QQ[x,y]
+		 F = {y^2-x^2-1,x-y^2+4*y-2}
+		 I = ideal F
+		 regularRep(y,I)
+		 S = R/I
+		 regularRep(y)
+	 	 ///,
+        }
+
+document {
+        Key => {(wittDecomp, Matrix), wittDecomp},
+	Usage => "wittDecomp(M)",
+	Inputs => {"M"},
+	Outputs => { (ZZ,Matrix) => { "the number of hyperbolic forms that make up the bilinear form represented by ", TT "M", ", and the anisotropic part of the form represented as a matrix." }},
+	PARA {"Given an invertible matrix ", TT "M", ", which represents a non-degenerate bilinear form, ", TT "b"," , this command gives us ", TT "(n,A)", " where ", TT "b="},
+	EXAMPLE lines ///
+		 R = QQ[x,y]
+		 F = {y^2-x^2-1,x-y^2+4*y-2}
+		 I = ideal F
+		 regularRep(y,I)
+		 S = R/I
+		 regularRep(y)
+	 	 ///,
+        }
