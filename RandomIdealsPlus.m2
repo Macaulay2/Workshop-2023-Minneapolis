@@ -236,11 +236,15 @@ Description
 
 -* Test section *-
 TEST /// -* [insert short title for this test] *-
-    setRandomSeed 0;
-    S = ZZ/101[a..d];
-    hf = {4,7,10};
-    I = randomMonomialIdealHilbertFunction(S,hf)
-    assert(I == ideal "a2, ab, b2, a4, a3b, a3c, a3d, a2b2, a2bc, a2bd, a2c2, a2cd, a2d2, ab3, ab2c, ab2d, abc2, abcd, abd2, ac3, ac2d, acd2, ad3, b4, b3c, b3d, b2c2, b2cd, b2d2, bc3, bc2d, bcd2, bd3, c4, c3d, c2d2, cd3, d4")
+setRandomSeed 0;
+S = ZZ/101[a..d];
+hf = {4,7,10};
+I = randomMonomialIdealHilbertFunction(S,hf)
+assert(I == ideal "a2, ab, b2, a4, a3b, a3c, a3d, a2b2, a2bc, a2bd, a2c2, a2cd, a2d2, ab3, ab2c, ab2d, abc2, abcd, abd2, ac3, ac2d, acd2, ad3, b4, b3c, b3d, b2c2, b2cd, b2d2, bc3, bc2d, bcd2, bd3, c4, c3d, c2d2, cd3, d4")
+setRandomSeed 0
+assert(randomNnomialIdeal(3,{3},S) == ideal( -30*a^2*b + 24*b^2*c + 19*a*c*d))
+setRandomSeed 0
+assert(randomMixedIdeal({2,3},{{2},{2}},S) == ideal(-10*a*d - 8*c*d, 19*a*c + 39*b*c - 24*c*d))    
 ///
 
 end--
