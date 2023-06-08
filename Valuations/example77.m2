@@ -56,12 +56,12 @@ primeConesOfIdeal = I -> (
     cns := for i in c list(r_i);
     inCns := for c in cns list (flatten entries( c * transpose matrix{toList(numColumns(c) : 1)}));
     L:= for i from 0 to #cns-1 list (J = gfanBuchberger(I, "w" => -1*(inCns#i));
-        H = gfanInitialForms(J, -1*(inCns#i), "ideal" =>true);
-        K = H_1;
+        H := gfanInitialForms(J, -1*(inCns#i), "ideal" =>true);
+        K := H_1;
         if binomialIsPrime(ideal(K)) then cns#i);
     return delete(null,L))
 
-primeConesOfIdeal I
+C = primeConesOfIdeal I
 
 
 
@@ -87,7 +87,15 @@ return finalScaledMats
 
 
 coneToMatrix = coneRays -> (
-    v1 = coneRays_0 + coneRays_1;
-    v2 = coneRays_0 + 2*coneRays_1;
-    transpose matrix {v1, v2}
+    v1 := coneRays_0 + coneRays_1;
+    v2 := coneRays_0 + 2*coneRays_1;
+    matrix {v1, v2}
+    )
+
+coneToValuation = coneRays -> (
+    M := coneToMatrix(coneRays);
+    T := QQ[z_1 .. z_4, MonomialOrder=>{Weights=>(entries M_0), Weights=>(entries M_1)}, Global=>false];
+    val := f -> leadTerm(2, sub(f, T));
+    QQnT := orderedQQn(T);
+    valuation(val, S, QQnT)
     )
