@@ -6,19 +6,6 @@ needsPackage "Saturation"
 -- Auxiliary Functions
 ----------------------------------------------------------------------------------------------
 
-identityMatrix := n -> id_( ZZ^n )
-
-----------------------------------------------------------------------------------------------
--- Types
-----------------------------------------------------------------------------------------------
-
-FrobeniusFunctor = new Type of MethodFunction
-
-FModule = new Type of HashTable
-
-ModuleClass = new Type of Module
-
-Morphism = new Type of Matrix
 
 GeneratingMorphism = new Type of Morphism
 
@@ -313,7 +300,7 @@ filterRegSeq (ZZ,Ideal,Module) := List => (n,I,M) ->
     f := 1_k;
     
     i:=0;
-    while not isFilterRegElement(G#i,I,M,module ideal(0_R)) do (i=i+1;);
+    while not isFilterRegElement(G#i,I,M,ideal(0_R)*M) do (i=i+1;);
     L:={G#i};
     i=0;
         
@@ -424,10 +411,11 @@ lowerLimit = method()
 lowerLimit(BasicList) := Ideal => L ->
 (
     if #L==0 then error "lowerLimit: Cannot be computed on an empty list";
-    LC:=ring L#0;
+    R:=ring L#0;
+    local LC;
     if #L==1 then (
-	if L#0==0_LC then return ideal(0_LC);
-	LC=ideal(0_LC);
+	if L#0==0_R then return ideal(0_R);
+	LC=ideal(0_R);
 	)
      else LC=limitClosure(drop(L,-1));
     ascendingIdealEquality( j -> (LC:(L#(-1)^j)))
@@ -454,7 +442,7 @@ lyubeznikNumber(ZZ,ZZ,Ideal,Ring) := ZZ => (i,j,I,R) ->
     m=ideal R_*;
     
     r:= root(localCohomology(n-j,I,R));
-    frs:= filterRegSeq(i,m,r);
+    frs:= randomFilterRegSeq(i,m,r);
     c:=lowerLimit(frs);
     prod:=product(apply(frs,x->x^(p-1)));
     r
