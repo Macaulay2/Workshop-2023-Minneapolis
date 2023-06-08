@@ -1,3 +1,5 @@
+--Andrew Tawfeek, Tom Hagedorn, Joel Louwsma
+
 -- load "./GW-type.m2"
 
 -- Input: L is list of functions {f1,...,fn} over same ring R and p is prime ideal of an isolated zero
