@@ -385,6 +385,7 @@ polarizedCanonicalRes(NeuralCode,Ring) := Resolution => (C,S) -> (
 polarizedCanonicalRes(NeuralCode) := Resolution => C -> (
     d := dim C;
     x := getSymbol "x";
+    y := getSymbol "y";
     S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
     polarizedCanonicalRes(C,S)
     )
