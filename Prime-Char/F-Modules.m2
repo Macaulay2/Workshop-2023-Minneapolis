@@ -1,4 +1,4 @@
-loadPackage "TestIdeals"
+needsPackage "TestIdeals"
 
 needsPackage "Saturation"
 
@@ -180,15 +180,12 @@ localCohomologyFilter := ( i, I, R ) ->
     J := ideal filterSeq;
     p := char R;
     u := ( product filterSeq )^( p-1 );
-    (time rt := root makeFModule map( FF( R^1/J ), R^1/J, u ) );
-    (time K := ascendingIdealEquality( 
-            e ->  frobeniusPower( p^e, J ) : ideal( u^(lift( (p^e-1)/(p-1), ZZ )) ) 
+    time K := ascendingIdealEquality( 
+        e ->  frobeniusPower( p^e, J ) : ideal( u^(lift( (p^e-1)/(p-1), ZZ )) ) 
     ) );
---    rt = minimalPresentation rt/J;
     M1 := saturate( R^1/(frobenius K), I );
     N1 := saturate( R^1/K, I );
     rtMorphism := generatingMorphism map( M1, N1, u );
-    -- rtMorphism := generatingMorphism map( saturate( FF rt, I ), saturate( rt, I ), u );
     M := makeFModule rtMorphism;
     M#cache#(symbol root) = rtMorphism;
     M
@@ -232,13 +229,13 @@ FModule == ZZ := ( M, n ) ->
     root( M )  == 0
 )
 
-cohomDim = method()
+cohomDim = method( Options => { Strategy => Ext } )
 
-cohomDim Ideal := ZZ => I ->
+cohomDim Ideal := ZZ => o -> I ->
 (
     R := ring I;
     n := #(trim I)_*;
-    while localCohomology( n, I, R) == 0 do n = n-1;
+    while localCohomology( n, I, R, o) == 0 do n = n-1;
     n
 )
 
