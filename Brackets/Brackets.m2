@@ -4,7 +4,7 @@ newPackage(
           Date => "June 7, 2023",
           Headline => "Brackets, Grassmann-Cayley Algebra, and Projective Geometry",
           Authors => {
-	      { Name => "Dalton Bidleman", Email => "", HomePage => ""},
+	      { Name => "Dalton Bidleman", Email => "deb0036@auburn.edu", HomePage => ""},
 	      { Name => "Tim Duff", Email => "timduff@uw.edu", HomePage => "https://timduff35.github.io/timduff35/"},
 	      { Name => "Jack Kendrick", Email => "", HomePage => ""},
 	      { Name => "Thomas Yahl", Email => "thomasjyahl@tamu.edu", HomePage => "tjyahl.github.io"},
