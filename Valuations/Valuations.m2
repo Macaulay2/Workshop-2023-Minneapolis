@@ -27,16 +27,12 @@ ring RingOfInvariants := A -> ambient A
 ring LocalRing := A -> A
 ambient LocalRing := A -> A
 
-export{"function",
-       "valuation",
+export{"valuation",
        "trivialValuation",
        "padicValuation",
        "leadTermValuation",
        "lowestTermValuation",
-       "localRingValuation",
-       "getMExponent",
-       "domain",
-       "codomain"
+       "localRingValuation"
        }
 
 --------------------------------------------------------------------------------
@@ -67,18 +63,18 @@ for i in ourSources do (
 internalValuation = method()
 internalValuation (Function, Thing, Thing) := (v, S, T) -> (
     new Valuation from{
-        function => v,
-        domain => S,
-        codomain => T,
+        "function" => v,
+        "domain" => S,
+        "codomain" => T,
         cache => new CacheTable
         }
     )
 
 Valuation Thing := (v,t) -> (
-    if (v.domain === null) or (ring t) === v.domain then
+    if (v#"domain" === null) or (ring t) === v#"domain" then
     -- Concerns with comparing things like ZZ and QQ
     -- Concerns with subrings and local rings, will need testing.
-    v.function t
+    v#"function" t
     )
 
 --------------------------------------------------------------------------------
@@ -226,7 +222,6 @@ doc ///
          Constructs the trivial valuation
      Usage
          v = trivialValuation
-
      Outputs
          v:Valuation
              the trivial valuation
@@ -240,7 +235,7 @@ doc ///
            v (14/23)
            v 0
      SeeAlso
-         MethodFunction
+         valuation
      ///
 
 
@@ -260,7 +255,7 @@ doc ///
              p-adic valuation using prime p
      Description
        Text
-           Stuff goes here
+           A function to construct the p-adic valuation, returning the number of times that p divides the numerator minus the number of times it divides the denominator.
        Example
            v = padicValuation 7;
            v 98
@@ -268,7 +263,7 @@ doc ///
            v 0
            v (-42)
      SeeAlso
-         MethodFunction
+         valuation
      ///
 
 doc ///
@@ -297,22 +292,29 @@ doc ///
            f = 13*a^2*b + a*c^3;
            vS f
      SeeAlso
-         MethodFunction
+         valuation
      ///
 
 doc ///
      Key
          valuation
          (valuation, Function)
-         (valuation, Function, Ring, Ring)
-         (valuation, Function, Ring, LocalRing)
-         (valuation, Function, Ring, Subring)
-         (valuation, Function, LocalRing, Ring)
-         (valuation, Function, LocalRing, LocalRing)
-         (valuation, Function, LocalRing, Subring)
-         (valuation, Function, Subring, Ring)
-         (valuation, Function, Subring, LocalRing)
-         (valuation, Function, Subring, Subring)
+	 (valuation, Function, Ring, Ring) 
+	 (valuation, Function, Ring, Subring)
+	 (valuation, Function, Ring, LocalRing)
+	 (valuation, Function, Ring, RingOfInvariants)
+	 (valuation, Function, Subring, Ring)
+	 (valuation, Function, Subring, Subring)
+	 (valuation, Function, Subring, LocalRing)
+	 (valuation, Function, Subring, RingOfInvariants)
+	 (valuation, Function, LocalRing, Ring)
+	 (valuation, Function, LocalRing, Subring)
+	 (valuation, Function, LocalRing, LocalRing)
+	 (valuation, Function, LocalRing, RingOfInvariants)
+	 (valuation, Function, RingOfInvariants, Ring)
+	 (valuation, Function, RingOfInvariants, Subring)
+	 (valuation, Function, RingOfInvariants, LocalRing)
+	 (valuation, Function, RingOfInvariants, RingOfInvariants)
      Headline
          Constructs a user defined valuation object
      Usage
@@ -332,7 +334,11 @@ doc ///
              v = valuation(x -> if x == 0 then infinity else 0)
              v = valuation(x -> if x == 0 then infinity else 0, ZZ, ZZ)
      SeeAlso
-          MethodFunction
+          lowestTermValuation
+	  padicValuation
+	  "trivialValuation"
+	  leadTermValuation
+	  localRingValuation
 ///
 
 doc ///
@@ -392,8 +398,34 @@ doc ///
 	   localVal(x^4 + x^2*y^2 + x^7 + y^3)
 	   localVal(x^2 + x*y + y^2)
      SeeAlso
-         MethodFunction
+         valuation
      ///
+     
+doc ///
+      Key
+      	  Valuations
+      Headline
+      	  A package for constructing and using valuations.
+      Description
+      	  Text
+	      A valuation is a function $v:R\rightarrow G\cup\{\infty\}$ 
+	      where $R$ is a ring and $G$ is a linearly ordered group with
+	      the following properties: $v(ab)=v(a)+v(b)$, 
+	      $v(a+b)\geq\min\{v(a),v(b)\}$, and $v(a)=\infty$ iff $a=0$.
+      ///
+
+doc ///
+      Key
+      	  Valuation
+      Headline
+      	  The type of all valuations
+      Description
+      	  Text
+	      @TT "Valuation"@ is a type that contains the data needed 
+	      to evaluate a valuation.
+      SeeAlso
+      	  valuation
+      ///
 
 --------------------------------------------------------------------------------
 ------------------------------------ Tests -------------------------------------
@@ -447,7 +479,7 @@ assert(val(x^2*y^2*z + x^7*y) > val(x*y*z^2 + y^3*z))
 
 -- 
 
-end
+end--
 
 
 --------------------------------------------------------------------------------
