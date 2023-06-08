@@ -1,3 +1,6 @@
+needsPackage "Depth"; -- for the Gorenstein case 
+needsPackage "TestIdeals";
+
 expDecomp = (R,p,e,f) -> apply(exponents(f),
       exponent->{coefficient(R_exponent,f)*R_(exponent //p^e),exponent%p^e});
 --Gets the exponent vectors of each monomial X^u of the polynomial f, and associates to u the two-element list whose
@@ -19,13 +22,13 @@ AKmatrix = (R,e,f) -> (
     time(p:=char R;
     d:=dim R;
     n:=p^e;
-    I:=(ideal(vars R))^[n];
-    monBasis=(entries basis(R^1/I))#0;
-    expBasis=flatten(apply(monBasis,exponents));
-    L=for i from 0 to p^(e*d)-1 list f*(monBasis#i);
+    I:= frobenius^e(ideal(vars R));
+    monBasis:=(entries basis(R^1/I))#0;
+    expBasis:=flatten(apply(monBasis,exponents));
+    L:=for i from 0 to p^(e*d)-1 list f*(monBasis#i);
     -- T#i is a hashtable whose keys are exponents & values are coeefs
     --     appearing in f*(ith monomial)
-    T=(for i from 0 to p^(e*d)-1 list simpExpDecomp(e,L#i)););
+    T:=(for i from 0 to p^(e*d)-1 list simpExpDecomp(e,L#i)););
     return time transpose time matrix time( 
         for t in T list( 
         for exponent in expBasis list (
@@ -42,13 +45,13 @@ AKmatrix = (R,e,f) -> (
     p:=char R;
     d:=dim R;
     n:=p^e;
-    I:=(ideal(vars R))^[n];
-    monBasis=(entries basis(R^1/I))#0;
-    expBasis=flatten(apply(monBasis,exponents));
-    L=for i from 0 to p^(e*d)-1 list f*(monBasis#i);
+    I:=frobenius^e(ideal(vars R));
+    monBasis:=(entries basis(R^1/I))#0;
+    expBasis:=flatten(apply(monBasis,exponents));
+    L:=for i from 0 to p^(e*d)-1 list f*(monBasis#i);
     -- T#i is a hashtable whose keys are exponents & values are coeefs
     --     appearing in f*(ith monomial)
-    T=flatten (for i from 0 to p^(e*d)-1 list ( expList := simpExpDecomp(e,L#i);
+    T:=flatten (for i from 0 to p^(e*d)-1 list ( expList := simpExpDecomp(e,L#i);
         for key in keys expList list (getIndex(key,p,e), i)=>expList#key));
     map(R^(n^d),R^(n^d),T)
 )
@@ -71,7 +74,7 @@ fSplittingNumber = (R,e) -> (
     J:=systemOfParameters(R);
     I:=ideal(vars(R/J));
     delta:=sub(ann(I),R);
-    return degree((J^[n]):delta^n)
+    return degree((frobenius^e(J)):delta^n)
     )
 --Assumes R is Gorenstein
 
@@ -84,6 +87,36 @@ fSplittingNumberNonGor = (R,e,f) -> (
     phi:=inducedMap(S^1,module(I));
     return numgens source basis(coker(Hom(M,phi)))
 )
+
+-- ----- AKmatrix Tests -------------
+    R = ZZ/2[x]; 
+    f=1;
+    -- assert(AKmatrix(R,1,f) == matrix{{1,0},{0,1}})
+
+
+-- -----AKmatrxIdeal Tests --------------
+
+
+
+-- fSplittingNumber Tests --------------
+    R = ZZ/2[x,y,z]; f = z^2-x*y;
+    a1=2;
+    a2=8;
+    a3=32;
+    assert(fSplittingNumber(R/ideal f,1) == a1)
+    assert(fSplittingNumber(R/ideal f,2) == a2)
+    assert(fSplittingNumber(R/ideal f,3) == a3)
+    assert(fSplittingNumberNonGor(R,1,f) == a1)
+    assert(fSplittingNumberNonGor(R,2,f) == a2)
+    assert(fSplittingNumberNonGor(R,3,f) == a3)
+
+    R = ZZ/3[x,y,z]; f = z^2-x*y;
+    a1 = 5;
+    a2 = 41;
+    assert(fSplittingNumber(R/ideal f,1) == a1)
+    assert(fSplittingNumberNonGor(R,1,f) == a1)
+    assert(fSplittingNumber(R/ideal f,2) == a2)
+    assert(fSplittingNumberNonGor(R,2,f) == a2)
 
 
 
