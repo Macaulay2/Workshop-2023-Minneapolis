@@ -376,6 +376,8 @@ entries GCMatrix := M -> (
     T := applyTable(L, t->t_B))
  
 
+undocumented {AbstractGCRing, (net, GCAlgebra)}
+
 -* Documentation section *-
 beginDocumentation()
 
@@ -431,6 +433,12 @@ Description
 doc ///
 Key
   bracketRing
+  (bracketRing, AbstractGCRing) 
+  (bracketRing, BracketRing)    
+  (bracketRing, GCAlgebra)      
+  (bracketRing, GCExpression)   
+  (bracketRing, VisibleList, ZZ)
+  (bracketRing, ZZ, ZZ)         
 Headline
   Constructor for bracket rings
 Usage
