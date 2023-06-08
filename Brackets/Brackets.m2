@@ -116,7 +116,7 @@ gc (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     )
 
 bracketRing GCAlgebra := o -> Gnd -> Gnd#bracketRing
-gens GCAlgebra := Gnd -> gens ring Gnd
+gens GCAlgebra := o -> Gnd -> gens ring Gnd
 net GCAlgebra := Gnd -> (
     R := ring Gnd;
     n := numgens R;
