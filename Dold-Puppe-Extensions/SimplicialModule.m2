@@ -27,9 +27,10 @@ SimplicialModule = new Type of MutableHashTable --
 SimplicialModule.synonym = "Simplicial Module"
 SimplicialModuleMap.synonym = "Map of Simplicial Modules"
 
+topDegree = method();
 topDegree SimplicialModule := ZZ => S -> S.topDegree
 
-ring SimplicialModule := Ring => C -> C.ring
+ring SimplicialModule := Ring => S -> S.ring
 
 --H1 is the face maps, H2 is the degeneracy maps
 simplicialModule = method(Options => {Base=>0})
@@ -61,26 +62,27 @@ simplicialModule(Complex,ZZ) := SimplicialModule => opts -> (C,d) -> (
      if not instance(opts.Base, ZZ) then
       error "expected Base to be an integer";
      if instance(C,Complex) then (
-	 degenmapHash := hashTable flatten flatten for n from 1 to d list (
-	     for k from 0 to n list (
-		 for i from 0 to n list (
-		     (n,i) => degenMapi(n,i,C)
-		     );
-		 );
+	 degenmapHash := hashTable flatten for n from 1 to d list (
+	    for i from 0 to n list (
+		(n,i) => degenMapi(n,i,C)
+		)
 	     );
-	 facemapHash := hashTable flatten flatten for n from 1 to d list (
-	     for k from 0 to n list (
-		 for i from 0 to n list (
-		     (n,i) => faceMapi(n,i,C)
-		     );
-		 );
+    print(degenmapHash);
+	 facemapHash := hashTable flatten for n from 1 to d list (
+	     for i from 0 to n list (
+	 	 (n,i) => faceMapi(n,i,C)
+	 	 )
 	     );
 	 return simplicialModule(C,facemapHash,degenmapHash,d)
 	 );
      )
  
  
-SimplicialModule _ (ZZ,ZZ) := Module => (S,n,k) -> if C.module#?(n,k) then C.module#(n,k) else (ring C)^0
+SimplicialModule _ Sequence := Module => (S,p) -> (
+    if #p =!= 2 then
+    	error ("Expected a pair of integer indices");
+    if C.module#?(p#0,p#1) then C.module#(p#0,p#1) else (ring C)^0
+    )
 SimplicialModule _ ZZ := Module => (S,n) -> directSum(for k from 0 to n list S_(n,k))
 
 net SimplicialModule := S -> (
@@ -111,7 +113,7 @@ target SimplicialModuleMap := SimplicialModule => f -> f.target
 ring SimplicialModuleMap := SimplicialModule => f -> ring source f
 degree SimplicialModuleMap := ZZ => f -> f.degree
 
-isHomogeneous ZZdFactorizationMap := (f) -> all(values f.map, isHomogeneous)
+isHomogeneous SimplicialModuleMap := (f) -> all(values f.map, isHomogeneous)
 
 map(SimplicialModule, SimplicialModule, HashTable) := SimplicialModuleMap => opts -> (tar, src, maps) -> (
     if not(topDegree tar == topDegree src) then error "expected source and target to have the same top degree";
