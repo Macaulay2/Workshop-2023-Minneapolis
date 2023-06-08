@@ -132,6 +132,29 @@ isVexillary List := Boolean => (perm) -> (
 )
 
 ------------------------------------------
+--INPUT: longestIncrSeq, takes a previous value, a previous size, and a permutation in one line notation
+--OUTPUT: returns the length of the longest consecutive permutation plus the previous size
+--        that starts at the beginning of the permutation and has the elements of the sequence larger than the previous value
+--TO DO: Document
+------------------------------------------
+longestIncrSeq = method()
+longestIncrSeq (ZZ,ZZ,List) := List => memoize ((preVal,prevSZ,w) -> (
+    if w == {} then return prevSZ;
+    
+    longestSZ := prevSZ;
+    currSZ := prevSZ;
+    currVal := preVal;
+    
+    for i from 0 to #w-1 do (
+    	currVal = w_i;
+	if (currVal < preVal) then currSZ = longestIncrSeq(preVal,prevSZ,w_{i+1..#w-1})
+	else currSZ = longestIncrSeq(currVal,prevSZ+1,w_{i+1..#w-1});
+	longestSZ = max(longestSZ,currSZ);
+    );
+    return longestSZ;
+))
+
+------------------------------------------
 --INPUT: rajCode, takes a permutation in one line notation
 --OUTPUT: returns the rajCode of the permutation
 ------------------------------------------
@@ -161,35 +184,3 @@ rajIndex List := ZZ => (w) -> (
     return sum rajCode w;
     
 );
-
-
-------------------------------------------
---INPUT: longestIncrSeq, takes a previous value, a previous size, and a permutation in one line notation
---OUTPUT: returns the length of the longest consecutive permutation plus the previous size
---        that starts at the beginning of the permutation and has the elements of the sequence larger than the previous value
---TO DO: Document
-------------------------------------------
-longestIncrSeq = (preVal,prevSZ,w) -> (
-    
-    if w == {} then return prevSZ;
-    
-    longestSZ := prevSZ;
-    currSZ := prevSZ;
-    currVal := preVal;
-    
-    for i from 0 to #w-1 do (
-
-    	
-    	currVal = w_i;
-	if (currVal < preVal) then currSZ = longestIncrSeq(preVal,prevSZ,w_{i+1..#w-1})
-	else currSZ = longestIncrSeq(currVal,prevSZ+1,w_{i+1..#w-1});
-	longestSZ = max(longestSZ,currSZ);
-    );
-    return longestSZ;
-);
-
-longestIncrSeq = memoize longestIncrSeq ;
-
-
-
-
