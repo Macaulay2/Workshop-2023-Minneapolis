@@ -1,6 +1,7 @@
 restart
 loadPackage("Brackets",FileName=>"../Brackets.m2")
 G = gc(a .. h,4,CoefficientRing => QQ[u,v])
+--G = gc(a .. h,4,CoefficientRing => QQ[u,v],Strategy => Grassmannian)
 B = bracketRing G
 
 l1 = (a * b)_G;
