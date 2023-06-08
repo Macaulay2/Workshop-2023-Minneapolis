@@ -302,8 +302,8 @@ minimizeDiffOnce(Matrix,ZZ,ZZ) := (A,u,v) -> (
     a := rank target A;
     R := ring A;
     inv := (A_(u,v))^(-1);
-    N := map(R^a,R^a, (i,j) -> if i == v and j != v then -inv*A_(u,j) else 0) + id_(R^a);
-    Q := map(R^a,R^a, (i,j) -> if j == u and i != u then -inv*A_(i,v) else 0) + id_(R^a);
+    N := map(source A,source A, (i,j) -> if i == v and j != v then -inv*A_(u,j) else 0) + id_(R^a);
+    Q := map(target A,target A, (i,j) -> if j == u and i != u then -inv*A_(i,v) else 0) + id_(R^a);
     A' := Q*N^(-1)*A*N*Q^(-1);
     newRows := select(a,i-> i != u and i != v);
     newCols := select(a,i-> i != u and i != v);
@@ -349,7 +349,7 @@ minimizeDM(DifferentialModule) := r ->(
 
 --  Input:  a free complex F and a degree d
 --  Output: the corresponding free differential module of degree da
---MAYA: NOT YET CHANGED TO BE COMPATIBLE WITH NEW DEGREE CONVENTION
+--MAYA: changed to be compatible with degree convention
 foldComplex = method();
 foldComplex(ChainComplex,ZZ) := DifferentialModule => (F,d)->(
     R := ring F;
@@ -604,5 +604,14 @@ TEST ///
     phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
     D = differentialModule phi
     M = minimizeDM D
-    assert(degrees M=={-1,-1})
+    assert(degree M==2)
+///
+
+TEST ///
+    S = QQ[x,y]
+    m = matrix{{0,x,y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
+    phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
+    D = differentialModule phi
+    M = minimizeDM D
+    assert(degrees M_0==2)
 ///
