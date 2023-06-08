@@ -557,8 +557,6 @@ Description
     See also @TO BracketRing@.
 ///
 
-<<<<<<< HEAD
-
 doc ///
 Key
   normalForm
