@@ -85,20 +85,18 @@ AKhashTable = (R,e,f) -> (
             coe = expList#key;
             rowList#i = coe;
             rHT#i#j = coe;
-        )
+        );
+        rowList
     );
     (rHT,cHT)
 )
 
 swapRows = (rHT,cHT,r,s) -> (
     -- swaps rows r & s
-    rRow = rHT#r;
-    rHT#r = rHT#s;
-    rHT#s = rRow;
     for jthCol in cHT do (
         if jthCol#?r then (
             if jthCol#?s then (
-                temp = jthCol#r;
+                temp := jthCol#r;
                 jthCol#r = jthCol#s;
                 jthCol#s = temp;
             ) else (
@@ -107,11 +105,93 @@ swapRows = (rHT,cHT,r,s) -> (
         ) else (
             if jthCol#?s then (
                 jthCol#r = jthCol#s; remove(jthCol,s)
-            ) else ();
+            );
+        )
+    );
+    (switch(r,s,rHT),cHT)
+);
+
+swapCols = (rHT,cHT,c,d) -> (
+    -- swap cols c & d
+    for ithRow in rHT do(
+        if ithRow#?c then (
+            if ithRow#?d then (
+                temp := ithRow#c;
+                ithRow#c = ithRow#d;
+                ithRow#d = temp; 
+            ) else (
+                ithRow#d = ithRow#c; 
+                remove(ithRow,c);
+            )
+        ) else (
+            if ithRow#?d then (
+                ithRow#c = ithRow#d;
+                remove(ithRow,d);
+            );
+        )
+    );
+    (rHT,  switch(c,d,cHT))
+)
+
+hashToMatrix = (R,rHT,cHT) -> (
+    map(R^(#cHT),R^(#rHT), 
+        flatten for i from 0 to #rHT-1 list (
+            for j in keys rHT#i list ((i,j)=>rHT#i#j)
+        )
+    )
+)
+
+blockDiagonalize = (rHT,cHT) -> (
+    fixedRows := 0; -- number of already "fixed" rows 
+    fixedCols :=0; -- number of already "fixed" cols 
+    topRow := 0;
+    topCol := 0;
+    doRows := true; -- flag for whether to work on rows or cols
+    while ((fixedRows < #rHT and fixedCols < #cHT)) do (
+        if doRows then (
+        topRow = fixedRows;
+        eligableRows := sort select(keys cHT#fixedCols, t -> t>=fixedRows);
+        print("eligable rows are ");
+        print(eligableRows);
+        for i in eligableRows do(
+            if i==topRow then (
+                topRow = i + 1;
+            ) else (
+                (rHT,cHT) = swapRows(rHT,cHT,topRow,i);
+                topRow = topRow+1;
+            );
+        );
+        fixedRows = topRow;
+        print("Finished increasing rows; number is");
+        print(fixedRows);
+        doRows = not doRows;
+        ) else (
+        topCol = fixedCols;
+        eligableCols := sort select (keys rHT#fixedRows, t -> t>=fixedCols);
+        print("eligableCols are");
+        print(eligableCols);
+        for j in eligableCols do (
+            if j == topCol then (
+                topCol = j+1;
+            ) else (
+                (rHT,cHT) = swapCols(rHT,cHT,topCol,i);
+                topCol = topCol+1;
+            )
+        );
+        fixedCols = topCol;
+        doRows = not doRows;
+        print("Finished increasing cols; number is");
+        print(fixedCols);
         )
     );
     (rHT,cHT)
-);
+)
+
+R = ZZ/2[x,y]; g = 1+y;
+(rHT,cHT) = AKhashTable(R,1,g);
+smallMat = hashToMatrix(R, rHT,cHT)
+(rD,cD) = blockDiagonalize(rHT,cHT);
+diagMat = hashToMatrix(R,rD,cD)
 
 AKmatrixIdeal = (R,e,I) -> (
     p:=char R;
@@ -159,9 +239,40 @@ fSplittingNumberNonGorIdeal = (R,e,J) -> (
     -- assert(AKmatrix(R,1,f) == matrix{{1,0},{0,1}})
 
 
--- -----AKmatrxIdeal Tests --------------
+-- -----AKhashTable Tests --------------
+    R = ZZ/2[x]; f = 1;
+    (rHT,cHT) = AKhashTable(R,1,f);
+    assert(keys (rHT#0) == {0});
+    assert(keys (rHT#1) == {1});
+    assert(rHT#0#0 == 1);
+    assert(rHT#1#1 == 1);
+    assert(keys (cHT#0) == {0});
+    assert(keys (cHT#1) == {1});
+    assert(cHT#0#0 == 1);
+    assert(cHT#1#1 == 1);
 
+    (rHT,cHT) = swapRows(rHT,cHT,0,1);
+    assert(pairs rHT#0 == {(1,1)});
+    assert(pairs rHT#1 == {(0,1)});
+    assert(pairs cHT#0 == {(1,1)});
+    assert(pairs cHT#1 == {(0,1)});
 
+    (rHT,cHT) = swapCols(rHT,cHT,0,1);
+    assert(pairs rHT#0 == {(0,1)});
+    assert(pairs rHT#1 == {(1,1)});
+    assert(pairs cHT#0 == {(0,1)});
+    assert(pairs cHT#1 == {(1,1)});
+    
+
+    -- note "pairs" has no guaranteed order; need to sort!
+    R = ZZ/3[x]; f=1+2*x;
+    (rHT,cHT) = AKhashTable(R,1,f);
+    assert(sort pairs rHT#0 == sort {(0,1),(2,2*x)});
+    assert(sort pairs rHT#1 == sort {(0,2),(1,1)});
+    assert(sort pairs rHT#2 == sort {(1,2),(2,1)});
+    assert(sort pairs cHT#0 == sort {(0,1),(1,2)});
+    assert(sort pairs cHT#1 == sort {(1,1),(2,2)});
+    assert(sort pairs cHT#2 == sort {(0,2*x),(2,1)});
 
 -- fSplittingNumber Tests --------------
     R = ZZ/2[x,y,z]; f = z^2-x*y;
