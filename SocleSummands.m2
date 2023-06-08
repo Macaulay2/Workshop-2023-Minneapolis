@@ -60,8 +60,10 @@ socle Ring := R -> (
     )
 socle Module := M -> (
     R := ring M;
-    (0_R*M):(ideal gens ring M)
+--    (0_R*M):(ideal gens ring M)
+    kernel (M**transpose vars R)
     )
+
 
 
 socleSummands = method(Options => {Verbose => false, Boundaries => true})
@@ -217,6 +219,7 @@ Description
   Example
     summandExamples
 ///
+
 doc ///
 Key
  almostKoszul
@@ -245,11 +248,18 @@ Description
    This shows that the the socle summands do NOT all come from the
    Koszul complex, but leaves open the conjecture that 
    (with the one exception) the socle summand persist once they start.
+   
+   It's also striking that (in this case) the first socle
+   summands come from the linear strand of the resolution,
+   though they begin to appear exactly where the resolution
+   ceases to be linear.
+   
   Example
-   R = almostKoszul(ZZ/32003, 3)
-   F = res (coker vars R, LengthLimit => 4)
+   R = almostKoszul(ZZ/32003, 2)
+   F = res (coker vars R, LengthLimit =>4)
    betti F
    socleSummands F
+   socleSummands linearPart F
 References
 SeeAlso
    socleSummands
@@ -453,6 +463,13 @@ socleSummandsSemigroup(I,7)
 ))
 assert (L == {{0}, {0,2,3}, {0,3,4,5}, {0,4,5,6,7}, {0,4,6,7}})
 ///
+TEST///
+R = almostKoszul(ZZ/101, 3)
+F = res(coker vars R, LengthLimit => 5)
+assert( degree prune socle coker F.dd_2 == 3 and
+degree prune socle coker F.dd_3 == 18)
+assert(socleSummands F ==socleSummands linearPart F)
+///
 
 end--
 
@@ -586,3 +603,47 @@ betti F
 betti linearPart F
 socleSummands linearPart F
 socleSummands F
+H = summandExamples
+netList for i from 1 to 5 list(
+    I = H#i;
+    R = ring I/I;
+    F = res(coker vars R, LengthLimit => 6);
+    (socleSummands F, socleSummands linearPart F)
+    )
+
+R =almostKoszul(ZZ/101,1)
+F = res(coker vars R, LengthLimit => 7)
+betti F
+toString coker F.dd_2
+
+M = cokernel matrix {{0, 0, 0, 0, 0, 0, -w, 0, 0, 0, 0, -v, 0, 0, 0, 0, u, 0, 0, 0, 0, z, 0, y, 0, x}, {0, 0, 0, 0, 0, -w, 0, 0, 0, 0, -v, 0, 0, 0, 0, -u, 0, 0, 0, z, 0, 0, 0, 0, x, 0}, {0, 0, 0, 0, -w, 0, 0, 0, 0, -v, 0, 0, 0, u, 0, 0,
+       w, w, z, 0, y, w, x+w, 0, 0, 0}, {0, 0, 0, -w, 0, 0, 0, v, 0, 0, 0, 0, u, 0, z, y, -w, x-w, 0, 0, 0, -w, -w, 0, 0, 0}, {0, w, 0, 0, 0, 0, 0, 0, u, z, y, x, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {w, 0, v, u, z, y, x, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}
+
+socle (M = coker F.dd_2)
+N = (0_R*M)
+N:(R_0) -- error
+N:(ideal R_0) -- error
+kernel (N**transpose vars R)
+
+
+restart
+needsPackage "MonomialOrbits"
+needsPackage "SocleSummands"
+
+kk = ZZ/101
+S = kk[a,b,c]
+I = ideal "a3, a2b, bc2, b3, c3"
+not isGolod(S/I) and not isBurch I
+use S
+elapsedTime socleSummandsSemigroup(I,10)
+socleSummands (
+
+restart
+kk = ZZ/101
+S = kk[a,b,c]
+I = ideal "a3, a2b, bc2, b3, c3"
+R = S/I
+M = coker vars R
+elapsedTime F = res(M, LengthLimit => 12)
+elapsedTime F = res(M, LengthLimit => 13)

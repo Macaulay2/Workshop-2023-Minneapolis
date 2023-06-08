@@ -14,7 +14,10 @@ newPackage(
 	PackageExports => {"Depth"},
 	DebuggingMode => true)
 export {
- "roosTable", "higherDepthTable", "depthZeroTable"
+ "roosTable", 
+ "higherDepthTable", 
+ "depthZeroTable",
+ "almostKoszul"
 }
 
 
@@ -132,6 +135,28 @@ twodimIrrationalPoincare = (degs2 := {{36,0}, {33,3}, {30,6}, {28,8}, {26,10}, {
     ker map(QQ[t,s], QQ[w_1 .. w_9, Degrees => degs2], apply(degs2, a -> t^(a#0)*s^(a#1)))
     )
 
+ almostKoszul = method()
+ almostKoszul (Ring, ZZ) := Ring => (kk, a)-> (
+    --A series of examples discovered by Jan-Erik Roos:
+    --
+    --If kk = QQ then the resolution of kk over the output
+    --ring has linear resolution for a steps but 1 quadratic syzygy
+    --at the a+1-st step. 
+    --It also seems to have the first socle summand
+    --at the a+1-st step!
+    --These phenomena are also visible with kk = ZZ/32003, at
+    --least for moderate size a.
+    x := symbol x; 
+    y := symbol y;
+    z := symbol z; 
+    u := symbol u; 
+    v := symbol v; 
+    w := symbol w;
+    S := kk[x,y,z,u,v,w];
+    I := ideal (x^2,x*y,y*z,z^2,z*u,u^2,u*v,v*w,w^2,
+           x*z+a*z*w-u*w,z*w+x*u+(a-2)*u*w);
+    S/I
+       )
 
 
 ---TO DO: create a function to identify non-Koszul examples (see Table 8)
@@ -202,6 +227,47 @@ Description
     depthZeroTable
 ///
 
+doc ///
+Key
+ almostKoszul
+Headline
+ Examples discovered by Jan-Erik Roos
+Usage
+ R = alomostKoszul(kk,a)
+Inputs
+ kk:Ring
+  the field over which R will be defined
+ a: ZZ
+  length of the linear part of the resolution of kk over R
+Outputs
+ R:Ring
+Description
+  Text
+   A standard graded ring R is Koszul if the
+   minimal R-free resolution F of its residue field kk
+   is linear. Roos' examples, which are 2-dimensional rings of
+   depth 0 in 6 variables, show that it is not enough to require
+   that F be linear for a steps, no matter how large a is.
+   
+   The examples are also remarkable in that (as far as we could check)
+   the (a+1)-st syzygy, and all subsequent syzygies
+   of kk have socle summands, but none before the (a+1)-st do.
+   This shows that the the socle summands do NOT all come from the
+   Koszul complex, but leaves open the conjecture that 
+   (with the one exception) the socle summand persist once they start.
+   
+   It's also striking that (in this case) the first socle
+   summands come from the linear strand of the resolution,
+   though they begin to appear exactly where the resolution
+   ceases to be linear.
+   
+  Example
+   R = almostKoszul(ZZ/32003, 4)
+   F = res (coker vars R, LengthLimit =>6)
+   betti F
+References
+  Unpublished paper by Jan-Erik Roos
+///
 
 -* Test section *-
 TEST///
@@ -216,12 +282,19 @@ S=ring I
 assert(depth (S/I) == 1)
 ///
 
+TEST///
+   R = almostKoszul(ZZ/32003, 2)
+   F = res (coker vars R, LengthLimit =>3)
+   assert( betti F === new BettiTally from {(0,{0},0) => 1, (1,{1},1) => 6, (2,{2},2) => 26, (3,{3},3) => 104, (3,{4},4) => 1,
+      (4,{4},4) => 404, (4,{5},5) => 10})
+///
+
 end--
 
 uninstallPackage "QuadraticIdealExamplesByRoos"
 restart
 installPackage "QuadraticIdealExamplesByRoos"
-
+viewHelp QuadraticIdealExamplesByRoos
 viewHelp "QuadraticIdealExamplesByRoos"
 
 
