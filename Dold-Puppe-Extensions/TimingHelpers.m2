@@ -10,7 +10,7 @@ race = (fun1,fun2,args,numIterations) -> (
     T = tally L;
     Tcat = tally (L|{true,false});
     -- Concattenating with true false so that 
-    if T#false>T#true then print(toString(fun1) | " was slower than " | toString(fun2)) else print(toString(fun2) | " was slower than " | toString(fun1));
+    if Tcat#false>Tcat#true then print(toString(fun1) | " was faster than " | toString(fun2)) else print(toString(fun2) | " was faster than " | toString(fun1));
     T
     )
 	    
