@@ -274,10 +274,11 @@ Description
 doc ///
 Key
  "almostKoszul"
+ (almostKoszul, Ring, ZZ)
 Headline
  Examples discovered by Jan-Erik Roos
 Usage
- R = alomostKoszul(kk,a)
+ R = almostKoszul(kk,a)
 Inputs
  kk:Ring
   the field over which R will be defined
