@@ -19,7 +19,8 @@ cohomDim J
 p = 5
 R = ZZ/p[x_1..x_6]
 J = minors( 2, matrix {{x_1,x_2,x_3},{x_4,x_5,x_6}} )
-cohomDim J == 2
+time cohomDim J == 2
+time cohomDim( J, Strategy => Filter ) == 2
 
 -------------------
 -- Theorem 3.2 in https://arxiv.org/abs/1503.06184v1
@@ -31,7 +32,8 @@ R = ZZ/p[x_(1,0)..x_(d,n)];
 B = apply(1..d, i -> transpose matrix toList apply(n, j-> { x_(i,j), x_(i,j+1) }) );
 B = fold( B, (a,b) -> a | b );
 J = minors( 2, B );
-cohomDim J == n*d - 1
+time cohomDim J == n*d - 1
+time cohomDim( J, Strategy => Filter ) == n*d - 1 -- Takes too long!
 
 -------------------
 -- Result mentioned intro of in E.E. Witt / Advances in Mathematics 231 (2012) 1998–2012 
@@ -42,7 +44,9 @@ s = 6;
 R = ZZ/p[x_(1,1)..x_(r,s)]
 X = matrix toList apply(1..r, i -> toList apply(1..s, j -> x_(i,j) ) );
 I = minors( min(r,s), X );
-cohomDim I == s - r + 1 and all( 0..(s-r), i -> localCohomology( i, I, R ) == 0 )
+time cohomDim I == s - r + 1 and all( 0..(s-r), i -> localCohomology( i, I, R ) == 0 )
+-- 11s
+time cohomDim( I, Strategy => Filter ) == s - r + 1 and all( 0..(s-r), i -> localCohomology( i, I, R, Strategy => Filter ) == 0 )  -- takes too long
 
 -----------------
 -- Example 4.2 in https://arxiv.org/pdf/1509.01519.pdf
