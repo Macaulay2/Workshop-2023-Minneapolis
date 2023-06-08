@@ -245,20 +245,23 @@ codeSupport(NeuralCode) := C -> (
 canonicalCode = method();
 
 canonicalCode List := NeuralCode => L -> (
+    --want to check that elements in L are in same ring, return error otherwise
     R := ring L#0;
     d := numgens R;
     allCodeList := allCodeWords(d);
     codeList := for i in allCodeList list (
 	validCode := true;
 	for j in L do (
-	    if sub(j,matrix{apply(d,k->value(i#k))})=!= 0 then (
+	    if sub(j,matrix{
+		    apply(d,k->sub(value(i#k),R))
+		    })=!= 0 then (
 		validCode = false;
 		break
 		);
 	    );
-	if validCode == true then i
+	if validCode == false then continue else i
 	);
-    neuralCode(codeList)
+    neuralCode(codeList) --getting error array index 0 out of bounds 0 .. -1
     )
 
 ----The following function is an internal function from the PseudomonomialPrimaryDecomposition package by Alan Veliz-Cuba
