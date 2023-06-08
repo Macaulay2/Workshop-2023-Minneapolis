@@ -17,16 +17,14 @@ newPackage(
 export {"Subring",
         "subring",
 	"presentationRing",
-	"presRing",
 	"presentationMap",
-	"presMap",
         "presentationIdeal",
         "toQuotientRing"}
 
-Subring := new Type of HashTable
+Subring = new Type of HashTable
 
 -- a method to create subrings
-subring := method()
+subring = method()
 subring Matrix := genMatrix -> (
     
     -- compute presentation ring
@@ -59,24 +57,24 @@ subring List := genList -> (
     subring matrix {genList}
     )
 
-presentationRing := method()
+presentationRing = method()
 presentationRing Subring := S -> (
-    S#presRing
+    S#presentationRing
     )
 
-presentationMap := method()
+presentationMap = method()
 presentationMap Subring := S -> (
-    S#presMap
+    S#presentationMap
     )
 
-presentationIdeal := method()
+presentationIdeal = method()
 presentationIdeal Subring := S -> (
     P := presentationRing S;
     f := presentationMap S;
     return ker f; --kernel is cached automatically
     )
 
-toQuotientRing := method()
+toQuotientRing = method()
 toQuotientRing Subring := S -> (
     P := presentationRing S;
     I := presentationIdeal S;

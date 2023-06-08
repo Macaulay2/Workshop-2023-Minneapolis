@@ -1,0 +1,24 @@
+
++ M2 --no-readline --print-width 97
+Macaulay2, version 1.22
+with packages: ConwayPolynomials, Elimination, IntegralClosure, InverseSystems, Isomorphism,
+               LLLBases, MinimalPrimes, OnlineLookup, PrimaryDecomposition, ReesAlgebra,
+               Saturation, TangentCone
+/usr/local/share/Macaulay2/Core/debugging.m2:18:6:(1):[21]: error: mutable unexported unset symbol(s) in package Subrings: 'FirstPackage'
+currentString:1:0-1:12: here is the first use of 'FirstPackage'
+/usr/local/share/Macaulay2/Core/debugging.m2:18:6:(1):[21]: --entering debugger (type help to see debugger commands)
+/usr/local/share/Macaulay2/Core/debugging.m2:18:5-18:26: --source code:
+     olderror processArgs args)
+
+i1 : subring
+
+o1 = subring
+
+o1 : Symbol
+
+i2 : viewHelp "subring"
+
+i3 : g
+stdio:3:2:(3): error: syntax error at ':'
+
+i3 : 
