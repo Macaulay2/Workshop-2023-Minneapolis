@@ -365,25 +365,3 @@ end--
 uninstallPackage "QuadraticIdealExamplesByRoos"
 restart
 installPackage "QuadraticIdealExamplesByRoos"
-
-viewHelp QuadraticIdealExamplesByRoos
-viewHelp "QuadraticIdealExamplesByRoos"
-
-uninstallPackage "SocleSummands"
-installPackage "SocleSummands"
-
-applyPairs(roosTable, (i,I) -> (i,socleSummandsSemigroup(I,5)))
-applyPairs(roosIsotopes, (i,I) -> (i,socleSummandsSemigroup(I,7)))
-
-viewHelp "socleSummandsSemigroup"
-
-
-H0 = applyPairs(H, (i,I) -> if (depth(S/I) == 0 and not isBurch I and not isGolod (S/I)) then (i,I))
-
-elapsedTime applyPairs(H0, (i,I) -> (i,socleSummandsSemigroup(I,7)))
---22 & 59 have semigroup {0,6} --when checking up to spot 6
-H5 = new HashTable from {42 => H0#42, 34 => H0#34, 55 => H0#55, 60 => H0#60}
-elapsedTime applyPairs(H5, (i,I) -> (i, socleSummandsSemigroup(I,9)))
-
-
----68,78,81 have different socle summand semigroups than their isotopes
