@@ -6,7 +6,7 @@ newPackage(
           Authors => {
 	      { Name => "Dalton Bidleman", Email => "", HomePage => ""},
 	      { Name => "Tim Duff", Email => "timduff@uw.edu", HomePage => "https://timduff35.github.io/timduff35/"},
-	      { Name => "Jack Kendrick", Email => "", HomePage => ""},
+	      { Name => "Jack Kendrick", Email => "jackgk@uw.edu", HomePage => ""},
 	      { Name => "Thomas Yahl", Email => "thomasjyahl@tamu.edu", HomePage => "tjyahl.github.io"},
 	      { Name => "Michael Zeng", Email => "", HomePage => ""}		      
 	      },
@@ -463,6 +463,48 @@ Description
   Text
     See also @TO BracketRing@.
 ///
+
+
+doc ///
+Key 
+ GCAlgebra
+Description
+ Text
+  An object of class GCAlgebra represents a Grassmann-Cayley algebra. 
+  The Grassmann-Cayley algebra may be viewed as an algebra of linear subspaces of $\mathbb{P}^{d−1}.$ In this algebra, there are two operations which correspond to the join and meet of subspaces. We denote these operators by * and ^, respectively. 
+  The first operator is simply multiplication in a skew- commutative polynomial ring $\mathbb{C}\langle a_1, . . . , a_n\rangle.$ An algebraic formula for the meet operator is more complicated, but it can be defined using the shuffle product. 
+  As a $k-$vector space, the Grassmann-Cayley algebra has a direct-sum decomposition
+  $$\oplus_{k=0}^d\Lambda^k(a_1, \ldots, a_n)$$
+  where $\Lambda^k(a_1,\ldots, a_n)$ is the space of {\it extensors} of the form $a_{i_1}\cdots a_{i_k}.$
+  We may identify $\Lambda^d(a_1, \ldots, a_n)\cong B_{n,d}.$
+///
+
+doc ///
+Key
+ gc
+Headline
+ Constructor for Grassmann-Cayley algebras.
+Usage
+ G = gc(vectorSymbols, d)
+Inputs
+ vectorSymbols:List
+ d:ZZ
+Outputs
+ G:GCAlgebra
+Description
+ Text
+  To construct a Grassmann-Cayley algebra specify a @ ofClass{VisibleList} @ of $n$ symbols and an integer.
+ Example
+  G = gc(a .. f, 3)
+ Text
+  See also @TO GCAlgebra@.
+///
+
+
+
+
+
+
 
 -* Test section *-
 TEST /// -* Sturmfels Example 3.1.10 *-
