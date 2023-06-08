@@ -180,9 +180,16 @@ localCohomologyFilter := ( i, I, R ) ->
     J := ideal filterSeq;
     p := char R;
     u := ( product filterSeq )^( p-1 );
-    rt := root makeFModule map( FF( R^1/J ), R^1/J, u );
-    rtMorphism := generatingMorphism map( saturate( FF rt, I ), saturate( rt, I ), u );
-    M = makeFModule rtMorphism;
+    (time rt := root makeFModule map( FF( R^1/J ), R^1/J, u ) );
+    (time K := ascendingIdealEquality( 
+            e ->  frobeniusPower( p^e, J ) : ideal( u^(lift( (p^e-1)/(p-1), ZZ )) ) 
+    ) );
+--    rt = minimalPresentation rt/J;
+    M1 := saturate( R^1/(frobenius K), I );
+    N1 := saturate( R^1/K, I );
+    rtMorphism := generatingMorphism map( M1, N1, u );
+    -- rtMorphism := generatingMorphism map( saturate( FF rt, I ), saturate( rt, I ), u );
+    M := makeFModule rtMorphism;
     M#cache#(symbol root) = rtMorphism;
     M
 )
@@ -396,7 +403,7 @@ ascendingIdealEquality = method( Options => {MaxTries => infinity})
 
 -----this function specifically finds the FIRST spot that we retain equlaity and returns
 -----the union of ideals up to that spot (equivalently the ideal at that spot)
-ascnedingIdealEquality (Function) := Ideal => o -> f ->
+ascendingIdealEquality (Function) := Ideal => o -> f ->
 (
     i:=1;
     isEqual = false;
@@ -404,20 +411,20 @@ ascnedingIdealEquality (Function) := Ideal => o -> f ->
 	isEqual = (f(i)==f(i+1));
 	i=i+1;
 	);
-    if not isEqual then error "ascnedingIdealEquality: Reached maximum limit of tries.";
+    if not isEqual then error "ascendingIdealEquality: Reached maximum limit of tries.";
     f(i)
 )
 
 limitClosure = method()
 limitClosure(BasicList) := Ideal => L ->
 (
-    ascnedingIdealEquality(j -> (ideal(apply(L,x->x^(p^j)):ideal(product(apply(L,x->x^(p^j-1))))))
+    ascendingIdealEquality(j -> (ideal(apply(L,x->x^(p^j)):ideal(product(apply(L,x->x^(p^j-1)))))))
 )
 
 lowerLimit = method()
 lowerLimit(BasicList) := Ideal => L ->
 (
     LC:=limitClosure(drop(L,-1));
-    ascnedingIdealEquality( j -> ideal(LC:(L#(-1)^j)))
+    ascendingIdealEquality( j -> ideal(LC:(L#(-1)^j)))
 )
     
