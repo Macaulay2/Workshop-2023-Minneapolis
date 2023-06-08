@@ -36,7 +36,7 @@ globalA1Degree (List) := (Matrix) => (Endo) -> (
     Rquot:= R/promotedEndo; -- defines the quotient ring kk[X_1..Y_n]/(f(X),f(Y)) which is Q(f)\otimes_{k}Q(f) in the paper
     sBXProm :=sub(standBasisX,Rquot); -- moves the standard bases to the quotient ring
     sBYProm :=sub(standBasisY,Rquot); -- moves the standard bases to the quotient ring 
-    bezDetProm := promote(bezDet, Rquot); -- moves the Bezoutian polynomial to the quotient ring
+    bezDetRed := bezDet % promotedEndo; --reduces bezDet mod promotedEndo 
     ------------------------
     phi0 := map(kk,Rquot,(toList ((2*n):0))); -- define a ring map that takes the coefficients to the field kk instead of considering it as an element of the quotient ring (RMK is this even needed?)
     --will return matrix B
@@ -45,11 +45,14 @@ globalA1Degree (List) := (Matrix) => (Endo) -> (
     --print sBXProm#1;
     for i from 0 to m-1 do (
         for j from 0 to m-1 do (
-            B_(i,j)=phi0(coefficient((sBXProm_(0,i)**sBYProm_(0,j))_(0,0), bezDetProm));
+            B_(i,j)=phi0(coefficient((sBXProm_(0,i)**sBYProm_(0,j))_(0,0), bezDetRed));
         );
     );
     return matrix(B);
 );
+
+
+
 
 
 

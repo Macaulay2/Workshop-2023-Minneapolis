@@ -33,12 +33,14 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     --apply localAlgebraBasis to compute standard basis for localization
     standBasisX :=localAlgebraBasis(list1,mapxtoX p);
     standBasisY := localAlgebraBasis(list2,mapxtoY p); 
-    promotedEndo :=sub(ideal list1,R)+sub(ideal list2,R); -- takes the sum of the ideals in the ring kk[X_1..Y_n]
-    Rquot:= R/promotedEndo; -- localized quotient ring
-    
+
+    J:=(ideal Endo):saturate(ideal Endo,p);
+    localIdeal :=sub(mapxtoX(J),R)+sub( mapxtoY(J),R); 
+    Rquot:=R/localIdeal;
     sBXProm :=apply(toList(0..#standBasisX-1),i-> sub(standBasisX_i,Rquot)); -- moves the standard bases to the quotient ring
     sBYProm :=apply(toList(0..#standBasisY-1),i-> sub(standBasisY_i,Rquot)); -- moves the standard bases to the quotient ring 
-    bezDetProm := promote(bezDet, Rquot); -- moves the Bezoutian polynomial to the quotient ring
+    bezDetRed := bezDet % localIdeal;
+    
     ------------------------
     phi0 := map(kk,Rquot,(toList ((2*n):0))); -- ring map that takes the coefficients to the field kk instead of considering it as an element of the quotient ring (RMK is this even needed?)
     --will return matrix B
@@ -47,15 +49,44 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     --print sBXProm#1;
     for i from 0 to m-1 do (
         for j from 0 to m-1 do (
-            B_(i,j)=phi0(coefficient((sBXProm_i**sBYProm_j)_(0,0), bezDetProm));
+            B_(i,j)=phi0(coefficient((sBXProm_i**sBYProm_j)_(0,0), bezDetRed));
         );
     );
     return matrix(B);
 );
 
-T = QQ[z];
-e = {z^4+z^3-z^2-z};
-p=ideal {z+1/1};
-bez_e = localA1Degree(e,p);
-bez_e = transpose bez_e;
-print bez_e
+load "diagonalize.m2"
+T = QQ[x_1];
+f = {x_1^4 + x_1^3 - x_1^2 - x_1};
+p=ideal {x_1+1};
+bez_f = localA1Degree(f,p);
+print "This is the example from the handout."
+print bez_f;
+
+
+T1 = QQ[x_1..x_3];
+f1 = {x_1^2, x_2^2, x_3^2};
+p=ideal {x_1,x_2,x_3};
+bez_f1 = localA1Degree(f1,p);
+print "This is Ex. 3.10 from BMP."
+print diagonalize(bez_f1);
+
+T2 = QQ[y_1..y_2];
+f2 = {y_1*y_2, y_1 + y_2};
+p=ideal {y_1,y_2};
+bez_f2 = localA1Degree(f2,p);
+print "This is Rmk. 7.1 from BMP."
+print bez_f2;
+
+
+load "wittDecomp.m2"
+load "rationalSimplify.m2"
+T3 = QQ[z_1..z_2];
+f3 = {(z_1-1)*z_1*z_2, (3/5)*z_1^2 - (17/3)*z_2^2};
+p=ideal {z_1,z_2};
+localBez1 = diagonalize(localA1Degree(f3,p));
+p=ideal {z_1-1,z_2^2-9/(5*17)};
+localBez2 =diagonalize(localA1Degree(f3,p));
+print rationalSimplify(localBez1 ++ localBez2)
+print wittDecomp((rationalSimplify(localBez2 ++ localBez1))_1);
+
