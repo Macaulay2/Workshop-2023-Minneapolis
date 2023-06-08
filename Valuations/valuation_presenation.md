@@ -117,6 +117,8 @@ Use tropical geometry to build valuation on \(\mathbb{C}[e_1,e_2,e_3,y]\)
 ```
 needsPackage "Valuations"
 needsPackage "SubalgebraBases"
+R1 = QQ[x_1, x_2, x_3]
+R2 = QQ[e_1, e_2, e_3, y]
 a_1 = x_1 + x_2 + x_3
 a_2 = x_1*x_2 + x_1*x_3 + x_2*x_3
 a_3 = x_1*x_2*x_3
