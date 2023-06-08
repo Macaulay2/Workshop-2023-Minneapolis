@@ -1,18 +1,18 @@
--*
 newPackage("DifferentialModules",
     Version => "1.1",
     Date => "5 June 2023",
     Headline => "Computing Free Resolutions of Differential Modules",
     Authors => {
-        {Name => "Michael K. Brown",         Email => "mkb0096@auburn.edu",    HomePage => "http://webhome.auburn.edu/~mkb0096/" }
-	{Name => "Daniel Erman",    	     Email => "erman@wisc.edu",        HomePage => "https://people.math.wisc.edu/~erman/" }
-	{Name => "Tara Gomes",	    	     Email => "gomes072@umn.edu",      HomePage => "Fill in" }
-	{Name => "Pouya	Layeghi",    	     Email => "layeg001@umn.edu",      HomePage => "Fill in" }
-	{Name => "Prashanth Sridhar",	     Email => "pzs0094@auburn.ed",     HomePage => "https://sites.google.com/view/prashanthsridhar/home" }
-	{Name => "Andrew Tawfeek",   	     Email => "atawfeek@uw.edu",       HomePage => "https://www.atawfeek.com/" }
-	{Name => "Eduardo Torres Davila",    Email => "torre680@umn.edu",      HomePage => "https://etdavila10.github.io/" }
-	{Name => "Jay Yang",         	     Email => "jayy@wustl.edu",        HomePage => "https://www.math.wustl.edu/~jayy/" }
-	{Name => "Sasha	Zotine",    	     Email => "18az45@qiueensu.ca",    HomePage => "Fill in" }
+	{Name => "Maya Banks",             Email => "mdbanks@wisc.edu",      HomePage => "https://sites.google.com/wisc.edu/mayabanks" },
+    {Name => "Michael K. Brown",       Email => "mkb0096@auburn.edu",    HomePage => "http://webhome.auburn.edu/~mkb0096/" },
+	{Name => "Daniel Erman",           Email => "erman@wisc.edu",        HomePage => "https://people.math.wisc.edu/~erman/" },
+	{Name => "Tara Gomes",             Email => "gomes072@umn.edu",      HomePage => "Fill in" },
+	{Name => "Pouya Layeghi",          Email => "layeg001@umn.edu",      HomePage => "Fill in" },
+	{Name => "Prashanth Sridhar",      Email => "pzs0094@auburn.ed",     HomePage => "https://sites.google.com/view/prashanthsridhar/home" },
+	{Name => "Andrew Tawfeek",         Email => "atawfeek@uw.edu",       HomePage => "https://www.atawfeek.com/" },
+	{Name => "Eduardo Torres Davila",  Email => "torre680@umn.edu",      HomePage => "https://etdavila10.github.io/" },
+	{Name => "Jay Yang",               Email => "jayy@wustl.edu",        HomePage => "https://www.math.wustl.edu/~jayy/" },
+	{Name => "Sasha Zotine",           Email => "18az45@qiueensu.ca",    HomePage => "Fill in" }
 	    },
   DebuggingMode => true
   )
@@ -22,11 +22,10 @@ export {
     "differentialModule",
     "unfold",
     "foldComplex",
-    "resDM",  
-    "resKC",    
+    "resDM",
+    "resKC",
     "minimize"
     }
-*-
 
 --Input:    A list of matrices with the same number of rows.
 --Output:   The concatenation of those matrices.
@@ -67,6 +66,7 @@ differentialModule ChainComplex := C -> (
 ---MAYA: changed this so that source and target are the same, map may be nonzero degree
 differentialModule Matrix := phi -> (
     --check if the source and target are the same up to a twist
+    if phi^2 != 0 then error "The differential does not square to zero.";
     R := ring phi;
     -- MAYA d := (degrees source phi)_0 - (degrees target phi)_0;
     -- MAYA if target phi != source phi**R^{d} then error "source and target of map are not the same, up to a twist"; 
@@ -83,7 +83,7 @@ differentialModule Matrix := phi -> (
     --if target phi != source phi then error "source and target of map are not the same"; 
     new DifferentialModule from (chainComplex(phi**R^{d},phi)[1]));
     --new DifferentialModule from (chainComplex(phi,phi)[1]));
-    *-
+ *-
 
 
 ring(DifferentialModule) := Ring => D -> D.ring;
@@ -363,14 +363,9 @@ foldComplex(ChainComplex,ZZ) := DifferentialModule => (F,d)->(
     differentialModule(chainComplex(degFDiff,degFDiff)[1]) --maya added
     )
 
-end;
-restart
-load "DifferentialModules.m2"
 
 
--*
 beginDocumentation()
-
 
 doc ///
    Key 
@@ -554,8 +549,8 @@ doc ///
 
 doc ///
    Key 
-    minimize
-    (minimize,DifferentialModule)
+    minimizeDM
+    (minimizeDM,DifferentialModule)
    Headline
     minimizes a sqaure matrix or a differential module
    Usage
@@ -579,4 +574,14 @@ doc ///
       mr = minimize(r)
       mr.dd_1   
 ///
-*-
+
+
+TEST ///
+    S = ZZ/101[x,y,z]
+    phi = map(S^{0,1,1,2},S^{0,1,1,2}, matrix{{0, -x, -y, 1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}, Degree => 2})
+    assert(isHomogeneous phi)
+///
+
+end;
+--restart;
+--load "DifferentialModules.m2";
