@@ -333,14 +333,16 @@ randomFilterRegSeg ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) ->
 (
     L := {};
     G := (trim I)_*;
-    counter := 0;
-    deg := min apply( G, k -> first degree k );
-    density := 0.1;
+    minDeg := min apply( G, k -> first degree k );
+    minDensity := 0.1;
     R = ring I;
     J := ideal( 0_R ); 
-    local candidate;
+    counter := 0;
+    local candidate; local deg; local density;
     while counter < o.Tries and deg < o.MaxDegree and #L < n do
     (
+        deg = minDeg + ( counter // 100 );
+        density = minDensity + 0.009*( counter % 100); 
         if counter < #G then candidate = G_counter
         else candidate = randomElementInIdeal( deg, density, I, Homogeneous => o.Homogeneous);
         if isFilterRegElement( candidate, I, M, J*M ) then 
@@ -349,8 +351,6 @@ randomFilterRegSeg ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) ->
             J = J + ideal( candidate )
         );
         counter = counter + 1;
-        deg = deg + ( counter // 100 );
-        density = density + 0.1*( ( counter % 100 ) // 10 ); 
     );
     if #L < n then error "randomFilterRegSeg: could not find a sequence of the desired length; try increasing Tries or MaxDegree";
     L
