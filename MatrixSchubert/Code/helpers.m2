@@ -13,7 +13,7 @@ genMat = (n,m) -> (
     zEntries := flatten table (n,m,(i,j) -> (i,j));
     z := local z;
     degs := apply(zEntries,i-> i_1-i_0 + m); --are there better ways to make the antidiagonal weights? prob
-    Q:=k[z_(1,1)..z_(n,m),MonomialOrder=>Weights=>degs];
+    Q:=k[z_(1,1)..z_(n,m)];
     Mmut:=mutableMatrix(Q,n,m);
     for box in zEntries do (
         Mmut_(box) = z_(box_0+1, box_1+1);

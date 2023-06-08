@@ -101,7 +101,8 @@ toAntiDiagTrans (List, ZZ) := List => (idx, maxIdx) -> (
 composePerms = method()
 composePerms (List, List) := List => (u,v) -> (
     if not (isPerm u) then error("The first argument is not a permutation.");
-    if not (isPerm v) then error("the second argument is not a permutation.");
+    if not (isPerm v) then error("The second argument is not a permutation.");
+    if not (#v==#u) then error("Expected permutations of the same length.");
     u0 := apply(u, i->i-1);
     v0 := apply(v, i->i-1);
     apply(u0_v0, i-> i+1)
@@ -109,7 +110,7 @@ composePerms (List, List) := List => (u,v) -> (
 
 --------------------------------
 --checks if a permutation is pattern-avoiding
---INPUT: a permutation (in one-line notation), written as a list
+--INPUT: a permutation (in 1-line notation), written as a list
 --OUTPUT: whether the permutation avoid the pattern
 --TODO: input validation/type checking
 --------------------------------
@@ -130,7 +131,7 @@ isPatternAvoiding (List,List) := Boolean => (perm, pattern) -> (
 
 --------------------------------
 --checks if a permutation is vexillary, i.e. 2143-avoiding
---INPUT: a permutation (one-line notation), written as a list
+--INPUT: a permutation (1-line notation), written as a list
 --OUTPUT: whether the permutation is vexillary
 --TODO: input validation/type checking
 --------------------------------
@@ -139,6 +140,59 @@ isVexillary List := Boolean => (perm) -> (
     --input validation
     if not (isPerm perm) then error(toString perm | " is not a permutation.");
     isPatternAvoiding(perm, {2,1,4,3})
+)
+
+--------------------------------
+--checks if a permutation avoids all of the given patterns, i.e. 2143-avoiding
+--INPUT: a permutation (1-line notation), written as a list, and a list of lists (patterns)
+--OUTPUT: whether the permutation avoids all of the patterns
+--TODO: input validation/type checking
+--------------------------------
+avoidsAllPatterns = method()
+avoidsAllPatterns (List, List) := Boolean => (perm, patterns) -> (
+    all(patterns, pattern -> isPatternAvoiding(perm, pattern))
+)
+
+--------------------------------
+--checks if a permutation is Cartwright-Sturmfels
+--INPUT: a permutation (1-line notation)
+--OUTPUT: whether the permutation avoids all of the patterns
+--TODO: input validation/type checking
+--------------------------------
+isCartwrightSturmfels = method()
+isCartwrightSturmfels List := Boolean => (perm) -> (
+    patterns := {{1,2,5,4,3}, 
+                 {1,3,2,5,4}, 
+                 {1,3,5,2,4}, 
+                 {1,3,5,4,2}, 
+                 {2,1,5,4,3}, 
+                 {1,2,5,3,6,4}, 
+                 {1,2,5,6,3,4}, 
+                 {2,1,5,3,6,4},
+                 {2,1,5,6,3,4},
+                 {3,1,5,2,6,4},
+                 {3,1,5,6,2,4},
+                 {3,1,5,6,4,2}};
+    all(patterns, pattern -> isPatternAvoiding(perm, pattern))
+)
+
+--------------------------------
+--checks if a permutation is CDG
+--INPUT: a permutation (1-line notation)
+--OUTPUT: whether the permutation avoids all of the patterns
+--TODO: input validation/type checking
+--------------------------------
+isCDG = method()
+isCDG List := Boolean => (perm) -> (
+    patterns := {{1,3,2,5,4},
+                 {2,1,5,4,3},
+                 {2,1,4,6,3,5},
+                 {2,1,5,3,6,4},
+                 {2,1,5,6,3,4},
+                 {2,4,1,6,3,5},
+                 {3,1,5,2,6,4},
+                 {4,2,6,1,7,3,5}};
+    all(patterns, pattern -> isPatternAvoiding(perm, pattern))
 )
 
 ------------------------------------------

@@ -38,6 +38,7 @@ export{
     "grothendieckPoly",
     "rotheDiagram",
     "permToMatrix",
+    "toOneLineNotation",
     "composePerms",
     "isPerm",
     "schubertPoly",
@@ -46,6 +47,8 @@ export{
     "augmentedRotheDiagram",
     "isPatternAvoiding",
     "isVexillary",
+    "isCDG",
+    "isCartwrightSturmfels",
     "schubertDecomposition",
     "isIntersectionSchubIdeals",
     "rajCode",
@@ -134,7 +137,9 @@ betti res diagLexInit M
 betti res antiDiagInit M
 
 
-A = matrix{{0,1,0,0},{1,0,0,0}}
+w = {4,1,3,5,2}
+A = (permToMatrix w)_{0,1,2}
+
 if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
 zMatrix = genMat(numrows A, numcols A); --generic matrix
 rankMat = rankMatrix A; --rank matrix for A
@@ -145,12 +150,19 @@ if essBoxes == {} then (
     );
 zBoxes = apply(essBoxes, i-> flatten table(i_0,i_1, (j,k)->(j+1,k+1))); --smaller matrix indices for each essential box
 ranks = apply(essBoxes, i-> rankMat_(i_0-1,i_1-1)); --ranks for each essential box
-fultonGens = new MutableList;
+antiDiagGens = new MutableList;
 for box in essBoxes do (
     pos = position(essBoxes, i-> i==box);
-    fultonGens#(#fultonGens) = (minors(ranks_pos+1, zMatrix^{0..(box_0-1)}_{0..(box_1-1)}))_*;
+    boxSubmatrix = zMatrix^{0..(box_0-1)}_{0..(box_1-1)};
+    for x in subsets(numrows boxSubmatrix,ranks_pos+1) do (
+    	for y in subsets(numcols boxSubmatrix,ranks_pos+1) do(
+	    indicesList = apply(pack(2,mingle(x,reverse y)),i->toSequence i);
+	    antiDiagGens#(#antiDiagGens) =  product(apply(indicesList,i->boxSubmatrix_i));
+	    );
+	);
     );
-ideal(unique flatten toList fultonGens)
+ideal(unique flatten toList antiDiagGens)
+
 
 
 
@@ -231,7 +243,7 @@ uninstallPackage "MatrixSchubert"
 restart
 installPackage "MatrixSchubert"
 restart
-needsPackage "MatrixSchubert"
+debug needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
 
