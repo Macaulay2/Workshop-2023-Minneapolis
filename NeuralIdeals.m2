@@ -141,8 +141,8 @@ neuralIdeal NeuralCode := Ideal => C -> (
 canonicalForm = method(Options => {Factor => false});
 
 canonicalForm Ideal := List => opts -> I -> (
-    if isSquarefreePseudomonomialIdeal I==true then (
-    decomp := primaryDecomposition I;
+    --if isSquarefreePseudomonomialIdeal I==true then (
+    decomp := primaryDecompositionPseudomonomial I;
     multipliedGens :=product(decomp, i->i);
     R := ring I;
     d :=numgens R;
