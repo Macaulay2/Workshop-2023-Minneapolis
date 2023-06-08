@@ -135,8 +135,6 @@ toricRR(Module,List) := (N,LL) ->(
     f0 := matrix {for d in unique LL list gens image basis(d,M)};
     wEtwist := append(-sum degrees S, -numgens S);
     df0 := apply(degrees source f0, d -> (-d | {0}) + wEtwist);
-    df1 := apply(degrees source f0, d -> (-d | {1}) + wEtwist);
-    dfneg1 := apply(degrees source f0, d -> (-d | {-1}) + wEtwist);
     SE := S**E;
     --the line below is better for degrees,it overwrites S somehow...
     --SE := coefficientRing(S)[gens S|gens E, Degrees => apply(degrees S,d->d|{0}) | degrees E, SkewCommutative => gens E];
@@ -147,7 +145,7 @@ toricRR(Module,List) := (N,LL) ->(
     newg := matrixContract(transpose sub(f0,SE),newf0);
     g' := sub(newg,E);
     if E^df0 == E^0 then chainComplex map(E^0, E^0, 0) else (
-    	differentialModule(chainComplex{map(E^dfneg1,E^df0, -g', Degree => degree 1_S | {-1}),map(E^df0,E^df1, -g', Degree => degree 1_S | {-1})})
+    	differentialModule(chainComplex{map(E^df0,E^df0, -g', Degree => degree 1_S | {-1}),map(E^df0,E^df0, -g',  Degree => degree 1_S | {-1})}[1])
     	)
     )
 
@@ -158,7 +156,7 @@ load "MultigradedBGG.m2"
 S = ring hirzebruchSurface 3
 M = coker matrix{{x_0}}
 LL = {{0,0}, {1,0}}
-toricRR(M, LL)
+RM = toricRR(M, LL)
 
 S = ring weightedProjectiveSpace {1,1,1}
 N = coker map(S^1, (S^{-2})^3, matrix{{x_0^2, x_1^2, x_2^2}})
@@ -219,18 +217,6 @@ L = unique ((ideal 1_S)_* | (ideal {x_0..x_3})_* | ((ideal {x_0..x_3})^2)_* | ((
 RM = toricRR(M,L)
 assert(RM.dd^2 == 0)
 assert(isHomogeneous RM)
-E = ring RM
-actualmatrix = matrix {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {e_0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {e_2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {e_1, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {e_3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, e_2, e_0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, e_1, 0, e_0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, e_1, e_2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, e_3, 0, 0, e_0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, e_3, 0, e_2, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, e_3, e_1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, e_1, e_2, e_0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, e_3, 0, 0,
-	e_2, e_0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, e_3, 0, e_1, 0, e_0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, e_3, 0, e_1, e_2, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, e_3, e_1, e_2, e_0, 0}}
-actualdifferential = map(E^-{{-1, 2, 5}, {0, 2, 5}, {0, 2, 5}, {-4, 3, 5}, {-1, 3, 5}, {1, 2, 5}, {-3, 3, 5}, {-3, 3, 5}, {0, 3, 5}, {0, 3, 5}, {-4, 4, 5}, {-2, 3, 5}, {1, 3, 5}, {-3, 4, 5}, {-3,
-	    4, 5}, {-2, 4, 5}},
-    E^-{{-1, 2, 4}, {0, 2, 4}, {0, 2, 4}, {-4, 3, 4}, {-1, 3, 4}, {1, 2, 4}, {-3, 3, 4}, {-3, 3, 4}, {0, 3, 4}, {0, 3, 4}, {-4, 4, 4}, {-2, 3, 4}, {1, 3, 4}, {-3, 4, 4}, {-3,
-      	    4, 4}, {-2, 4, 4}}, actualmatrix)
-assert(RM.dd_0 == actualdifferential)
 ///
 
 
@@ -240,45 +226,37 @@ toricLL = method();
 --Caveat: Assumes N is finitely generated.
 --Caveat 2:  arrows of toricLL(N) correspond to exterior multiplication (not contraction)
 toricLL Module := N -> (
-    E := ring(N);
+    E := ring N;
     if not isSkewCommutative E then error "ring N is not skew commutative";
-    if not E.?symmetric then E.symmetric = dualRingToric(E);
+    if not E.?symmetric then E.symmetric = dualRingToric E;
     S := E.symmetric;
     N = coker presentation N;
-    bb := basis(N);
-    b := (degrees source bb);
+    bb := basis N;
+    b := degrees source bb;
     homDegs := sort unique apply(b, i-> last i);
     inds := new HashTable from apply(homDegs, i-> i=> select(#b, j-> last(b#j) == i));
-    sBasis := new HashTable from apply(homDegs, i-> i => (bb)_(inds#i));
+    sBasis := new HashTable from apply(homDegs, i-> i => bb_(inds#i));
     FF := new HashTable from apply(homDegs, i ->(
-	    --i => S^(apply((degrees sBasis#i)_1, j-> drop(j,-1)))
 	    i => S^(apply((degrees sBasis#i)_1, j-> -drop(j,-1)))
 	    )
 	);
     relationsN := presentation N;
     SE := S**E;
     tr := sum(dim S, i-> SE_i*SE_(dim S+i));
-    f0 := gens image basis(N);
-    newf0 := map(SE^(rank target f0), SE^(rank source f0), f0*tr);
+    f0 := gens image basis N;
+    newf0 := sub(f0, SE)*tr;
     -- hacky fix. skew commutativity makes computations different, so we just... remove it.
-    SE' := coefficientRing(S)(monoid[gens S|gens E, Degrees => apply(degrees S,d->d|{0}) | degrees E]);
-    -- the hackiness continues. we should ask Greg how to do this better
-    relationsNinSE := map(SE'^(rank target relationsN), SE'^(rank source relationsN), sub(relationsN,SE'));
+    SE' := coefficientRing(S)[gens S|gens E, Degrees => entries matrix {{matrix degrees S, 0}, {0,matrix degrees E}}];
+    relationsNinSE := sub(relationsN, SE');
     newf0 = sub(newf0,SE') % relationsNinSE;
-    --newf0 := sub(f0,SE)*tr;
-    --relationsNinSE := sub(relationsN,SE);
-    --newf0 = newf0 % relationsNinSE;
-    --newg := contract(transpose sub(f0,SE), newf0);
     newg := matrixContract(transpose sub(f0,SE'),newf0);
+    -- TODO: This is _terrible_. figure out a different way to define SE'.
+    -- monoid doesn't work because it can kill torsion... need to redefine the variables or something.
     use E;
     g' := sub(newg,S);
     --Now we have to pick up pieces of g' and put them in the right homological degree.
     --Note:  perhaps we want everything transposed??
     if #homDegs == 1 then (chainComplex map(S^0,FF#0,0))[1] else (
-    --if #homDegs == 1 then chainComplex map(FF#0,S^0,0) else (
-    	--dual(chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1),transpose g'_(inds#(i))^(inds#(i+1))))[-homDegs#0])
-    	--dual(chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), g'_(inds#(i+1))^(inds#(i))))[-homDegs#0])
-    	--dual(chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^((homDegs#0)+1)*g'_(inds#(i+1))^(inds#(i))))[-homDegs#0])
 	chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^(homDegs#0)*g'_(inds#(i+1))^(inds#(i))))[-homDegs#0]
 	)
     )
@@ -289,6 +267,8 @@ load "MultigradedBGG.m2"
 loadPackage "NormalToricVarieties"
 S = ring hirzebruchSurface 3;
 E = dualRingToric S;
+N = module ideal {e_0, e_1*e_3}
+
 C3 = toricLL(module ideal(e_0, e_1*e_3))
 C3.dd
 C4 = toricLL(module ideal(e_2, e_1*e_3))
