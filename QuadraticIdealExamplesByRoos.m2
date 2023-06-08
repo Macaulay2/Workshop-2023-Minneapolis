@@ -135,7 +135,8 @@ Description
   Text
     This is based on Main Theorem and Tables 3-8 in "Homological properties of the homology
     algebra of the Koszul complex of a local ring: Examples and questions" by Jan-Erik Roos, Journal of Algebra 
-    465 (2016) 399-436.
+    465 (2016) 399-436. The ideals in this table exemplify 83 known cases of bi-graded Poincar\'e series of 
+    quadratic ideals of embedding dimension four in characteristic zero.
   Example
     roosTable
 ///
