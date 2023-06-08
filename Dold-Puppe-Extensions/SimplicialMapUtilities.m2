@@ -84,11 +84,11 @@ faceMapik = (n,k,i) -> (
 )
 
 faceMapi = (n,i,C) -> (
-    maxK = min(length C-1,n-1);
+    maxK = min(length C,n-1);
     -- Need to check if this can be sped up by direct summing as lists
     -- Instead of first passing to matrices
     -- and then saving the creation of the matrix option till the very end
-    if i==0 then promoteFaceMapZerotoComplex(faceMapZero(n,len),C)
+    if i==0 then promoteFaceMapZerotoComplex(faceMapZero(n,maxK),C)
     else if i==n then (
 	preMat = fold(directSum,for k from 0 to maxK list (
 	    promoteMaptoComplex(faceMapnk(n,k),k,C)
