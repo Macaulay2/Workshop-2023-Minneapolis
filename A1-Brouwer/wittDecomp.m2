@@ -9,8 +9,8 @@ load "./diagonalize.m2"
 --Nikita Borisov and Frenly Espino
 wittDecomp = method()
 wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
-    k:= ring A;
-    
+    k:= ring A;   
+  
     -- Add error in case the base field is RR or CC
     if (instance(k,InexactFieldFamily) or instance(k,RealField) or instance(k,ComplexField)) then error "Error: base field is inexact, use wittDecompInexact() instead";
     
@@ -38,15 +38,15 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     if (n==2) then (return (1,matrix(k,{{}})));
 
     --find y not orthogonal (wrt bilinear form) to x
-    x:=matrix{toList solnPt}; --x as a row matrix
-    xA:=x*A; --x*A
+    z:=matrix{toList solnPt}; --z as a row matrix
+    zA:=z*A; --z*A
     y :=new MutableMatrix from matrix{toList(n:(0/1))};
     for i from 0 to (n-1) do (
-        if (xA_(0,i) != 0) then (y_(0,i)=1; break;);
+        if (zA_(0,i) != 0) then (y_(0,i)=1; break;);
     );
     --now x and y span a copy of |H in the bilinear form
     --we need to find a basis of vectors orthogonal (wrt bilinear form) to x and y
-    Red := reducedRowEchelonForm (x||matrix(y));
+    Red := reducedRowEchelonForm (z||matrix(y));
     W := mutableMatrix matrix(toList((n-2):toList(n:0/1))); --W will contain as its rows w2,...,w(n-1) orthogonal to x and y
     for i from 2 to (n-1) do (
         W_(i-2,i)=1;
