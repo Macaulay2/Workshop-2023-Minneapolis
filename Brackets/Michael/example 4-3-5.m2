@@ -10,8 +10,9 @@ also intersects with the other line.
 The first part of this script is to be converted as the Grassmann strategy for the GCExpression method. 
 
 *-
-----------------------------------------------------------------
-TestBracketRing = new Type of AbstractGCRing
+---------------------------------------------------------------
+-*
+BracketRing = new Type of AbstractGCRing
 -- constructor
 bracketRing = method(Options => {Strategy => GroebnerBasis})
 bracketRing AbstractGCRing := G -> error "not implemented"
@@ -39,11 +40,22 @@ bracketRing (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
 	) 
     else if o#Strategy === Grassmannian then (
 	-- use the function "Grassmannian" to simplify construction of R, I, etc, above
-	error "not implemented";
-	)
+	G := Grassmannian(d - 1, #vectorSymbols - 1);
+    B := bracketRing(#vectorSymbols, d);
+    GB := apply(
+        gens ring G, 
+        v -> (
+            S := last baseName v;
+            A := [new Array from apply(S, i -> i + 1)];
+            A_B
+            )
+        )
+    ret.cache#gb = GB;
+	ret.cache#syz = selectInSubring(1, GB);
+    )
     else if o#Strategy === "vanDerWaerden" then (
 	error "not implemented";
-	)
+    )
     else if o#Strategy === sagbi then (
 	-- use SubalgebraBases package
 	error "not implemented";
@@ -87,7 +99,7 @@ toBrackets(List) := (sequenceList) -> (
     );
     bracketList;
 )
-
+*-
 ----------------------------------------------------------------
 -- grassmann method for computing GCalgebra 
 G37 = Grassmannian(3,7) --ideal of Pluecker relations
@@ -100,14 +112,21 @@ G = G37ring/G37 -- quotient ring is desired GCalgebra
 --G = gc(a .. h, 4) -- old method that is too computationally expensive
 
 ----------------------------------------------------------------
-R = (G, [u,v]) -- algebra with indeterminants u and v over GCalgebra G
+G = gc(a .. h,4)
 
-l1 = a*b; --
-l2 = c*d;
-l3 = e*f;
---l4 = g*h;
+R = G [u,v] -- algebra with indeterminants u and v over GCalgebra G
 
-l = (((u*a + v*b)*c*d)^(e*f)) * (u*a + v*b)
+l1 = (a * b)_G; --
+l2 = (c * d)_G;
+l3 = (e * f)_G;
+l4 = (g * h)_G;
+t = (u*a)_G+ (v*b)_G;
+
+n = (c*d)_G
+m = (e*f)_G
+n^m
+
+l = ((t*(c*d)_G)^(e*f)_G) * t
 
 quantity1 = l*g*h
 
