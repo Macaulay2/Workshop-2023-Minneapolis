@@ -7,7 +7,7 @@
 -- is defined.  For example, it will do the reduction over ZZ. 
 
 -- Example:  A = matrix{{1,2},{2,5}}
--- diagonalizeChangeBasisMatrix A returns  (D, Q),  D=((1,01),(0,1)),  Q=((1, 0), (-2,1))
+-- diagonalizeChangeBasisMatrix A returns  (D, Q),  D=((1,0),(0,1)),  Q=((1, 0), (-2,1))
 
 diagonalizeChangeBasisMatrix = method()
 
@@ -79,10 +79,6 @@ diagonalizeCB (Matrix) := (Matrix) => (N) -> (
 		rowAdd(M, 0, 1, row);
 	    	columnAdd(M, 0, 1, row);
 		)
-	    else (
-		print "Error: Matrix A was singular"; 
-		return N;
-		);
 	    );
 	);
    
@@ -100,24 +96,20 @@ diagonalizeCB (Matrix) := (Matrix) => (N) -> (
 	    );
 	 row=row +1;
 	);
-    if flag == 1 then (
-	print "Error: Original square matrix A was singular"; 
-	return;
-	);
-    
-    
-    --entry in M_(col,col) is non-zero at this point
-    for row from (1) to (n-1) do (
-	temp:=M_(row,0);
-	rowMult(M, row, M_(0,0));
-	rowAdd(M, row,-temp,0);	
-	);
+        --entry in M_(col,col) is non-zero at this point
+    if M_(0,0) != 0 then (
+        for row from (1) to (n-1) do (
+    	    temp:=M_(row,0);
+    	    rowMult(M, row, M_(0,0));
+	    rowAdd(M, row,-temp,0);	
+	    );
    
-    for col from 1 to (n-1) do (
-	temp := M_(0,col);
-        columnMult(M, col, M_(0,0));		
-	columnAdd(M, col,-temp, 0);	
-	);
+        for col from 1 to (n-1) do (
+	    temp := M_(0,col);
+            columnMult(M, col, M_(0,0));		
+	    columnAdd(M, col,-temp, 0);	
+	    );
+        );
    
     
     -- At this point, we have taken care of first row, column; 

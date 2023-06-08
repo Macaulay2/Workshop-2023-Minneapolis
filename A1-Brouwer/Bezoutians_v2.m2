@@ -1,5 +1,7 @@
 -- Given an endomorphism of affine space f=(f1,...,fn) given as a list of polynomials, return the Bezoutian corresponding to the endomorphism
 bezoutian = method()
+-- Given an endomorphism of affine space f=(f1,...,fn) given as a list of polynomials, return the Bezoutian corresponding to the endomorphism
+bezoutian = method()
 
 bezoutian (List) := (Matrix) => (Endo) -> (
     --use ring ideal(Endo);
@@ -39,19 +41,32 @@ bezoutian (List) := (Matrix) => (Endo) -> (
     coeffsTuple := coefficients(bezDetProm);
     presMons :=(coeffsTuple)_0;  
     coeffs := (coeffsTuple)_1;
-    print class phi0((coeffs)_(2,0));
     --will return matrix B
-    m:=#sBXProm;
+    m:= numColumns(sBXProm);
     B:=mutableMatrix id_(kk^m);
-    coefIndex:=0;
+    --print sBXProm#1;
     for i from 0 to m-1 do (
         for j from 0 to m-1 do (
-            --sBXProm_
-            B_(i,j)=phi0((coeffs)_(coefIndex,0));
+            B_(i,j)=phi0(coefficient((sBXProm_(0,i)**sBYProm_(0,j))_(0,0), bezDetProm));
         );
     );
-    return 1;
+    return matrix(B);
 );
+
+T = QQ[x_1,x_2];
+e = {x_1^2+x_2,x_2^3+x_1};
+bez_e = bezoutian(e);
+bez_e = transpose bez_e;
+print bez_e
+
+
+T1 = QQ[x_1];
+f = {x_1^4 + x_1^3 - x_1^2 - x_1};
+bez_f = bezoutian(f);
+bez_f = transpose bez_f;
+print bez_f
+
+
 
 T = QQ[x_1,x_2];
 e = {x_1^2+x_2,x_2^3+x_1};
