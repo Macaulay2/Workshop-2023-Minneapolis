@@ -252,12 +252,10 @@ canonicalCode List := NeuralCode => L -> (
     codeList := for i in allCodeList list (
 	validCode := true;
 	for j in L do (
-	    --if sub(j,matrix{
-		    --apply(d,k->sub(value(i#k),R))
-		    --})=!= 0 then (
+	    if sub(j,matrix{apply(d,k->sub(value(i#k),R))})=!= 0 then (
 		validCode = false;
 		break
-		--);
+		);
 	    );
 	if validCode == false then continue else i
 	);
@@ -272,7 +270,7 @@ canonicalCode List := NeuralCode => L -> (
 -- Output:
 -- true or false
 isPseudomonomial = method();
-isPseudomonomial(RingElement) := P -> ( 
+isPseudomonomial(RingElement)  = P -> ( 
     -- check if polynomial is a unit or zero
     if P == 0 then return false;
     if isUnit P then return true;
@@ -306,13 +304,8 @@ sigmaTau(RingElement) := P -> (
     if isPseudomonomial(P) == false then error "Expected input to be a Pseudomonomial";
     R := ring P;
     d := numgens R;
-    sigma := {};
-    tau := {};
-    for i to d-1 do (
-	if P%R_i == 0 then sigma = append(sigma,i+1);
-	if P%(1-R_i) == 0 then tau = append(tau,i+1);
-	);
-    {sigma,tau}
+    sigma = {};
+    tau = {};
     )
 	
 
@@ -320,17 +313,6 @@ polarizePseudomonomial = method();
 
 polarizePseudomonomial(RingElement) := P -> (
     if isPseudomonomial(P) == false then error "Expected input to be a Pseudomonomial";
-    st := sigmaTau(P);
-    R := ring P;
-    d := numgens R;
-    y:=getSymbol "y";
-    S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
-    sigma := st#0;
-    tau := st#1;
-    mon := 1;
-    for i in sigma do mon = mon*x_i;
-    for i in tau do mon = mon*y_i;
-    mon
     )
 
 
