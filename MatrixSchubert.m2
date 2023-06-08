@@ -38,6 +38,7 @@ export{
     "grothendieckPoly",
     "rotheDiagram",
     "permToMatrix",
+    "toOneLineNotation",
     "composePerms",
     "isPerm",
     "schubertPoly",
