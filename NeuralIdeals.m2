@@ -34,6 +34,7 @@ export{--types
     "polarizePseudomonomial",
     "allCodeWords",
     "polarizedCanonicalResolution",
+    "depolarizationMap",
     --Symbols
     "codeWords",
     "Factor",
@@ -409,14 +410,14 @@ polarizedCanonicalResolution(NeuralCode) := Resolution => C -> (
 
 depolarizationMap = method();
 
-depolarizationMap(Ring,Ring) := (S,R) -> ( ----Source ring followed by target ring
+depolarizationMap(Ring,Ring) := (R,S) -> ( ----Target ring followed by source ring
     if 2*(numgens R) < numgens S then error "Target ring must have at least half the number of generators of the source";
     if (numgens S)%2 != 0 then error "Source ring must have an even number of generators";
     d := (numgens S)//2;
     maintain := for i to d-1 list R_i;
     change := for i to d-1 list 1+R_i;
     depolarizationList := maintain|change;
-    dePolMap := map(S,R,depolarizationList)
+    dePolMap := map(R,S,depolarizationList)
     )
     
 beginDocumentation()
