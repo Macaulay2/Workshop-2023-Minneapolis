@@ -1,3 +1,5 @@
+--Joel Louwsma
+
 --return true if can easily detect that square matrix is upper left triangular after permuting basis vectors
 --otherwise return false.
 

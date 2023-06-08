@@ -1,3 +1,5 @@
+--Nikita
+
 --diagonalize method
 --given a symmetric invertible matrix, this function outputs a diagonal matrix congruent to original matrix
 diagonalize = method()

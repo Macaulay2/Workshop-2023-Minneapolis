@@ -1,6 +1,8 @@
 load "wittDecomp.m2"
 load "diagonalize.m2"
 
+--Nikita
+
 --wittDecompGeneral returns dimention of totally anistropic part,
 --witt index and anisotropic part
 wittDecompGeneral = method();
