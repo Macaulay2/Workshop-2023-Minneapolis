@@ -1,6 +1,6 @@
 -- -*- coding: utf-8 -*-
 newPackage(
-    "Subring",
+    "Subrings",
     Version => "1.0",
     Date => "June 6, 2023",
     Authors => {
@@ -15,9 +15,11 @@ newPackage(
 
 
 export {"Subring",
-    "subring",
-    "presentationIdeal",
-    "toQuotientRing"}
+        "subring",
+	"presentationRing",
+	"presentationMap",
+        "presentationIdeal",
+        "toQuotientRing"}
 
 Subring = new Type of HashTable
 
@@ -29,6 +31,7 @@ subring Matrix := genMatrix -> (
     R := ring genMatrix;
     nGens := numgens source genMatrix;
     k := coefficientRing R;
+    x := symbol x;
     P := k[x_1..x_nGens];
     
     -- compute presentation map 
@@ -36,7 +39,7 @@ subring Matrix := genMatrix -> (
     
     new Subring from {
 	generators => genMatrix,
-	ambientRing => R,
+	ambient => R,
 	
 	-- presentation ring: one variable for each generator
 	presentationRing => P,
@@ -53,88 +56,55 @@ subring List := genList -> (
     subring matrix {genList}
     )
 
+presentationRing = method()
+presentationRing Subring := S -> (
+    S#presentationRing
+    )
+
+presentationMap = method()
+presentationMap Subring := S -> (
+    S#presentationMap
+    )
 
 presentationIdeal = method()
-presentationIdeal subring := S -> (
+presentationIdeal Subring := S -> (
     P := presentationRing S;
     f := presentationMap S;
     return ker f; --kernel is cached automatically
     )
 
 toQuotientRing = method()
-toQuotientRing subring := S -> (
+toQuotientRing Subring := S -> (
     P := presentationRing S;
     I := presentationIdeal S;
     return P/I;
     )
 
 
--- given a subring S, output presentation ring P (one variable for each generator)
--*presentationRing = S -> (
-    nGens = numgens source S#generators;
-    k = coefficientRing S#ambientRing;
-    P = k[x_1..x_nGens]    
-    )
-
--- given a subring S, output presentation map f:P->R whose image is S
-presentationMap = S -> (
-    P = presentationRing S;
-    f = map(R, P, S#generators)
-    )
-
-
--- tests
-R = QQ[x,y]
-
-S = subring {x^2, x*y, y^2}
-
-P = presentationRing S
-
-f = presentationMap S
--*
-
-
-
--- beginDocumentation()
--*
+beginDocumentation()
 doc ///
  Node
   Key
-   Subring
+   Subrings
   Headline
-     an example Macaulay2 package
+   a package to deal with subrings
   Description
    Text
-    {\em FirstPackage} is a basic package to be used as an example.
-  Caveat
-    Still trying to figure this out.
-  Subnodes
-    firstFunction
- Node
-  Key
-   (firstFunction,ZZ)
-   firstFunction
-  Headline
-   a silly first function
-  Usage
-   firstFunction n
-  Inputs
-   n:
-  Outputs
-   :
-    a silly string, depending on the value of {\tt n}
-  Description
-   Text
-    Here we show an example.
-   Example
-    firstFunction 1
-    firstFunction 0
+     {\em Subrings} is a package to give basic subroutines for subrings.
+    Caveat
+     There are other subring flavor things out there. 
+    Subnodes
+     Subring
+     subring
+     presentationRing
+     presentationMap
+     presentationIdeal
+     toQuotientRing
 ///
 
 TEST ///
-    assert ( firstFunction 2 == "D'oh!" )
+    assert(true == true)
 ///
-*-
 
 end--
 
