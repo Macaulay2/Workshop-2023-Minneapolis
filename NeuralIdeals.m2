@@ -250,7 +250,7 @@ canonicalCode List := NeuralCode => L -> (
     R := ring L#0;
     d := numgens R;
     if isSquarefreePseudomonomialIdeal(ideal(L))==false then error "Expected elements that generate a squarefree pseudomonomial ideal.";
-    if ideal(L)==sub(ideal(1),R) then error "Expected a non-unit ideal.";
+    if ideal(L)==sub(ideal(1),R) then error "Expected generators of a non-unit ideal.";
     for ell in L do (if ring ell =!= R then error "Expected elements of the same ring.");
     allCodes := allCodeWords(d);
     codeList := for i in allCodes list (
@@ -396,6 +396,26 @@ document{
   ///,
 }
 
+document{
+  Key => {canonicalCode, (canonicalCode,List)},
+  Headline => "Canonical Code",
+  TEX "A method which computes the neural code corresponding to a list of pseudomonomial generators (generally expected to be in canonical form).",
+  Usage => "canonicalCode(List)",
+  Inputs => {"List of squarefree pseudomonomials in a single polynomial ring which do not generate the unit ideal"},
+  Outputs => {"The corresponding neural code"},
+  TEX "We compute an example",
+  EXAMPLE lines ///
+  R=ZZ/2[x_1,x_2];
+  L={x_1*x_2};
+  canonicalCode(L)
+  ///,
+  EXAMPLE lines ///
+  R=ZZ/2[x_1..x_3];
+  M=ideal(x_1*x_2,x_3*(1-x_1),x_2*x_3);
+  canonicalCode(M)
+  ///,
+}
+
 
 -- **TEST0**
 TEST ///
@@ -419,6 +439,12 @@ TEST ///
     cC=canonicalForm(C,R);
     L={x_2};
     assert((cI==cC) and (cI==L))
+    
+    -- **TEST2**
+TEST ///
+    R=ZZ/2[x_1,x_2];
+    L={x_1*x_2};
+    assert(canonicalCode(L)==neuralCode("00","10","01"))
 
 -- **TEST1**  This makes a pinch point.  We check that it has one minimal prime, that it has 3 variables, and that the singular locus is dimension 1 while the ambient object is dimension 2.  We also check that the ring we construct is a subring of A.
 --TEST ///
