@@ -32,8 +32,15 @@ export{"valuation",
        "padicValuation",
        "leadTermValuation",
        "lowestTermValuation",
-       "localRingValuation"
+       "localRingValuation",
+       "getMExponent",
+       "domain",
+       "codomain",
+       "orderedQQn"
        }
+   
+OrderedQQn = new Type of Module
+OrderedQQVector = new Type of Vector
 
 --------------------------------------------------------------------------------
 -------------------------------- Valuation Type --------------------------------
@@ -48,7 +55,7 @@ valuation Function := v -> (
     )
 
 ourSources := {Ring,Subring,LocalRing,RingOfInvariants}
-ourTargets := {Ring,Subring,LocalRing,RingOfInvariants}
+ourTargets := {Ring,Subring,LocalRing,RingOfInvariants,OrderedQQn}
 
 for i in ourSources do (
     for j in ourTargets do (
@@ -81,10 +88,6 @@ Valuation Thing := (v,t) -> (
 --------------------------- Ordered QQ-module Types ----------------------------
 --------------------------------------------------------------------------------
 
-OrderedQQn = new Type of Module
-OrderedQQVector = new Type of Vector
-
---
 -- Ordered Module based on the monomial order of a polyomial ring
 --
 -- given two elements a, b in QQ^n they are compared by using the
