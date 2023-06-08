@@ -30,7 +30,7 @@ ZZdFactorizationMap.synonym = "map of ZZ/d-graded factorizations"
   
 ring ZZdFactorization := Ring => C -> C.ring
 
-
+period = method()
 period ZZdFactorization := ZZ => C -> C.period
 
 
@@ -63,7 +63,7 @@ ZZdfactorization HashTable := ZZdFactorization => opts -> maps -> (
     C
     )
 ZZdfactorization List := ZZdFactorization => opts -> L -> (
-    -- L is a list of matrices or a list of modules
+    -- L is a list of matrices,  a list of modules, or a list of ring elements
     if not instance(opts.Base, ZZ) then
       error "expected Base to be an integer"; 
     if all(L, ell -> instance(ell,Matrix)) then (
@@ -71,6 +71,13 @@ ZZdfactorization List := ZZdFactorization => opts -> L -> (
 	mapHash := hashTable for i from 0 to #L-1 list opts.Base+i+1 => map(trg, trg, L#i);
         return ZZdfactorization(mapHash, opts)
         );
+    --
+    if all(L, ell -> instance(ell,RingElement)) then (
+        trg2 := (ring(L#0))^1;
+	mapHash2 := hashTable for i from 0 to #L-1 list opts.Base+i+1 => map(trg2, trg2, matrix{{L#i}});
+        return ZZdfactorization(mapHash2, opts)
+        );
+    --
     if all(L, ell -> instance(ell,Module)) then (
         R := ring L#0;
         if any(L, ell -> ring ell =!= R) then
