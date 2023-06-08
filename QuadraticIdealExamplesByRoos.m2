@@ -14,7 +14,7 @@ newPackage(
 	PackageExports => {"Depth"},
 	DebuggingMode => true)
 export {
- "roosTable"
+ "roosTable", "higherDepthTable", "depthZeroTable"
 }
 
 
@@ -108,18 +108,21 @@ ideal "x2,y2,z2,u2,xy,xz,xu,yz,yu,zu"
 new HashTable from for i from 1 to 83 list i => L#(i-1)
 )
 
+
+
 higherDepthIndices = splice {1..6, 8..10, 23, 26, 27, 50, 52, 68};
+
+
 depthZeroIndices = (lst = toList(1..83);
      for i in higherDepthIndices do lst=delete(i,lst);
      lst
      )
 
 higherDepthTable = new HashTable from for i in higherDepthIndices list i=> (roosTable#i); 
+
 depthZeroTable = new HashTable from for i in depthZeroIndices list i=> (roosTable#i);
 
----TO DO: write function that outputs the depth zero ones, as described in the tables
-
-----need to export and document the following two functions
+-----need to export and document the following two functions
 
 onedimIrrationalPoincare = (degs1 := {18,24,25,26,28,30,33}; --this example is from froberg-roos 2000, lofwall-lundqvist-roos
     ker map(QQ[t], QQ[w_1 .. w_7, Degrees => degs1], apply(degs1, a -> t^a))
@@ -128,6 +131,10 @@ onedimIrrationalPoincare = (degs1 := {18,24,25,26,28,30,33}; --this example is f
 twodimIrrationalPoincare = (degs2 := {{36,0}, {33,3}, {30,6}, {28,8}, {26,10}, {25,11}, {24,12}, {18,18}, {0,36}};
     ker map(QQ[t,s], QQ[w_1 .. w_9, Degrees => degs2], apply(degs2, a -> t^(a#0)*s^(a#1)))
     )
+
+
+
+---TO DO: create a function to identify non-Koszul examples (see Table 8)
 
       -* Documentation section *-
       
@@ -153,12 +160,46 @@ Outputs
  H: HashTable
 Description
   Text
-    This is based on Main Theorem and Tables 3-8 in "Homological properties of the homology
+    This is based on Main Theorem and Tables 3-7 in "Homological properties of the homology
     algebra of the Koszul complex of a local ring: Examples and questions" by Jan-Erik Roos, Journal of Algebra 
     465 (2016) 399-436. The ideals in this table exemplify 83 known cases of bi-graded Poincar\'e series of 
-    quadratic ideals of embedding dimension four in characteristic zero.
+    quadratic ideals of embedding dimension four in characteristic zero. The coefficient field is QQ.
   Example
     roosTable
+///
+
+doc ///
+Key
+ "higherDepthTable"
+Headline
+ Creates hashtable of Jan-Erik Roos' examples of quadratic ideals with positive depth
+Usage
+ H = higherDepthTable ()
+Outputs
+ H: HashTable
+Description
+  Text
+    This outputs the examples in Tables 3-7 of positive depth. These are those in the tables
+    with non-bold row index. 
+  Example
+    higherDepthTable
+///
+
+doc ///
+Key
+ "depthZeroTable"
+Headline
+ Creates hashtable of Jan-Erik Roos' examples of quadratic ideals with depth zero
+Usage
+ H = depthZeroTable ()
+Outputs
+ H: HashTable
+Description
+  Text
+    This outputs the examples in Tables 3-7 of depth zero. These are those in the tables
+    with bold row index. 
+  Example
+    depthZeroTable
 ///
 
 
