@@ -304,7 +304,7 @@ doubleSchubertPoly(List) := (w) -> (
 
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
---OUTPUT: diagonal initial ideal of Schubert determinantal ideal for w
+--OUTPUT: diagonal initial ideal, lex wrt lex, of Schubert determinantal ideal for w
 --TODO: make diagRevlexInit function (potentially faster for tests)
 --WARNING: This method does not like the identity permutation
 ----------------------------------------
@@ -312,15 +312,46 @@ diagLexInit = method()
 diagLexInit Matrix := monomialIdeal => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     I:= schubertDetIdeal A;
-    R:= newRing(ring I, MonomialOrder=>Lex); --making new ring with diagonal term order (lex suffices)
+    R:= newRing(ring I, MonomialOrder=>Lex); --making new ring with lex diagonal term order 
     monomialIdeal leadTerm sub(I,R)
     )
 diagLexInit List := monomialIdeal => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     I:= schubertDetIdeal w;
-    R:= newRing(ring I, MonomialOrder=>Lex); --making new ring with diagonal term order (lex suffices)
+    R:= newRing(ring I, MonomialOrder=>Lex); --making new ring with lex diagonal term order 
     monomialIdeal leadTerm sub(I,R)
     )
+
+----------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation
+--OUTPUT: diagonal initial ideal, lex wrt lex, of Schubert determinantal ideal for w
+--TODO: make diagRevlexInit function (potentially faster for tests)
+--WARNING: This method does not like the identity permutation
+----------------------------------------
+diagRevLexInit = method()
+diagRevLexInit Matrix := monomialIdeal => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    I:= schubertDetIdeal A;
+    k:=numrows A;
+    R:=ring I;
+    oldvars:=R_*;
+    groupedvars:=pack(oldvars,k);
+    newvars:=apply(groupedvars, i->reverse i);
+    S:=QQ[flatten newvars]; --making new ring with revlex diagonal term order 
+    monomialIdeal leadTerm sub(I,S)
+    )
+diagRevLexInit List := monomialIdeal => (w) -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
+    I:= schubertDetIdeal w;
+    k:=#w;
+    R:=ring I;
+    oldvars:=R_*;
+    groupedvars:=pack(oldvars,k);
+    newvars:=apply(groupedvars, i->reverse i);
+    S:=QQ[flatten newvars]; --making new ring with revlex diagonal term order 
+    monomialIdeal leadTerm sub(I,S)
+    )
+
 -------------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: subword complex associated to w (i.e. SR-ideal of antiDiagInit)
@@ -587,3 +618,27 @@ rankTableFromMatrix Matrix := Matrix => (A) -> (
     matrix rankTable
 );
 
+--------------------------------------------
+-- INPUT: a list of permutations or ASMs
+-- OUTPUT: the intersection of the ideals 
+-- TODO: tests and documentation
+--------------------------------------------
+schubIntersect = method()
+schubIntersect List := Ideal => (L) -> (
+    if (#L == 0) then error("Please enter a nonempty list.");
+    ll := L/schubertDetIdeal;
+    intersect apply(ll, J -> sub(J, vars ring ll#0))
+);
+
+--------------------------------------------
+-- INPUT: a list of permutations or ASMs
+-- OUTPUT: the sum of the ideals 
+-- TODO: tests and documentation
+--------------------------------------------
+schubAdd = method()
+schubAdd List := Ideal => (L) -> (
+    if (#L == 0) then error("Please enter a nonempty list.");
+    listPermM := L / permToMatrix;
+    rankM := entrywiseMinRankTable(listPermM);
+    schubertDetIdeal rankTableToASM(rankM)
+);
