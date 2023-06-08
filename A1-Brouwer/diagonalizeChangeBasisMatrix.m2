@@ -1,3 +1,4 @@
+-- Tom Hagedorn, Joel Louwsma
 
 -- The function diagonalizeChangeBasisMatrix takes a symmetric non-singular matrix A and 
 -- returns (D, Q), where D is a diagonal matrix and Q is the change of basis matrix such that
