@@ -242,7 +242,7 @@ uninstallPackage "MatrixSchubert"
 restart
 installPackage "MatrixSchubert"
 restart
-debug needsPackage "MatrixSchubert"
+needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
 
