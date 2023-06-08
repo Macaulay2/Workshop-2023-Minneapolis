@@ -38,11 +38,11 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     if (n==2) then (return (1,matrix(k,{{}})));
 
     --find y not orthogonal (wrt bilinear form) to x
-    x:=matrix{toList solnPt}; --x as a row matrix
-    xA:=x*A; --x*A
+    z:=matrix{toList solnPt}; --z as a row matrix
+    zA:=z*A; --z*A
     y :=new MutableMatrix from matrix{toList(n:(0/1))};
     for i from 0 to (n-1) do (
-        if (xA_(0,i) != 0) then (y_(0,i)=1; break;);
+        if (zA_(0,i) != 0) then (y_(0,i)=1; break;);
     );
     --now x and y span a copy of |H in the bilinear form
     --we need to find a basis of vectors orthogonal (wrt bilinear form) to x and y
