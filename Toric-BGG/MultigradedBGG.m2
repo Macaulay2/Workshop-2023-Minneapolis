@@ -67,8 +67,8 @@ load "DifferentialModules.m2";
 
 --Input:    A pair of matrices (M,N)
 --Output:   The effect of contracting M by N. 
-matrixContract=method()
-matrixContract(Matrix,Matrix) := (M,N) -> (
+matrixContract = method()
+matrixContract (Matrix,Matrix) := (M,N) -> (
     S := ring M;
     if M==0 or N==0 then return map(S^(-degrees source N),S^(degrees source M),0);
     assert(rank source M == rank target N); 
@@ -85,7 +85,7 @@ dualRingToric = method(
 	}
     );
 
-dualRingToric(PolynomialRing) := opts -> (S) ->(
+dualRingToric PolynomialRing := opts -> S ->(
 --  Input: a polynomial ring OR an exterior algebra
 --  Output:  the Koszul dual exterior algebra, but with an additional 
 --           ZZ-degree, the ``standard grading'' where elements of \bigwedge^k
@@ -160,9 +160,9 @@ RM = toricRR(M, LL)
 
 S = ring weightedProjectiveSpace {1,1,1}
 N = coker map(S^1, (S^{-2})^3, matrix{{x_0^2, x_1^2, x_2^2}})
-isHomogeneous N
+assert isHomogeneous N
 M = coker map(N**(S^{1}) ++ N**(S^{2}), N^1, matrix {{x_0}, {x_1*x_2}})
-isHomogeneous M
+assert isHomogeneous M
 basis M
 toricRR(M, {-2,-1, 0,1})
 
