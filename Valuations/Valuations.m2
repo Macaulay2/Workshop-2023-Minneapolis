@@ -430,6 +430,23 @@ val = leadTermValuation(R)
 assert(val(x) > val(y^2))
 ///
 
+-- Lowest Term Valuation tests
+TEST///
+R = QQ[x,y,MonomialOrder => Lex];
+val = lowestTermValuation R;
+assert(val(x^2 + x*y) > val(y^3 + x*y^4));
+///
+
+TEST///
+R = QQ[x,y,z, Degrees => {1,2,3}, MonomialOrder => GLex];
+val = lowestTermValuation R;
+assert(val(x^2*y^2*z + x^7*y) > val(x*y*z^2 + y^3*z))
+///
+
+-- Local ring valuation tests
+
+-- 
+
 end
 
 
