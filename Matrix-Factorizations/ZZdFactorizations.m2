@@ -31,6 +31,8 @@ ZZdFactorizationMap.synonym = "map of ZZ/d-graded factorizations"
 ring ZZdFactorization := Ring => C -> C.ring
 
 
+period ZZdFactorization := ZZ => C -> C.period
+
 
 
 ZZdfactorization = method(Options => {Base=>0})
