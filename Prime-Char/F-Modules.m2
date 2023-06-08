@@ -1,5 +1,7 @@
 loadPackage "TestIdeals"
 
+needsPackage "Saturation"
+
 ----------------------------------------------------------------------------------------------
 -- Auxiliary Functions
 ----------------------------------------------------------------------------------------------
@@ -150,16 +152,39 @@ makeFModule = method()
 makeFModule GeneratingMorphism := FModule => g -> 
     new FModule from { generatingMorphism => g, cache => new CacheTable }
 
---- Compute a generating morphism for H_I^i(R)
-localCohomology = method()
+makeFModule Matrix := FModule => g -> makeFModule generatingMorphism g
 
-localCohomology ( ZZ, Ideal, Ring ) := FModule => ( i, I, R ) -> 
+--- Compute a generating morphism for H_I^i(R)
+localCohomology = method( Options => { Strategy => Ext } )
+
+localCohomology ( ZZ, Ideal, Ring ) := FModule => o -> ( i, I, R ) -> 
+(
+    -- TODO: check that I is ideal of R, positive characteristic, etc.
+    if o.Strategy === Ext then localCohomologyExt( i, I, R )
+    else localCohomologyFilter( i, I, R )
+)
+
+localCohomologyExt := ( i, I, R ) -> 
 (
     -- TODO: check that I is ideal of R, positive characteristic, etc.
     M := R^1/I;
     f := inducedMap( M, FF M );
     E := Ext^i( f, R^1 );
     makeFModule generatingMorphism E
+)
+
+--- Compute a generating morphism for H_I^i(R)
+localCohomologyFilter := ( i, I, R ) -> 
+(
+    filterSeq := randomFilterRegSeq( i, I, R );
+    J := ideal filterSeq;
+    p := char R;
+    u := ( product filterSeq )^( p-1 );
+    rt := root makeFModule map( FF( R^1/J ), R^1/J, u );
+    rtMorphism := generatingMorphism map( saturate( FF rt, I ), saturate( rt, I ), u );
+    M = makeFModule rtMorphism;
+    M#cache#(symbol root) = rtMorphism;
+    M
 )
   
 root = method()
@@ -356,10 +381,8 @@ randomFilterRegSeq ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) ->
     L
 )
 
-randomFilterRegSeq (ZZ,Ideal,Ring):= List => o -> (n,I,R) ->
-(
-    randomFilterRegSeq(n,I,R^1);
-)
+randomFilterRegSeq ( ZZ , Ideal, Ring ) := List => o -> ( n, I, R ) ->
+    randomFilterRegSeq( n, I, R^1 )
     
 
 
