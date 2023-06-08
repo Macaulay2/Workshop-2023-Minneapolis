@@ -147,6 +147,8 @@ Headline
  "Examples of Quadratic Ideals with Embedding Dimension Four by Jan-Erik Roos"
 Subnodes
  "roosTable"
+ "higherDepthTable"
+ "depthZeroTable"
 ///
 
 doc ///
