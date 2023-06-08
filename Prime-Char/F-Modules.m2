@@ -172,7 +172,7 @@ root FModule := Module => ( cacheValue symbol root )( M ->
     (    
         if debugLevel > 1 then 
             print "generatingRoot: generating morphism is already injective"; 
-        return g
+        return source g
     );
     g1 := (FF g)*g;
     K1 := ker g1;
@@ -196,7 +196,7 @@ ZZ == FModule := ( n, M ) -> M == n
 FModule == ZZ := ( M, n ) -> 
 (
     if n =!= 0 then error "Attempted to compare an FModule to nonzero integer";
-    -- check that generating root == 0
+    -- check while generating root == 0
     root( M )  == 0
 )
 
@@ -209,6 +209,8 @@ cohomDim Ideal := ZZ => I ->
     while localCohomology( n, I, R) == 0 do n = n-1;
     n
 )
+
+associatedPrimes FModule := List => o -> M -> associatedPrimes( root M, o )
 
 ----------------------------------------------------------------------------------------------
 -- Generating random generating morphisms and FModules
@@ -307,6 +309,52 @@ filterRegSeq (ZZ,Ideal,Module) := List => (n,I,M) ->
     L
 )
 
+----------------------------------------------------------------------------------------------
+
+-- generates a random element of degree deg of the ideal I
+randomElementInIdeal = method( Options => { Homogeneous => false } )
+
+randomElementInIdeal ( ZZ, RR, Ideal ) := RingElement => o -> ( deg, density, I ) ->
+(
+    if o.Homogeneous then random( deg, I, Density => density )
+    else sum random( toList( 1..deg ), I, Density => density )
+)
+
+randomFilterRegSeg = method( 
+    Options => 
+    { 
+        Tries => infinity, 
+        Homogeneous => false, 
+        MaxDegree => infinity 
+    } 
+)
+
+randomFilterRegSeg ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) -> 
+(
+    L := {};
+    G := (trim I)_*;
+    counter := 0;
+    deg := min apply( G, k -> first degree k );
+    density := 0.1;
+    R = ring I;
+    J := ideal( 0_R ); 
+    local candidate;
+    while counter < o.Tries and deg < o.MaxDegree and #L < n do
+    (
+        if counter < #G then candidate = G_counter
+        else candidate = randomElementInIdeal( deg, density, I, Homogeneous => o.Homogeneous);
+        if isFilterRegElement( candidate, I, M, J*M ) then 
+        (
+            L = append( L, candidate );
+            J = J + ideal( candidate )
+        );
+        counter = counter + 1;
+        deg = deg + ( counter // 100 );
+        density = density + 0.1*( ( counter % 100 ) // 10 ); 
+    );
+    if #L < n then error "randomFilterRegSeg: could not find a sequence of the desired length; try increasing Tries or MaxDegree";
+    L
+)
     
 
 
