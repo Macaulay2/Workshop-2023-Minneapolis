@@ -100,6 +100,3 @@ wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
         );
 );
 
-
-M = matrix(RR,{{0,1},{1,0}})
-wittDecompInexact(M)
