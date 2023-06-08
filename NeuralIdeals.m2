@@ -252,16 +252,16 @@ canonicalCode List := NeuralCode => L -> (
     codeList := for i in allCodeList list (
 	validCode := true;
 	for j in L do (
-	    if sub(j,matrix{
-		    apply(d,k->sub(value(i#k),R))
-		    })=!= 0 then (
+	    --if sub(j,matrix{
+		    --apply(d,k->sub(value(i#k),R))
+		    --})=!= 0 then (
 		validCode = false;
 		break
-		);
+		--);
 	    );
 	if validCode == false then continue else i
 	);
-    neuralCode(codeList) --getting error array index 0 out of bounds 0 .. -1
+    neuralCode(codeList) --getting error array index 0 out of bounds 0 .. -1 with current state
     )
 
 ----The following function is an internal function from the PseudomonomialPrimaryDecomposition package by Alan Veliz-Cuba
