@@ -17,14 +17,16 @@ newPackage(
 export {"Subring",
         "subring",
 	"presentationRing",
+	"presRing",
 	"presentationMap",
+	"presMap",
         "presentationIdeal",
         "toQuotientRing"}
 
-Subring = new Type of HashTable
+Subring := new Type of HashTable
 
 -- a method to create subrings
-subring = method()
+subring := method()
 subring Matrix := genMatrix -> (
     
     -- compute presentation ring
@@ -37,43 +39,44 @@ subring Matrix := genMatrix -> (
     -- compute presentation map 
     f := map(R, P, genMatrix);
     
-    new Subring from {
+    S := new Subring from {
 	generators => genMatrix,
 	ambient => R,
 	
 	-- presentation ring: one variable for each generator
-	presentationRing => P,
+	presRing => P,
       
 	-- presentation map: presentation ring --> ambient ring
-	presentationMap => f,
+	presMap => f,
 	 
 	-- presentation ideal?? -- probably compute into cache 
 	cache => new CacheTable
-	}
+	};
+    S
     )
 
 subring List := genList -> (
     subring matrix {genList}
     )
 
-presentationRing = method()
+presentationRing := method()
 presentationRing Subring := S -> (
-    S#presentationRing
+    S#presRing
     )
 
-presentationMap = method()
+presentationMap := method()
 presentationMap Subring := S -> (
-    S#presentationMap
+    S#presMap
     )
 
-presentationIdeal = method()
+presentationIdeal := method()
 presentationIdeal Subring := S -> (
     P := presentationRing S;
     f := presentationMap S;
     return ker f; --kernel is cached automatically
     )
 
-toQuotientRing = method()
+toQuotientRing := method()
 toQuotientRing Subring := S -> (
     P := presentationRing S;
     I := presentationIdeal S;
