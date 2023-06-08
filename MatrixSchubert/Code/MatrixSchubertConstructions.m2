@@ -406,12 +406,12 @@ entrywiseMaxRankTable List := Matrix => (L) -> (
 schubertDecomposition = method()
 schubertDecomposition Ideal := List => (I) -> (
     primeDecomp := decompose ideal leadTerm I;
-    maxIdx := max((flatten entries vars ring I) / variableIndex // max);
+    maxIdx := max((flatten entries vars ring I) / indexOfVariable // max);
     -- varWeights := (monoid ring I).Options.MonomialOrder#1#1;
     cycleDecomp := {};
     for primeComp in primeDecomp do {
-        mons := sort(primeComp_*, mon -> ((variableIndex mon)_0+1)*maxIdx - (variableIndex mon)_1); --bad because variableIndex called twice; need decorated sort paradigm
-        perms := apply(mons / variableIndex, perm -> toAntiDiagTrans(perm, maxIdx));
+        mons := sort(primeComp_*, mon -> ((indexOfVariable mon)_0+1)*maxIdx - (indexOfVariable mon)_1); --bad because variableIndex called twice; need decorated sort paradigm
+        perms := apply(mons / indexOfVariable, perm -> toAntiDiagTrans(perm, maxIdx));
         cycleDecomp = append(cycleDecomp, fold(composePerms, perms));
     };
     unique cycleDecomp
