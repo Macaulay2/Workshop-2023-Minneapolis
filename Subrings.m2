@@ -44,10 +44,10 @@ subring Matrix := genMatrix -> (
 	ambient => R,
 	
 	-- presentation ring: one variable for each generator
-	presRing => P,
+	presentationRing => P,
       
 	-- presentation map: presentation ring --> ambient ring
-	presMap => f,
+	presentationMap => f,
 	 
 	-- presentation ideal?? -- probably compute into cache 
 	cache => new CacheTable
