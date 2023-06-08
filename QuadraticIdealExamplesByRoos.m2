@@ -14,13 +14,11 @@ newPackage(
 	PackageExports => {"Depth"},
 	DebuggingMode => true)
 export {
-<<<<<<< HEAD
  "roosTable", 
  "higherDepthTable", 
  "depthZeroTable",
- "almostKoszul"
-=======
- "roosTable", "higherDepthTable", "depthZeroTable", "roosIsotopes", "almostKoszul"
+ "almostKoszul",
+ "roosIsotopes"
 }
 
 
@@ -275,7 +273,7 @@ Description
 
 doc ///
 Key
- almostKoszul
+ "almostKoszul"
 Headline
  Examples discovered by Jan-Erik Roos
 Usage
@@ -366,6 +364,7 @@ end--
 uninstallPackage "QuadraticIdealExamplesByRoos"
 restart
 installPackage "QuadraticIdealExamplesByRoos"
+
 viewHelp QuadraticIdealExamplesByRoos
 viewHelp "QuadraticIdealExamplesByRoos"
 
