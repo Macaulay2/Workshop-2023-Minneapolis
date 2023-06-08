@@ -242,17 +242,16 @@ toricLL Module := N -> (
 	);
     relationsN := presentation N;
     SE := S**E;
+    EtoSE := map(SE,E,for i to dim S-1 list SE_(dim S + i));
     tr := sum(dim S, i-> SE_i*SE_(dim S+i));
     f0 := gens image basis N;
-    newf0 := sub(f0, SE)*tr;
-    -- hacky fix. skew commutativity makes computations different, so we just... remove it.
-    SE' := coefficientRing(S)[gens S|gens E, Degrees => entries matrix {{matrix degrees S, 0}, {0,matrix degrees E}}];
-    relationsNinSE := sub(relationsN, SE');
-    newf0 = sub(newf0,SE') % relationsNinSE;
+    newf0 := (EtoSE f0)*tr;
+    -- weird fix. skew commutativity makes computations different, so we just... remove it.
+    SE' := (coefficientRing S)(monoid[gens S | gens E, Degrees => entries matrix {{matrix degrees S, 0}, {0,matrix degrees E}}]);
+    SEtoSE' := map(SE',SE,gens SE');
+    relationsNinSE := SEtoSE' EtoSE relationsN;
+    newf0 = (SEtoSE' newf0) % relationsNinSE;
     newg := matrixContract(transpose sub(f0,SE'),newf0);
-    -- TODO: This is _terrible_. figure out a different way to define SE'.
-    -- monoid doesn't work because it can kill torsion... need to redefine the variables or something.
-    use E;
     g' := sub(newg,S);
     --Now we have to pick up pieces of g' and put them in the right homological degree.
     --Note:  perhaps we want everything transposed??
