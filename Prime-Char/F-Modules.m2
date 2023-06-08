@@ -331,8 +331,8 @@ filterRegSeq (ZZ,Ideal,Module) := List => (n,I,M) ->
 randomElementInIdeal = method( Options => { Homogeneous => false } )
 
 randomElementInIdeal ( ZZ, RR, Ideal ) := RingElement => o -> ( deg, density, I ) ->
-(
-    if o.Homogeneous then random( deg, I, Density => density )
+(   
+    if o.Homogeneous or deg == 1 then random( deg, I, Density => density )
     else sum random( toList( 1..deg ), I, Density => density )
 )
 
