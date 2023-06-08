@@ -104,10 +104,9 @@ faceMapi = (n,i,C) -> (
     )
 
 degenMapik = (n, k, i) -> (
-    idSize = binomial(n-2,k);
-    zeroes = new List from (binomial(n-2,k)) : 0;
-    A = ABuilder(n-1,k);
-    print(A);
+    idSize = binomial(n,k);
+    zeroes = new List from (binomial(n,k)) : 0;
+    A = ABuilder(n+1,k);
     sig = new MutableList from 0..(#A-1);
     l = 0;
     for j to #A-1 do(
