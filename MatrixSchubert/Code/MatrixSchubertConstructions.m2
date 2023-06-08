@@ -30,7 +30,7 @@ return true
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: ANTIdiagonal initial ideal of Schubert determinantal ideal for w
 ----------------------------------------
-
+-*
 antiDiagInit = method()
 antiDiagInit Matrix := monomialIdeal => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
@@ -40,11 +40,8 @@ antiDiagInit List := monomialIdeal => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     monomialIdeal leadTerm schubertDetIdeal w
     );
+*-
 
-
--*
---This will be the updated/faster antiDiagInit code
---but it's still under construction
 antiDiagInit = method()
 antiDiagInit Matrix := MonomialIdeal => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
@@ -52,31 +49,35 @@ antiDiagInit Matrix := MonomialIdeal => (A) -> (
     rankMat := rankMatrix A; --rank matrix for A
     essBoxes := essentialBoxes A;
     if essBoxes == {} then (
-	R := ring zMatrix;
-	return ideal(0_R)
-	);
+    	R := ring zMatrix;
+    	return ideal(0_R)
+    	);
     zBoxes := apply(essBoxes, i-> flatten table(i_0,i_1, (j,k)->(j+1,k+1))); --smaller matrix indices for each essential box
     ranks := apply(essBoxes, i-> rankMat_(i_0-1,i_1-1)); --ranks for each essential box
     antiDiagGens := new MutableList;
     for box in essBoxes do (
     	pos := position(essBoxes, i-> i==box);
-	boxSubmatrix := zMatrix^{0..(box_0-1)}_{0..(box_1-1)};
-	for x in subsets(numRows boxSubmatrix,) do (
-	    for y in subsets(numCols boxSubmatrix do(
-		    indicesList := 
-        antiDiagGens#(#antiDiagGens) = apply((minors(ranks_pos+1, zMatrix^{0..(box_0-1)}_{0..(box_1-1)}))_*,);
-        );
-    return ideal(unique flatten toList antiDiagGens)
+    	boxSubmatrix := zMatrix^{0..(box_0-1)}_{0..(box_1-1)};
+    	for x in subsets(numrows boxSubmatrix,ranks_pos+1) do (
+    	    for y in subsets(numcols boxSubmatrix,ranks_pos+1) do(
+	    	indicesList = apply(pack(2,mingle(x,reverse y)),i->toSequence i);
+	    	antiDiagGens#(#antiDiagGens) =  product(apply(indicesList,i->boxSubmatrix_i));
+	    	);
+	    );
+    	);
+    monomialIdeal(unique flatten toList antiDiagGens)
     );
-antiDiagInit List := monomialIdeal => (w) -> (
+
+antiDiagInit List := MonomialIdeal => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    monomialIdeal leadTerm schubertDetIdeal w
+    A := permToMatrix w;
+    antiDiagInit A
     );
-*-
+
 ----------------------------------------
 --Computes rank matrix of an ASM
---INPUT: an (n x n)- alternating sign matrix A OR a 1-line perm w
---OUTPUT: an (n x n) integer matrix of ranks of each entry
+--INPUT: an (n x m)- partial alternating sign matrix A OR a 1-line perm w
+--OUTPUT: an (n x m) integer matrix of ranks of each entry
 --Author: Yuyuan Luo
 --TODO: add tests for this function
 ----------------------------------------
@@ -85,10 +86,11 @@ rankMatrix = method()
 rankMatrix Matrix := Matrix => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     n := numrows A;
+    m := numcols A;
     rankA := {};
     for i from 0 to n-1 do (
 	temp := toList(n:0);
-        for j from 0 to n-1 do (
+        for j from 0 to m-1 do (
             if (j>0) then prev := temp#(j-1);
             if (i==0 and j==0) then temp=replace(j,A_(0,0),temp)
             else if (i==0) then temp=replace(j,prev+A_(i,j),temp)
