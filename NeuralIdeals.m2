@@ -162,8 +162,8 @@ canonicalForm Ideal := List => opts -> I -> (
 	if isDivisible==true then continue; 
 	if opts.Factor == true then factor(i) else i
 	)
-    )
-    else error "Input must be a squarefree pseudomonomial ideal"
+    --)
+    --else error "Input must be a squarefree pseudomonomial ideal"
     )
 
 canonicalForm NeuralCode := List => opts -> C -> (
@@ -247,6 +247,13 @@ canonicalCode = method();
 canonicalCode List := NeuralCode => L -> (
     R := ring L#0;
     d := numgens R;
+    codeList := allCodeWords(d);
+    for i in codeList list (
+	validCode := false;
+	for i in L do (
+	    
+	    )
+	)
     )
 
 ----The following function is an internal function from the PseudomonomialPrimaryDecomposition package by Alan Veliz-Cuba
