@@ -485,6 +485,17 @@ needsPackage "RandomIdeals"
 
 setRandomSeed 0
 
+--FOR DEMO
+I = summandExamples#5
+isBurch(I)
+isGolod(ring I/I)
+
+F = res(coker vars (ring I/I), LengthLimit => 7)
+socleSummands F
+socleSummandsSemigroup(I,7)
+
+-- COUNTEREXAMPLE
+
 
 
 for i from 1 to 4 do(
