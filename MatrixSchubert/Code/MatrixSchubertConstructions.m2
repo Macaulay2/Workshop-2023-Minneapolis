@@ -61,9 +61,9 @@ antiDiagInit Matrix := MonomialIdeal => (A) -> (
     for box in essBoxes do (
     	pos := position(essBoxes, i-> i==box);
 	boxSubmatrix := zMatrix^{0..(box_0-1)}_{0..(box_1-1)};
-	for x in subsets(numRows boxSubmatrix) do (
+	for x in subsets(numRows boxSubmatrix,) do (
 	    for y in subsets(numCols boxSubmatrix do(
-		    product(
+		    indicesList := 
         antiDiagGens#(#antiDiagGens) = apply((minors(ranks_pos+1, zMatrix^{0..(box_0-1)}_{0..(box_1-1)}))_*,);
         );
     return ideal(unique flatten toList antiDiagGens)
@@ -119,11 +119,11 @@ rotheDiagram Matrix := List => (A) -> (
     ones := select(listEntries, i-> A_i == 1);
     seen := new MutableList;
     for one in ones do(
-	for i from one_0 to m-1 do( --death rays to the right
+	for i from one_0 to n-1 do( --death rays to the right
 	    if (A_(i,one_1)==-1) then break;
 	    seen#(#seen) = (i,one_1);
 	    );
-	for i from one_1 to n-1 do(
+	for i from one_1 to m-1 do(
 	    if A_(one_0,i)==-1 then break;
 	    seen#(#seen) = (one_0,i);
 	    );
