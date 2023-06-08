@@ -24,6 +24,7 @@ export{--types
     "NeuralCode",
     --methods/functions
     "neuralCode",
+    "polarRing",
     "neuralIdeal",
     "canonicalForm",
     "codeSupport",
@@ -32,13 +33,13 @@ export{--types
     "sigmaTau",
     "polarizePseudomonomial",
     "allCodeWords",
-    "polarizedCanonicalRes",
+    "polarizedCanonicalResolution",
     --Symbols
-    "codes",
+    "codeWords",
     "Factor",
     "Iterative"}
 
-protect codes
+protect codeWords
 protect dimension
 protect Factor
 protect Iterative
@@ -49,7 +50,7 @@ NeuralCode.synonym = "neural code"
 neuralCode=method(List):= codeList -> (
     d := #(codeList#0);
     X:=new NeuralCode from {
-	symbol codes => codeList,
+	symbol codeWords => codeList,
 	symbol dimension => d,
 	symbol cache => new CacheTable
 	};
@@ -68,7 +69,7 @@ ring NeuralCode := C -> (
 isWellDefined NeuralCode := Boolean => X -> (
     --check keys
     K:=keys X;
-    expectedKeys := set{symbol codes, symbol dimension}; 
+    expectedKeys := set{symbol codeWords, symbol dimension}; 
     if set K =!= expectedKeys then (
 	if debugLevel > 0 then (
 	    added := toList(K - expectedKeys);
@@ -81,24 +82,24 @@ isWellDefined NeuralCode := Boolean => X -> (
 	return false
 	);
     -- check types
-    if not instance(X.codes, List) then (
+    if not instance(X.codeWords, List) then (
 	if debugLevel >0 then
 	<< "-- expected 'codes' to be a list" <<endl;
 	return false
 	);
-    if X.codes === {} or not all (X.codes, r->instance(r,String)) then (
+    if X.codeWords === {} or not all (X.codeWords, r->instance(r,String)) then (
 	if debugLevel >0 then
 	<< "-- expected 'codes' to be a nonempty list of strings" <<endl;
 	return false
 	);
-    if not all (X.codes, r->all(r,i->(value(i)==0 or value(i)==1))) then (
+    if not all (X.codeWords, r->all(r,i->(value(i)==0 or value(i)==1))) then (
 	if debugLevel >0 then
 	<< "-- expected 'codes' to be a list of strings of 0's and 1's" << endl;
 	return false
 	);
-    codeList := codes X;
+    codeList := codeWords X;
     d:= # (codeList#0);
-    if not all (X.codes, r-> #r === d) then (
+    if not all (X.codeWords, r-> #r === d) then (
 	if debugLevel > 0 then
 	<< "-- expected 'codes' to be a list of equal length strings" << endl;
 	return false
@@ -109,6 +110,15 @@ isWellDefined NeuralCode := Boolean => X -> (
 --	return false
 	--);
     true);
+
+polarRing = method();
+
+polarRing(NeuralCode) := C -> (
+    d := dim C;
+    x := getSymbol "x";
+    y := getSymbol "y";
+    S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d])
+    )
 
 allCodeWords = method();
 allCodeWords (ZZ) := (n) ->(
@@ -124,7 +134,7 @@ neuralCodeComplement = method();
 neuralCodeComplement  (NeuralCode) := NeuralCode => C ->(
     d := dim C;
     L1 := allCodeWords(d);
-    L:=C.codes;
+    L:=C.codeWords;
     for i in L do L1=delete(i,L1);
     L1
     )    
@@ -158,13 +168,13 @@ iterCanonicalForm = method();
 iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
     d := dim C;
     if numgens R =!= d then error "Expected ring of the same dimension as the neuralCode";
-    initCode := C.codes#0;
+    initCode := C.codeWords#0;
     canonical := {};
     for i to d-1 do (
 	canonical = append(canonical,R_i - value(initCode#i))
 	);
-    for i from 1 to #C.codes - 1 do (
-	current := C.codes#i;
+    for i from 1 to #C.codeWords - 1 do (
+	current := C.codeWords#i;
 	codeCoordinate := {};
 	factors := {};
 	subs := {};
@@ -258,7 +268,7 @@ canonicalForm NeuralCode := List => opts -> C -> (
 codeSupport = method();
 codeSupport(NeuralCode) := C -> (
     fullSupport := {};
-    L := C.codes;
+    L := C.codeWords;
     for c in L do (
 	cSupport := for i to #c-1 list (if value(c#i) == 0 then continue; i+1);
 	fullSupport = append(fullSupport, cSupport);
@@ -372,28 +382,28 @@ polarizePseudomonomial(RingElement) := RingElement => P -> (
     polarizePseudomonomial(P,R)
     )
 
-polarizedCanonicalRes = method();
+polarizedCanonicalResolution = method();
 
-polarizedCanonicalRes(NeuralCode,Ring,Ring) := Resolution => (C,R,S) -> (
+polarizedCanonicalResolution(NeuralCode,Ring,Ring) := Resolution => (C,R,S) -> (
     L := canonicalForm(C,R);
     polarL := for P in L list polarizePseudomonomial(P,R,S);
     res ideal(polarL)
     )
 
-polarizedCanonicalRes(NeuralCode,Ring) := Resolution => (C,S) -> (
+polarizedCanonicalResolution(NeuralCode,Ring) := Resolution => (C,S) -> (
     if (numgens S)%2 != 0 then error "Second ring must have an even number of generators";
     d := (numgens S)//2;
     x := getSymbol "x";
     R := (ZZ/2)(monoid[x_1..x_d]);
-    polarizedCanonicalRes(C,R,S)
+    polarizedCanonicalResolution(C,R,S)
     )
 
-polarizedCanonicalRes(NeuralCode) := Resolution => C -> (
+polarizedCanonicalResolution(NeuralCode) := Resolution => C -> (
     d := dim C;
     x := getSymbol "x";
     y := getSymbol "y";
     S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
-    polarizedCanonicalRes(C,S)
+    polarizedCanonicalResolution(C,S)
     )
 
 beginDocumentation()
