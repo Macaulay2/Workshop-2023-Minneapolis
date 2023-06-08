@@ -61,7 +61,7 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     
     ------------------------
     
-    phi0 := map(kk,Rquot,(toList ((2*n):0))); -- ring map that takes the coefficients to the field kk instead of considering it as an element of the quotient ring (RMK is this even needed?)
+    phi0 := map(kk,Rquot,(toList ((2*n):0))); -- ring map that takes the coefficients to the field kk instead of considering it as an element of the quotient ring 
     
     -- m is the dimension of the basis for the local ring
     m:= #sBXProm;
