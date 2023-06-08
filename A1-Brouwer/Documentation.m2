@@ -1,4 +1,4 @@
---Type: GrothendieckWittClass
+-Type: GrothendieckWittClass
 
     (1). Matrix -> GrothendieckWittClass
                 gwClass (Matrix)
@@ -15,7 +15,7 @@
                 Returns the tensor product of two GrothendieckWittClasses (isomorphism class of direct sum of two quadratic spaces)
         (e). isWellDefined (GrothendieckWittClass) -> (Boolean)
                 Returns true if matrix representing a GW class is defined over a field k, char(k)\neq 2, symmetric, nonsingular
---Functions:
+-Functions:
     (1). Basic Matrix Properties Check
         (a). isSquare (Matrix)-> (Boolean)
         (b). isSquareAndSymmetric (Matrix) -> (Boolean)
