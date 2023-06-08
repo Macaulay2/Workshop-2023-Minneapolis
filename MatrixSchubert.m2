@@ -27,6 +27,7 @@ newPackage(
 
 export{
     "isPartialASM",
+    "partialASMToASM",
     "fultonGens",
     "schubertDetIdeal",
     "diagLexInit",

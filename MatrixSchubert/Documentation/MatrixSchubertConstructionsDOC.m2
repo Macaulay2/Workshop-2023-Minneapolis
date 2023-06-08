@@ -108,7 +108,7 @@ doc ///
 	    
 ///
 
--*
+
 doc ///
     Key
     	(antiDiagInit, List)
@@ -120,30 +120,31 @@ doc ///
     	antiDiagInit(w)
     	antiDiagInit(A)
     Inputs
-         w:List
-	    or {\tt A} is a @TO Matrix@
+        w:List
+	        or {\tt A} is a @TO Matrix@
     Description
     	Text
-	 Let Z = (z_(i,j)) be a generic matrix and R=k[Z] is a polynomial ring in the entries of Z over the ring k.  We call a term order 
-	 on R antidiagonal if the lead term of the determinant of each submatrix Z' of Z is the product of terms along the antidiagonal 
-	 of Z'. 
+	        Let $Z = (z_{i,j})$ be a generic matrix and $R=k[Z]$ is a polynomial ring in the entries of Z over the ring k.  We call a term order on R antidiagonal if the lead term of the determinant of each submatrix $Z'$ of Z is the product of terms along the antidiagonal of $Z'$. 
+	
+	        This method relies on these theorems.  It computes the antidiagonal initial ideal of an alternating sign matrix ideal by directly forming 
+	        the ideal of the lead terms of the Fulton generators.  
+
+            @UL {{"[KM05]: Knutson and Miller, Gröbner geometry of Schubert polynomials (see ", arXiv "0110058", ")."},}@ 
+            
+            tells us that the Fulton generators of each Schubert determinantal ideal form a Gröbner basis, a result extended to alternating sign matrix ideals by  
+            
+            @UL {{"[Knu]: Knutson, Frobenius splitting, point-counting, and degeneration (see ", arXiv "0911.4941", ")."},}@ 
+            
+            and by 
+            
+            @UL {{"[Wei]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},}@
 	 
-	 This method relies on these theorems.  It computes the antidiagonal initial ideal of an alternating sign matrix ideal by directly forming 
-	 the ideal of the lead terms of the Fulton generators.  @UL {
-        {"[KM05]: Knutson and Miller, Gröbner geometry of Schubert polynomials (see ", arXiv "0110058", ")."},}@ tells us that the Fulton generators of each 
-	 Schubert determinantal ideal form a Gröbner basis, a result extended to alternating sign matrix ideals by  @UL {
-        {"[Knu]: Knutson, Frobenius splitting, point-counting, and degeneration (see ", arXiv "0911.4941", ")."},
-        }@ and by @UL {
-        {"[Wei]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},
-        }@.
-	 
-	 
-	 Example
-	 schubertDetIdeal({1,3,2})
-	 schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+        Example
+            schubertDetIdeal({1,3,2})
+            schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 
 ///
-*-
+
 
 doc ///
     Key
@@ -308,7 +309,7 @@ doc ///
     Headline
     	to find the ASM associated to a given rank table
     Usage
-    	rankTableToASM(M)
+    	rankTableToASM M
     Inputs
     	M:Matrix
     Description
@@ -321,3 +322,22 @@ doc ///
 	    rankTableToASM(B)
    
 ///           
+
+doc ///
+    Key
+        rankTableFromMatrix
+        (rankTableFromMatrix, Matrix)
+    Headline
+    	to find the minimal rank table which is associated to a unique ASM, given a square integer matrix
+    Usage
+    	rankTableFromMatrix M
+    Inputs
+    	M:Matrix
+    Description
+    	Text
+	    	Given a square integer matrix, return the associated valid minimal rank table which is associated to a unique ASM.
+	Example
+	    A = matrix {{1,0,0},{0,23,24},{23,24,25}}
+	    rankTableToASM(A)
+   
+///   
