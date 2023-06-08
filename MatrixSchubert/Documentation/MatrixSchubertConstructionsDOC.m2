@@ -338,6 +338,6 @@ doc ///
 	    	Given a square integer matrix, return the associated valid minimal rank table which is associated to a unique ASM.
 	Example
 	    A = matrix {{1,0,0},{0,23,24},{23,24,25}}
-	    rankTableToASM(A)
+	    rankTableFromMatrix A
    
 ///   
