@@ -144,6 +144,9 @@ OrderedQQVector ? OrderedQQVector := (a, b) -> (
     else symbol ==
     )
 
+OrderedQQVector == InfiniteNumber := (a, b) -> false
+InfiniteNumber ==  OrderedQQn := (a, b) -> false
+
 --
 -- monomialToOrderedQQVector
 --
