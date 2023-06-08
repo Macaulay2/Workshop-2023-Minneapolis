@@ -25,7 +25,7 @@ matrix GrothendieckWittClass := Matrix => beta -> beta.matrix
 baseField = method()
 baseField GrothendieckWittClass := Ring => beta -> (
     if(isWellDefined(beta)===true) then (ring beta.matrix)
-    ring beta.matrix;
+    ring beta.matrix
 )
 
 -- Check if a constructed class is well-defined
