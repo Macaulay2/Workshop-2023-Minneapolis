@@ -61,6 +61,49 @@ baseField GrothendieckWittClass := Ring => beta -> (
     ring beta.matrix;
 )
 
+easyIsomorphicGW = method(
+    Options => {
+	HeightBound => 3
+	}
+    )
+
+easyIsomorphicGW (GrothendieckWittClass, GrothendieckWittClass) := Boolean => opts -> (beta, gamma) -> (
+    -- Returns error if the matrices are defined over different base fields
+    if not baseField(beta) === baseField(gamma) then error "Error: these classes have different underlying fields";
+    
+    A := beta.matrix;
+    B := gamma.matrix;
+    
+    -- Return false if the matrices are not of the same size
+    if not numRows(A) == numRows(B) then return false;
+    
+    k:= baseField(beta);
+    n := numRows(A);
+    
+    -- Build a generic matrix P in indeterminants over our field
+    R := k[x_(1,1)..x_(n,n)];
+    P := genericMatrix(R,n,n);
+    
+    -- Take the n^2 equations produced by this matrix equality
+    testZeroMatx := transpose(P)*A*P - B;
+    fullEqns := flatten entries testZeroMatx;
+    I := ideal(fullEqns);
+    
+    -- Increasing the height bound, check for solutions at each stage
+    for i in 1..opts.HeightBound do(
+	L := rationalPoints(k, I, Bound=>i);
+	if not #L === 0 then(
+	    return true;
+	    break;
+	    );
+	if #L === 0 then(
+	    print("No solutions up to height " | toString(i));
+	    );
+     	);
+    print("Height bound exceeded");
+    return false;
+    )
+
 testMatrix1 = matrix(QQ,{{6/1,-1/1},{2/1,3/1}});
 testMatrix2 = matrix(QQ, {{0,1/1},{1/1, 0}});
 resultMatrix1 = matrix(QQ, {{1/1,0},{0,-1/1}});
