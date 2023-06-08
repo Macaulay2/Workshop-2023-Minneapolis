@@ -121,6 +121,7 @@ neuralCodeOpp  (NeuralCode) := NeuralCode => C ->(
     L1
     )    
 
+--input: a NeuralCode, outputs a neural ideal by the method of The Neural Ring, not necessarily in canonical form
 neuralIdeal = method();
 
 neuralIdeal(NeuralCode,Ring) := Ideal => (C,R) -> (
@@ -144,7 +145,7 @@ neuralIdeal NeuralCode := Ideal => C -> (
     neuralIdeal(C,R)
     )
 
---not exported, used as an option for canonicalForm below it
+--not exported, used as an option for canonicalForm below it, iterative method from NeuralIdeals in SageMath paper
 iterCanonicalForm = method();
 iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
     d := dim C;
@@ -200,6 +201,8 @@ iterCanonicalForm(NeuralCode) := List => C -> (
     iterCanonicalForm(C,R)
     )
 
+
+--inputs a squarefree pseudomonomial ideal or a NeuralCode, outputs the canonical form of its neural ideal
 canonicalForm = method(
     Options => {
 	Factor => false,
@@ -207,7 +210,6 @@ canonicalForm = method(
 	});
 
 canonicalForm Ideal := List => opts -> I -> (
-    --if isSquarefreePseudomonomialIdeal I==true then (
     decomp := primaryDecompositionPseudomonomial I;
     multipliedGens :=product(decomp, i->i);
     R := ring I;
@@ -224,22 +226,25 @@ canonicalForm Ideal := List => opts -> I -> (
 	if isDivisible==true then continue; 
 	if opts.Factor == true then factor(i) else i
 	)
-    --)
-    --else error "Input must be a squarefree pseudomonomial ideal"
     )
 
 canonicalForm(NeuralCode,Ring) := List => opts -> (C,R) -> (
-    if opts.Iterative == false then
-    canonicalForm(neuralIdeal(C,R),Factor => opts.Factor) else
-    iterCanonicalForm(C,R)
+    if opts.Iterative == true then (
+	iterCanonicalForm(C,R)
+	)
+    else
+    canonicalForm(neuralIdeal(C,R),Factor => opts.Factor)
     )
 
 canonicalForm NeuralCode := List => opts -> C -> (
-    if opts.Iterative == false then
-    canonicalForm(neuralIdeal(C),Factor => opts.Factor) else
-    iterCanonicalForm(C)
+    if opts.Iterative == true then (
+	iterCanonicalForm(C)
+	)
+    else 
+    canonicalForm(neuralIdeal(C),Factor => opts.Factor)
     )
 
+--finds the support of a given neural code
 codeSupport = method();
 codeSupport(NeuralCode) := C -> (
     fullSupport := {};
@@ -251,6 +256,7 @@ codeSupport(NeuralCode) := C -> (
     fullSupport
     )
 
+--given a non-unit squarefree pseudomonomial ideal, preferably in canonical form, and outputs the corresponding NeuralCode
 canonicalCode = method();
 
 canonicalCode List := NeuralCode => L -> (
@@ -395,21 +401,26 @@ document{
 }
 
 document{
-  Key => {canonicalForm, (canonicalForm,Ideal),(canonicalForm,NeuralCode)},
+  Key => {canonicalForm, (canonicalForm,Ideal),(canonicalForm,NeuralCode,Ring),(canonicalForm,NeuralCode)},
   Headline => "Canonical Form",
-  TEX "A method which computes the canonical form of a given squarefree pseudomonomial ideal or neural code.",
-  Usage => "canonicalForm(Ideal) or canonicalForm(NeuralCode)",
-  Inputs => {"Squarefree pseudomonomial ideal or NeuralCode"},
-  Outputs => {"The canonical form"},
+  TEX "A method which computes the canonical form of a given squarefree pseudomonomial ideal or neural code. If entering a neural code, you can also specify the ring where the elements of the canonical form will live. The option Iterative=> true will compute the canonical form of a neural code using the newer method from NeuralIdeals in SageMath.",
+  Usage => "canonicalForm(Ideal) or canonicalForm(NeuralCode,Ring) or canonicalForm(NeuralCode) or canonicalForm(NeuralCode,Ring,Iterative=true) or canonicalForm(NeuralCode,Iterative=true)",
+  Inputs => {"Squarefree pseudomonomial ideal or NeuralCode (recommend specifying a ring for the latter), Iterative or not (if entering a neural code)"},
+  Outputs => {"The canonical form as a list of elements of the ring of the ideal, the specified ring, or ZZ/2[x_1..x_d] where d is the dimension of the neural code."},
   TEX "We compute an example",
-  EXAMPLE lines ///
-  C=neuralCode("000","001");
-  canonicalForm(C)
-  ///,
   EXAMPLE lines ///
   R=ZZ/2[x_1..x_3];
   I=ideal(x_1*x_3,x_2*(1-x_1));
   canonicalForm(I)
+  ///,
+  EXAMPLE lines ///
+  R=ZZ/2[x_1..x_3];
+  C=neuralCode({"000","001"},R);
+  canonicalForm(C)
+  ///,
+  EXAMPLE lines ///
+  R=ZZ/2[x_1..x_3];
+  C=neuralCode({"000","001"},R,Iterative=>true)
   ///,
 }
 
