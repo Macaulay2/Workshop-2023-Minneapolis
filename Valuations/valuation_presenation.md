@@ -71,3 +71,10 @@ Code
 
 
 ## Future Directions
+1. General development
+2. Use valuations in other M2 pacakges:
+   (-) [Tropical](http://www2.macaulay2.com/Macaulay2/doc/Macaulay2-1.17/share/doc/Macaulay2/Tropical/html/index.html) --  the main M2 package for tropical computations
+   (-) [FormalGroupLaws](http://www2.macaulay2.com/Macaulay2/doc/Macaulay2-1.17/share/doc/Macaulay2/FormalGroupLaws/html/index.html) -- commutative formal group laws
+   (-) [SubalgebraBases](http://www2.macaulay2.com/Macaulay2/doc/Macaulay2-1.18/share/doc/Macaulay2/SubalgebraBases/html/index.html) -- A package for finding canonical subalgebra bases (Sagbi bases)
+3. Puiseux series
+4. Any suggestions?
