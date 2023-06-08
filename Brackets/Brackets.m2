@@ -8,7 +8,7 @@ newPackage(
 	      { Name => "Tim Duff", Email => "timduff@uw.edu", HomePage => "https://timduff35.github.io/timduff35/"},
 	      { Name => "Jack Kendrick", Email => "jackgk@uw.edu", HomePage => ""},
 	      { Name => "Thomas Yahl", Email => "thomasjyahl@tamu.edu", HomePage => "tjyahl.github.io"},
-	      { Name => "Michael Zeng", Email => "", HomePage => ""}		      
+	      { Name => "Michael Zeng", Email => "zengrf@uw.edu", HomePage => ""}		      
 	      },
 	  PackageImports => {"SubalgebraBases"},
           AuxiliaryFiles => false,
@@ -129,7 +129,7 @@ gc (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     )
 
 bracketRing GCAlgebra := o -> Gnd -> Gnd#bracketRing
-gens AbsctactGCRing := o -> G -> gens ring G
+gens AbstractGCRing := o -> G -> gens ring G
 net GCAlgebra := Gnd -> (
     R := ring Gnd;
     n := numgens R;
@@ -493,6 +493,7 @@ Description
 doc ///
 Key
  gc
+ (gc, VisibleList, ZZ)
 Headline
  Constructor for Grassmann-Cayley algebras.
 Usage
@@ -642,6 +643,42 @@ Description
   Text
     See also @TO GCAlgebra@, @TO GCExpression@.
 ///
+
+doc ///
+Key
+  (symbol _, RingElement, AbstractGCRing)
+Headline
+  Substituting ring elements into bracket rings and GC algebras
+Usage
+  a = b_R;
+Inputs
+  b:RingElement
+  R:AbstractGCRing
+Outputs
+  a:GCExpression
+Description
+  Text
+    This element is required in order to interpret various symbols as elements of the Grassmann-Cayley algebra or its associated bracket ring.
+///
+
+doc ///
+Key
+  (symbol _, GCExpression, BracketRing)
+Headline
+  Substituting top-degree Grassmann-Cayley elements into the bracket ring
+Usage
+  a = b_R;
+Inputs
+  b:GCExpression
+  R:BracketRing
+Outputs
+  a:GCExpression
+Description
+  Text
+    Interpreting bracket polynomials as functions on $\Lambda^d (V)$ (see @TO (symbol ^, GCExpression, GCExpression)@ for notation), we may convert an extensor $a_1 \wedge \cdots \wedge a_d$ to the bracket $[a_1, \ldots , a_d].$
+///
+
+
 -* Test section *-
 TEST /// -* Sturmfels Example 3.1.10 *-
 B = bracketRing(6, 3)
