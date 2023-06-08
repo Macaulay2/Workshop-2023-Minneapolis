@@ -15,7 +15,6 @@ export {
     "socleSummandsSemigroup",
     "isBurch",
     "burchIndex",
-    "almostKoszul",
     --
     "Boundaries"
 
@@ -31,28 +30,6 @@ export {
 --    (5, ideal"a4,b4,c4,ab3, b2c2"),
     (5, ideal"a4,a3b,b3,abc2,c5")}
 )
- almostKoszul = method()
- almostKoszul (Ring, ZZ) := Ring => (kk, a)-> (
-    --A series of examples discovered by Jan-Erik Roos:
-    --
-    --If kk = QQ then the resolution of kk over the output
-    --ring has linear resolution for a steps but 1 quadratic syzygy
-    --at the a+1-st step. 
-    --It also seems to have the first socle summand
-    --at the a+1-st step!
-    --These phenomena are also visible with kk = ZZ/32003, at
-    --least for moderate size a.
-    x := symbol x; 
-    y := symbol y;
-    z := symbol z; 
-    u := symbol u; 
-    v := symbol v; 
-    w := symbol w;
-    S := kk[x,y,z,u,v,w];
-    I := ideal (x^2,x*y,y*z,z^2,z*u,u^2,u*v,v*w,w^2,
-           x*z+a*z*w-u*w,z*w+x*u+(a-2)*u*w);
-    S/I
-       )
 
 socle = method()
 socle Ring := R -> (
@@ -484,6 +461,17 @@ needsPackage "MonomialOrbits"
 needsPackage "RandomIdeals"
 
 setRandomSeed 0
+
+--FOR DEMO
+I = summandExamples#5
+isBurch(I)
+isGolod(ring I/I)
+
+F = res(coker vars (ring I/I), LengthLimit => 7)
+socleSummands F
+socleSummandsSemigroup(I,7)
+
+-- COUNTEREXAMPLE
 
 
 
