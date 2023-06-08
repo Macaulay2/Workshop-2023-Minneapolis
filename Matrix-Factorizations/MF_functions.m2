@@ -1,4 +1,5 @@
-needs "ZZdFactorizations.m2" 
+needs "ZZdFactorizations.m2"
+needsPackage "TensorComplexes" --Koszul factorization method needs this 
 
 --shift function
 shift = method()
@@ -292,22 +293,24 @@ koszulMFf(List, RingElement, RingElement) := (L,f, omega) -> (
     koszulMF(A)
 )
 
-needsPackage "TensorComplexes"
-koszulMFf(List, RingElement, ZZ, RingElement) := (L,f, d, omega) -> (
-    if not(omega^d == sub(1,ring omega)) then error "ring element must be a d^th root of unity where d is the third input";
+--In: List L generating an ideal I such that polynomial f lies in I^{d-1}, where d is the desired period of factorization
+--In: root of unity omega and integer e=d-1 such that omega^(e+1)=1
+--Out: factorization of f with period d
+--omega should be an (e+1) root of unity!
+koszulMFf(List, RingElement, ZZ, RingElement) := (L,f, e, omega) -> (
+    if not(omega^(e+1) == sub(1,ring omega)) then error "ring element must be a d^th root of unity where d is the third input";
     G := matrix {L};
-    Gd := multiSubsets(flatten entries G, d);
+    Gd := multiSubsets(flatten entries G, e);
     prods := for i to #Gd-1 list product(Gd_i);
     M := f //matrix{prods};
     N := for i to #Gd-1 list flatten {Gd#i, (entries M)#i};
-      F := select(N, i -> not(last i == 0));
+    F := select(N, i -> not(last i == 0));
+    koszulMF(entries transpose matrix F, omega)
+	)
 	 
---    N := transpose (gens I) | M;     
-  ---  E  := entries N;
- --   F := select(E, i -> not(i#1 == 0)); 
---    A := flatten F;
---    koszulMF(A)
-F
-)
+S = QQ[x,y,z,w]
+Q = adjoinRoot(5, S)
+K = koszulMFf({x,y,z,w}, x^5+y^5+w^5, 4, t)
+dd^K
+isdFactorization K
 
-koszulMFf({x,y,z,u,v,w}, x^5+y^5+w^10, 4, t)
