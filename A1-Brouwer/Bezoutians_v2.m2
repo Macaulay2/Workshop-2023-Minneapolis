@@ -1,4 +1,4 @@
-
+--Nikita
 -- Given an endomorphism of affine space f=(f1,...,fn) given as a list of polynomials, return the Bezoutian corresponding to the endomorphism
 bezoutian = method()
 
