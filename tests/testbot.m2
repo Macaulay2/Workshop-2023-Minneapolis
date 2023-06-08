@@ -13,23 +13,30 @@
 -- Uncomment and edit the following line to add your project directories
 -- containing Macaulay2 source code files to the load path. Terminate each
 -- directory name with a "/".
---path = join( { currentDirectory() | "src/singularities/", ... }, path )
-
+path = join( { currentDirectory() | "A1-Brouwer/" }, path )
+print("Path:");
+print(path);
 -- Uncomment and edit the following lines to preload and check your package or
 -- to run a series of examples with every push on GitHub.
 --needsPackage "LocalRings"
 --check LocalRings
---load "tests/example.m2"
---capture get "tests/example.m2"
+-- load "A1-Brouwer/GW-type.m2"
+-- capture get "A1-Brouwer/GW-type.m2"
 
 -- The following lines automatically run every file in the "tests" directory.
 -- If you wish, you can change testDir to any other directory.
 testDir = currentDirectory() | "tests/"
+print("testDir:");
+print readDirectory(testDir | "../");
+
 
 testFiles = select(readDirectory testDir,
     file -> match("\\.m2$", file) and file != "testbot.m2")
 printerr("Found ", toString(#testFiles), " test file(s) matching '", testDir, "*.m2'.")
 TEST(testFiles / (filename -> testDir | "/" | filename), FileName => true)
+
+print("test files:");
+print(testFiles);
 
 -- workaround for https://github.com/Macaulay2/M2/issues/2835
 importFrom_Core {"PackageIsLoaded"}

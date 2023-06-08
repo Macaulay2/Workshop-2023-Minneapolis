@@ -6,6 +6,7 @@
 
 
 
+
 -- Input: L is list of functions {f1,...,fn} over same ring R and p is prime ideal of an isolated zero
 
 -- Output: list of basis elements of local k-algebra Q_p(f) where f = (f1,...,fn):A^n --> A^n

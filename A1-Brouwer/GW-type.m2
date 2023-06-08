@@ -85,36 +85,3 @@ gwMultiply(GrothendieckWittClass, GrothendieckWittClass) := GrothendieckWittClas
     
     return gwClass(b**g)
     )
-
-
-
--- Method for diagonalizing a square matrix
-diagonalize = method()
-
-diagonalize (MutableMatrix) := (MutableMatrix) => (A) -> (
-    
-    -- TODO return error if not square
-    n=numRows(A);
-    for col from 0 to (n-1) do (
-        if A_(col,col) == 0 then (
-            for row from col+1 to n-1 do (
-                if A_(row,col) != 0 then (
-                    --we have found non-zero entry
-                    rowAdd(A,col,1,row);
-                    columnAdd(A,col,1,row);
-                    break;
-                );
-            );
-            if A_(col,col)==0 then (print "Error: Matrix A was singular"; return A;);
-        );
-        --entry in A_(col,col) is non-zero at this point
-         for row from (col+1) to (n-1) do (
-            temp=A_(row,col);
-            rowAdd(A,row,-temp/A_(col,col),col);
-            columnAdd(A,row,-temp/A_(col,col),col);
-        );
-
-    );
-    return A
-)
-

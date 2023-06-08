@@ -3,14 +3,6 @@
 splitOffObviousHyperbolic = method()
 
 splitOffObviousHyperbolic (Matrix) := (ZZ,Matrix) => (A) -> (
-    --matrix must be square
-    if numRows(A) != numColumns(A) then (
-	error "Matrix is not square.";
-	);
-    --matrix must be nonsingular
-    if det(A) == 0 then (
-	error "Matrix is singular.";
-	);
     --matrix must be symmetric
     if A != transpose(A) then (
         error "Matrix is not symmetric";
@@ -19,7 +11,7 @@ splitOffObviousHyperbolic (Matrix) := (ZZ,Matrix) => (A) -> (
     remainingMatrix = A;
     for i from 0 to (numRows(A)-1) do (
         for j from (i+1) to (numRows(A)-1) do (
-            if A_(i,i) == -A_(j,j) then (
+            if (A_(i,i) == -A_(j,j) and A_(i,i) != 0) then (
                  foundHyperbolic = 1;
                  remainingMatrix = submatrix'(A,{i,j},{i,j});
                  return(foundHyperbolic,remainingMatrix)
