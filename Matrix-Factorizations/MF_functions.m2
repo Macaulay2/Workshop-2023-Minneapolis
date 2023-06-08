@@ -120,10 +120,23 @@ tensorMF(ZZdFactorization,ZZdFactorization) := (X,Y) -> (
 
 koszulMF = method()
 koszulMF(List) := L -> (
-    X := ZZdfactorization{ matrix{{L#0}}, matrix{{L#1}}};
-    for i from 1 to (#L)//2-1 do X = tensorMF(X, ZZdfactorization{ matrix{{L#(2*i)}}, matrix{{L#(2*i+1)}}});
+    X := ZZdfactorization{L#0, L#1};
+    for i from 1 to (#L)//2-1 do X = tensorMF(X, ZZdfactorization{ L#(2*i), L#(2*i+1)});
     X
 )
+-- 2 case is not consistent breaks a list into 2, rather than inputs 2 lists
+
+
+---inputs a list of d lists each of length n outputs the tensor product of n ZZdfactorizations
+koszulMF(List, RingElement) := (L, omega) -> (
+    n := #(L#0);
+    d := #L;
+    Z := for i to n-1 list ZZdfactorization for j to d-1 list (L#j)#i;
+    T := Z#0;
+    for i from 1 to n-1 do T = dTensor(T,Z#i, omega);
+    T
+)
+
 
 ------KoszulMF from ideal and function
 koszulMFf = method()
@@ -196,7 +209,7 @@ restart
 needs "MF_functions.m2"
 
 S = QQ[x,y,z,u,v,w]
-
+P = ZZdfactorization {x,y,z,u,v,w}
 F = ZZdfactorization{matrix{{x,0},{0,x}}, matrix{{y,0},{0,y}}, matrix{{z,0},{0,z}}}
 G = ZZdfactorization{matrix{{v,x},{0,v}}, matrix{{v,x},{x,v}}, matrix{{w,0},{0,w}}}
 
@@ -249,3 +262,51 @@ T.dd
 F.dd
 (dd^T_1)*(dd^T_2)*(dd^T_3)
 
+R = QQ[x,y,z,u,v,w]
+Q = adjoinRoot(4,R)
+koszulMF{{x,y,z},{u,v,w},{x^10*y, z,w},{u^2,v,w}}
+
+koszulMF = method()
+koszulMF(List, RingElement) := (L, omega) -> (
+    n := #(L#0);
+    d := #L;
+    Z := for i to n-1 list ZZdfactorization for j to d-1 list (L#j)#i;
+    T := Z#0;
+    for i from 1 to n-1 do T = dTensor(T,Z#i, omega);
+    T
+)
+
+K = koszulMF({{x,y,z},{u,v,w},{x^10*y, z,w},{u^2,v,w}}, t)
+
+dd^K
+
+isdFactorization K
+
+koszulMFf(List, RingElement, RingElement) := (L,f, omega) -> (
+    I := ideal L;
+    M := f //gens(I^2);
+    N := transpose (gens I) | M;     
+    E  := entries N;
+    F := select(E, i -> not(i#1 == 0)); 
+    A := flatten F;
+    koszulMF(A)
+)
+
+needsPackage "TensorComplexes"
+koszulMFf(List, RingElement, ZZ, RingElement) := (L,f, d, omega) -> (
+    if not(omega^d == sub(1,ring omega)) then error "ring element must be a d^th root of unity where d is the third input";
+    G := matrix {L};
+    Gd := multiSubsets(flatten entries G, d);
+    prods := for i to #Gd-1 list product(Gd_i);
+    M := f //matrix{prods};
+        F := select(entries M, i -> not(i#0 == 0));
+	 
+--    N := transpose (gens I) | M;     
+  ---  E  := entries N;
+ --   F := select(E, i -> not(i#1 == 0)); 
+--    A := flatten F;
+--    koszulMF(A)
+F
+)
+
+koszulMFf({x,y,z,u,v,w}, x^5+y^5+w^10, 4, t)
