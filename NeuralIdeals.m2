@@ -34,7 +34,9 @@ export{--types
     "allCodeWords",
     "polarizedCanonicalRes",
     --Symbols
-    "codes"}
+    "codes",
+    "Factor",
+    "Iterative"}
 
 protect codes
 protect dimension
@@ -230,6 +232,7 @@ canonicalForm Ideal := List => opts -> I -> (
 
 canonicalForm(NeuralCode,Ring) := List => opts -> (C,R) -> (
     if opts.Iterative == true then (
+	if opts.Factor == true then apply(iterCanonicalForm(C),factor) else
 	iterCanonicalForm(C,R)
 	)
     else
@@ -238,6 +241,7 @@ canonicalForm(NeuralCode,Ring) := List => opts -> (C,R) -> (
 
 canonicalForm NeuralCode := List => opts -> C -> (
     if opts.Iterative == true then (
+	if opts.Factor == true then apply(iterCanonicalForm(C),factor) else
 	iterCanonicalForm(C)
 	)
     else 
@@ -407,9 +411,9 @@ document{
 }
 
 document{
-  Key => {canonicalForm, (canonicalForm,Ideal),(canonicalForm,NeuralCode,Ring),(canonicalForm,NeuralCode)},
+  Key => {canonicalForm, (canonicalForm,Ideal),(canonicalForm,NeuralCode,Ring),(canonicalForm,NeuralCode),[canonicalForm,Factor],[canonicalForm,Iterative]},
   Headline => "Canonical Form",
-  TEX "A method which computes the canonical form of a given squarefree pseudomonomial ideal or neural code. If entering a neural code, you can also specify the ring where the elements of the canonical form will live. The option Iterative=> true will compute the canonical form of a neural code using the newer method from NeuralIdeals in SageMath.",
+  TEX "A method which computes the canonical form of a given squarefree pseudomonomial ideal or neural code. If entering a neural code, you can also specify the ring where the elements of the canonical form will live. The option factor factors the elements of the list. The option Iterative=> true will compute the canonical form of a neural code using the newer method from NeuralIdeals in SageMath.",
   Usage => "canonicalForm(Ideal) or canonicalForm(NeuralCode,Ring) or canonicalForm(NeuralCode) or canonicalForm(NeuralCode,Ring,Iterative=true) or canonicalForm(NeuralCode,Iterative=true)",
   Inputs => {"Squarefree pseudomonomial ideal or NeuralCode (recommend specifying a ring for the latter), Iterative or not (if entering a neural code)"},
   Outputs => {"The canonical form as a list of elements of the ring of the ideal, the specified ring, or ZZ/2[x_1..x_d] where d is the dimension of the neural code."},
@@ -418,6 +422,11 @@ document{
   R=ZZ/2[x_1..x_3];
   I=ideal(x_1*x_3,x_2*(1-x_1));
   canonicalForm(I)
+  ///,
+    EXAMPLE lines ///
+  R=ZZ/2[x_1..x_3];
+  I=ideal(x_1*x_3,x_2*(1-x_1));
+  canonicalForm(I,Factored=>true)
   ///,
   EXAMPLE lines ///
   R=ZZ/2[x_1..x_3];
@@ -463,6 +472,7 @@ TEST ///
     C=neuralCode("00","10");
     I=neuralIdeal(C);
     assert(I==ideal((1-x_1)*x_2,x_1*x_2))
+///
     
 -- **TEST2**
 TEST ///
@@ -471,28 +481,17 @@ TEST ///
     I=neuralIdeal(C,R);
     cI=canonicalForm(I);
     cC=canonicalForm(C,R);
+    cCIter=canonicalForm(C,R,Iterative=>true);
     L={x_2};
-    assert((cI==cC) and (cI==L))
+    assert((cI==cC) and (cI==L) and (cCIter==cC))
+///
     
-    -- **TEST2**
+-- **TEST3**
 TEST ///
     R=ZZ/2[x_1,x_2];
     L={x_1*x_2};
     assert(canonicalCode(L)==neuralCode("00","10","01"))
-
--- **TEST1**  This makes a pinch point.  We check that it has one minimal prime, that it has 3 variables, and that the singular locus is dimension 1 while the ambient object is dimension 2.  We also check that the ring we construct is a subring of A.
---TEST ///
---  A = QQ[x,y];
---  I = ideal(x);
---  B = A/I;
---  C = QQ[u];
---  f = map(B, A);
---  g = map(B, C, {y^2}); 
---  l1 = pullback(f,g);
---  vlist = first entries vars (l1#0);
---  assert ( (#(vlist) == 3) and (dim l1#0 == 2) and ((#minimalPrimes (ideal l1#0)) == 1) and (1 == dim singularLocus (l1#0)) and (ker (l1#1) == ideal(sub(0,l1#0))) )
---///
-  
+///
 
 
 end
