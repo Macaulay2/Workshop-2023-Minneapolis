@@ -32,11 +32,11 @@ return true
 ----------------------------------------
 
 antiDiagInit = method()
-antiDiagInit Matrix := monomialIdeal => (A) -> (
+antiDiagInit Matrix := MonomialIdeal => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     monomialIdeal leadTerm schubertDetIdeal A
     );
-antiDiagInit List := monomialIdeal => (w) -> (
+antiDiagInit List := MonomialIdeal => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     monomialIdeal leadTerm schubertDetIdeal w
     );
