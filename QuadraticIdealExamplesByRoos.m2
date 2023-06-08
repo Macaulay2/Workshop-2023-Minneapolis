@@ -18,8 +18,8 @@ export {
 }
 
 
-
-roosTable = (S = ZZ/101[x,y,z,u];
+---TO DO: make this a method to allow user to pick coefficient field
+roosTable = (S = QQ[x,y,z,u];
 L= {
 sub(ideal "0",S),
 ideal "x2",
@@ -135,6 +135,15 @@ beginDocumentation()
 
 doc ///
 Key
+ "QuadraticIdealExamplesByRoos"
+Headline
+ "Examples of Quadratic Ideals with Embedding Dimension Four by Jan-Erik Roos"
+Subnodes
+ "roosTable"
+///
+
+doc ///
+Key
  "roosTable"
 Headline
  Creates hashtable of Jan-Erik Roos' examples of quadratic ideals
@@ -171,6 +180,10 @@ end--
 uninstallPackage "QuadraticIdealExamplesByRoos"
 restart
 installPackage "QuadraticIdealExamplesByRoos"
+
+viewHelp "QuadraticIdealExamplesByRoos"
+
+
 
 H0 = applyPairs(H, (i,I) -> if (depth(S/I) == 0 and not isBurch I and not isGolod (S/I)) then (i,I))
 
