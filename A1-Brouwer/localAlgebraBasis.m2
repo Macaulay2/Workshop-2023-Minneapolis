@@ -8,11 +8,17 @@
 
 localAlgebraBasis = method()
 localAlgebraBasis (List, Ideal) := (List) => (L,p) -> (
+    
+    -- Determine whether or not an ideal is prime
     if isPrime(p) == false then (
         error "Error: ideal is not prime"
         );
+    
+    -- Ambient ring
     R := ring L#0;
     I := ideal(L);
+    
+    -- Check whether or not an ideal is zero-dimensional
     if dim I > 0  then (
         error "Error: morphism does not have isolated zeroes"
         );
