@@ -1,3 +1,5 @@
+--Andrew Tawfeek, Tom Hagedorn, Joel Louwsma
+
 -- load "./GW-type.m2"
 
 
