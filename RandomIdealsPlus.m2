@@ -14,17 +14,22 @@ export {
 
      -* Code section *-
   
-isBurch = I -> (
-    R := ring I;
-    mm := ideal gens R;
-    mm != (mm*I):(I:mm)
-    )
 
         
 mixedIdeal = method()
 mixedIdeal (Ring, List, List) := Ideal => (S, BList, MList)-> (
  randomPureBinomialIdeal(BList, S)+ randomMonomialIdeal(MList,S)
  )   	
+
+
+mixedIdealList = method()
+mixedIdealList(Ring, ZZ, List, List) := List => (A, Num, Bdegs, Mdegs) -> (
+    for i from 1 to Num list (
+	trim(randomBinomialIdeal(Bdegs,A)+randomMonomialIdeal(Mdegs,A))
+	)
+    )
+
+
     -* Documentation section for mixedIdeal *-
 beginDocumentation()
 
@@ -53,28 +58,11 @@ Description
 ///
 
 
-     -* Code Section *-
-
-mixedIdealList = method()
- mixedIdealList(Ring, ZZ, List, List) := List => (A, Num, Bdegs, Mdegs) -> (
-    for i from 1 to Num list (
-    criteria := false ;
-    while criteria == false  do (
-    I := trim(randomBinomialIdeal(Bdegs,A) + randomMonomialIdeal(Mdegs,A));
-	criteria = (dim I == 0) and (numgens I != numgens A) and (not isBurch(I)) and (not isGolod(A/I))
-	);
-    I)
-)
-
-    -* Documentation section for mixedIdealList *-
-beginDocumentation()
-
-
 doc ///
 Key
   mixedIdealList
 Headline
- Computes a list of ideals which is the sum of a binomial ideal and a monomial ideal with the generators of specified degrees and satisfying certain conditions. 
+ Computes a list of ideals which is the sum of a binomial ideal and a monomial ideal with the generators of specified degrees.
 Usage
   L  = mixedIdealList(R,i,L1,L2)   
 Inputs
@@ -87,8 +75,7 @@ Outputs
 Description
   Text
     The function computes a list of ideals which is the sum of a binomial ideal and a monomial ideal with the 
-    generators of specified degrees such that all the ideals in the list are not Burch, not complete
-    intersection and the quotient ring through the ideal is not Golod
+    generators of specified degrees.
   Example
     R = ZZ/101[a,b,c]
     Blist = {3,4}
