@@ -14,30 +14,42 @@ entryCalculator = (mu,j) -> (
     0
 )
 
+zeroMatrix = (numRow,numCol) -> toList (numRow:(toList(numCol:0)));
+
+    
 ABuilder = (n,k) -> table(sort compositions(k+1,n-k),0..n,entryCalculator)
 
 rowOfId = (n,l) -> splice {l:0,1,(n-1-l):0}    
 
--* Not working yet
+    
+
 faceMapCase0 = (n,len) -> (
+    -- This probably can be optimized
+    -- It's slower than faceMapCasen in particular
     -- If bounded => true then do this
     -- TODO implement option toggle for bounded complexes
-    topDeg = sum(len+1,i->binomial(n,i));
-    offset = 0 -- keeps track of where we are
-    for k to len list (
+    topDeg = sum(len+1,i->binomial(n-1,i));
+    offset = 0; -- keeps track of where we are
+    verticalStrips = for k to len list (
     -- First loop over the vertical strips of columns
-    -- Create appropriately sized 
-	for row to topDeg-1 list (
-	-- for fixed k, loop over the rows of the matrix
-    	    	effectiveRow = row-offset;
-		if effectiveRow<binomial(n,k) then splice {row:0,2,(binomial(n,k)-1-row):0}
-    	    	-- Put in symbol for differential
-		else if (condition) then splice {row:0,1, (binomial(n,k)-1-row):0}
-    	    	-- Put in symbol for identity
-		else 
-		-- put in zeros
+    -- Create appropriately sized top pad of zeros
+	bink=binomial(n,k);
+    	topZeros = zeroMatrix(offset,bink);
+	modifiedMat = for row to bink-1 list (
+    	    if row<=binomial(n-1,k-1)-1 then splice{row:0,2,(bink-1-row):0}
+	    else rowOfId(bink,row)
+	    );
+    -- Create appropriately sized bottom pad of zeros
+	botZeros = zeroMatrix(topDeg-offset-binomial(n,k),binomial(n,k));
+    	offset = offset + binomial(n-1,k-1);
+    	verticalStrip = flatten{topZeros,modifiedMat,botZeros}
+    -- Update Offset
+	);
+    for row to topDeg-1 list (
+    	flatten apply(verticalStrips, strip->strip#row)
+	)
     )
-*-
+
 
 faceMapCasen = (n,k) -> (
     Abigvector = apply(ABuilder(n,k), row->row_n);
