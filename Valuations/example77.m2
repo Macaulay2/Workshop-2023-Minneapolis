@@ -34,8 +34,8 @@ primeConesOfIdeal = I -> (
 
 primeConesOfIdeal I
 
-coneToMatrix = C -> (
-    v1 = C_0 + C_1;
-    v2 = C_0 + 2*C_1;
+coneToMatrix = coneRays -> (
+    v1 = coneRays_0 + coneRays_1;
+    v2 = coneRays_0 + 2*coneRays_1;
     transpose matrix {v1, v2}
     )
