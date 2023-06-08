@@ -63,6 +63,29 @@ primeConesOfIdeal = I -> (
 
 primeConesOfIdeal I
 
+
+
+
+positivity = (f, matL) -> (
+l = transpose linealitySpace(f);
+finalScaledMats = {};
+matList = for i from 0 to #matL-1 list entries matL_i;
+
+for i from 0 to #matList-1 do (
+	scaledRows ={};
+	for j from 0 to #(matList_i)-1 do (
+		coeff = -1*floor(min apply(#(matList_i)_j, k -> (((matList_i)_j)_k)/(flatten entries l)_k));
+		scaledRows = append(scaledRows, (1/gcd(flatten entries (coeff*l + matrix{(matList_i)_j}))) *(coeff*l + matrix{(matList_i)_j}));
+		);
+	mat = scaledRows_0;
+	for i from 1 to #scaledRows-1 do mat = mat || scaledRows_i;
+	finalScaledMats = append(finalScaledMats, mat);
+);
+return finalScaledMats
+)
+
+
+
 coneToMatrix = coneRays -> (
     v1 = coneRays_0 + coneRays_1;
     v2 = coneRays_0 + 2*coneRays_1;
