@@ -84,20 +84,22 @@ faceMapik = (n,k,i) -> (
 )
 
 faceMapi = (n,i,C) -> (
-    len = length C;
+    maxK = min(length C-1,n-1);
     -- Need to check if this can be sped up by direct summing as lists
     -- Instead of first passing to matrices
     -- and then saving the creation of the matrix option till the very end
     if i==0 then promoteFaceMapZerotoComplex(faceMapZero(n,len),C)
     else if i==n then (
-	fold(directSum,for k from 0 to len list (
+	preMat = fold(directSum,for k from 0 to maxK list (
 	    promoteMaptoComplex(faceMapnk(n,k),k,C)
-	    ))
+	    )); 
+	preMat | map(target preMat,C_maxK,0) 
 	)
     else (
-    	fold(directSum,for k from 0 to len list (
+    	preMat = fold(directSum,for k from 0 to maxK list (
 	     promoteMaptoComplex(faceMapik(n,k,i),k,C)
-	     ))
+	    )); 
+	preMat | map(target preMat,C_maxK,0) 
 	)
     )
 
@@ -105,6 +107,7 @@ degenMapik = (n, k, i) -> (
     idSize = binomial(n-2,k);
     zeroes = new List from (binomial(n-2,k)) : 0;
     A = ABuilder(n-1,k);
+    print(A);
     sig = new MutableList from 0..(#A-1);
     l = 0;
     for j to #A-1 do(
@@ -119,11 +122,12 @@ degenMapik = (n, k, i) -> (
     )
 
 degenMapi = (n,i,C) -> (
-    len = length C;
-    fold(directSum,for k from 0 to len list (
+    maxK = min(length C-1,n-1);
+    preMat = fold(directSum,for k from 0 to maxK list (
 	    promoteMaptoComplex(degenMapik(n,k,i),k,C)
 	    )
-	)
+	);
+    preMat || map(C_maxK,source preMat,0)
     )
     
 promoteMaptoComplex = (d,k,C) -> (matrix d)**id_(C_k)
