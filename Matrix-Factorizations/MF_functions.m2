@@ -299,7 +299,8 @@ koszulMFf(List, RingElement, ZZ, RingElement) := (L,f, d, omega) -> (
     Gd := multiSubsets(flatten entries G, d);
     prods := for i to #Gd-1 list product(Gd_i);
     M := f //matrix{prods};
-        F := select(entries M, i -> not(i#0 == 0));
+    N := for i to #Gd-1 list flatten {Gd#i, (entries M)#i};
+      F := select(N, i -> not(last i == 0));
 	 
 --    N := transpose (gens I) | M;     
   ---  E  := entries N;
