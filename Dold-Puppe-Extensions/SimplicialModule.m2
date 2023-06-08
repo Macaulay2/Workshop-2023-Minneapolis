@@ -64,14 +64,14 @@ simplicialModule(Complex,ZZ) := SimplicialModule => opts -> (C,d) -> (
 	 degenmapHash := hashTable flatten flatten for n from 1 to d list (
 	     for k from 0 to n list (
 		 for i from 0 to n list (
-		     (n,i) => --placeholder for degen maps output
+		     (n,i) => degenMapi(n,i,C)
 		     );
 		 );
 	     );
 	 facemapHash := hashTable flatten flatten for n from 1 to d list (
 	     for k from 0 to n list (
 		 for i from 0 to n list (
-		     (n,i) => --placeholder for face maps output
+		     (n,i) => faceMapi(n,i,C)
 		     );
 		 );
 	     );
