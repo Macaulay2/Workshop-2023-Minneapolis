@@ -7,7 +7,7 @@ newPackage(
 	      { Name => "Dalton Bidleman", Email => "", HomePage => ""},
 	      { Name => "Tim Duff", Email => "timduff@uw.edu", HomePage => "https://timduff35.github.io/timduff35/"},
 	      { Name => "Jack Kendrick", Email => "", HomePage => ""},
-	      { Name => "Thomas Yahl", Email => "", HomePage => ""},
+	      { Name => "Thomas Yahl", Email => "thomasjyahl@tamu.edu", HomePage => "tjyahl.github.io"},
 	      { Name => "Michael Zeng", Email => "", HomePage => ""}		      
 	      },
 	  PackageImports => {"SubalgebraBases"},
@@ -72,10 +72,23 @@ bracketRing (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
 	ret.cache#syz = selectInSubring(1, G);
 *-
 	) 
+   
     else if o#Strategy === Grassmannian then (
 	-- use the function "Grassmannian" to simplify construction of R, I, etc, above
-	error "not implemented";
+	    G := Grassmannian(d - 1, #vectorSymbols - 1);
+      B := bracketRing(#vectorSymbols, d);
+      GB := apply(
+        gens ring G, 
+        v -> (
+            S := last baseName v;
+            A := [new Array from apply(S, i -> i + 1)];
+            A_B;
+            )
+        );
+      ret.cache#gb = GB;
+	    --ret.cache#syz = selectInSubring(1, GB);
 	)
+
     else if o#Strategy === "vanDerWaerden" then (
 	error "not implemented";
 	)
@@ -425,6 +438,45 @@ assert(net pointPerspective == "2*[bde]*[acf]-2*[cdf]*[abe]")
 assert(net f1#0 == "[bdf]*[ace]-[bef]*[acd]-[cdf]*[abe]-[def]*[abc]")
 assert(net f2#2 == "[bdf]*[ace]-[bef]*[acd]-[cdf]*[abe]-[def]*[abc]")
 ///
+
+
+TEST ///--simple colinearity condition
+B = bracketRing(a..c,3)
+X = matrix B
+f = toBracketPolynomial(det X,B)
+assert(net f == "[abc]")
+///
+
+
+TEST ///--6 points lie on a conic
+B = bracketRing(6,3)
+X = matrix B
+C = fold(apply(0..5,i->basis(2,ring X,Variables => (entries X)#i)),(a,b)->a||b)
+D = det C
+f = toBracketPolynomial(D,B)
+assert(net f == "-[456]*[236]*[135]*[124]+[356]*[246]*[145]*[123]")
+///
+
+
+TEST ///--Sturmfels 3.2.10 example
+B = bracketRing(toList(a..f),2)
+X = matrix B
+
+--polynomial from Example 3.2.10 in Sturmfels
+F = -X_(0,0)*X_(1,0)*X_(2,0)*X_(3,1)*X_(4,1)*X_(5,1) - X_(0,0)*X_(1,0)*X_(2,1)*X_(3,0)*X_(4,1)*X_(5,1) + X_(0,0)*X_(1,0)*X_(2,1)*X_(3,1)*X_(4,0)*X_(5,1) + X_(0,0)*X_(1,0)*X_(2,1)*X_(3,1)*X_(4,1)*X_(5,0) + X_(0,0)*X_(1,1)*X_(2,0)*X_(3,0)*X_(4,1)*X_(5,1) - X_(0,0)*X_(1,1)*X_(2,1)*X_(3,1)*X_(4,0)*X_(5,0) + X_(0,1)*X_(1,0)*X_(2,0)*X_(3,0)*X_(4,1)*X_(5,1) - X_(0,1)*X_(1,0)*X_(2,1)*X_(3,1)*X_(4,0)*X_(5,0) - X_(0,1)*X_(1,1)*X_(2,0)*X_(3,0)*X_(4,0)*X_(5,1) - X_(0,1)*X_(1,1)*X_(2,0)*X_(3,0)*X_(4,1)*X_(5,0) + X_(0,1)*X_(1,1)*X_(2,0)*X_(3,1)*X_(4,0)*X_(5,0) + X_(0,1)*X_(1,1)*X_(2,1)*X_(3,0)*X_(4,0)*X_(5,0) 
+F' = toBracketPolynomial(F,B)
+assert(net F' == "-[cf]*[be]*[ad]-[df]*[be]*[ac]+[ef]*[bd]*[ac]+[df]*[ce]*[ab]-[ef]*[cd]*[ab]")
+///
+
+
+TEST ///--Sturmfels 3.2 problem 2 (4 points in P^1 that lie on a cubic, two must be equal)
+B = bracketRing(4,2)
+X = matrix B
+P = matrix apply(4,i->flatten entries basis(3,ring B,Variables=>(entries X)#i))
+f = det P--this is the normal form of the product [1 2]_B * [1 3]_B * [1 4]_B * [2 3]_B * [2 4]_B * [3 4]_B
+assert(net toBracketPolynomial(f,B) == "[34]*[24]^2*[13]^2*[12]-[34]^2*[24]*[13]*[12]^2")
+///
+
 
 end--
 

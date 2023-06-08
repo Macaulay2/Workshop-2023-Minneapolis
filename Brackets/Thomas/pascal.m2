@@ -40,6 +40,6 @@ X = matrix B
 
 C = fold(apply(0..5,i->basis(2,ring X,Variables => (entries X)#i)),(a,b)->a||b)
 D = det C
-toBracketPolynomial(D)
+toBracketPolynomial(D,B)
 I = B#ideal
 D % I --looks pretty
