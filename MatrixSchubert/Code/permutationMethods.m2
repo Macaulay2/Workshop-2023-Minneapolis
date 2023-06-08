@@ -101,7 +101,8 @@ toAntiDiagTrans (List, ZZ) := List => (idx, maxIdx) -> (
 composePerms = method()
 composePerms (List, List) := List => (u,v) -> (
     if not (isPerm u) then error("The first argument is not a permutation.");
-    if not (isPerm v) then error("the second argument is not a permutation.");
+    if not (isPerm v) then error("The second argument is not a permutation.");
+    if not (#v==#u) then error("Expected permutations of the same length.");
     u0 := apply(u, i->i-1);
     v0 := apply(v, i->i-1);
     apply(u0_v0, i-> i+1)
