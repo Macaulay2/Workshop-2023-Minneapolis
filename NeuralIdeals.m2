@@ -32,6 +32,7 @@ export{--types
     "sigmaTau",
     "polarizePseudomonomial",
     "allCodeWords",
+    "polarizedCanonicalRes",
     --Symbols
     "codes"}
 
@@ -347,6 +348,15 @@ polarizePseudomonomial(RingElement) := RingElement => P -> (
     R := ring P;
     polarizePseudomonomial(P,R)
     )
+
+polarizedCanonicalRes = method();
+
+polarizedCanonicalRes(NeuralCode,Ring) := List => (C,R) -> (
+    L := canonicalForm(C,R);
+    polarL := for p in L list polarizePseudomonomial(p);
+    polarL
+    )
+    
 
 beginDocumentation()
 
