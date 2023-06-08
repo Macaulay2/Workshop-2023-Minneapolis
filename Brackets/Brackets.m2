@@ -46,20 +46,20 @@ AbstractGCRing Array := (G, A) -> (
 -- class declaration for BracketRing
 BracketRing = new Type of AbstractGCRing
 -- constructor
-bracketRing = method(Options => {Strategy => GroebnerBasis})
+bracketRing = method(Options => {Strategy => GroebnerBasis,CoefficientRing => QQ})
 bracketRing AbstractGCRing := G -> error "not implemented"
 bracketRing (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     n := length vectorSymbols;
     if not (n >= d) then error("The first argument n in bracketRing(n, d) (representing the number of rows) is assumed to be at least the second argument d (representing the number of columns)");
     x := symbol x;
-    R := QQ[x_(1,1)..x_(n,d)];
+    R := o.CoefficientRing[x_(1,1)..x_(n,d)];
     X := matrix for i from 1 to n list for j from 1 to d list x_(i,j);
     n'choose'd := rsort(sort \ subsets(vectorSymbols, d)); -- important for "Tableux order"
     n'choose'd'Indices := rsort(sort \ subsets(#vectorSymbols, d));
     minorsX := apply(n'choose'd'Indices, R -> det X^R);
     y := symbol y; 
     bracketVariables := apply(n'choose'd, S -> y_("["|fold(S, (a, b) -> toString(a)|toString(b))|"]"));
-    S := QQ[gens R, bracketVariables, MonomialOrder => {Eliminate(numgens R), GRevLex}]; -- important for "Tableaux order"
+    S := o.CoefficientRing[gens R, bracketVariables, MonomialOrder => {Eliminate(numgens R), GRevLex}]; -- important for "Tableaux order"
     lookupTable := new HashTable from apply(binomial(n, d), i -> increment n'choose'd'Indices#i => (gens S)#(numgens R+i));
     I := ideal apply(minorsX, bracketVariables, (m, b) -> sub(m, S) - b_S);
     ret := new BracketRing from {numrows => n, numcols => d, ring => S, ideal => I, table => lookupTable, cache => new CacheTable from {}};
