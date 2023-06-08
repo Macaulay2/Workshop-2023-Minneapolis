@@ -270,7 +270,7 @@ canonicalCode List := NeuralCode => L -> (
 -- Output:
 -- true or false
 isPseudomonomial = method();
-isPseudomonomial(RingElement)  = P -> ( 
+isPseudomonomial(RingElement) : = P -> ( 
     -- check if polynomial is a unit or zero
     if P == 0 then return false;
     if isUnit P then return true;
@@ -304,8 +304,8 @@ sigmaTau(RingElement) := P -> (
     if isPseudomonomial(P) == false then error "Expected input to be a Pseudomonomial";
     R := ring P;
     d := numgens R;
-    sigma = {};
-    tau = {};
+    sigma := {};
+    tau := {};
     )
 	
 
