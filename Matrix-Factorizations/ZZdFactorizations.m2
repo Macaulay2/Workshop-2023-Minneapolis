@@ -116,7 +116,9 @@ ZZdfactorization Ideal := ZZdFactorization => opts -> I -> ZZdfactorization(modu
     -- complex (0 * dd^C)
     )*-
 
-ZZdFactorization _ ZZ := Module => (C,i) -> if C.module#?i then C.module#i else (ring C)^0
+ZZdFactorization _ ZZ := Module => (C,i) -> C.module#(i%C.period)
+--C.module#?i then C.module#i else C.module#(i%C.period)
+--(ring C)^0
 ZZdFactorization ^ ZZ := Module => (C,i) -> C_(-i)
 
 
