@@ -56,11 +56,10 @@ export{
     "isMinRankTable",
     "Double",
     "rankTableToASM",
-    "schubertReg",
     "rankTableFromMatrix",
     "schubertCodim",
     "matrixSchubertRegADI",
-    "matrixSchubertRegWPS",
+    "matrixSchubertReg",
     "isASMIdeal",
     "ASM",
     "getASM",
@@ -179,11 +178,11 @@ Tester (n) -> (
 );
 
 TesterPerm = (w) -> (
-    assert(matrixSchubertRegADI(w)==matrixSchubertRegWPS(w));
+    assert(matrixSchubertRegADI(w)==matrixSchubertReg(w));
 );
 
 NTests = 50;
-NMax = 8;
+NMax = 5;
 for i from 1 to NTests do (
     w = random toList (1..(random(1,NMax)));
     TesterPerm(w);
@@ -198,6 +197,27 @@ TesterPermTime = (w) -> (
     elapsedTime matrixSchubertRegWPS w;
 --    elapsedTime matrixSchubertRegADI w;
     << endl;
+);
+
+Tester = (n) -> (
+
+    apply( ran(toList(1..n)),w->assert(matrixSchubertRegADI(w) == matrixSchubertReg(w)));
+        
+);
+
+randomTester = (lenPerm) -> (
+
+    w = random (toList(1..lenPerm));
+    
+    << w << endl;
+
+    elapsedTime (rADI = matrixSchubertRegADI(w));
+    elapsedTime (rRaj = matrixSchubertReg(w));
+
+    if (rADI != rRaj) then (
+	<< "BAD: " << w << endl;
+	exit(1);
+    );
 );
 
 apply(1..10,i->Tester(i));

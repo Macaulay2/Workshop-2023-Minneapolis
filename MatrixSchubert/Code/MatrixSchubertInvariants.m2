@@ -4,14 +4,9 @@
 
 
 ------------------------------------------
---INPUT: matrixSchubertReg, takes a permutation or an ASM 
---       and an optional strategy computation argument. The
---       strategy options are ADI (computes the antiDiagonalInitial
---       ideal and then computes the Castelnuovo-Mumford regularity)
---       and PSW (computes the Castelnuovo-Mumford regularity of the
---       matrix Schubert variety using Theorem 1.1 of Pechenki-Speyer-Weigandt)
+--INPUT: matrixSchubertRegADI, takes a permutation in 1-line notation
 --OUTPUT: returns the Castelnuovo-Mumford reguarity of the matrix 
---        Schubert variety
+--        Schubert variety by computing the regularity of the antidiagonal initial ideal
 ------------------------------------------
 
 matrixSchubertRegADI = method()
@@ -31,33 +26,16 @@ matrixSchubertReg List := ZZ => (w) -> (
      
      return rajIndex(w) - permLength(w);
          
+)
+matrixSchubertReg Matrix := ZZ => (A) -> (
+
+    
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    
+    return regularity (schubertDetIdeal A) -1;
+         
 );
 
--*
-matrixSchubertReg() = method(
-    Options => {
-	Strategy => ADI
-	}    
-)
-
-matrixSchubertReg (List) := opts -> 
-*-
-
-----------------------------------------
---INPUT: a list w corresponding to a permutation in 1-line notation or a partial ASM
---OUTPUT: the Castlenuovo-Mumford regularity of I_A or I_w
-----------------------------------------
--*
-schubertReg= method()
-schubertReg Matrix := ZZ => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    regularity(antiDiagInit A)
-    );
-schubertReg List := ZZ => (w) -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-     regularity(antiDiagInit w)
-    );
-*-
 schubertCodim = method() 
 schubertCodim Matrix := ZZ => A -> (
     if not (isPartialASM A) then error("The input must be a partial alternating sign matrix");
