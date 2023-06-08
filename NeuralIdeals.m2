@@ -58,6 +58,12 @@ neuralCode=method(List):= codeList -> (
  
 dim NeuralCode := C -> C.dimension
 
+ring NeuralCode := C -> (
+    d := dim C;
+    x := getSymbol "x";
+    R := (ZZ/2)(monoid[x_1..x_d])
+    )
+
 
 isWellDefined NeuralCode := Boolean => X -> (
     --check keys
