@@ -16,7 +16,7 @@ localAlgebraBasis (List, Ideal) := (List) => (L,p) -> (
     if dim I > 0  then (
         error "Error: morphism does not have isolated zeroes"
         );
-    if isSubset(I,p) == false then (
+    if (not isSubset(I,p)) then (
         error "Error: prime is not a zero of function"
         );
     J := I:saturate(I,p);

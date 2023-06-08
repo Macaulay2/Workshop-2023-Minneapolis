@@ -1,8 +1,10 @@
---Nikita, Gabriel
 -- Given an endomorphism of affine space f=(f1,...,fn) given as a list of polynomials, return the Bezoutian corresponding to the endomorphism
-bezoutian = method()
+--for notation: input domain is kk[x_1..x_n] while Bezoutian computed in kk[X_1..Y_n]
+load "localAlgebraBasis.m2"
 
-bezoutian (List) := (Matrix) => (Endo) -> (
+localA1Degree = method()
+
+localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     -- first check if the morphism does not have isolated zeroes
     if dim ideal(Endo) > 0  then (print "Error: morphism does not have isolated zeroes"; return Endo;);
     n := #Endo; -- n is the no. of polynomials defining the morphism
@@ -22,48 +24,38 @@ bezoutian (List) := (Matrix) => (Endo) -> (
     bezDet:= numerator (det(D)); -- typecast to kk[X_1, ..., Y_n]
     RX:=kk[X_1..X_n]; 
     RY:=kk[Y_1..Y_n];
-    mapxtoX:= (map(RX,S,toList(X_1..X_n))); -- defines the map f_i(x_1, ..., x_n) to f_i(X_1, ..., X_n)
-    mapxtoY:=(map(RY,S,toList(Y_1..Y_n))); -- defines the map f_i(x_1, ..., x_n) to f_i(Y_1, ..., Y_n)
-    standBasisX := basis (RX/(ideal (leadTerm (mapxtoX ideal Endo)))); -- Compute the standard basis of kk[X_1, ..., X_n]/(f_1, ..., f_n)
-    standBasisY := basis (RY/(ideal (leadTerm (mapxtoY ideal Endo)))); -- Compute the standard basis of kk[Y_1, ..., Y_n]/(f_1, ..., f_n)
-    id1 := (ideal apply(toList(0..n-1), i-> mapxtoX(Endo_i))); -- defines an ideal (f_1(X), ..., f_n(X))
-    id2 := (ideal apply(toList(0..n-1), i-> mapxtoY(Endo_i))); -- defines an ideal (f_1(Y), ..., f_n(Y))
-    promotedEndo :=sub(id1,R)+sub(id2,R); -- takes the sum of the ideals in the ring kk[X_1..Y_n]
-    Rquot:= R/promotedEndo; -- defines the quotient ring kk[X_1..Y_n]/(f(X),f(Y)) which is Q(f)\otimes_{k}Q(f) in the paper
-    sBXProm :=sub(standBasisX,Rquot); -- moves the standard bases to the quotient ring
-    sBYProm :=sub(standBasisY,Rquot); -- moves the standard bases to the quotient ring 
+    mapxtoX:= (map(RX,S,toList(X_1..X_n))); -- map f_i(x_1, ..., x_n) to f_i(X_1, ..., X_n)
+    mapxtoY:=(map(RY,S,toList(Y_1..Y_n))); -- map f_i(x_1, ..., x_n) to f_i(Y_1, ..., Y_n)
+
+    --find standard basis and define local quotient ring
+    list1 := (apply(toList(0..n-1), i-> mapxtoX(Endo_i))); -- list (f_1(X), ..., f_n(X))
+    list2 := (apply(toList(0..n-1), i-> mapxtoY(Endo_i))); -- list (f_1(Y), ..., f_n(Y))
+    --apply localAlgebraBasis to compute standard basis for localization
+    standBasisX :=localAlgebraBasis(list1,mapxtoX p);
+    standBasisY := localAlgebraBasis(list2,mapxtoY p); 
+    promotedEndo :=sub(ideal list1,R)+sub(ideal list2,R); -- takes the sum of the ideals in the ring kk[X_1..Y_n]
+    Rquot:= R/promotedEndo; -- localized quotient ring
+    
+    sBXProm :=apply(toList(0..#standBasisX-1),i-> sub(standBasisX_i,Rquot)); -- moves the standard bases to the quotient ring
+    sBYProm :=apply(toList(0..#standBasisY-1),i-> sub(standBasisY_i,Rquot)); -- moves the standard bases to the quotient ring 
     bezDetProm := promote(bezDet, Rquot); -- moves the Bezoutian polynomial to the quotient ring
     ------------------------
-    phi0 := map(kk,Rquot,(toList ((2*n):0))); -- define a ring map that takes the coefficients to the field kk instead of considering it as an element of the quotient ring (RMK is this even needed?)
+    phi0 := map(kk,Rquot,(toList ((2*n):0))); -- ring map that takes the coefficients to the field kk instead of considering it as an element of the quotient ring (RMK is this even needed?)
     --will return matrix B
-    m:= numColumns(sBXProm);
+    m:= #sBXProm;
     B:= mutableMatrix id_(kk^m);
     --print sBXProm#1;
     for i from 0 to m-1 do (
         for j from 0 to m-1 do (
-            B_(i,j)=phi0(coefficient((sBXProm_(0,i)**sBYProm_(0,j))_(0,0), bezDetProm));
+            B_(i,j)=phi0(coefficient((sBXProm_i**sBYProm_j)_(0,0), bezDetProm));
         );
     );
     return matrix(B);
 );
 
-T = QQ[x_1,x_2];
-e = {x_1^2+x_2,x_2^3+x_1};
-bez_e = bezoutian(e);
+T = QQ[z];
+e = {z^4+z^3-z^2-z};
+p=ideal {z+1/1};
+bez_e = localA1Degree(e,p);
 bez_e = transpose bez_e;
 print bez_e
-
-
-T1 = QQ[x_1];
-f = {x_1^4 + x_1^3 - x_1^2 - x_1};
-bez_f = bezoutian(f);
-bez_f = transpose bez_f;
-print bez_f
-
-
-
-T = QQ[x_1,x_2];
-e = {x_1^2+x_2,x_2^3+x_1};
-print bezoutian(e);
--- Given an endomorphism of an affine space f=(f1,...,fn) given given as a sequence, and a closed point p of the target, return the local Bezoutian
---localBezoutian = method()
