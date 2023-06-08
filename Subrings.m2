@@ -16,14 +16,13 @@ newPackage(
 
 export {"Subring",
         "subring",
+        "subringGenerators",
 	"presentationRing",
 	"presentationMap",
         "presentationIdeal",
         "toQuotientRing"}
 
 Subring = new Type of HashTable
-generators Subring := S -> S#generators
-ambient  Subring := S -> S#ambient
 
 
 -- a method to create subrings
@@ -85,7 +84,8 @@ toQuotientRing Subring := S -> (
     return P/I;
     )
 
--- generators Subring := S -> S#generators
+subringGenerators = method()
+subringGenerators Subring := S -> S#generators
 ambient Subring := S -> S#ambient
 
 net Subring := S -> (
