@@ -34,6 +34,7 @@ doc ///
         matrixSchubertReg(w)
     Inputs
         w:List
+	M:Matrix
     Description
         Text
             Given a partial alternating sign matrix computes the Castelnuovo-Mumford regularity of the corresponding schubert Schubert determinantal ideal by
@@ -41,6 +42,9 @@ doc ///
 	     of the corresponding Schubert determinantal ideal by implementing Theorem 1.1 of CASTELNUOVO–MUMFORD REGULARITY OF MATRIX SCHUBERT VARIETIES by OLIVER PECHENIK, 
 	     DAVID E SPEYER, AND ANNA WEIGANDT found at ...
         Example
+	    w = {2,3,5,1,4}
+	    matrixSchubertReg(w)
+	
 	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
             matrixSchubertReg(A)
 ///
