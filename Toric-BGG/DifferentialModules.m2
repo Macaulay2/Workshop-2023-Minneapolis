@@ -338,9 +338,10 @@ minimizeDiff(Matrix) := A ->(
 minimizeDM = method();
 minimizeDM(DifferentialModule) := r ->(
     R := ring r;
-    --d := degree r;
+    d := degree r;
     A := minimizeDiff(r.dd_1);
-    differentialModule (chainComplex(A,A)[1])
+    degA := map(target A, source A, A, Degree=>d);
+    differentialModule (chainComplex(degA,degA)[1])
     )
 
 ---
@@ -580,3 +581,28 @@ doc ///
       mr.dd_1   
 ///
 *-
+
+TEST ///
+    S = QQ[x,y]
+    m = matrix{{0,x,y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
+    phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
+    D = differentialModule phi
+    assert(degree D==2) --test degree of differential module
+///
+
+TEST ///
+    S = QQ[x,y]
+    m = matrix{{0,x,y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
+    phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
+    D = differentialModule phi
+    assert(prune homology D==cokernel matrix{{x,y}}) --test homology
+///
+
+TEST ///
+    S = QQ[x,y]
+    m = matrix{{0,x,y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
+    phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
+    D = differentialModule phi
+    M = minimizeDM D
+    assert(degrees M=={-1,-1})
+///
