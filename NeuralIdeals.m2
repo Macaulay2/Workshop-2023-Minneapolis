@@ -142,7 +142,7 @@ canonicalForm = method(Options => {Factor => false});
 
 canonicalForm Ideal := List => opts -> I -> (
     if isSquarefreePseudomonomialIdeal I==true then (
-    decomp := primaryDecompositionPseudomonomial I;
+    decomp := primaryDecomposition I;
     multipliedGens :=product(decomp, i->i);
     R := ring I;
     d :=numgens R;
@@ -238,6 +238,60 @@ codeSupport(NeuralCode) := C -> (
     fullSupport
     )
 
+----The following function is an internal function from the PseudomonomialPrimaryDecomposition package by Alan Veliz-Cuba
+
+-- determines if a polynomial is square free pseudomonomial
+-- Input:
+-- Polynomial P in bitwise form
+-- Output:
+-- true or false
+isPseudomonomial = method();
+isPseudomonomial(RingElement)  = P -> ( 
+    -- check if polynomial is a unit or zero
+    if P == 0 then return false;
+    if isUnit P then return true;
+    -- factor polynomial P and initialize the support list
+    factoredP := factor P;
+    allSupport := {};
+    -- test if some factor is not of the form (xi-a) where a=0 or 1
+    for i to #factoredP-1 do ( 
+        -- evaluate ith factor
+        base := value factoredP#i; 
+        -- if factor is not a unit but is a constant -> not a square free pseudomonomial
+        if isUnit base then continue;
+        if isConstant base then return false;
+        -- find if factor is equal to xi or xi-1
+        suppi := support base;
+        if #suppi >= 2 then return false;
+        if suppi_0 =!= base and suppi_0-1 =!= base then return false;
+        allSupport = append(allSupport,suppi_0);
+    );
+    -- find if there are factors xi, xi-1 simultaneously -> not a square free pseudomonomial
+    #(support P) == #allSupport
+    -- if #(support P) != #allSupport then return false;
+    -- true
+)
+
+--------------------------------------
+
+sigmaTau = method();
+
+sigmaTau(RingElement) := P -> (
+    if isPseudomonomial(P) == false then error "Expected input to be a Pseudomonomial";
+    R := ring P;
+    d := numgens R;
+    sigma = {};
+    tau = {};
+    )
+	
+
+polarizePseudomonomial = method();
+
+polarizePseudomonomial(RingElement) := P -> (
+    if isPseudomonomial(P) == false then error "Expected input to be a Pseudomonomial";
+    )
+
+
 beginDocumentation()
 
 document{
@@ -280,7 +334,7 @@ document{
   TEX "A method which computes the canonical form of a given squarefree pseudomonomial ideal or neural code.",
   Usage => "canonicalForm(Ideal) or canonicalForm(NeuralCode)",
   Inputs => {"Squarefree pseudomonomial ideal or NeuralCode"},
-  Outputs => {"A list of generators of the canonical form"},
+  Outputs => {"The canonical form"},
   TEX "We compute an example",
   EXAMPLE lines ///
   C=neuralCode("000","001");
