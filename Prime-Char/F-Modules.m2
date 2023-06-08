@@ -444,22 +444,21 @@ lowerLimit (RingElement) := Ideal => f ->
 
 lyubeznikNumber=method()
 
-lyubeznikNumber(ZZ,ZZ,Ideal) := ZZ => (i,j,I) ->
+lyubeznikNumber(ZZ,ZZ,Ideal,Ring) := ZZ => (i,j,I,R) ->
 (
-    R:=ring I;
     n:= dim R;
     d:= dim (R/I);
     p:= char R;
-    if (i<0 or j<0 or i<j or i>d or j>d) then return 0;
+    if (i<0 or j<0 or j<i or i>d or j>d) then return 0;
     
     m=ideal R_*;
     
-    --LC:= localCohomology
-    --compute H^n-j
-    --find root of H^n-j
-    --compute m-filter regular seq of length i
-    --lower limit of m-filter regular sequence (gi)
-    --pi= (prod of gi)^{p-1}
+    r:= root(localCohomology(n-j,I,R));
+    frs:= filterRegSeq(i,m,r);
+    c:=lowerLimit(frs);
+    prod:=product(apply(frs,x->x^(p-1)));
+    r
+    
     --compute root of ?
     --Compute socle and take dim -- see if determining length of socleDegrees =dim Socle
 )
