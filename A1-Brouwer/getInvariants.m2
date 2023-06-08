@@ -1,11 +1,13 @@
 load "./diagonalize.m2"
 loadPackage "RationalPoints2"
+load "GW-type.m2"
 --getInvariants method spits out basic invariants of a matrix representing a bilinear form
 --isIdenticalDiscriminant tells us whether two matrices representing bilinear forms have the same discriminant
 
 getInvariants=method()
 
-getInvariants (Matrix) := (List) => (A) -> (
+getInvariants (GrothendieckWittClass) := (List) => (alpha) -> (
+    A:= alpha.matrix
     n:= numRows(A);
     kk:=ring A;
 
@@ -37,7 +39,9 @@ getInvariants (Matrix) := (List) => (A) -> (
 
 isIdenticalDiscriminant=method()
 
-isIdenticalDiscriminant (Matrix,Matrix) := (Boolean) => (A,B) -> (
+isIdenticalDiscriminant (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alpha,beta) -> (
+    A:= alpha.matrix
+    B:=beta.matrix
     a:=det(A);
     b:=det(B);
     kk:= ring A;
