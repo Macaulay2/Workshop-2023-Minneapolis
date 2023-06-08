@@ -2,9 +2,12 @@ restart
 needsPackage "Brackets"
 
 G = gc(a .. f,3); 
+B = bracketRing G;
 
 ABC = (a*b*c)_G;
 DEF = (d*e*f)_G;
+toBracketPolynomial(ABC#RingElement, B);
+
 
 aeLine = (a*e)_G;
 bfLine = (b*f)_G;

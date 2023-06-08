@@ -46,20 +46,20 @@ AbstractGCRing Array := (G, A) -> (
 -- class declaration for BracketRing
 BracketRing = new Type of AbstractGCRing
 -- constructor
-bracketRing = method(Options => {Strategy => GroebnerBasis})
+bracketRing = method(Options => {Strategy => GroebnerBasis,CoefficientRing => QQ})
 bracketRing AbstractGCRing := G -> error "not implemented"
 bracketRing (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     n := length vectorSymbols;
     if not (n >= d) then error("The first argument n in bracketRing(n, d) (representing the number of rows) is assumed to be at least the second argument d (representing the number of columns)");
     x := symbol x;
-    R := QQ[x_(1,1)..x_(n,d)];
+    R := o.CoefficientRing[x_(1,1)..x_(n,d)];
     X := matrix for i from 1 to n list for j from 1 to d list x_(i,j);
     n'choose'd := rsort(sort \ subsets(vectorSymbols, d)); -- important for "Tableux order"
     n'choose'd'Indices := rsort(sort \ subsets(#vectorSymbols, d));
     minorsX := apply(n'choose'd'Indices, R -> det X^R);
     y := symbol y; 
     bracketVariables := apply(n'choose'd, S -> y_("["|fold(S, (a, b) -> toString(a)|toString(b))|"]"));
-    S := QQ[gens R, bracketVariables, MonomialOrder => {Eliminate(numgens R), GRevLex}]; -- important for "Tableaux order"
+    S := o.CoefficientRing[gens R, bracketVariables, MonomialOrder => {Eliminate(numgens R), GRevLex}]; -- important for "Tableaux order"
     lookupTable := new HashTable from apply(binomial(n, d), i -> increment n'choose'd'Indices#i => (gens S)#(numgens R+i));
     I := ideal apply(minorsX, bracketVariables, (m, b) -> sub(m, S) - b_S);
     ret := new BracketRing from {numrows => n, numcols => d, ring => S, ideal => I, table => lookupTable, cache => new CacheTable from {}};
@@ -114,7 +114,7 @@ matrix BracketRing := o -> B -> transpose genericMatrix(ring B,numcols B, numrow
 
 -- class declaration for GCAlgebra
 GCAlgebra = new Type of AbstractGCRing
-gc = method(Options => {Strategy => GroebnerBasis})
+gc = method(Options => {Strategy => GroebnerBasis,CoefficientRing => QQ})
 -- constructor
 gc (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     n := # vectorSymbols;
@@ -532,6 +532,7 @@ Description
 doc ///
 Key
   toBracketPolynomial
+  (toBracketPolynomial, RingElement, BracketRing)
 Headline
   Represent an invariant polynomial as a polynomial in brackets
 Usage
@@ -553,6 +554,24 @@ Description
     Such a representation is not unique. It may be checked that two bracket polynomials are equal through their normal form with respect to a Groebner basis. See @TO normalForm@ for a further explanation. 
 
     See also @TO BracketRing@.
+///
+
+
+doc ///
+Key
+  normalForm
+  (normalForm, GCExpression)
+Headline
+  Represent a bracket polynomial in a normal form with respect to a Groebner basis
+Description
+  Text
+    The relations between brackets generate an ideal, which are the classic Plücker relations. A Groebner basis for this ideal allows one to represent a polynomial in brackets in a unique normal form. 
+  Example
+    B = bracketRing(4,2)
+    f = [1 2]_B * [3 4]_B - [1 3]_B * [2 4]_B + [1 4]_B * [2 3]_B
+    normalForm(f)
+  Text
+    See also @TO Bracket@, @TO toBracketPolynomial@, and @TO bracketRing@
 ///
 
 -* Test section *-
