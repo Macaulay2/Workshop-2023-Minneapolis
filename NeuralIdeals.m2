@@ -114,8 +114,8 @@ allCodeWords (ZZ) := (n) ->(
     apply(L2, i-> concatenate(apply(i,j->toString j)))
     )
 
-neuralCodeOpp = method();
-neuralCodeOpp  (NeuralCode) := NeuralCode => C ->(
+neuralCodeComplement = method();
+neuralCodeComplement  (NeuralCode) := NeuralCode => C ->(
     d := dim C;
     L1 := allCodeWords(d);
     L:=C.codes;
@@ -131,7 +131,7 @@ neuralIdeal(NeuralCode,Ring) := Ideal => (C,R) -> (
     if numgens R =!= d then error "Expected ring of the same dimension as the neuralCode";
     if coefficientRing R =!= ZZ/2 then error "Expected coefficientRing of ring to be ZZ/2";
     if instance(R,PolynomialRing)==false then error "Expected ring to be a PolynomialRing";
-    oppC:=neuralCodeOpp(C);
+    oppC:=neuralCodeComplement(C);
     genList:=for i to #oppC-1 list (
     	prod:=1;
     	for j to d-1 do
