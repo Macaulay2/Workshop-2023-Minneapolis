@@ -20,13 +20,24 @@ isIdentity List := Boolean => (w) -> (
     )
 
 lastDescent = method()
-lastDescent List := Boolean => (w) -> (
+lastDescent List := ZZ => (w) -> (
     if not (isPerm w) then error ("Expecting a permutation.");
     if isIdentity(w) then error ("Expecting a non-identity permutation.");
     n := #w;
    
     ans := -1;
     scan (reverse (0..n-2), i-> if w_i > w_(i+1) then (ans = i+1; break));
+    ans
+    )
+
+firstDescent = method()
+firstDescent List := ZZ => (w) -> (
+    if not (isPerm w) then error ("Expecting a permutation.");
+    if isIdentity(w) then error ("Expecting a non-identity permutation.");
+    n := #w;
+   
+    ans := -1;
+    scan ((0..n-2), i-> if w_i > w_(i+1) then (ans = i+1; break));
     ans
     )
 

@@ -63,7 +63,9 @@ export{
     "isSchubertCM",
     "ASMFullList",
     "cohenMacaulayASMsList",
-    "nonCohenMacaulayASMsList"
+    "nonCohenMacaulayASMsList",
+    "lastDescent",
+    "firstDescent"
     }
     
 ------------------------------------------------------------------------------
