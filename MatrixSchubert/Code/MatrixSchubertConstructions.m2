@@ -61,9 +61,9 @@ antiDiagInit Matrix := MonomialIdeal => (A) -> (
     for box in essBoxes do (
     	pos := position(essBoxes, i-> i==box);
 	boxSubmatrix := zMatrix^{0..(box_0-1)}_{0..(box_1-1)};
-	for x in subsets(numRows boxSubmatrix) do (
+	for x in subsets(numRows boxSubmatrix,) do (
 	    for y in subsets(numCols boxSubmatrix do(
-		    product(
+		    indicesList := 
         antiDiagGens#(#antiDiagGens) = apply((minors(ranks_pos+1, zMatrix^{0..(box_0-1)}_{0..(box_1-1)}))_*,);
         );
     return ideal(unique flatten toList antiDiagGens)
@@ -119,11 +119,11 @@ rotheDiagram Matrix := List => (A) -> (
     ones := select(listEntries, i-> A_i == 1);
     seen := new MutableList;
     for one in ones do(
-	for i from one_0 to m-1 do( --death rays to the right
+	for i from one_0 to n-1 do( --death rays to the right
 	    if (A_(i,one_1)==-1) then break;
 	    seen#(#seen) = (i,one_1);
 	    );
-	for i from one_1 to n-1 do(
+	for i from one_1 to m-1 do(
 	    if A_(one_0,i)==-1 then break;
 	    seen#(#seen) = (one_0,i);
 	    );
@@ -303,30 +303,6 @@ doubleSchubertPoly(List) := (w) -> (
 
 
 ----------------------------------------
---INPUT: a list w corresponding to a permutation in 1-line notation or a partial ASM
---OUTPUT: the Castlenuovo-Mumford regularity of I_A or I_w
-----------------------------------------
-schubertReg= method()
-schubertReg Matrix := ZZ => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    regularity(antiDiagInit A)
-    );
-schubertReg List := ZZ => (w) -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-     regularity(antiDiagInit w)
-    );
-
-schubertCodim = method() 
-schubertCodim Matrix := ZZ => A -> (
-    if not (isPartialASM A) then error("The input must be a partial alternating sign matrix");
-    codim antiDiagInit A
-)
-schubertCodim List := ZZ => (w) -> (
-    if not (isPerm w) then error("The input must be a permutation in one line notation");
-    permLength w
-)
-
-----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: diagonal initial ideal of Schubert determinantal ideal for w
 --TODO: make diagRevlexInit function (potentially faster for tests)
@@ -389,7 +365,7 @@ entrywiseMinRankTable List := Matrix => (L) -> (
             );
         );
 
-        minimalRankMtx
+        matrix minimalRankMtx
     );
 
     ------------------------------------------
@@ -418,7 +394,7 @@ entrywiseMaxRankTable List := Matrix => (L) -> (
             );
         );
 
-        maximalRankMtx
+        matrix maximalRankMtx
     );
 
 -------------------------------------------
@@ -557,7 +533,7 @@ rankTableToASM Matrix := Matrix => (A) -> (
         );
     );
 
-    ASMret
+    matrix ASMret
 );
 
 --------------------------------------------
@@ -608,5 +584,6 @@ rankTableFromMatrix Matrix := Matrix => (A) -> (
         );
     );
 
-    rankTable
+    matrix rankTable
 );
+
