@@ -15,7 +15,7 @@ newPackage(
           DebuggingMode => true
           )
 
-export {"AbstractGCRing", "bracketRing", "BracketRing", "GCAlgebra", "normalForm", "gc", "toBracketPolynomial"}
+export {"AbstractGCRing", "bracketRing", "BracketRing", "GCAlgebra", "normalForm", "gc", "toBracketPolynomial", "GCExpression"}
 
 -* Code section *-
 
@@ -654,8 +654,7 @@ p2 = afLine ^ cdLine -- Intersection point of lines joining a, f and c, d
 p3 = bcLine ^ efLine -- Intersection point of lines joining b, c and e, f
 q2 = p1 * p2 * p3 -- Span of p1, p2, p3. q = 0 if the points are collinear.
 normalForm q2 === (-1) * q1 -- True! So, a,b,c,d,e,f lie on a single quadric if and only if p1, p2, p3 are collinear.
-assert(net normalForm q2 == "[bef]*[bcf]*[ade]*[acd]-[bef]*[bde]*[acf]*[acd]+[cef]*[bde]*[acd]*[abf]-[cdf]*[bef]*[ade]*[abc]")
-
+assert(net normalForm q2 == "[def]*[bcf]*[ace]*[abd]-[cef]*[bdf]*[ade]*[abc]")
 ///
 
 
@@ -663,6 +662,7 @@ assert(net normalForm q2 == "[bef]*[bcf]*[ade]*[acd]-[bef]*[bde]*[acf]*[acd]+[ce
 end--
 
 -* Development section *-
+uninstallPackage "Brackets"
 restart
 needsPackage "Brackets"
 check "Brackets"
