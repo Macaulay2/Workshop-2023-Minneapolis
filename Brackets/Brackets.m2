@@ -114,7 +114,7 @@ matrix BracketRing := o -> B -> transpose genericMatrix(ring B,numcols B, numrow
 
 -- class declaration for GCAlgebra
 GCAlgebra = new Type of AbstractGCRing
-gc = method(Options => {Strategy => GroebnerBasis})
+gc = method(Options => {Strategy => GroebnerBasis,CoefficientRing => QQ})
 -- constructor
 gc (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     n := # vectorSymbols;
@@ -565,10 +565,10 @@ Headline
   Represent a bracket polynomial in a normal form with respect to a Groebner basis
 Description
   Text
-    The relations between brackets generate an ideal, which are the classic Plücker relations. A Groebner basis for this ideal allows one to represent a polynomial in brackets in a unique normal form.
+    The relations between brackets generate an ideal, which are the classic Plücker relations. A Groebner basis for this ideal allows one to represent a polynomial in brackets in a unique normal form. 
   Example
     B = bracketRing(4,2)
-    f = [1 2]_B * [1 4]_B * [2 3]_B
+    f = [1 2]_B * [3 4]_B - [1 3]_B * [2 4]_B + [1 4]_B * [2 3]_B
     normalForm(f)
   Text
     See also @TO Bracket@, @TO toBracketPolynomial@, and @TO bracketRing@
