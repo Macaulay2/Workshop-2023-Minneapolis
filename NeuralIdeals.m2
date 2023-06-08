@@ -59,6 +59,7 @@ neuralCode=method List := codeList -> (
  
 dim NeuralCode := C -> C.dimension
 
+--issue: if user is already using another ring, may be confused if they call ring C and it's not the ring they're already using
 ring NeuralCode := C -> (
     d := dim C;
     x := getSymbol "x";
