@@ -88,6 +88,15 @@ Valuation Thing := (v,t) -> (
 OrderedQQn = new Type of Module
 OrderedQQVector = new Type of Vector
 
+--
+-- Ordered Module based on the monomial order of a polyomial ring
+--
+-- given two elements a, b in QQ^n they are compared by using the
+-- the monomial order of the polynomial ring:
+-- 1) clear the denominators of a and b: d*a, d*b \in \ZZ^n
+-- 2) clear the negative values: d*a + c, d*b + c \in \NN^n
+-- 3) compare x^(d*a + c) and x^(d*b + c) in the polynomial ring
+
 orderedQQn = method()
 orderedQQn(PolynomialRing) := R -> (
     n := numgens R;
@@ -101,6 +110,7 @@ orderedQQn(ZZ, List) := (n, monOrder) -> (
     ordMod
     )
 
+-- Two ordered modules are equal iff their cached rings are identitcal
 OrderedQQn == OrderedQQn := (N, M) -> (
     N.cache.Ring === M.cache.Ring
     )
@@ -112,6 +122,8 @@ OrderedQQn#{Standard,AfterNoPrint} = M -> (
     << " : Ordered QQ^" | toString (numgens M) | " module" << endl
     );
 
+--
+-- comparison of ordered vectors 
 OrderedQQVector ? OrderedQQVector := (a, b) -> (
     M := class a;
     N := class b;
@@ -133,10 +145,13 @@ OrderedQQVector ? OrderedQQVector := (a, b) -> (
     else symbol ==
     )
 
+--
+-- monomialToOrderedQQVector
+--
+-- A function that takes a monomial and an ordered QQ-module and returns the
+-- exponent vector of the monomial as a vector in the passed QQ-module    
 monomialToOrderedQQVector = method()
 monomialToOrderedQQVector (RingElement, OrderedQQn) := (monomial, orderedQQModule) -> (
-    -- A function that takes a monomial and an ordered QQ-module and returns the
-    -- exponent vector of the monomial as a vector in the passed QQ-module
     exponentVector := vector flatten exponents monomial;
     modGens := gens orderedQQModule;
     modGens*exponentVector
