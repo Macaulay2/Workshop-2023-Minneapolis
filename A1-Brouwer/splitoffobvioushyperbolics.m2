@@ -1,3 +1,5 @@
+--Tom Hagedorn, Joel Louwsma
+
 --given diagonal matrix, split off any <a>+<-a> and return number of times we can do this as well as smaller matrix with none of these
 
 splitOffObviousHyperbolic = method()
