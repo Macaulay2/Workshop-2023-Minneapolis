@@ -1,5 +1,6 @@
 restart
 needsPackage "Valuations"
+needsPackage "SubalgebraBases"
 
 R = QQ[x_1, x_2, x_3]
 
@@ -19,7 +20,8 @@ needsPackage "Tropical"
 needsPackage "gfanInterface"
 needsPackage "Binomials"
 
-primeConesOfIdeal = I -> (F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
+primeConesOfIdeal = I -> (
+    F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
     r:=rays(F);
     c:=maxCones(F);
     cns := for i in c list(r_i);
@@ -27,7 +29,13 @@ primeConesOfIdeal = I -> (F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true)
     L:= for i from 0 to #cns-1 list (J = gfanBuchberger(I, "w" => -1*(inCns#i));
         H = gfanInitialForms(J, -1*(inCns#i), "ideal" =>true);
         K = H_1;
-        if binomialIsPrime(ideal(K)) then K);
+        if binomialIsPrime(ideal(K)) then cns#i);
     return delete(null,L))
 
 primeConesOfIdeal I
+
+coneToMatrix = coneRays -> (
+    v1 = coneRays_0 + coneRays_1;
+    v2 = coneRays_0 + 2*coneRays_1;
+    transpose matrix {v1, v2}
+    )
