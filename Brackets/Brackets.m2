@@ -6,7 +6,7 @@ newPackage(
           Authors => {
 	      { Name => "Dalton Bidleman", Email => "deb0036@auburn.edu", HomePage => ""},
 	      { Name => "Tim Duff", Email => "timduff@uw.edu", HomePage => "https://timduff35.github.io/timduff35/"},
-	      { Name => "Jack Kendrick", Email => "", HomePage => ""},
+	      { Name => "Jack Kendrick", Email => "jackgk@uw.edu", HomePage => ""},
 	      { Name => "Thomas Yahl", Email => "thomasjyahl@tamu.edu", HomePage => "tjyahl.github.io"},
 	      { Name => "Michael Zeng", Email => "", HomePage => ""}		      
 	      },
@@ -15,7 +15,7 @@ newPackage(
           DebuggingMode => true
           )
 
-export {"AbstractGCRing", "bracketRing", "BracketRing", "GCAlgebra", "normalForm", "gc", "toBracketPolynomial"}
+export {"AbstractGCRing", "bracketRing", "BracketRing", "GCAlgebra", "normalForm", "gc", "toBracketPolynomial", "GCExpression"}
 
 -* Code section *-
 
@@ -376,6 +376,8 @@ entries GCMatrix := M -> (
     T := applyTable(L, t->t_B))
  
 
+undocumented {AbstractGCRing, (net, GCAlgebra)}
+
 -* Documentation section *-
 beginDocumentation()
 
@@ -431,6 +433,12 @@ Description
 doc ///
 Key
   bracketRing
+  (bracketRing, AbstractGCRing) 
+  (bracketRing, BracketRing)    
+  (bracketRing, GCAlgebra)      
+  (bracketRing, GCExpression)   
+  (bracketRing, VisibleList, ZZ)
+  (bracketRing, ZZ, ZZ)         
 Headline
   Constructor for bracket rings
 Usage
@@ -466,6 +474,41 @@ Description
     See also @TO BracketRing@.
 ///
 
+
+doc ///
+Key 
+ GCAlgebra
+Description
+ Text
+  An object of class GCAlgebra represents a Grassmann-Cayley algebra. 
+  The Grassmann-Cayley algebra may be viewed as an algebra of linear subspaces of $\mathbb{P}^{d−1}.$ In this algebra, there are two operations which correspond to the join and meet of subspaces. We denote these operators by * and ^, respectively. 
+  The first operator is simply multiplication in a skew- commutative polynomial ring $\mathbb{C}\langle a_1, . . . , a_n\rangle.$ An algebraic formula for the meet operator is more complicated, but it can be defined using the shuffle product. 
+  As a $k-$vector space, the Grassmann-Cayley algebra has a direct-sum decomposition
+  $$\oplus_{k=0}^d\Lambda^k(a_1, \ldots, a_n)$$
+  where $\Lambda^k(a_1,\ldots, a_n)$ is the space of {\it extensors} of the form $a_{i_1}\cdots a_{i_k}.$
+  We may identify $\Lambda^d(a_1, \ldots, a_n)\cong B_{n,d}.$
+///
+
+doc ///
+Key
+ gc
+Headline
+ Constructor for Grassmann-Cayley algebras.
+Usage
+ G = gc(vectorSymbols, d)
+Inputs
+ vectorSymbols:List
+ d:ZZ
+Outputs
+ G:GCAlgebra
+Description
+ Text
+  To construct a Grassmann-Cayley algebra specify a @ ofClass{VisibleList} @ of $n$ symbols and an integer.
+ Example
+  G = gc(a .. f, 3)
+ Text
+  See also @TO GCAlgebra@.
+///
 
 
 doc ///
@@ -511,7 +554,6 @@ Description
 
     See also @TO BracketRing@.
 ///
-
 
 -* Test section *-
 TEST /// -* Sturmfels Example 3.1.10 *-
@@ -620,8 +662,7 @@ p2 = afLine ^ cdLine -- Intersection point of lines joining a, f and c, d
 p3 = bcLine ^ efLine -- Intersection point of lines joining b, c and e, f
 q2 = p1 * p2 * p3 -- Span of p1, p2, p3. q = 0 if the points are collinear.
 normalForm q2 === (-1) * q1 -- True! So, a,b,c,d,e,f lie on a single quadric if and only if p1, p2, p3 are collinear.
-assert(net normalForm q2 == "[bef]*[bcf]*[ade]*[acd]-[bef]*[bde]*[acf]*[acd]+[cef]*[bde]*[acd]*[abf]-[cdf]*[bef]*[ade]*[abc]")
-
+assert(net normalForm q2 == "[def]*[bcf]*[ace]*[abd]-[cef]*[bdf]*[ade]*[abc]")
 ///
 
 
@@ -629,6 +670,7 @@ assert(net normalForm q2 == "[bef]*[bcf]*[ade]*[acd]-[bef]*[bde]*[acf]*[acd]+[ce
 end--
 
 -* Development section *-
+uninstallPackage "Brackets"
 restart
 needsPackage "Brackets"
 check "Brackets"
