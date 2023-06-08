@@ -2,7 +2,22 @@ restart
 needsPackage "Valuations"
 needsPackage "SubalgebraBases"
 
-R = QQ[x_1, x_2, x_3]
+
+R = QQ[x_1, x_2, x_3, e_1, e_2, e_3, y, MonomialOrder => Eliminate 3]
+I = ideal{x_1 + x_2 + x_3 - e_1, x_1*x_2 + x_1*x_3 + x_2*x_3 - e_2, x_1*x_2*x_3 - e_3, (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3) - y}
+f = e_1^2*e_2^2 - 4*e_2^3 - 4*e_3*e_1^3 + 18*e_1*e_2*e_3 - 27*e_3^2 - y^2
+
+valM = (f, g, valMTwiddle, weights) -> (
+    R : = QQ[x_1, x_2, x_3, e_1, e_2, e_3, y, MonomialOrder => Eliminate 3];
+    I := ideal{x_1 + x_2 + x_3 - e_1, x_1*x_2 + x_1*x_3 + x_2*x_3 - e_2, x_1*x_2*x_3 - e_3, (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3) - y};
+    S := QQ[e_1, e_2, e_3, y, MonomialOrder => weights];
+    gTwiddle = sub(sub(g, R) % I, S);
+    maxTwiddle = gTwiddle % ideal(sub(f, S));
+    valMTwiddle(maxTwiddle)
+    )
+
+-----
+
 
 e_1 = x_1 + x_2 + x_3
 e_2 = x_1*x_2 + x_1*x_3 + x_2*x_3
