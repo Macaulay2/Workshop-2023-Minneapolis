@@ -34,7 +34,8 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     );
     --if no solutions found we assume the form is anisotropic
     if ( not solnFound) then (return (0,A));
-    --if solution found for rank 2 form, then the form is purely isotropy
+    --if solution found for rank 2 form, then the form is purely hyperbolic
+    if ((n==2) and  (det(A)==0))then (error "Matrix singular, run wittDecompGeneral instead" );
     if (n==2) then (return (1,matrix(k,{{}})));
 
     --find y not orthogonal (wrt bilinear form) to x
@@ -44,18 +45,12 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     for i from 0 to (n-1) do (
         if (zA_(0,i) != 0) then (y_(0,i)=1; break;);
     );
-    --now x and y span a copy of |H in the bilinear form
+    
+    --now z and y span a copy of |H in the bilinear form
     --we need to find a basis of vectors orthogonal (wrt bilinear form) to x and y
-    Red := reducedRowEchelonForm (z||matrix(y));
-    W := mutableMatrix matrix(toList((n-2):toList(n:0/1))); --W will contain as its rows w2,...,w(n-1) orthogonal to x and y
-    for i from 2 to (n-1) do (
-        W_(i-2,i)=1;
-        W_(i-2,0)=-Red_(0,i);
-        W_(i-2,1)=-Red_(1,i);
-    );
-    --now recursively apply wittDecomp to W*A*W^T a (n-2)-by-(n-2) Gram matrix
-    Wmat := matrix(W);
-    subComputation := wittDecomp(Wmat*A*transpose(Wmat));
+    orthoComp :=gens kernel((z||matrix(y))*A);
+    --now recursively apply wittDecomp to orthoComp^T*A*orthoComp a (n-2)-by-(n-2) Gram matrix
+    subComputation := wittDecomp(transpose(orthoComp)*A*orthoComp);
     return (1+subComputation_0, subComputation_1);
 )
 
@@ -91,7 +86,7 @@ wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
             );
         );
 
-        if (posEntries + negEntries > n) then print"A is singular";
+        if (posEntries + negEntries > n) then (print "A is singular");
         wittIndex := min(posEntries,negEntries); -- witt index is given by how many positive-negative diagonal entry pairs exist
         signature := posEntries-negEntries; 
         if signature == 0 then (return (wittIndex,matrix(RR,{{}})))
@@ -99,4 +94,5 @@ wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
         else return (wittIndex, -id_(k^(-signature)));
         );
 );
+
 
