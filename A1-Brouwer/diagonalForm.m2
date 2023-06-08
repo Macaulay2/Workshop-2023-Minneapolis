@@ -35,6 +35,8 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
 	H := matrix(RR,{{1,0},{0,-1}});
 	if k == 0 then(
 	    outputMatrix := anisotropicPart;
+	    beta.cache.diagonalForm = outputMatrix;
+	    return gwClass(outputMatrix)
 	    );
 	
 	if k > 0 then(
@@ -42,12 +44,15 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
 	    for i in 1..(k-1) do(
 	    	outputMatrix = outputMatrix++H;
 	    	);
+	    
+	    if not anisotropicPart == 0 then(
+	    	outputMatrix = outputMatrix++anisotropicPart;
+	    	);
 	    );
-	if not anisotropicPart == 0 then(
-	    outputMatrix = outputMatrix++anisotropicPart;
-	    );
-	beta.cache.diagonalForm = outputMatrix;
-	return gwClass(outputMatrix)
+	    
+	    beta.cache.diagonalForm = outputMatrix;
+	    return gwClass(outputMatrix)
+	
 	);
     
     A := beta.matrix;
@@ -55,5 +60,3 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
     beta.cache.diagonalForm = gwClass(D);
     return gwClass(D) 
     )
-
-
