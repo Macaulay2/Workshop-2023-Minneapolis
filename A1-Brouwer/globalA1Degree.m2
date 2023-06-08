@@ -1,9 +1,12 @@
 --Nikita, Gabriel
 -- Given an endomorphism of affine space f=(f1,...,fn) given as a list of polynomials, return the Bezoutian corresponding to the endomorphism
 --for notation: input domain is kk[x_1..x_n] while Bezoutian computed in kk[X_1..Y_n]
+
+
 globalA1Degree = method()
 
 globalA1Degree (List) := (Matrix) => (Endo) -> (
+    -- Endo is the list {f_i} of the polynomials f_i
     -- first check if the morphism does not have isolated zeroes
     if dim ideal(Endo) > 0  then (print "Error: morphism does not have isolated zeroes"; return Endo;);
     n := #Endo; -- n is the no. of polynomials defining the morphism
