@@ -6,7 +6,7 @@ load "./squarefreePart.m2"
 load "./easyUpperLeftTriangular.m2"
 load "./diagonalize.m2"
 
---Nikita Borisov
+--Nikita Borisov and Frenly Espino
 wittDecomp = method()
 wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     k:= ring A;
