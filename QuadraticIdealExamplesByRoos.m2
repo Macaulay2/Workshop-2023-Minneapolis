@@ -19,8 +19,7 @@ export {
 
 
 
-
-S = ZZ/101[x,y,z,u];
+roosTable = (S = ZZ/101[x,y,z,u];
 L = {
 sub(ideal "0",S),
 ideal "x2",
@@ -105,15 +104,17 @@ ideal "x2,xy,xz,y2,yz,yu,z2,zu",
 ideal "x2,y2,z2,u2,xy,xz,yz-xu,yu,zu",
 ideal "x2,xy,xz,xu,y2,zu,u2,yz,yu",
 ideal "x2,y2,z2,u2,xy,xz,xu,yz,yu,zu"
-}
-H = new HashTable from for i from 1 to 83 list i => L#(i-1)
-H0 = applyPairs(H, (i,I) -> if (depth(S/I) == 0 and not isBurch I and not isGolod (S/I)) then (i,I))
+};
+new HashTable from for i from 1 to 83 list i => L#(i-1)
+)
 
-elapsedTime applyPairs(H0, (i,I) -> (i,socleSummandsSemigroup(I,7)))
---22 & 59 have semigroup {0,6} --when checking up to spot 6
-H5 = new HashTable from {42 => H0#42, 34 => H0#34, 55 => H0#55, 60 => H0#60}
-elapsedTime applyPairs(H5, (i,I) -> (i, socleSummandsSemigroup(I,9)))
+onedimIrrationalPoincare = (degs1 := {18,24,25,26,28,30,33}; --this example is from froberg-roos 2000, lofwall-lundqvist-roos
+    ker map(QQ[t], QQ[x_1 .. x_7, Degrees => degs1], apply(degs1, a -> t^a))
+)
 
+twodimIrrationalPoincare = (degs2 := {{36,0}, {33,3}, {30,6}, {28,8}, {26,10}, {25,11}, {24,12}, {18,18}, {0,36}};
+    ker map(QQ[t,s], QQ[x_1 .. x_9, Degrees => degs2], apply(degs2, a -> t^(a#0)*s^(a#1)))
+    )
 
 
 
@@ -153,3 +154,10 @@ end--
 uninstallPackage "QuadraticIdealExamplesByRoos"
 restart
 installPackage "QuadraticIdealExamplesByRoos"
+
+H0 = applyPairs(H, (i,I) -> if (depth(S/I) == 0 and not isBurch I and not isGolod (S/I)) then (i,I))
+
+elapsedTime applyPairs(H0, (i,I) -> (i,socleSummandsSemigroup(I,7)))
+--22 & 59 have semigroup {0,6} --when checking up to spot 6
+H5 = new HashTable from {42 => H0#42, 34 => H0#34, 55 => H0#55, 60 => H0#60}
+elapsedTime applyPairs(H5, (i,I) -> (i, socleSummandsSemigroup(I,9)))
