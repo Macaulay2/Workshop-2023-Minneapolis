@@ -335,20 +335,26 @@ sigmaTau(RingElement) := P -> (
 
 polarizePseudomonomial = method();
 
-polarizePseudomonomial(RingElement,Ring) := RingElement => (P,R) -> (
+polarizePseudomonomial(RingElement,Ring,Ring) := RingElement => (P,R,S) -> (  -----ring element, the ring you want the element to currently live in, the ring you want the polarization to live in----
     if isPseudomonomial(P) == false then error "Expected input to be a Pseudomonomial";
+    if (numgens S)%2 != 0 then error "Second ring must have an even number of generators";
+    d := (numgens S)//2;
     st := sigmaTau(P);
     sigma := st_0;
     tau := st_1;
-    d := numgens R;
-    y := getSymbol "y";
-    S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
     use S;
     mon := 1_S;
     for i in sigma do mon = mon*S_(i-1);
     for i in tau do mon = mon*S_(d+i-1);
     mon
     )
+
+polarizePseudomonomial(RingElement,Ring) := RingElement => (P,R) -> (
+     d := numgens R;
+     y := getSymbol "y";
+     S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
+     polarizePseudomonomial(P,R,S)
+     )
 
 polarizePseudomonomial(RingElement) := RingElement => P -> (
     R := ring P;
@@ -357,10 +363,10 @@ polarizePseudomonomial(RingElement) := RingElement => P -> (
 
 polarizedCanonicalRes = method();
 
-polarizedCanonicalRes(NeuralCode,Ring) := List => (C,R) -> (
+polarizedCanonicalRes(NeuralCode,Ring,Ring) := Resolution => (C,R,S) -> (
     L := canonicalForm(C,R);
-    polarL := for p in L list polarizePseudomonomial(p);
-    polarL
+    polarL := for P in L list polarizePseudomonomial(P,R,S);
+    res ideal(polarL)
     )
     
 
