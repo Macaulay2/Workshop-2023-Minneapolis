@@ -374,19 +374,19 @@ polarizedCanonicalRes(NeuralCode,Ring,Ring) := Resolution => (C,R,S) -> (
     res ideal(polarL)
     )
 
-polarizedCanonicalRes(NeuralCode,Ring) := Resolution => (C,R) -> (
-    d := numgens R;
+polarizedCanonicalRes(NeuralCode,Ring) := Resolution => (C,S) -> (
+    if (numgens S)%2 != 0 then error "Second ring must have an even number of generators";
+    d := (numgens S)//2;
     x := getSymbol "x";
-    y := getSymbol "y";
-    S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
+    R := (ZZ/2)(monoid[x_1..x_d]);
     polarizedCanonicalRes(C,R,S)
     )
 
 polarizedCanonicalRes(NeuralCode) := Resolution => C -> (
     d := dim C;
     x := getSymbol "x";
-    R := (ZZ/2)(monoid[x_1..x_d]);
-    polarizedCanonicalRes(C,R)
+    S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
+    polarizedCanonicalRes(C,S)
     )
 
 beginDocumentation()
