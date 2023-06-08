@@ -67,6 +67,7 @@ differentialModule ChainComplex := C -> (
 ---MAYA: changed this so that source and target are the same, map may be nonzero degree
 differentialModule Matrix := phi -> (
     --check if the source and target are the same up to a twist
+    if phi^2 != 0 then error "map does not square to 0";
     R := ring phi;
     -- MAYA d := (degrees source phi)_0 - (degrees target phi)_0;
     -- MAYA if target phi != source phi**R^{d} then error "source and target of map are not the same, up to a twist"; 
