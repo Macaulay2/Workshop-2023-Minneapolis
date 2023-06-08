@@ -5,14 +5,14 @@
 
 A valuation is a map \(v: R \rightarrow \Gamma\) between a ring \(R\) and an ordered semigroup \(\Gamma\) such that:
 
---* \(v(ab) = v(a) + v(b)\)
---* \(v(a+b) \ge \min\{v(a), v(b)\}\)
---* (For \(k\)-algebras) \(v(\lambda a) = v(a)\)
+* \(v(ab) = v(a) + v(b)\)
+* \(v(a+b) \ge \min\{v(a), v(b)\}\)
+* (For \(k\)-algebras) \(v(\lambda a) = v(a)\)
 
 They are fundamental for the definition of:
 
---* Tropical varieties (polyhedral complexes that encode data about the original variety)
---* Khovanskii bases (a generating set for an algebra analogous to Groebner bases)
+* Tropical varieties (polyhedral complexes that encode data about the original variety)
+* Khovanskii bases (a generating set for an algebra analogous to Groebner bases)
 
 ### Let's define a valuation
 
@@ -96,7 +96,7 @@ v(f) < v(g)
     ```
     m_1 > m_2
     ```
->>>>>>> dbf396aef443d8af0de47799471ab842a2b4b2df
+    
 ## Kaveh-Manon Example
 
 ```
