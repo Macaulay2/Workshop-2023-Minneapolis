@@ -1,8 +1,9 @@
---diagonalize method
+--diagonalizeOverInt method
 --given a symmetric matrix, this function outputs a diagonal matrix congruent to original matrix
-diagonalize = method()
+--capable of diagonalizing over rings (algorithm has no divisions)
+diagonalizeOverInt = method()
 
-diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
+diagonalizeOverInt (Matrix) := (Matrix) => (AnonMut) -> (
     A := mutableMatrix AnonMut;
     if A != transpose(A) then (
         error "Matrix is not symmetric";
@@ -22,13 +23,13 @@ diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
         if (A_(col,col)!=0) then (
             for row from (col+1) to (n-1) do (
                 temp:=A_(row,col);
-                rowAdd(A,row,-temp/A_(col,col),col); --more row reduction make every entry below A_(col,col) is zero
-                columnAdd(A,row,-temp/A_(col,col),col); --column reduction to keep reduced matrix congruent
+                rowMult(A,row,A_(col,col)); --multiply row row by A_(col,col)
+                columnMult(A,row,A_(col,col)); --column multiplication to keep reduced matrix congruent
+                rowAdd(A,row,-temp,col); --more row reduction make every entry below A_(col,col) is zero
+                columnAdd(A,row,-temp,col); --column reduction to keep reduced matrix congruent
             );
         );
 
     );
     return matrix A 
 )
-
-
