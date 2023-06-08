@@ -46,10 +46,9 @@ subring Matrix := genMatrix -> (
 	-- presentation ring: one variable for each generator
 	presentationRing => P,
       
-	-- presentation map: presentation ring --> ambient ring
+	-- presentation map: presentation ring --> ambient ring, image(f)=S
 	presentationMap => f,
 	 
-	-- presentation ideal?? -- probably compute into cache 
 	cache => new CacheTable
 	};
     S
@@ -71,7 +70,7 @@ presentationMap Subring := S -> (
 
 presentationIdeal = method()
 presentationIdeal Subring := S -> (
-    P := presentationRing S;
+    --P := presentationRing S;
     f := presentationMap S;
     return ker f; --kernel is cached automatically
     )
@@ -105,6 +104,29 @@ net Subring := S -> (
     )
 
 
+
+-*
+-membership test: (x,S) -> boolean
+-equality of subrings: S_1 == S_2
+
+
+
+
+--Subring == Subring := (S_1, S_2) -> (
+    -- if generators S_1 in S_2 and generators S_2 in S_1 return true, else false
+   
+  --  g_1 := S_1#generators;
+  --  g_2 := S_2#generators;
+    
+  --  for i from 0 to #g_1-1 do (
+--	if !(isElement(g_i, S_2)) 
+  --	)
+     
+  --  )
+
+-- given an element of S, write it in terms of the p_i's
+
+*-
 
 
 
@@ -172,7 +194,7 @@ doc ///
         I = presentationIdeal S
     Inputs
         S:Subring
-            a @ ofClass{Subring} of a @ ofClass{PolynomialRing}
+            a @ ofClass{Subring} @ of a @ ofClass{PolynomialRing} @
     Outputs
         I:Ideal
             the presentation ideal of the subring
