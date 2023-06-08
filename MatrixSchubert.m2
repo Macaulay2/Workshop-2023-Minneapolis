@@ -85,6 +85,7 @@ beginDocumentation ()
 load "./MatrixSchubert/Documentation/permutationMethodsDOC.m2"
 load "./MatrixSchubert/Documentation/MatrixSchubertConstructionsDOC.m2"
 load "./MatrixSchubert/Documentation/MatrixSchubertInvariantsDOC.m2"
+load "./MatrixSchubert/Documentation/listsDOC.m2"
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 -- **TESTS** --
