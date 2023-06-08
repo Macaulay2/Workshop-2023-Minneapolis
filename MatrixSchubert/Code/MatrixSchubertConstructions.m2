@@ -26,17 +26,84 @@ return true
 )
 
 
+-------------------------------------
+--INPUT: partial alternating sign matrix A
+--OUTPUT: corresponding alternating sign matrix
+-------------------------------------
+partialASMToASM = method()
+partialASMToASM Matrix := Matrix => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix.");
+    n:=numrows(A);
+    m:=numcols(A);
+    o:=0;
+    l:=0;
+    for i from 0 to n-1 do(
+	if sum(flatten entries(A^{i}))==0 then(
+	    o=o+1;
+	    );
+	);
+    for i from 0 to m-1 do(
+	if sum(flatten entries((transpose A)^{i}))==0 then(
+	    l=l+1;
+	    );
+	);
+    M:=mutableMatrix (ZZ,n,o);
+    k:=0;
+    for i from 0 to n-1 do (
+	if sum(flatten entries(A^{i}))==1 then(
+	    for j from 0 to o-1 do(
+		M_(i,j)=0;
+	    );
+	) 
+        else (
+	    for j from 0 to o-1 do (
+	    	if j==k then(
+	     	    M_(i,j)=1;
+	       	)
+	        else (
+		    M_(i,j)=0;
+		);
+		
+	    );
+	k=k+1; 
+    	);
+    );
+    B:=A|matrix(M);
+    q:=0;
+    N:=mutableMatrix (ZZ,l,m+o);
+    for i from 0 to m+o-1 do (
+	if sum(flatten entries((transpose B)^{i}))==1 then(
+	    for j from 0 to l-1 do(
+		N_(j,i)=0;
+	    );
+	) 
+        else (
+	    for j from 0 to l-1 do (
+	    	if j==q then(
+	     	    N_(j,i)=1;
+	       	)
+	        else (
+		    N_(j,i)=0;
+		);
+	    );
+		q=q+1; 
+    	);
+    );
+    C:=B||matrix(N)
+    );
+
+
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: ANTIdiagonal initial ideal of Schubert determinantal ideal for w
 ----------------------------------------
 
 antiDiagInit = method()
-antiDiagInit Matrix := monomialIdeal => (A) -> (
+antiDiagInit Matrix := MonomialIdeal => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     monomialIdeal leadTerm schubertDetIdeal A
     );
-antiDiagInit List := monomialIdeal => (w) -> (
+antiDiagInit List := MonomialIdeal => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     monomialIdeal leadTerm schubertDetIdeal w
     );

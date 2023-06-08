@@ -171,3 +171,11 @@ Br = matrix {{0,0,1,1,1},{1,1,1,2,2},{1,2,2,3,3},{1,2,3,4,4},{1,2,3,4,5}}
 B = matrix {{0,0,1,0,0},{1,0,-1,1,0},{0,1,0,0,0},{0,0,1,0,0},{0,0,0,0,1}}
 assert(rankTableToASM(Br) == B)
 ///
+
+TEST///
+-- rankTableFromMatrix
+Am = matrix {{1,0,0},{0,23,24},{23,24,25}}
+A = matrix {{0,0,0},{0,1,1},{1,2,2}}
+assert(rankTableFromMatrix(Am) == A)
+
+///
