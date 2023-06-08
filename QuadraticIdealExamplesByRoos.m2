@@ -4,8 +4,13 @@ newPackage(
 	Date => "June, 2023",
 	AuxiliaryFiles => false,
 	Authors => {{Name => "David Eisenbud", Email => "de@msri.org"},
-	    {Name => "Hai Long Dao"}},
-	Headline => "Roos' Examples of ",
+	    {Name => "Michael Perlman", Email => "mperlman@umn.edu"}, 
+	    {Name => "Ritvik Ramkumar", Email => "ritvikr@cornell.edu"},
+	    {Name => "Deepak Sireeshan"},
+	    {Name => "Aleksandra Sobieska", Email => "asobieska@wisc.edu"},
+	    {Name => "Teresa Yu", Email => "twyu@umich.edu"},
+	    {Name => "Jacob Zoromski", Email => "jzoromsk@nd.edu"} },
+	Headline => "Examples of Quadratic Ideals with Embedding Dimension Four by Jan-Erik Roos",
 	PackageExports => {"Depth"},
 	DebuggingMode => true)
 export {
@@ -110,3 +115,41 @@ H5 = new HashTable from {42 => H0#42, 34 => H0#34, 55 => H0#55, 60 => H0#60}
 elapsedTime applyPairs(H5, (i,I) -> (i, socleSummandsSemigroup(I,9)))
 
 
+
+
+      -* Documentation section *-
+      
+beginDocumentation()
+
+doc ///
+Key
+ "roosTable"
+Headline
+ Creates hashtable of Jan-Erik Roos' examples of quadratic ideals
+Usage
+ H = roosTable ()
+Outputs
+ H: HashTable
+Description
+  Text
+    This is based on Main Theorem and Tables 3-8 in "Homological properties of the homology
+    algebra of the Koszul complex of a local ring: Examples and questions" by Jan-Erik Roos, Journal of Algebra 
+    465 (2016) 399-436.
+  Example
+    roosTable
+///
+doc ///
+
+
+
+-* Test section *-
+TEST///
+-----insert test here, perhaps checking poincare series?
+///
+
+
+end--
+
+uninstallPackage "QuadraticIdealExamplesByRoos"
+restart
+installPackage "QuadraticIdealExamplesByRoos"
