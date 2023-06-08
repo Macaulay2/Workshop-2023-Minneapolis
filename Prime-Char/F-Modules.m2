@@ -249,7 +249,7 @@ isFilterRegSeq (BasicList,Ideal,Module) := Boolean => (L,I,M) ->
     if not isSubset(ideal(L),I) then error "isFilterRegSeq: The sequence is not contained in the ideal.";
     l:=#L;
     R:=ring I;
-    isFRE = isFilterRegElement(L#0,I,M,module ideal(0_R));
+    isFRE = isFilterRegElement(L#0,I,M,ideal(0_R)*M);
     N:=ideal(L#0)*M;
     i:=1;
     while (isFRE and i<l) do (
@@ -373,7 +373,7 @@ ascendingIdealEquality = method( Options => {MaxTries => infinity})
 
 -----this function specifically finds the FIRST spot that we retain equlaity and returns
 -----the union of ideals up to that spot (equivalently the ideal at that spot)
-ascnedingIdealEquality (Function) := Ideal => o -> f ->
+ascendingIdealEquality (Function) := Ideal => o -> f ->
 (
     i:=1;
     isEqual = false;
@@ -381,20 +381,33 @@ ascnedingIdealEquality (Function) := Ideal => o -> f ->
 	isEqual = (f(i)==f(i+1));
 	i=i+1;
 	);
-    if not isEqual then error "ascnedingIdealEquality: Reached maximum limit of tries.";
+    if not isEqual then error "ascendingIdealEquality: Reached maximum limit of tries.";
     f(i)
 )
 
 limitClosure = method()
 limitClosure(BasicList) := Ideal => L ->
 (
-    ascnedingIdealEquality(j -> (ideal(apply(L,x->x^(p^j)):ideal(product(apply(L,x->x^(p^j-1))))))
+    if #L==0 then error "limitClosure: The ideal should be the 0 ideal but cannot check the ring it lives in since the list is empty.";
+    p:= char ring L#0;
+    ascendingIdealEquality(j -> (frobenius^j(ideal(L)):ideal(product(apply(L,x->x^(p^j-1))))))
 )
 
 lowerLimit = method()
 lowerLimit(BasicList) := Ideal => L ->
 (
-    LC:=limitClosure(drop(L,-1));
-    ascnedingIdealEquality( j -> ideal(LC:(L#(-1)^j)))
+    if #L==0 then error "lowerLimit: Cannot be computed on an empty list";
+    LC:=ring L#0;
+    if #L==1 then (
+	if L#0==0_LC then return ideal(0_LC);
+	LC=ideal(0_LC);
+	)
+     else LC=limitClosure(drop(L,-1));
+    ascendingIdealEquality( j -> (LC:(L#(-1)^j)))
+)
+
+lowerLimit (RingElement) := Ideal => f ->
+(
+    lowerLimit({f})
 )
     
