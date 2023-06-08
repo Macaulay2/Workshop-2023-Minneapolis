@@ -330,6 +330,10 @@ polarizePseudomonomial(RingElement,Ring) := RingElement => (P,R) -> (
     mon
     )
 
+polarizePseudomonomial(RingElement) := RingElement => P -> (
+    R := ring P;
+    polarizePseudomonomial(P,R)
+    )
 
 beginDocumentation()
 
