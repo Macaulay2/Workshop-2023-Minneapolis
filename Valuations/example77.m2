@@ -8,20 +8,20 @@ I = ideal{x_1 + x_2 + x_3 - e_1, x_1*x_2 + x_1*x_3 + x_2*x_3 - e_2, x_1*x_2*x_3 
 f = e_1^2*e_2^2 - 4*e_2^3 - 4*e_3*e_1^3 + 18*e_1*e_2*e_3 - 27*e_3^2 - y^2
 
 valMfunc = (f, g, valMTwiddle) -> (
-    R : = QQ[x_1, x_2, x_3, e_1, e_2, e_3, y, MonomialOrder => Eliminate 3];
+    R := QQ[x_1, x_2, x_3, e_1, e_2, e_3, y, MonomialOrder => Eliminate 3];
     I := ideal{x_1 + x_2 + x_3 - e_1, x_1*x_2 + x_1*x_3 + x_2*x_3 - e_2, x_1*x_2*x_3 - e_3, (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3) - y};
-    S := valMTwiddle#"domain"
+    S := valMTwiddle#"domain";
     gTwiddle = sub(sub(g, R) % I, S);
     maxTwiddle = gTwiddle % ideal(sub(f, S));
     valMTwiddle(maxTwiddle)
     )
 
 
-valM (f, valMTwiddle) -> (
+valM = (f, valMTwiddle) -> (
     valMfunc = (g) -> (
-        R : = QQ[x_1, x_2, x_3, e_1, e_2, e_3, y, MonomialOrder => Eliminate 3];
+        R := QQ[x_1, x_2, x_3, e_1, e_2, e_3, y, MonomialOrder => Eliminate 3];
         I := ideal{x_1 + x_2 + x_3 - e_1, x_1*x_2 + x_1*x_3 + x_2*x_3 - e_2, x_1*x_2*x_3 - e_3, (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3) - y};
-        S := valMTwiddle#"domain"
+        S := valMTwiddle#"domain";
         gTwiddle := sub(sub(g, R) % I, S);
         maxTwiddle := gTwiddle % ideal(sub(f, S));
         valMTwiddle(maxTwiddle)
@@ -64,38 +64,42 @@ primeConesOfIdeal = I -> (
 C = primeConesOfIdeal I
 
 
-
-
-positivity = (f, matL) -> (
-l = transpose linealitySpace(f);
-finalScaledMats = {};
-matList = for i from 0 to #matL-1 list entries matL_i;
-
-for i from 0 to #matList-1 do (
-	scaledRows ={};
-	for j from 0 to #(matList_i)-1 do (
-		coeff = -1*floor(min apply(#(matList_i)_j, k -> (((matList_i)_j)_k)/(flatten entries l)_k));
-		scaledRows = append(scaledRows, (1/gcd(flatten entries (coeff*l + matrix{(matList_i)_j}))) *(coeff*l + matrix{(matList_i)_j}));
-		);
-	mat = scaledRows_0;
-	for i from 1 to #scaledRows-1 do mat = mat || scaledRows_i;
-	finalScaledMats = append(finalScaledMats, mat);
-);
-return finalScaledMats
-)
-
-
-
 coneToMatrix = coneRays -> (
     v1 := coneRays_0 + coneRays_1;
     v2 := coneRays_0 + 2*coneRays_1;
-    matrix {v1, v2}
+    transpose matrix {v1, v2}
     )
+
+positivity = (f, matL) -> (
+    l := transpose linealitySpace(f);
+    finalScaledMats := {};
+    matList := for i from 0 to #matL-1 list entries matL_i;
+    
+    for i from 0 to #matList-1 do (
+	scaledRows = {};
+	for j from 0 to #(matList_i)-1 do (
+		coeff := -1*floor(min apply(#(matList_i)_j, k -> (((matList_i)_j)_k)/(flatten entries l)_k));
+		scaledRows = append(scaledRows, (1/gcd(flatten entries (coeff*l + matrix{(matList_i)_j})))*(coeff*l + matrix{(matList_i)_j}));
+		);
+	mat := scaledRows_0;
+	for i from 1 to #scaledRows-1 do mat = mat || scaledRows_i;
+	finalScaledMats = append(finalScaledMats, mat);
+    );
+finalScaledMats
+)
+
+F = tropicalVariety(I)
+M = coneToMatrix(C#0)
+P = positivity(F, {M})
 
 coneToValuation = coneRays -> (
     M := coneToMatrix(coneRays);
-    T := QQ[z_1 .. z_4, MonomialOrder=>{Weights=>(entries M_0), Weights=>(entries M_1)}, Global=>false];
-    val := f -> leadTerm(2, sub(f, T));
-    QQnT := orderedQQn(T);
-    valuation(val, S, QQnT)
+    scaledM := (positivity(F, {M}))/(i -> sub(i, ZZ));
+    T := QQ[z_1 .. z_4, MonomialOrder=>{Weights=>((entries scaledM_0)_0), Weights=>((entries scaledM_0)_1)}];
+    val := leadTermValuation(T);
+    orderedM := orderedQQn(2, {Lex});
+    func := (f -> (gens orderedM)*(scaledM_0)*(val(sub(f, T))));
+    valuation(func, S, orderedM)
     )
+
+val = coneToValuation(C#0);
