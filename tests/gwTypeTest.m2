@@ -5,4 +5,4 @@ beta = gwClass(M);
 assert(baseField(beta) === QQ)
 assert(beta.matrix === M)
 
-print("got here")
+print("got here - testing")
