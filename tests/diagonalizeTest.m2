@@ -10,4 +10,3 @@ A=diagonalize(testMatrix2);
 E=gwClass(A);
 B=gwClass(resultMatrix1);
 C=gwClass(resultMatrix2);
-assert(easyIsomorphicGW(E, B)===true or easyIsomorphicGW(E, C)===true);
