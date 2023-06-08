@@ -6,7 +6,7 @@ newPackage(
 	Authors => {{Name => "David Eisenbud", Email => "de@msri.org"},
 	    {Name => "Michael Perlman", Email => "mperlman@umn.edu"}, 
 	    {Name => "Ritvik Ramkumar", Email => "ritvikr@cornell.edu"},
-	    {Name => "Deepak Sireeshan"},
+	    {Name => "Deepak Sireeshan", Email => "dsbx7@umsystem.edu"},
 	    {Name => "Aleksandra Sobieska", Email => "asobieska@wisc.edu"},
 	    {Name => "Teresa Yu", Email => "twyu@umich.edu"},
 	    {Name => "Jacob Zoromski", Email => "jzoromsk@nd.edu"} },
