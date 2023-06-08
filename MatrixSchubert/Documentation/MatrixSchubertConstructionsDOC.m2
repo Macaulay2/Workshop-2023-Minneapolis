@@ -111,6 +111,27 @@ doc ///
 
 doc ///
     Key
+        (partialASMToASM, Matrix)
+    	partialASMToASM
+    Headline
+    	to extend a partial alternating sign matrix to an alternating sign matrix
+    Usage
+        partialASMToASM(M)
+    Inputs
+    	M:Matrix
+    Description
+    	Text
+	 Given a partial alternating sign matrix returns the unique smallest alternating sign matrix by adding necessary number of rows and columns.
+	Example
+	    M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+	    partialASMToASM(M)
+
+	    
+///
+
+
+doc ///
+    Key
     	(antiDiagInit, List)
     	(antiDiagInit, Matrix)
     	antiDiagInit

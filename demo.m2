@@ -59,5 +59,14 @@ rajCode v
 permLength v
 schubertPoly v
 doubleSchubertPoly v
+
+isCDG w --is Conca-De Negri-Gorla
+isVexillary w -- 2143 avoiding
+isVexillary v -- not 2143 avoiding
+
+--Gorenstein example
+--takes some time
+--betti res trim schubertDetIdeal({3,7,1,4,8,2,6,5})
+
 ----------------
 
