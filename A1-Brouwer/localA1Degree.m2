@@ -55,38 +55,4 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     return matrix(B);
 );
 
-load "diagonalize.m2"
-T = QQ[x_1];
-f = {x_1^4 + x_1^3 - x_1^2 - x_1};
-p=ideal {x_1+1};
-bez_f = localA1Degree(f,p);
-print "This is the example from the handout."
-print bez_f;
-
-
-T1 = QQ[x_1..x_3];
-f1 = {x_1^2, x_2^2, x_3^2};
-p=ideal {x_1,x_2,x_3};
-bez_f1 = localA1Degree(f1,p);
-print "This is Ex. 3.10 from BMP."
-print diagonalize(bez_f1);
-
-T2 = QQ[y_1..y_2];
-f2 = {y_1*y_2, y_1 + y_2};
-p=ideal {y_1,y_2};
-bez_f2 = localA1Degree(f2,p);
-print "This is Rmk. 7.1 from BMP."
-print bez_f2;
-
-
-load "wittDecomp.m2"
-load "rationalSimplify.m2"
-T3 = QQ[z_1..z_2];
-f3 = {(z_1-1)*z_1*z_2, (3/5)*z_1^2 - (17/3)*z_2^2};
-p=ideal {z_1,z_2};
-localBez1 = diagonalize(localA1Degree(f3,p));
-p=ideal {z_1-1,z_2^2-9/(5*17)};
-localBez2 =diagonalize(localA1Degree(f3,p));
-print rationalSimplify(localBez1 ++ localBez2)
-print wittDecomp((rationalSimplify(localBez2 ++ localBez1))_1);
 
