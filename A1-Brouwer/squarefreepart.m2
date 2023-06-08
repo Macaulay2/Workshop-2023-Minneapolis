@@ -1,3 +1,5 @@
+--Tom Hagedorn, Joel Louwsma
+
 --takes in a rational number or integer and outputs the smallest magnitude integer in its square class
 squarefreePart = method()
 

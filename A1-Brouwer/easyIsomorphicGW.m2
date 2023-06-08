@@ -1,6 +1,8 @@
 loadPackage "RationalPoints2"
 load "./GW-type.m2"
 
+-- Tom, Andrew
+
 ------------
 -- easyIsomorphicGW method
 ------------

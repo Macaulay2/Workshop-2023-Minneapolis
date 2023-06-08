@@ -1,3 +1,5 @@
+--many people, essentially everyone
+
 --diagonalize method
 --given a symmetric matrix, this function outputs a diagonal matrix congruent to original matrix
 diagonalize = method()
