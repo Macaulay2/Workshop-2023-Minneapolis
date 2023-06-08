@@ -9,6 +9,9 @@ load "./wittDecomp.m2"
 diagonalForm = method()
 diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
     
+    -- TODO: quick check if the form is already diagonal, if so return it and cache it
+    
+    
     -- Check if the diagonalForm has already been computed, if so recall it from the cache
     if beta.cache.?diagonalForm then return beta.cache.diagonalForm;
     
@@ -44,7 +47,7 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
 	    outputMatrix = outputMatrix++anisotropicPart;
 	    );
 	beta.cache.diagonalForm = outputMatrix;
-	return outputMatrix
+	return gwClass(outputMatrix)
 	);
     
     A := beta.matrix;
@@ -52,3 +55,5 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
     beta.cache.diagonalForm = gwClass(D);
     return gwClass(D) 
     )
+
+
