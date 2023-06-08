@@ -1,4 +1,4 @@
-loadPackage "RationalPoints2"
+needsPackage "RationalPoints2"
 load "./GW-type.m2"
 
 -- Tom, Andrew
@@ -31,7 +31,7 @@ easyIsomorphicGW (GrothendieckWittClass, GrothendieckWittClass) := Boolean => op
     -- Return false if the matrices are not of the same size
     if not numRows(A) == numRows(B) then return false;
     
-    k := baseField(beta);
+    k:= baseField(beta);
     n := numRows(A);
     
     -- Build a generic matrix P in indeterminants over our field
