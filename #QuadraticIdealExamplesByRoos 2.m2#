@@ -295,4 +295,4 @@ H5 = new HashTable from {42 => H0#42, 34 => H0#34, 55 => H0#55, 60 => H0#60}
 elapsedTime applyPairs(H5, (i,I) -> (i, socleSummandsSemigroup(I,9)))
 
 
-
+---68,78,81 have different socle summand semigroups than their isotopes
