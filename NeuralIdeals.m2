@@ -26,7 +26,6 @@ export{--types
     "neuralCode",
     "neuralIdeal",
     "canonicalForm",
-    "iterCanonicalForm",
     "codeSupport",
     "canonicalCode",
     "isPseudomonomial",
@@ -39,6 +38,7 @@ export{--types
 protect codes
 protect dimension
 protect Factor
+protect Iterative
 
 NeuralCode = new Type of HashTable
 NeuralCode.synonym = "neural code"
@@ -143,40 +143,7 @@ neuralIdeal NeuralCode := Ideal => C -> (
     neuralIdeal(C,R)
     )
 
-canonicalForm = method(Options => {Factor => false});
-
-canonicalForm Ideal := List => opts -> I -> (
-    --if isSquarefreePseudomonomialIdeal I==true then (
-    decomp := primaryDecompositionPseudomonomial I;
-    multipliedGens :=product(decomp, i->i);
-    R := ring I;
-    d :=numgens R;
-    booleanIdeal :=ideal(apply(d,i->(R_i*(1-R_i))));
-    booleanR :=R/booleanIdeal;
-    reducedGens :=apply(first entries gens multipliedGens,i->sub(i,booleanR));
-    noDuplicateGens :=delete(sub(0,booleanR),reducedGens);
-    almostGens :=unique apply(noDuplicateGens,i->(sub(i,R)));
-    actualGens := for i in almostGens list (
-	isDivisible := false;
-	for j in almostGens do (
-	    if i%j==0 and i =!= j then (isDivisible=true; break));
-	if isDivisible==true then continue; 
-	if opts.Factor == true then factor(i) else i
-	)
-    --)
-    --else error "Input must be a squarefree pseudomonomial ideal"
-    )
-
-canonicalForm NeuralCode := List => opts -> C -> (
-    canonicalForm(neuralIdeal(C),Factor => opts.Factor)
-    )
-
-canonicalForm(NeuralCode,Ring) := List => opts -> (C,R) -> (
-    canonicalForm(neuralIdeal(C,R),Factor => opts.Factor)
-    )
-
-
-
+--not exported, used as an option for canonicalForm below it
 iterCanonicalForm = method();
 iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
     d := dim C;
@@ -230,6 +197,46 @@ iterCanonicalForm(NeuralCode) := List => C -> (
     x:=getSymbol "x"; 
     R:=(ZZ/2)(monoid[x_1..x_d]); 
     iterCanonicalForm(C,R)
+    )
+
+canonicalForm = method(
+    Options => {
+	Factor => false,
+	Iterative => false
+	});
+
+canonicalForm Ideal := List => opts -> I -> (
+    --if isSquarefreePseudomonomialIdeal I==true then (
+    decomp := primaryDecompositionPseudomonomial I;
+    multipliedGens :=product(decomp, i->i);
+    R := ring I;
+    d :=numgens R;
+    booleanIdeal :=ideal(apply(d,i->(R_i*(1-R_i))));
+    booleanR :=R/booleanIdeal;
+    reducedGens :=apply(first entries gens multipliedGens,i->sub(i,booleanR));
+    noDuplicateGens :=delete(sub(0,booleanR),reducedGens);
+    almostGens :=unique apply(noDuplicateGens,i->(sub(i,R)));
+    actualGens := for i in almostGens list (
+	isDivisible := false;
+	for j in almostGens do (
+	    if i%j==0 and i =!= j then (isDivisible=true; break));
+	if isDivisible==true then continue; 
+	if opts.Factor == true then factor(i) else i
+	)
+    --)
+    --else error "Input must be a squarefree pseudomonomial ideal"
+    )
+
+canonicalForm(NeuralCode,Ring) := List => opts -> (C,R) -> (
+    if opts.Iterative == false then
+    canonicalForm(neuralIdeal(C,R),Factor => opts.Factor) else
+    iterCanonicalForm(C,R)
+    )
+
+canonicalForm NeuralCode := List => opts -> C -> (
+    if opts.Iterative == false then
+    canonicalForm(neuralIdeal(C),Factor => opts.Factor) else
+    iterCanonicalForm(C)
     )
 
 codeSupport = method();
