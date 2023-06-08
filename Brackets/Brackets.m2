@@ -42,7 +42,6 @@ AbstractGCRing Array := (G, A) -> (
     new AbstractGCRing from {ring => R A, cache => new CacheTable from {}}
     )
 
-
 -- class declaration for BracketRing
 BracketRing = new Type of AbstractGCRing
 -- constructor
@@ -110,7 +109,6 @@ bracketRing BracketRing := o -> B -> B
 
 ZZ _ AbstractGCRing := (k, G) -> sub(k, ring G)
 matrix BracketRing := o -> B -> transpose genericMatrix(ring B,numcols B, numrows B)
-
 
 -- class declaration for GCAlgebra
 GCAlgebra = new Type of AbstractGCRing
@@ -210,7 +208,7 @@ GCExpression * Number := (b, c) -> new GCExpression from {RingElement => c * b#R
 toBracketPolynomial = method();
 toBracketPolynomial(RingElement, BracketRing) := (f, G) -> ( --input: polynomial, bracketring
     I := G#ideal;
-    (f % I) _ G
+    (f % I)_G
 )
 
 
@@ -474,19 +472,22 @@ Description
     See also @TO BracketRing@.
 ///
 
-
 doc ///
 Key 
  GCAlgebra
 Description
  Text
   An object of class GCAlgebra represents a Grassmann-Cayley algebra. 
-  The Grassmann-Cayley algebra may be viewed as an algebra of linear subspaces of $\mathbb{P}^{d−1}.$ In this algebra, there are two operations which correspond to the join and meet of subspaces. We denote these operators by * and ^, respectively. 
-  The first operator is simply multiplication in a skew- commutative polynomial ring $\mathbb{C}\langle a_1, . . . , a_n\rangle.$ An algebraic formula for the meet operator is more complicated, but it can be defined using the shuffle product. 
+  The Grassmann-Cayley algebra may be viewed as an algebra of linear subspaces of $\mathbb{P}^{d−1}.$ 
+  In this algebra, there are two operations which correspond to the join and meet of subspaces. 
+  We denote these operators by * and ^, respectively. 
+  The first operator is simply multiplication in a skew-commutative polynomial ring $\mathbb{C}\langle a_1, . . . , a_n\rangle.$ 
+  An algebraic formula for the meet operator is more complicated, but it can be defined using the so-called shuffle product. 
+  
   As a $k-$vector space, the Grassmann-Cayley algebra has a direct-sum decomposition
   $$\oplus_{k=0}^d\Lambda^k(a_1, \ldots, a_n)$$
-  where $\Lambda^k(a_1,\ldots, a_n)$ is the space of {\it extensors} of the form $a_{i_1}\cdots a_{i_k}.$
-  We may identify $\Lambda^d(a_1, \ldots, a_n)\cong B_{n,d}.$
+  where $\Lambda^k(a_1,\ldots, a_n)$ is the vector space of {\it extensors} of the form $a_{i_1}\cdots a_{i_k}.$
+  We may identify $\Lambda^d(a_1, \ldots, a_n)\cong B_{n,d}$ with the @TO BracketRing @.
 ///
 
 doc ///
@@ -503,7 +504,7 @@ Outputs
  G:GCAlgebra
 Description
  Text
-  To construct a Grassmann-Cayley algebra specify a @ ofClass{VisibleList} @ of $n$ symbols and an integer.
+  To construct a Grassmann-Cayley algebra specify a @ ofClass{VisibleList} @ of $n$ symbols, representing $n$ points in a projective space $\mathbb{P}^{d-1}$, and the integer $d.$
  Example
   G = gc(a .. f, 3)
  Text
@@ -556,6 +557,7 @@ Description
     See also @TO BracketRing@.
 ///
 
+<<<<<<< HEAD
 
 doc ///
 Key
@@ -574,6 +576,74 @@ Description
     See also @TO Bracket@, @TO toBracketPolynomial@, and @TO bracketRing@
 ///
 
+doc ///
+Key
+  GCExpression
+Description
+  Text
+    A general data type for representing elements of bracket rings and Grassmann-Cayley algebras.
+    GC expressions can be assembled into matrices, and they support a number of the usual arithmetic operations: addition, multiplication, and scalar multiplication.
+    
+    Multiplication on the Grassmann-Cayley algebra is the usual exterior product.
+    This represents the span, or join, of linear subspaces in a given vector space.
+    
+    The Grassmann-Cayley algebra is also endowed with a "shuffle product", representing the intersection or meet of linear subspaces.
+    This is implemented in @TO (symbol ^, GCExpression, GCExpression)@.
+///
+
+doc ///
+Key
+  (symbol ^, GCExpression, GCExpression)
+Headline
+  Shuffle product in the Grassmann-Cayley Algebra
+Usage
+  f = g ^ h;
+Inputs
+  g:GCExpression
+  h:GCExpression
+Outputs
+  f:GCExpression
+Description
+  Text
+    Let $V$ be a vector space of dimension $d$ over a field $\mathbb{F}.$
+    We recall the exterior algebra,
+    \[
+    \Lambda (V) = \displaystyle\bigoplus_{k=0}^d \Lambda^k (V),
+    \]
+    a set which forms an algebra with the usual addition and exterior product.
+    The {\it Grassmann-Cayley algebra} is obtained by endowing this set with an additional shuffle product, defined below.
+
+    The linear span of $k$ independent vectors $a_1, \ldots , a_k\in V$ is represented by the {\it extensor} $a_1 \cdots a_k \in \Lambda^k (V)$, where the product is the usual exterior product.
+    If we fix a basis $\{ e_1, \ldots , e_d \}$ for $V,$ then each exterior power $\Lambda^k (V)$ has a basis given by the extensors of the form $e_{i_1} \vee \cdots \vee e_{i_k}.$
+    We identify the extensor $a_1 \cdots a_d$ with the bracket $[a_1, \ldots , a_d]$ (see @TO BracketRing @.)
+    
+    Let $A = a_1 a_2 \cdots a_j$ and $B = b_1 b_2 \cdots b_k$ be extensors with $j+k\ge d.$
+    The {\it shuffle product} of $A$ and $B$ represents the intersection of the subspaces represented by $A$ and $B.$
+    is defined by the formula
+    \[
+    A \vee B = 
+    \displaystyle\sum_{\sigma \mid \text{is shuffle}} 
+    \operatorname{sgn}(\sigma ) [a_{\sigma (1)}, \ldots , a_{\sigma (d-k)}, b_1, \ldots , b_k],
+    \]
+    where the sum is taken over {\it shuffle permutations} with resepect to the split $(d-k, j + k -d).$
+    These are the permutations $\sigma : [j] \to [j]$ satisfying $\sigma (1) < \sigma (2) < \ldots  < \sigma (d-k)$ and $\sigma (d-k +1) < \sigma (d-k+2) < \cdots < \sigma (j).$
+    Extending $\mathbb{F}$-linearly, the shuffle product defines an associative, skew-commutative multiplication.
+    
+    The exterior and shuffle products are implemented using the operators @TO symbol * @ and  @TO symbol ^ @, respectively.
+    When using Grassmann-Cayley algebras to prove theorems involving point configurations in $\mathbb{P} (V)$, it is beneficial to work with indeterminate points, rather than fixed elements of $V.$
+    Internally, we represent these indeterminate points with variables in a skew-commutative polynomial ring, $\mathbb{F}< a_1, \ldots , a_n>$ (see @TO SkewCommutative @.) 
+
+    In the example below, three lines spanned by six distinct points in $\mathbb{P}^2$ in the Grassmann-Cayley algebra, as well as the intersection of these three lines.
+    In the latter case, we obtain an element of the bracket ring $B_{3,6}$ (see @TO BracketRing @.)
+  Example
+    G = gc(a..f, 3)
+    lab = (a*b)_G
+    lcd = (c*d)_G;
+    lef = (e*f)_G;
+    lab ^ lcd ^ lef
+  Text
+    See also @TO GCAlgebra@, @TO GCExpression@.
+///
 -* Test section *-
 TEST /// -* Sturmfels Example 3.1.10 *-
 B = bracketRing(6, 3)
