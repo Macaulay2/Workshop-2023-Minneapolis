@@ -20,8 +20,7 @@ export {
  "depthZeroTable",
  "almostKoszul"
 =======
- "roosTable", "higherDepthTable", "depthZeroTable", "roosIsotopes"
->>>>>>> ef26cabce1c766a6b92deda27b92322f8d2684f3
+ "roosTable", "higherDepthTable", "depthZeroTable", "roosIsotopes", "almostKoszul"
 }
 
 
@@ -129,8 +128,7 @@ higherDepthTable = new HashTable from for i in higherDepthIndices list i=> (roos
 
 depthZeroTable = new HashTable from for i in depthZeroIndices list i=> (roosTable#i);
 
-<<<<<<< HEAD
-=======
+
 
 
 roosIsotopes = (
@@ -161,7 +159,7 @@ roosIsotopes = (
     new HashTable from L
     )
 
->>>>>>> ef26cabce1c766a6b92deda27b92322f8d2684f3
+
 -----need to export and document the following two functions
 
 onedimIrrationalPoincare = (degs1 := {18,24,25,26,28,30,33}; --this example is from froberg-roos 2000, lofwall-lundqvist-roos
@@ -172,7 +170,7 @@ twodimIrrationalPoincare = (degs2 := {{36,0}, {33,3}, {30,6}, {28,8}, {26,10}, {
     ker map(QQ[t,s], QQ[w_1 .. w_9, Degrees => degs2], apply(degs2, a -> t^(a#0)*s^(a#1)))
     )
 
-<<<<<<< HEAD
+
  almostKoszul = method()
  almostKoszul (Ring, ZZ) := Ring => (kk, a)-> (
     --A series of examples discovered by Jan-Erik Roos:
@@ -195,8 +193,6 @@ twodimIrrationalPoincare = (degs2 := {{36,0}, {33,3}, {30,6}, {28,8}, {26,10}, {
            x*z+a*z*w-u*w,z*w+x*u+(a-2)*u*w);
     S/I
        )
-=======
->>>>>>> ef26cabce1c766a6b92deda27b92322f8d2684f3
 
 
 ---TO DO: create a function to identify non-Koszul examples (see Table 8)
@@ -220,6 +216,7 @@ Subnodes
  "higherDepthTable"
  "depthZeroTable"
  "roosIsotopes"
+ "almostKoszul"
 ///
 
 doc ///
@@ -315,7 +312,10 @@ Description
    F = res (coker vars R, LengthLimit =>6)
    betti F
 References
-  Unpublished paper by Jan-Erik Roos
+  Unpublished paper by Jan-Erik Roos. See announcement: J.E.Roos, Commutative non Koszul algebras
+  having a linear resolution of arbitrarily high order.
+  Applications to torsion in loop space homology,
+  C. R. Acad. Sci. Paris 316 (1993),1123-1128.
 ///
 
 
