@@ -1,0 +1,1 @@
+needsPackage "FInvariants"
