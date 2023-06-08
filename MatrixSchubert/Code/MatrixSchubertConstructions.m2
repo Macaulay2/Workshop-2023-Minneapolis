@@ -389,7 +389,7 @@ entrywiseMinRankTable List := Matrix => (L) -> (
             );
         );
 
-        minimalRankMtx
+        matrix minimalRankMtx
     );
 
     ------------------------------------------
@@ -418,7 +418,7 @@ entrywiseMaxRankTable List := Matrix => (L) -> (
             );
         );
 
-        maximalRankMtx
+        matrix maximalRankMtx
     );
 
 -------------------------------------------
@@ -557,7 +557,7 @@ rankTableToASM Matrix := Matrix => (A) -> (
         );
     );
 
-    ASMret
+    matrix ASMret
 );
 
 --------------------------------------------
@@ -608,5 +608,6 @@ rankTableFromMatrix Matrix := Matrix => (A) -> (
         );
     );
 
-    rankTable
+    matrix rankTable
 );
+
