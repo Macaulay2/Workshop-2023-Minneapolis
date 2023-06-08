@@ -202,3 +202,8 @@ RingElement % Subring := (f, S) -> (
  
  -- mirror functionnality of Rings
  -- matrices in presentation ring (reduce? designn decisionn - could be sslow.)
+
+-- uninstall Subring
+-- values PackageDictionary
+-- install Subrings -- plural
+-- values PackageDictionary
