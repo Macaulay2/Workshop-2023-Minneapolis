@@ -40,6 +40,7 @@ AKmatrix = (R,e,f) -> (
 -- returns number which is the sequence as a base p expansion
 getIndex = (seq,p,e) -> sum for i from 0 to #seq-1 list (seq#i*p^(e*i));
 
+
 -- Sparse Version
 AKmatrix = (R,e,f) -> (
     p:=char R;
@@ -49,13 +50,68 @@ AKmatrix = (R,e,f) -> (
     monBasis:=(entries basis(R^1/I))#0;
     expBasis:=flatten(apply(monBasis,exponents));
     L:=for i from 0 to p^(e*d)-1 list f*(monBasis#i);
+    -- OLD VERSION
     -- T#i is a hashtable whose keys are exponents & values are coeefs
     --     appearing in f*(ith monomial)
     T:=flatten (for i from 0 to p^(e*d)-1 list ( expList := simpExpDecomp(e,L#i);
-        for key in keys expList list (getIndex(key,p,e), i)=>expList#key));
+       for key in keys expList list (getIndex(key,p,e), i)=>expList#key));
     map(R^(n^d),R^(n^d),T)
 )
 
+
+-- encode all of our matrices as pairs (rHT, cHT), 
+-- where rHT & cHT are lists of hashTables
+-- rHT#i#j = cHT#j#i = entry (i,j) [when entry is non-zero]
+
+
+AKhashTable = (R,e,f) -> (
+    p:=char R;
+    d:=dim R;
+    n:=p^e;
+    I:=frobenius^e(ideal(vars R));
+    monBasis:=(entries basis(R^1/I))#0;
+    expBasis:=flatten(apply(monBasis,exponents));
+    L:=for i from 0 to p^(e*d)-1 list f*(monBasis#i);
+    -- T#i is a hashtable whose keys are exponents & values are coeefs
+    --     appearing in f*(ith monomial)
+    rHT := for i from 0 to p^(e*d)-1 list (
+        new MutableHashTable
+    );
+    cHT := for j from 0 to p^(e*d)-1 list ( 
+        rowList := new MutableHashTable;
+        expList := simpExpDecomp(e,L#j);
+        for key in keys expList do (
+            i = getIndex(key,p,e);
+            coe = expList#key;
+            rowList#i = coe;
+            rHT#i#j = coe;
+        )
+    );
+    (rHT,cHT)
+)
+
+swapRows = (rHT,cHT,r,s) -> (
+    -- swaps rows r & s
+    rRow = rHT#r;
+    rHT#r = rHT#s;
+    rHT#s = rRow;
+    for jthCol in cHT do (
+        if jthCol#?r then (
+            if jthCol#?s then (
+                temp = jthCol#r;
+                jthCol#r = jthCol#s;
+                jthCol#s = temp;
+            ) else (
+                jthCol#s = jthCol#r; remove(jthCol,r)
+            )
+        ) else (
+            if jthCol#?s then (
+                jthCol#r = jthCol#s; remove(jthCol,s)
+            ) else ();
+        )
+    );
+    (rHT,cHT)
+);
 
 AKmatrixIdeal = (R,e,I) -> (
     p:=char R;
@@ -64,7 +120,6 @@ AKmatrixIdeal = (R,e,I) -> (
     M:=fold((i,j) -> (i|j), for g in I_* list AKmatrix(R,e,g));
     return M
     )
-    
     
 
 fSplittingNumber = (R,e) -> (
@@ -88,6 +143,16 @@ fSplittingNumberNonGor = (R,e,f) -> (
     return numgens source basis(coker(Hom(M,phi)))
 )
 
+fSplittingNumberNonGorIdeal = (R,e,J) -> (
+    p=char R;
+    n=p^e;
+    S:=R/J;
+    M:=coker(sub(AKmatrixIdeal(R,e,J), S));
+    I:=ideal(vars S);
+    phi:=inducedMap(S^1,module(I));
+    return numgens source basis(coker(Hom(M,phi)))
+)
+
 -- ----- AKmatrix Tests -------------
     R = ZZ/2[x]; 
     f=1;
@@ -100,24 +165,27 @@ fSplittingNumberNonGor = (R,e,f) -> (
 
 -- fSplittingNumber Tests --------------
     R = ZZ/2[x,y,z]; f = z^2-x*y;
-    a1=2;
-    a2=8;
-    a3=32;
-    assert(fSplittingNumber(R/ideal f,1) == a1)
-    assert(fSplittingNumber(R/ideal f,2) == a2)
-    assert(fSplittingNumber(R/ideal f,3) == a3)
-    assert(fSplittingNumberNonGor(R,1,f) == a1)
-    assert(fSplittingNumberNonGor(R,2,f) == a2)
-    assert(fSplittingNumberNonGor(R,3,f) == a3)
+    aNum={2, 8, 32};
+    assert(fSplittingNumber(R/ideal f,1) == aNum#0)
+    assert(fSplittingNumber(R/ideal f,2) == aNum#1)
+    assert(fSplittingNumber(R/ideal f,3) == aNum#2)
+    assert(fSplittingNumberNonGor(R,1,f) == aNum#0)
+    assert(fSplittingNumberNonGor(R,2,f) == aNum#1)
+    assert(fSplittingNumberNonGor(R,3,f) == aNum#2)
 
     R = ZZ/3[x,y,z]; f = z^2-x*y;
-    a1 = 5;
-    a2 = 41;
-    assert(fSplittingNumber(R/ideal f,1) == a1)
-    assert(fSplittingNumberNonGor(R,1,f) == a1)
-    assert(fSplittingNumber(R/ideal f,2) == a2)
-    assert(fSplittingNumberNonGor(R,2,f) == a2)
+    aNum = {5, 41};
+    assert(fSplittingNumber(R/ideal f,1) == aNum#0)
+    assert(fSplittingNumberNonGor(R,1,f) == aNum#0)
+    assert(fSplittingNumber(R/ideal f,2) == aNum#1)
+    assert(fSplittingNumberNonGor(R,2,f) == aNum#1)
 
+    R = ZZ/2[a,b,c,d,e,symbol f]; 
+    I = ideal(c*e+b*f, c*d+a*f, b*d+a*e);
+    aNum = {10, 135, 2010, 31076, 488840, 7755280};
+    assert(fSplittingNumberNonGorIdeal(R,1,I) == aNum#0)
+    -- even e=2 takes too long...  
+    -- assert(fSplittingNumberNonGorIdeal(R,2,I) == aNum#1)
 
 
 -- Our running example:
