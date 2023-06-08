@@ -11,8 +11,6 @@ doc ///
     Description
         Text
             For $1 \leq n \leq 7$, a full list of all ASMs of size $n$ comes with the package.
-        Example
-            ASMFullList(4)
 ///
 
 doc ///
@@ -28,8 +26,6 @@ doc ///
     Description
         Text
             For $1 \leq n \leq 6$, a list of all Cohen-Macaulay ASMs of size $n$ comes with the package.
-        Example
-            cohenMacaulayASMsList(4)
 ///
 
 doc ///
@@ -45,6 +41,4 @@ doc ///
     Description
         Text
             For $1 \leq n \leq 6$, a list of all non-Cohen-Macaulay ASMs of size $n$ comes with the package.
-        Example
-            nonCohenMacaulayASMsList(4)
 ///
