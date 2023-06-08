@@ -28,6 +28,10 @@ export{--types
     "canonicalForm",
     "iterCanonicalForm",
     "codeSupport",
+    "canonicalCode",
+    "isPseudomonomial",
+    "sigmaTau",
+    "polarizePseudomonomial",
     --Symbols
     "codes"}
 
