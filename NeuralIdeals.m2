@@ -242,6 +242,13 @@ codeSupport(NeuralCode) := C -> (
     fullSupport
     )
 
+canonicalCode = method();
+
+canonicalCode List := NeuralCode => L -> (
+    R := ring L#0;
+    d := numgens R;
+    )
+
 ----The following function is an internal function from the PseudomonomialPrimaryDecomposition package by Alan Veliz-Cuba
 
 -- determines if a polynomial is square free pseudomonomial
