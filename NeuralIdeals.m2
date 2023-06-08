@@ -5,7 +5,7 @@ Date => "June 5, 2023",
 Authors => {{Name => "Hugh Geller"},{Name => "Rebecca R.G."}},
 Headline => "canonical forms of neural ideals",
 Keywords => {"Commutative Algebra", "Squarefree monomial ideals"},
-DebuggingMode => false,
+DebuggingMode => true,
 PackageImports => {"PrimaryDecomposition","PseudomonomialPrimaryDecomposition"},
 Reload => false
 )
@@ -32,6 +32,7 @@ export{--types
     "isPseudomonomial",
     "sigmaTau",
     "polarizePseudomonomial",
+    "allCodeWords",
     --Symbols
     "codes"}
 
@@ -248,18 +249,22 @@ canonicalCode List := NeuralCode => L -> (
     --want to check that elements in L are in same ring, return error otherwise
     R := ring L#0;
     d := numgens R;
-    allCodeList := allCodeWords(d);
-    codeList := for i in allCodeList list (
+    if isSquarefreePseudomonomialIdeal(ideal(L))==false then error "Expected elements that generate a squarefree pseudomonomial ideal.";
+    if ideal(L)==sub(ideal(1),R) then error "Expected a non-unit ideal.";
+    for ell in L do (if ring ell =!= R then error "Expected elements of the same ring.");
+    allCodes := allCodeWords(d);
+    codeList := for i in allCodes list (
 	validCode := true;
 	for j in L do (
-	    if sub(j,matrix{apply(d,k->sub(value(i#k),R))})=!= 0 then (
+	    M:=matrix{apply(d,k->sub(value(i#k),R))};
+	    if sub(j,M) != 0 then (
 		validCode = false;
 		break
 		);
 	    );
 	if validCode == false then continue else i
 	);
-    neuralCode(codeList) --getting error array index 0 out of bounds 0 .. -1 with current state
+    neuralCode(codeList)
     )
 
 ----The following function is an internal function from the PseudomonomialPrimaryDecomposition package by Alan Veliz-Cuba
