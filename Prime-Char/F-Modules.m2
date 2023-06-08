@@ -182,9 +182,9 @@ localCohomologyFilter := ( i, I, R ) ->
     u := ( product filterSeq )^( p-1 );
     time K := ascendingIdealEquality( 
         e ->  frobeniusPower( p^e, J ) : ideal( u^(lift( (p^e-1)/(p-1), ZZ )) ) 
-    ) );
-    M1 := saturate( R^1/(frobenius K), I );
-    N1 := saturate( R^1/K, I );
+    );
+    time M1 := saturate( R^1/(frobenius K), I );
+    time N1 := saturate( R^1/K, I );
     rtMorphism := generatingMorphism map( M1, N1, u );
     M := makeFModule rtMorphism;
     M#cache#(symbol root) = rtMorphism;
