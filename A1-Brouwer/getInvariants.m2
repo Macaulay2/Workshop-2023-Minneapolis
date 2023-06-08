@@ -4,6 +4,8 @@ load "GW-type.m2"
 --getInvariants method spits out basic invariants of a matrix representing a bilinear form
 --isIdenticalDiscriminant tells us whether two matrices representing bilinear forms have the same discriminant
 
+-- Frenly, Andrew
+
 getInvariants=method()
 
 getInvariants (GrothendieckWittClass) := (List) => (alpha) -> (
