@@ -69,3 +69,44 @@ doc ///
             v = {1,6,9,2,4,7,3,5,8}
             isVexillary(v)
 ///
+
+
+doc ///
+    Key
+        (rajCode, List)
+        rajCode
+    Headline
+        to return the rajCode of a permutation in 1-line notation.
+    Usage
+        rajCode(perm)
+    Inputs
+        perm:List
+    Description
+        Text
+            Given a permutation, returns the rajCode of the permutation.
+            For the definition of rajCode see CASTELNUOVO–MUMFORD REGULARITY OF MATRIX SCHUBERT VARIETIES by OLIVER PECHENIK, DAVID E SPEYER, AND ANNA WEIGANDT, https://arxiv.org/pdf/2111.10681.
+        Example
+            w = {2,5,4,1,3}
+            rajCode(w)
+///
+
+
+
+doc ///
+    Key
+        (rajIndex, List)
+        rajIndex
+    Headline
+        to return the length of a permutation in 1-line notation.
+    Usage
+        rajCode(perm)
+    Inputs
+        perm:List
+    Description
+        Text
+            Given a permutation, returns the rajIndex of the permutation.
+            For the definition of rajIndex see CASTELNUOVO–MUMFORD REGULARITY OF MATRIX SCHUBERT VARIETIES by OLIVER PECHENIK, DAVID E SPEYER, AND ANNA WEIGANDT, https://arxiv.org/pdf/2111.10681.
+        Example
+            w = {2,5,4,1,3}
+            rajIndex(w)
+///
