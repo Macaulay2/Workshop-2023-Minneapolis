@@ -12,8 +12,7 @@ newPackage(
 	{Name => "Pedro Teixeira", Email => "pteixeir@knox.edu"}
         },
     PackageImports => {"TestIdeals"},
-    Headline => "A package for calculations of Frobenius invariant
---    AuxiliaryFiles => true
+    Headline => "A package for calculations of Frobenius invariant"
     )
 
 export {"HSL"}
