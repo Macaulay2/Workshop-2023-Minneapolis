@@ -102,6 +102,60 @@ doc ///
      presentationIdeal
      toQuotientRing
 ///
+doc ///
+    Key
+        subring
+        (subring, Matrix)
+        (subring, List)
+    Headline
+         Construct a subring of a polynomial ring
+    Usage
+        S = subring M
+        S = subring L
+    Inputs
+        M:Matrix
+            of generators for a subring of a @ ofClass{PolynomialRing} @
+        L:List
+            of generators for a subring of a @ ofClass{PolynomialRing} @
+    Outputs
+        S:Subring
+            the subring of the polynomial ring
+    Description
+        Text
+            An easy way to specify a subring is to specify the ambient ring and the generators of a desired subring as a matrix. The ambient ring is implicit in the constructor function.
+        Example
+            R = QQ[x,y]
+            M = matrix(R, {{x^2, x*y, y^2}})
+            S = subring M
+        Text
+            This function also accepts a list of elements of a polynomial ring as an input.
+        Example
+            R = QQ[x,y]
+            L = {x^2, x*y, y^2}
+            S = subring L
+///
+doc ///
+    Key
+        presentationIdeal
+        (presentationIdeal, Subring)
+    Headline
+        Compute the presentation ideal of a subring
+    Usage
+        I = presentationIdeal S
+    Inputs
+        S:Subring
+            a @ ofClass{Subring} of a @ ofClass{PolynomialRing}
+    Outputs
+        I:Ideal
+            the presentation ideal of the subring
+    Description
+        Text
+            This function finds the presentation ideal of the subring, which is defined to be the presentation ring modulo the presentation map.
+        Example
+            R = QQ[x,y]
+            S = subring {x^2, x*y, y^2}
+            I = presentationIdeal S
+///
 
 TEST ///
     assert(true == true)
