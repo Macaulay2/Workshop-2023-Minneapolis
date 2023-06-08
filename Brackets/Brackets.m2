@@ -532,6 +532,7 @@ Description
 doc ///
 Key
   toBracketPolynomial
+  (toBracketPolynomial, RingElement, BracketRing)
 Headline
   Represent an invariant polynomial as a polynomial in brackets
 Usage
@@ -553,6 +554,24 @@ Description
     Such a representation is not unique. It may be checked that two bracket polynomials are equal through their normal form with respect to a Groebner basis. See @TO normalForm@ for a further explanation. 
 
     See also @TO BracketRing@.
+///
+
+
+doc ///
+Key
+  normalForm
+  (normalForm, GCExpression)
+Headline
+  Represent a bracket polynomial in a normal form with respect to a Groebner basis
+Description
+  Text
+    The relations between brackets generate an ideal, which are the classic Plücker relations. A Groebner basis for this ideal allows one to represent a polynomial in brackets in a unique normal form.
+  Example
+    B = bracketRing(4,2)
+    f = [1 2]_B * [1 4]_B * [2 3]_B
+    normalForm(f)
+  Text
+    See also @TO Bracket@, @TO toBracketPolynomial@, and @TO bracketRing@
 ///
 
 -* Test section *-
