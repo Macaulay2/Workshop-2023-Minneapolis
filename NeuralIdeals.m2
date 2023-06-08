@@ -306,6 +306,11 @@ sigmaTau(RingElement) := P -> (
     d := numgens R;
     sigma := {};
     tau := {};
+    for i to d-1 do (
+	if P%R_i == 0 then sigma = append(sigma,i+1);
+	if P%(1-R_i) == 0 then tau = append(tau,i+1);
+	);
+    {sigma,tau}
     )
 	
 
