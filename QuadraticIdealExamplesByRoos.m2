@@ -146,9 +146,16 @@ doc ///
 
 -* Test section *-
 TEST///
------insert test here, perhaps checking poincare series?
+I=roosTable#7
+S=ring I
+assert(depth (S/I) == 0)
 ///
 
+TEST///
+I=roosTable#68
+S=ring I
+assert(depth (S/I) == 1)
+///
 
 end--
 
