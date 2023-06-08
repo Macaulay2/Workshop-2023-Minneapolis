@@ -356,6 +356,7 @@ polarizePseudomonomial(RingElement,Ring,Ring) := RingElement => (P,R,S) -> (  --
 polarizePseudomonomial(RingElement,Ring) := RingElement => (P,R) -> (
      d := numgens R;
      y := getSymbol "y";
+     x := getSymbol "x";
      S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
      polarizePseudomonomial(P,R,S)
      )
@@ -372,7 +373,21 @@ polarizedCanonicalRes(NeuralCode,Ring,Ring) := Resolution => (C,R,S) -> (
     polarL := for P in L list polarizePseudomonomial(P,R,S);
     res ideal(polarL)
     )
-    
+
+polarizedCanonicalRes(NeuralCode,Ring) := Resolution => (C,R) -> (
+    d := numgens R;
+    x := getSymbol "x";
+    y := getSymbol "y";
+    S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
+    polarizedCanonicalRes(C,R,S)
+    )
+
+polarizedCanonicalRes(NeuralCode) := Resolution => C -> (
+    d := dim C;
+    x := getSymbol "x";
+    R := (ZZ/2)(monoid[x_1..x_d]);
+    polarizedCanonicalRes(C,R)
+    )
 
 beginDocumentation()
 
