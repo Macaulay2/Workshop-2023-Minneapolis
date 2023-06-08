@@ -12,7 +12,7 @@ export {
     "mixedIdealList"
 }
 
-     -* Code section *-
+-* Code section *-
   
 
         
@@ -30,8 +30,19 @@ mixedIdealList(Ring, ZZ, List, List) := List => (A, Num, Bdegs, Mdegs) -> (
     )
 
 
-    -* Documentation section for mixedIdeal *-
+-* Documentation section for mixedIdeal *-
 beginDocumentation()
+
+doc ///
+Key
+ RandomIdealsPlus
+Headline
+ Functions to produce Random ideals. 
+Description 
+ Text
+  Collection of functions  to create random ideals (or) a list of random ideals
+  with some constraints imposed.
+///
 
 
 doc ///
@@ -86,28 +97,16 @@ Description
 
 
 
-     -* Documentation section *-
-beginDocumentation()
- doc ///
-Key
- RandomIdealsPlus
-Headline
- Functions to produce Random ideals. 
-Description 
- Text
-  Collection of functions  to create random ideals (or) a list of random ideals
-  with some constraints imposed.
+
+-* Test section *-
+TEST /// -* [insert short title for this test] *-
+-- test code and assertions here
+-- may have as many TEST sections as needed
 ///
 
-     -* Test section *-
-     TEST /// -* [insert short title for this test] *-
-     -- test code and assertions here
-     -- may have as many TEST sections as needed
-     ///
+end--
 
-     end--
-
-     -* Development section *-
+-* Development section *-
 restart
 loadPackage("RandomIdealsPlus", Reload => true)
 debug needsPackage "RandomIdealsPlus"
