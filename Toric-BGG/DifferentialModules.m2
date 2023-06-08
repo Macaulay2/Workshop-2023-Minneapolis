@@ -51,6 +51,7 @@ concatMatrices(List) := L -> (
 DifferentialModule = new Type of ChainComplex
 DifferentialModule.synonym = "differential module"
 
+
 differentialModule = method(TypicalValue => DifferentialModule)
 differentialModule ChainComplex := C -> (
     --add error if C is not of the following form:
@@ -59,17 +60,33 @@ differentialModule ChainComplex := C -> (
     --is a grading), this matrix squares to 0, C_1 = C_0(-d), and C_{-1} = C_0(d).
   new DifferentialModule from C);
 
+
+---MAYA: changed this so that source and target are the same, map may be nonzero degree
+differentialModule Matrix := phi -> (
+    --check if the source and target are the same up to a twist
+    R := ring phi;
+    -- MAYA d := (degrees source phi)_0 - (degrees target phi)_0;
+    -- MAYA if target phi != source phi**R^{d} then error "source and target of map are not the same, up to a twist"; 
+    if target phi != source phi then error "source and target of map are not the same"; 
+    -- MAYA new DifferentialModule from (chainComplex(phi**R^{d},phi)[1]));
+    new DifferentialModule from (chainComplex(phi,phi)[1]));
+
+-*
 differentialModule Matrix := phi -> (
     --check if the source and target are the same up to a twist
     R := ring phi;
     d := (degrees source phi)_0 - (degrees target phi)_0;
-    if target phi != source phi**R^{d} then error "source and target of map are not the same, up to a twist";
+    if target phi != source phi**R^{d} then error "source and target of map are not the same, up to a twist"; 
+    --if target phi != source phi then error "source and target of map are not the same"; 
     new DifferentialModule from (chainComplex(phi**R^{d},phi)[1]));
+    --new DifferentialModule from (chainComplex(phi,phi)[1]));
+    *-
 
 
 ring(DifferentialModule) := Ring => D -> D.ring;
 module DifferentialModule :=  (cacheValue symbol module)(D -> D_0);
-degree DifferentialModule := ZZ => (D -> (degrees D_1)_0 - (degrees D_0)_0);
+--MAYA degree DifferentialModule := ZZ => (D -> (degrees D_1)_0 - (degrees D_0)_0);
+degree DifferentialModule := ZZ => (D -> degree D.dd_1); --maya changed to make degree of dm the degree of the map
 differential = method();
 differential DifferentialModule := Matrix=> (D->D.dd_1);
 kernel DifferentialModule := Module => opts -> (D -> kernel D.dd_0); 
@@ -80,6 +97,7 @@ isFreeModule(DifferentialModule) := D ->(
     isFreeModule module D
     )
 
+--MAYA: changed to be compatible with new degree convention
 unfold = method();
 --Input:  a differential module and a pair of integers low and high
 --Output:  the unfolded chain complex of the differential module, in homological degrees
@@ -89,14 +107,15 @@ unfold(DifferentialModule,ZZ,ZZ) := ChainComplex => (D,low,high)->(
     d := degree D;
     R := ring D;
     phi := differential D;
-    chainComplex apply(L,l-> phi**R^{l*d})[-low]
+    --MAYA chainComplex apply(L,l-> phi**R^{l*d})[-low]
+    chainComplex apply(L,l-> phi)[-low]
     )
 
 
 
 --killing cycles algorithm for resolution
 --CAVEAT:  maybe assumes that you start w/ a free differential module??
---         
+-- MAYA: changed to be compatible with new degree convention         
 killingCyclesOneStep = method();
 killingCyclesOneStep(DifferentialModule) := (D)->(
 --  commented out code was working but I'm trying to improve
@@ -108,13 +127,14 @@ killingCyclesOneStep(DifferentialModule) := (D)->(
 --    assert (newDiff*(newDiff**R^{-d}) == 0);
 --    differentialModule newDiff
 --    )
+    d := degree D;
+    R := ring D;
     homMat := mingens image((gens HH_0 D) %  (image D.dd_1));
     G := res image homMat;
-    psi := map(D_0,G_0,homMat);
-    d := degree D;
-    R := ring D;  
-    newDiff := matrix{{D.dd_1,psi},{map(G_0**R^{d},D_1,0),map(G_0**R^{d},G_0,0)}};
-    assert (newDiff*(newDiff**R^{-d}) == 0);
+    psi := map(D_0,G_0**R^{d},homMat, Degree=>d);
+    --MAYA newDiff := matrix{{D.dd_1,psi},{map(G_0**R^{d},D_1,0),map(G_0**R^{d},G_0,0)}};
+    newDiff := matrix{{D.dd_1,psi},{map(G_0**R^{d},D_1,0, Degree=>d),map(G_0**R^{d},G_0**R^{d},0, Degree=>d)}}; --maya added
+    assert (newDiff*(newDiff) == 0);
     differentialModule newDiff
     )
 --killing cycles resolution
@@ -122,6 +142,7 @@ killingCyclesOneStep(DifferentialModule) := (D)->(
 --Output:  the killing cycles resolution of D after k steps.
 -- NOTE:  until recently this produced the CONE over the resolution.
 --        but I'm interested in the resolution itself so the last few lines change that
+--MAYA: changed to be compatible with new degree convention
 resKC = method();
 resKC(DifferentialModule,ZZ) := (D,k)->(
     d := degree D;
@@ -130,10 +151,11 @@ resKC(DifferentialModule,ZZ) := (D,k)->(
     scan(k,i-> D = killingCyclesOneStep(D));
     t := numgens D_0;
     newDiff := submatrix(D.dd_1, toList(s..t-1),toList(s..t-1));
-    differentialModule (chainComplex(newDiff**R^{d},newDiff)[1])
+    differentialModule (chainComplex(newDiff**R^{-d},newDiff**R^{-d})[1])
     )
 
---same as above, but default value of 
+--same as above, but default value of k 
+--MAYA: changed to be compatible with new degree convention
 resKC(DifferentialModule) := (D)->(
     k := dim ring D + 1;
     d := degree D;
@@ -142,7 +164,7 @@ resKC(DifferentialModule) := (D)->(
     scan(k,i-> D = killingCyclesOneStep(D));
     t := numgens D_0;
     newDiff := submatrix(D.dd_1, toList(s..t-1),toList(s..t-1));
-    differentialModule (chainComplex(newDiff**R^{d},newDiff)[1])
+    differentialModule (chainComplex(newDiff**R^{-d},newDiff**R^{-d})[1])
     )
 
 
@@ -156,7 +178,7 @@ resDM = method(TypicalValue => DifferentialModule,
     	    LengthLimit => 3
     	    });
 
-
+--MAYA: changed to be compatible with new degree convention
 resDM(DifferentialModule) := opts -> (D) ->(
     n := opts.LengthLimit;
     d := degree D;
@@ -200,8 +222,10 @@ resDM(DifferentialModule) := opts -> (D) ->(
     bouToCycTAU := transpose matrix {apply(K',i-> transpose matrix{i})};
     bouToCyc := bouToCycPSI + bouToCycTAU;
     lastMap := map(bouMod,cycMod**R^{-d},0);
-    CEdiff := map(cycMod++bouMod,(cycMod++bouMod)**(ring D)^{-d}, (cycDiff|bouToCyc) || (lastMap|bouDiff));
-    differentialModule(chainComplex(CEdiff**(ring D)^{d},CEdiff)[1])
+    --MAYA CEdiff := map(cycMod++bouMod,(cycMod++bouMod)**(ring D)^{-d}, (cycDiff|bouToCyc) || (lastMap|bouDiff));
+    CEdiff := map(cycMod++bouMod,(cycMod++bouMod), (cycDiff|bouToCyc) || (lastMap|bouDiff), Degree=>d); --maya added
+    -- MAYA differentialModule(chainComplex(CEdiff**(ring D)^{d},CEdiff)[1])
+    differentialModule(chainComplex(CEdiff,CEdiff)[1]) --maya added
 	)
 
 --  same as resDM except it outputs a pair (r,eps)
@@ -212,6 +236,7 @@ resDMwMap = method(TypicalValue => DifferentialModule,
     	    LengthLimit => 3
     	    });
 
+--MAYA: Changed to be compatible with new degree convention
 resDMwMap(DifferentialModule) := opts -> (D) ->(
     n := opts.LengthLimit;
     d := degree D;
@@ -255,8 +280,10 @@ resDMwMap(DifferentialModule) := opts -> (D) ->(
     bouToCycTAU := transpose matrix{apply(K',i-> transpose matrix{i})};
     bouToCyc := bouToCycPSI + bouToCycTAU;
     lastMap := map(bouMod,cycMod**R^{-d},0);
-    CEdiff := map(cycMod++bouMod,(cycMod++bouMod)**(ring D)^{-d}, (cycDiff|bouToCyc) || (lastMap|bouDiff));
-    RD := differentialModule(chainComplex(CEdiff**(ring D)^{d},CEdiff)[1]);
+    CEdiff := map(cycMod++bouMod,(cycMod++bouMod), (cycDiff|bouToCyc) || (lastMap|bouDiff), Degree=>d);-- maya added
+    --CEdiff := map(cycMod++bouMod,(cycMod++bouMod)**(ring D)^{-d}, (cycDiff|bouToCyc) || (lastMap|bouDiff));
+    --RD := differentialModule(chainComplex(CEdiff**(ring D)^{d},CEdiff)[1]);
+    RD := differentialModule(chainComplex(CEdiff,CEdiff)[1]);
     epsBou := matrix{ {epsB0} | apply(length bou, i-> map(D_0,bou_(i+1),0))    };
     epsCyc := matrix{ {epsZ0} | apply(length cyc, i-> map(D_0,cyc_(i+1),0))    };
     eps := epsCyc|epsBou;
@@ -265,6 +292,8 @@ resDMwMap(DifferentialModule) := opts -> (D) ->(
 
 --  Subroutines and routines to produce the minimal part of a matrix.
 --  NEEDS TO BE A SQUARE MATRIX
+--  MAYA: matrix should be a map of free modules
+-- MAYA: changed to preserve degree
 minimizeDiffOnce = method();
 minimizeDiffOnce(Matrix,ZZ,ZZ) := (A,u,v) -> (
     a := rank target A;
@@ -299,14 +328,16 @@ minimizeDiff(Matrix) := A ->(
     A
     )
 
+
 --  Input:  A (finite, free) differential module
 --  Output: A minimization of that DM.
+-- MAYA: changed to be compatible with new degree convention
 minimizeDM = method();
 minimizeDM(DifferentialModule) := r ->(
     R := ring r;
-    d := degree r;
+    --d := degree r;
     A := minimizeDiff(r.dd_1);
-    differentialModule (chainComplex(A**R^{d},A)[1])
+    differentialModule (chainComplex(A,A)[1])
     )
 
 ---
@@ -314,6 +345,7 @@ minimizeDM(DifferentialModule) := r ->(
 
 --  Input:  a free complex F and a degree d
 --  Output: the corresponding free differential module of degree da
+--MAYA: NOT YET CHANGED TO BE COMPATIBLE WITH NEW DEGREE CONVENTION
 foldComplex = method();
 foldComplex(ChainComplex,ZZ) := DifferentialModule => (F,d)->(
     R := ring F;
@@ -323,7 +355,9 @@ foldComplex(ChainComplex,ZZ) := DifferentialModule => (F,d)->(
     FDiff := transpose(concatMatrices L);
     FMod := F_0;
     scan(length F+1, i-> FMod = FMod ++ ((F_(i+1))**(R)^{(i+1)*d}));
-    differentialModule(chainComplex(FDiff**(ring F)^{d},FDiff)[1])
+    degFDiff := map(FMod,FMod,FDiff, Degree=>d); --maya added
+    -- MAYA differentialModule(chainComplex(FDiff**(ring F)^{d},FDiff)[1])
+    differentialModule(chainComplex(degFDiff,degFDiff)[1]) --maya added
     )
 
 end;
