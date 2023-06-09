@@ -415,10 +415,11 @@ limitClosure(BasicList) := Ideal => L ->
 )
 
 lowerLimit = method()
-lowerLimit(BasicList) := Ideal => L ->
+lowerLimit(BasicList,Ring) := Ideal => (L,R) ->
 (
-    if #L==0 then error "lowerLimit: Cannot be computed on an empty list";
-    R:=ring L#0;
+    --By convention, I am pretty certain that we return the 0 ideal in the case of an empty
+    --list. See Example 6.5 from "Lyubeznik numbers, F-modules, and modules of generalized fractions
+    if #L==0 then return ideal(0_R);
     local LC;
     if #L==1 then (
 	if L#0==0_R then return ideal(0_R);
@@ -437,6 +438,8 @@ lowerLimit (RingElement) := Ideal => f ->
 
 -- Calculating the Lyubeznik numbers-----
 
+---ERROR: Still not computing values when i=j correctly except for highest Lyubeznik #
+
 lyubeznikNumber = method()
 
 lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
@@ -446,21 +449,23 @@ lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
     p := char R;
     if i < 0 or j < 0 or j < i or i > d or j > d then return 0;
 --    if i == 0 then i = 2;
-    m = ideal R_*;
+    m: = ideal R_*;
     LC := localCohomology( n-j, I, R );
     r := root LC;
     frs1 := randomFilterRegSeq( i+1, m, r ); --frs1 has one more elm than frs
     frs := drop( frs1, -1 );
-    c1 := lowerLimit frs1;
-    c := lowerLimit frs;    
+    c1 := lowerLimit(frs1,R);
+    c := lowerLimit(frs,R);    
     K := matrix entries relations r;
     F := target K;
-    P := ( c1*F + image K ) : last frs1;
-    Q := c*F + (last frs)*F + image K;
-    P1 := ((frobenius c1)*F + image frobenius K) : (last frs1)^p;
-    Q1 := (frobenius c)*F + (last frs)^p*F + image frobenius K;
-    M = P/Q; --ker inducedMap( F/P, F/Q );   
-    FM = P1/Q1; -- ker inducedMap( F/P1, F/Q1 );
+    g1 := last frs1;
+    g := if #frs==0 then 0_R else last frs;
+    P := ( c1*F + image K ) : g1;
+    Q := c*F + (g)*F + image K;
+    P1 := ((frobenius c1)*F + image frobenius K) : (g1)^p;
+    Q1 := (frobenius c)*F + (g)^p*F + image frobenius K;
+    M := P/Q; --ker inducedMap( F/P, F/Q );
+    FM := P1/Q1; -- ker inducedMap( F/P1, F/Q1 );
     pii := product( frs, x -> x^(p-1) );
     U := matrix entries LC#generatingMorphism;
     N := makeFModule inducedMap( FM, M, pii*U );
@@ -470,6 +475,8 @@ lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
 
 lyubeznikTable=method()
 
+--ADJUSTING THIS TO ONLY DO ELMS NOT ON THE DIAGONAL, just comment out the line above the comment
+--and un-comment-out the comment
 lyubeznikTable(Ideal,Ring) := Matrix => (I,R) ->
 (
     d:=dim(R/I);
@@ -477,7 +484,8 @@ lyubeznikTable(Ideal,Ring) := Matrix => (I,R) ->
     local M1;
     local j;
     for i from 0 to d do (
-	M1=toList(i:0);
+	M1=toList((i+1):0);
+	--M1=toList(i:0);
 	for j from i to d do M1=append(M1,lyubeznikNumber(i,j,I,R));
 	M=append(M,M1);
 	);

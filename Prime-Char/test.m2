@@ -3,12 +3,13 @@ I=ideal(gens R)
 cohomDim I
 
 -------------------
-
+-- Lyubeznik Numbers, F-Modules and Modules of Generalized Fractions, Example 6.6
 p = 2
 R = ZZ/p[x_1..x_7];
 I = intersect(ideal(x_1, x_2), ideal(x_3, x_4), ideal(x_5, x_6, x_7));
 #(trim I)_*
 cohomDim I
+lyubeznikTable(I,R)
 
 J = minors( 2, matrix {{0,x_1,x_2,x_3},{x_4,x_5,x_6,x_7}} )
 cohomDim J
@@ -83,5 +84,14 @@ localCohomology( 4, I, R ) == 0
 f = inducedMap(R^1/I, R^1/(frobenius I) )
 
 E = Ext^4( f, R^1 )
+
+-------------------
+-- Lyubeznik Numbers, F-Modules and Modules of Generalized Fractions, Example 6.5
+p = 2
+R=ZZ/p[x_1..x_5]
+c=intersect(ideal(x_1,x_2,x_3,x_4),ideal(x_2,x_3,x_5),ideal(x_1-x_5,x_2-x_5,x_3-x_4))
+
+lyubeznikTable(c,R)
+
 
 

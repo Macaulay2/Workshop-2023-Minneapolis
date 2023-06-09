@@ -305,6 +305,19 @@ associatedPrimes localCohomology( 6, J, S )
 -- HSL subgroup
 ----------------------------------------------------------------------------------------------
 
+restart
+needsPackage "FInvariants"
+needsPackage "TestIdeals"
+
+R=ZZ/2[x1,x2,x3,x4,x5]
+I=ideal((x2)^2+(x1)*(x3),(x1)*(x2)*(x4)^2+(x3)^3*(x5),(x1)^2*(x4)^2+(x2)*(x3)^2*(x5))
+HSLNumber(I,3)
+
+
+R=ZZ/11[x,y,z]
+I=ideal(x^5+y^5+z^5)
+HSLNumber(I,2)
+
 
 ----------------------------------------------------------------------------------------------
 -- Big Matrices subgroup
