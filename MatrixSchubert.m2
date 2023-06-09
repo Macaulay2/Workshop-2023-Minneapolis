@@ -9,17 +9,17 @@ newPackage(
             HomePage => "http://sites.google.com/view/ayah-almousa"},
 	{Name=> "Sean Grate",
 	    Email => "sean.grate@auburn.edu",
-	    HomePage => " "},
+	    HomePage => "https://seangrate.com/"},
         {Name => "Patricia Klein", 
             Email => "pjklein@tamu.edu", 
-            HomePage => " "},
+            HomePage => "https://patriciajklein.github.io/"},
 	{Name => "Adam LaClair",
-	    Email => "",
-	    HomePage=> " "},
+	    Email => "alaclair@purdue.edu ",
+	    HomePage=> "https://sites.google.com/view/adamlaclair/home"},
         {Name => "Yuyuan Luo",
             Email => "lyuyuan@mit.edu",
             HomePage=> "https://www.mit.edu/~lyuyuan/"},
-	{Name => "Joe McDonough",
+	{Name => "Joseph McDonough",
 	    Email => " ",
 	    HomePage=> " "}
     },
@@ -149,8 +149,8 @@ betti res antiDiagInit M
 w = {4,1,3,5,2}
 A = (permToMatrix w)_{0,1,2}
 
-if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-zMatrix = genMat(numrows A, numcols A); --generic matrix
+time if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+time zMatrix = genMat(numrows A, numcols A); --generic matrix
 rankMat = rankMatrix A; --rank matrix for A
 essBoxes = essentialBoxes A;
 if essBoxes == {} then (

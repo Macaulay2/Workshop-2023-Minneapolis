@@ -94,23 +94,16 @@ partialASMToASM Matrix := Matrix => (A) -> (
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: ANTIdiagonal initial ideal of Schubert determinantal ideal for w
+--TODO: modify so it doesn't compute the WHOLE rank table, only the necessary ranks
 ----------------------------------------
--*
-antiDiagInit = method()
-antiDiagInit Matrix := MonomialIdeal => (A) -> (
+antiDiagInit = method(
+    Options => {
+	CoefficientRing => QQ
+	}
+    )
+antiDiagInit Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    monomialIdeal leadTerm schubertDetIdeal A
-    );
-antiDiagInit List := MonomialIdeal => (w) -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    monomialIdeal leadTerm schubertDetIdeal w
-    );
-*-
-
-antiDiagInit = method()
-antiDiagInit Matrix := MonomialIdeal => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    zMatrix := genMat(numrows A, numcols A); --generic matrix
+    zMatrix := genMat(numrows A, numcols A, CoefficientRing => o.CoefficientRing); --generic matrix
     rankMat := rankMatrix A; --rank matrix for A
     essBoxes := essentialBoxes A;
     if essBoxes == {} then (
@@ -132,10 +125,10 @@ antiDiagInit Matrix := MonomialIdeal => (A) -> (
     );
     monomialIdeal(unique flatten toList antiDiagGens)
 )
-antiDiagInit List := MonomialIdeal => (w) -> (
+antiDiagInit List := o -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     A := permToMatrix w;
-    antiDiagInit A
+    antiDiagInit(A, CoefficientRing => o.CoefficientRing)
 )
 
 ----------------------------------------
@@ -177,7 +170,6 @@ rankMatrix List := Matrix => (w) -> (
 --TODO: add documentation
 -----------------------
 rotheDiagram = method()
---this is a tidied version of code by Yuyuan Luo
 rotheDiagram Matrix := List => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     n := numrows A;
@@ -244,10 +236,14 @@ essentialBoxes List := List => (w) -> (
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: Schubert determinantal ideal for w
 --------------------------------------------
-schubertDetIdeal = method()
-schubertDetIdeal Matrix := Ideal => (A) -> (
+schubertDetIdeal = method(
+    Options => {
+	CoefficientRing => QQ
+    }
+)
+schubertDetIdeal Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    zMatrix := genMat(numrows A, numcols A); --generic matrix
+    zMatrix := genMat(numrows A, numcols A, CoefficientRing=> o.CoefficientRing); --generic matrix
     rankMat := rankMatrix A; --rank matrix for A
     essBoxes := essentialBoxes A;
     if essBoxes == {} then (
@@ -263,23 +259,27 @@ schubertDetIdeal Matrix := Ideal => (A) -> (
     );
     return ideal(unique flatten toList fultonGens)
 )
-schubertDetIdeal List := Ideal => (w) -> (
+schubertDetIdeal List := o -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");    
     A := permToMatrix w;
-    schubertDetIdeal A
+    schubertDetIdeal(A,CoefficientRing=>o.CoefficientRing)
 )
 
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: list of fulton generators for matrix determinantal ideal w
 ---------------------------------------
-fultonGens = method()
-fultonGens Matrix := List => (A) -> (
-    (schubertDetIdeal A)_*
+fultonGens = method(
+    Options => {
+	CoefficientRing => QQ
+	}
+    )
+fultonGens Matrix := o -> A -> (
+    (schubertDetIdeal(A,CoefficientRing => o.CoefficientRing))_*
 )
 
-fultonGens List := List => (w) -> (
-    (schubertDetIdeal w)_*
+fultonGens List := o -> w -> (
+    (schubertDetIdeal(w,CoefficientRing=> o.CoefficientRing))_*
 )
 
 ----------------------------------------
@@ -305,7 +305,7 @@ isSchubertCM List := Boolean => (w) -> (
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: single Grothendieck polynomials
 --TODO: rename variables?
---WARNING: if you use the identity permutation your ring will be ZZ instead of Q and idk how to fix this
+--This function is incorrect and needs to be rewritten!
 ----------------------------
 grothendieckPoly = method()
 grothendieckPoly(Matrix):= (A) -> (
@@ -320,6 +320,7 @@ grothendieckPoly(List) := (w) -> (
     Q := newRing(ring I, DegreeRank => #w);
     numerator reduceHilbert hilbertSeries sub(I, Q)
 )
+
 
 schubertPolyHelper = method(Options=>{Double=>false})
 schubertPolyHelper(List, Ring) := opts -> (w, Q) -> (
@@ -356,39 +357,38 @@ doubleSchubertPoly(List) := (w) -> (
     schubertPolyHelper(w, Q, Double=>true)
 )
 
---TODO: add tests
---TODO: double grothendieck. Problem: can't rename variables. use divided differences instead
-
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: diagonal initial ideal, lex wrt lex, of Schubert determinantal ideal for w
 --TODO: make diagRevlexInit function (potentially faster for tests)
 --WARNING: This method does not like the identity permutation
 ----------------------------------------
-diagLexInit = method()
-diagLexInit Matrix := monomialIdeal => (A) -> (
+diagLexInit = method(
+    Options => {
+	CoefficientRing => QQ
+	}
+    )
+diagLexInit Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubertDetIdeal A;
+    I := schubertDetIdeal(A,CoefficientRing => o.CoefficientRing);
     R := newRing(ring I, MonomialOrder=>Lex); --making new ring with lex diagonal term order 
     monomialIdeal leadTerm sub(I, R)
 )
-diagLexInit List := monomialIdeal => (w) -> (
+diagLexInit List := o -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubertDetIdeal w;
+    I := schubertDetIdeal(w,CoefficientRing => o.CoefficientRing);
     R := newRing(ring I, MonomialOrder=>Lex); --making new ring with lex diagonal term order 
     monomialIdeal leadTerm sub(I, R)
 )
 
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
---OUTPUT: diagonal initial ideal, lex wrt lex, of Schubert determinantal ideal for w
---TODO: make diagRevlexInit function (potentially faster for tests)
---WARNING: This method does not like the identity permutation
+--OUTPUT: diagonal initial ideal, lex wrt revlex, of Schubert determinantal ideal for w
 ----------------------------------------
 diagRevLexInit = method()
-diagRevLexInit Matrix := monomialIdeal => (A) -> (
+diagRevLexInit Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubertDetIdeal A;
+    I := schubertDetIdeal(A, CoefficientRing => o.CoefficientRing);
     k := numrows A;
     R := ring I;
     oldvars := R_*;
@@ -397,9 +397,9 @@ diagRevLexInit Matrix := monomialIdeal => (A) -> (
     S := QQ[flatten newvars]; --making new ring with revlex diagonal term order 
     monomialIdeal leadTerm sub(I, S)
 )
-diagRevLexInit List := monomialIdeal => (w) -> (
+diagRevLexInit List := o -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubertDetIdeal w;
+    I := schubertDetIdeal(w,CoefficientRing => o.CoefficientRing);
     k := #w;
     R := ring I;
     oldvars := R_*;
@@ -510,7 +510,7 @@ isIntersectionSchubIdeals Ideal := List => (I) -> (
     isIntersection := true;
     if (I == radical(I)) then {
         schubDecomp := schubertDecomposition I;
-        isIntersection = I == intersect apply(schubDecomp/schubertDetIdeal, J -> sub(J, vars ring I));
+        isIntersection = I == intersect apply(apply(schubDecomp, i-> schubertDetIdeal(i, CoefficientRing => coefficientRing(ring I))), J -> sub(J, vars ring I));
     }
     else {
         isIntersection = false;
