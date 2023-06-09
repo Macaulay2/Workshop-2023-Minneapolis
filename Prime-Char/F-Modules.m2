@@ -470,7 +470,7 @@ lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
 
 lyubeznikTable=method()
 
-lyubeznikTable(Ideal,Ring) =: Matrix => (I,R) ->
+lyubeznikTable(Ideal,Ring) := Matrix => (I,R) ->
 (
     d:=dim(R/I);
     M:={};
