@@ -17,7 +17,7 @@ load "./GW-type.m2"
 -- Default upper bound for height:
 easyIsomorphicGW = method(
     Options => {
-	HeightBound => 3
+	HeightBound => 4  
 	}
     )
 
