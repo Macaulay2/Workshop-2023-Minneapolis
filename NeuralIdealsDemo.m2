@@ -1,3 +1,4 @@
+--Rebecca does place cells demo
 needsPackage "NeuralIdeals"
 R=ZZ/2[x_1..x_3]
 C=neuralCode("000","100","110","010","001")
@@ -9,5 +10,6 @@ J=ideal(x_1*(1-x_2),x_2*(1-x_3))
 canonicalForm(J,Factor=>true)
 f=x_1*(1-x_3)
 f%J
+canonicalCode(canonicalForm(J))
 
 --Hugh: add polarization demo
