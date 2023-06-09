@@ -3,31 +3,42 @@
 --     and something of the form aH+b
 
 load "./GW-type.m2"
+load "./wittDecomp.m2"
 load "./diagonalForm.m2"
+load "./safeBlockSum.m2"
 
 
--- Legendre boolean, returnts true if an element of a finite field is a square and false otherwise
+-- Legendre boolean, returns true if an element of a finite field is a square and false otherwise
 legendreBoolean = method()
 legendreBoolean (RingElement) := (Boolean) => a -> (
     if not instance(ring(a),GaloisField) then error "Error: this works only for Galois fields";
     q := (ring(a)).order;
     a^((q-1)//2) == 1 
-);
+)
+
+
+debugging = True;
 
 
 -- simplifyForm method
 
 simplifyForm = method()
 simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta -> (
-    print("TEST");
-    
+    print("got here");
     -- Check if the diagonalForm has already been computed, if so recall it from the cache    
     gamma := diagonalForm(beta);
+    
     -- Get the matrix, base field, and rank of the form
     A := gamma.matrix;
     k := baseField(gamma);
-    
     n := numRows(gamma.matrix);
+    if debugging == True then(
+	print("Matrix A is");
+	print(A);
+	print("Base field is");
+	print(k);
+	);
+	
     
     -- If the form has no rank, stop here and return the zero form. This gets rid of fringe cases later on
     if n == 0 then return (gamma,"zero form");
@@ -39,48 +50,46 @@ simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta 
     -- Field by field cases
     -----------------------
         
-    -- In the case of C:
+    --In the case of C:
     if (k === CC or instance(k,ComplexField)) then(
-        print("GOT HERE");
         if even n then(
         
             -- The form is (n/2)H
-            numHypForms := n/2;
+            numHypFormsCCEven := n/2;
         
-            simplifiedForm := H;
+            simplifiedFormCCEven := H;
         
-            for i in 1..sub((numHypForms-1),ZZ) do(
-                simplifiedForm = simplifiedForm ++H;
+            for i in 1..sub((numHypFormsCCEven-1),ZZ) do(
+                simplifiedFormCCEven = simplifiedFormCCEven ++H;
 		);
         
-            outputString := toString(numHypForms) | "H";
-            return (simplifiedForm,outputString)
+            outputStringCCEven := toString(numHypForms) | "H";
+            return (gwClass(simplifiedFormCCEven),outputStringCCEven)
             );
         if odd n then(
         
             -- The form is floor(n/2)H + <1>
-            numHypForms := floor n/2;
-            simplifiedForm := H;
+            numHypFormsCCOdd := floor n/2;
+            simplifiedFormCCOdd := H;
         
-            for i in 1..sub((numHypForms-1),ZZ) do(
-                simplifiedForm = simplifiedForm ++H;
+            for i in 1..sub((numHypFormsCCOdd-1),ZZ) do(
+                simplifiedFormCCOdd = simplifiedFormCCOdd ++H;
 		);
         
-            simplifiedForm = simplifiedForm ++ matrix(k,{{1}});
+            simplifiedFormCCOdd = simplifiedFormCCOdd ++ matrix(k,{{1}});
         
-            outputString := toString(numHypForms) | "H + <1>";
-            return (simplifiedForm,outputString)
+            outputStringCCOdd := toString(numHypFormsCCOdd) | "H + <1>";
+            return (gwClass(simplifiedFormCCOdd),outputStringoutputStringCCOdd)
             );
 	);
-    	-- End CC case
+	-- End CC case
     
-       
     -- If the field is R, look at the sign of elements along the diagonal
     if (k === RR or instance(k,RealField)) then(
-    	print("field is R");
+	print("field is R");
         posEntries := 0; --for loop counts the number of positive diagonal entries of diagA
         negEntries := 0; --for loop counts the number of negative diagonal entries
-    	for i from 0 to (n-1) do(
+	for i from 0 to (n-1) do(
             if A_(i,i)>0 then(
                 posEntries=posEntries+1;
             	);
@@ -89,44 +98,50 @@ simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta 
             	);
             );
             
-    	-- Number of hyperbolic forms is the number of positive and negative entries
-        wittIndex := min(posEntries,negEntries);
+	-- Number of hyperbolic forms is the number of positive and negative entries
+        wittIndexRR := min(posEntries,negEntries);
     	
-    	simplifiedForm := H;
-            
-    	for i in 1..(wittIndex-1) do(
-	    simplifiedForm = simplifiedForm ++H;
+	-- Make an empty matrix and string to add output to
+	simplifiedFormRR := matrix(k,{{}});
+	outputStringRR := "";
+	
+	-- Add hyperbolic forms to output
+	for i in 1..(wittIndexRR) do(
+	    simplifiedFormRR = safeBlockSum(simplifiedFormRR,H);
             );
-        
-    	-- Look at what's left over
-    	posEntries = posEntries - wittIndex;
-    	negEntries = negEntries - wittIndex;
-        
-    	if posEntries > 0 then(
-            for i in 1..posEntries do(
-        	simplifiedForm = simplifiedForm ++ matrix(k,{{1}});
-        	);
-            
-            outputString := toString(wittIndex) | "H + " | toString(posEntries) | "<1>";
-            
-	    return (simplifiedForm,outputString)
-	    );	        
-        
-    	if negEntries > 0 then(
-            for i in 1..negEntries do(
-        	simplifiedForm = simplifiedForm ++ matrix(k,{{-1}});
-        	);
-        
-            outputString := toString(wittIndex) | "H + " | toString(negEntries) | "<-1>";
-	    return (simplifiedForm,outputString)
-            );           
-        );
-    	-- End RR case
-    
-    
-    --------
+	
+	if wittIndexRR> 0 then(
+	    outputStringRR = outputStringRR | toString(wittIndexRR) | "H";
+	    );
+	
+	-- Look at what's left over
+	posEntries = posEntries - wittIndexRR;
+	negEntries = negEntries - wittIndexRR;
+	
+	-- Build the anisotropic part
+	anisotropicPart := safeBlockSum(matrix(mutableIdentity(k,posEntries)),((-1)*matrix(mutableIdentity(k,negEntries))));
+	
+	-- Add on (safely) the anisotropic part
+	simplifiedFormRR = safeBlockSum(simplifiedFormRR,anisotropicPart);
+	
+	-- Amend the string output with anisotropic info
+	if posEntries > 0 then(
+	    outputStringRR = outputStringRR | " + " | toString(posEntries) | "<1>";
+	    );
+	
+	if negEntries > 0 then(
+	    outputStringRR = outputStringRR | " + " | toString(negEntries) | "<-1>";
+	    );
+	
+	return (gwClass(simplifiedFormRR), outputStringRR);
+	
+	);
+	-- End RR case
+	-- TODO are we getting the string "4H" or whatever in the output string?
+       
+       
     -- Finite field case
-    --------
+    
     if instance(k, GaloisField) then(
 	
 	-- Take the diagonal entries to a list
@@ -159,70 +174,144 @@ simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta 
 		);
 	    );
 	
-	-- Number of hyperbolic forms
-        wittIndex := floor(numSquares/2) + floor(numNonSquares/2);
-	print("Witt index");
-	print(wittIndex);
 	
-	
-	-- If the wittIndex is positive:
-	
-	if wittIndex > 0 then(
+	-- If -1 is a square class in k, then 2<1> = H
+	if legendreBoolean(sub(-1,k)) then(
 	    
-	    print("I can see witt index positive");
-	    outputString := toString(wittIndex) | "H";
-	    outputMatrix := H;
-	    for i in 0..(wittIndex-1) do(
-		outputMatrix = outputMatrix ++ H;
-		
+	    if debugging == True then(
+	          print("In finite field, square case");
+	          );
+	    
+	    -- Set up output matrix and string
+	    simplifiedForm := matrix(k,{{}});
+	    outputString := "";	    
+	    
+	    -- Number of hyperbolic forms
+            wittIndex := floor(numSquares/2) + floor(numNonSquares/2);
+	    print("Witt index");
+	    print(wittIndex);
+	    
+	    -- If there are hyperbolic forms add them to the matrix and string
+	    if wittIndex > 0 then(
+		outputString = outputString | toString(wittIndex) | "H";
+		for i in 1..(wittIndex) do(
+		    simplifiedForm = safeBlockSum(simplifiedForm,H);
+		    );
 		);
 	    
+	    -- There will be at most one extra square or one extra nonsquare left over	
 	    if odd numSquares then(
-		outputMatrix = outputMatrix ++ matrix(k,{{1}});
-		outputString = outputString | " + <1>";
+		outputString = outputString | " + <1>";		
+		simplifiedForm = safeBlockSum(simplifiedForm,matrix(k,{{1}}));		
 		);
 	    
 	    if odd numNonSquares then(
-		print("I see odd num squares");
-		outputMatrix = outputMatrix ++ matrix(k,{{nonSquareRepresentative}});
-		outputString = outputString | " + <" | toString(nonSquareRepresentative) | ">";
+		outputString = outputString | " + <" | toString(nonSquareRepresentative) | ">";		
+		simplifiedForm = safeBlockSum(simplifiedForm,((-1)*matrix(k,{{nonSquareRepresentative}})));
+		
 		);
+		
+	    return(gwClass(simplifiedForm),outputString)
 	    
-	    return(outputMatrix,outputString)
 	    
+	    ); -- End "-1 is a square in GF"
+	
+	-- If -1 is not a square then it is a representative for the nonsquare class	  	   
+	   if not legendreBoolean(sub(-1,k)) then (
+	       
+	       if debugging == True then(
+	          print("In finite field, nonsquare case");
+	          );
+	      	            
+	       -- Set up output matrix and string
+	       simplifiedForm := matrix(k,{{}});
+	       outputString := "";
+	       
+	       
+	       -- Number of hyperbolic forms
+	       wittIndex := min(numSquares,numNonSquares);
+	       print("witt index is " | toString(wittIndex));
+	       
+	       
+	       -- Look at any remaining squares or nonsquares. One of these must be zero
+	       numSquares = numSquares - wittIndex;
+	       numNonSquares = numNonSquares - wittIndex;
+	       
+	       
+	       -- Add on hyperbolic part
+	       if wittIndex > 0 then(
+		   for i in 1..(wittIndex) do(
+		       simplifiedForm = safeBlockSum(simplifiedForm,H);
+		       
+		       );
+		   outputString = outputString | toString(wittIndex) | "H";
+		   
+		   );
+	       
+	       -- Add any anisotropic part
+	       if numSquares > 0 then(
+		   simplifiedForm = safeBlockSum(simplifiedForm, matrix(mutableIdentity(k,numSquares)));
+		   outputString = outputString | " + " | toString(numSquares) | "<1>";
+		   );
+		   
+	      if numNonSquares > 0 then(
+		   simplifiedForm = safeBlockSum(simplifiedForm, ((-1)*matrix(mutableIdentity(k,numNonSquares))));
+		   outputString = outputString | " + " | toString(numNonSquares) | "<-1>";
+		   );
+	       
+	       return (gwClass(simplifiedForm), outputString)		   
+	       
+	       ); -- End "-1 is not a square in GF"
+	
+	    
+	  
+			
+      
+	   
+	   
+	   );-- End finite field case
+       
+          -- Number field case
+    
+    -- NOTE: I wanted to do member(QQ,k.baseRings) but this returns false.
+    -- 	   This is because baseField(..) will return a ring
+    
+    
+    -- We're making the number field case a catch-all case now
+    
+    
+--    if member(QQ, k.baseRings) and (isField(k)) then(
+	
+	
+	-- Set up output form and matrix
+	simplifiedForm := matrix(k,{{}});
+        outputString := "";
+	
+	-- Get number of confirmed hyperbolic forms and remainder from wittDecomp
+	(numHypForms,B) := wittDecomp(A);
+	
+	-- Add any hyperbolic forms if they exist
+	if numHypForms > 0 then(
+	    for i in 1..(numHypForms) do(
+		
+		simplifiedForm = safeBlockSum(simplifiedForm,H);
+		outputString = outputString | toString(numHypForms) | "H + potentially anisotropic part";
+		
+		);
 	    );
 	
-	-- If the wittIndex is negative
-	if wittIndex == 0 then(
-	    outputString := "";
+	if numHypForms == 0 then(
+	    outputString = outputString | " potentially anisotropic part";
 	    
-	    if odd numSquares then(
-		outputMatrix := matrix(k,{{1}});
-		outputString = "<1>";
+	    );
+	 simplifiedForm = safeBlockSum(simplifiedForm,B);
+	 
+	 return (gwClass(simplifiedForm),outputString)
 		
-		if odd numNonSquares then(
-		    outputMatrix = outputMatrix ++ matrix(k,{{nonSquareRepresentative}});
-		    outputString = outputString | " + <" | toString(nonSquareRepresentative) | ">";
-		);
-		
-	        return (outputMatrix,outputString)
-		
-		);
-	    
-	    if odd numNonSquares then(
-		outputMatrix = matrix(k,{{nonSquareRepresentative}});
-		outputString = " <" | toString(nonSquareRepresentative) | ">";
-		
-		
-		return (outputMatrix,outputString)
-		);	    
-	    );    
-        );
-    	-- End finite field case
+       
+	
+--	);-- End number field case
+    
     
     
     );
-
-
-
-

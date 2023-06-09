@@ -1,6 +1,7 @@
 load "./GW-type.m2"
 load "./wittDecomp.m2"
-
+load "./safeBlockSum.m2"
+load "./diagonalize.m2"
 ---------
 -- diagonalForm method
 -- inputs a GWClass and outputs its diagonal form as a GWClass
@@ -29,34 +30,36 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
     
     -- If the field is the real numbers, we can run wittDecompInexact to determine its Witt index and anisotropic part
     if (baseField(beta) === RR or instance(baseField(beta),RealField)) then(
-	(k,anisotropicPart) := wittDecompInexact(beta.matrix);
+	
+	-- Get wittIndex and anisotropic part
+	(wittIndex,anisotropicPart) := wittDecompInexact(beta.matrix);
+	
+	-- Make empty output matrix to populate
+	diagOutputMatrix := matrix(RR,{{}});
+	H := matrix(RR,{{1,0},{0,-1}});
+	
+	
 	
 	-- Sum as many hyperbolic forms as the Witt index
-	H := matrix(RR,{{1,0},{0,-1}});
-	if k == 0 then(
-	    outputMatrix := anisotropicPart;
-	    beta.cache.diagonalForm = outputMatrix;
-	    return gwClass(outputMatrix)
+	
+	if wittIndex > 0 then(
+	    for i in 1..wittIndex do(
+		diagOutputMatrix = safeBlockSum(diagOutputMatrix,H);
+		);
+	    
 	    );
 	
-	if k > 0 then(
-	    outputMatrix := H;
-	    for i in 1..(k-1) do(
-	    	outputMatrix = outputMatrix++H;
-	    	);
-	    
-	    if not anisotropicPart == 0 then(
-	    	outputMatrix = outputMatrix++anisotropicPart;
-	    	);
-	    );
-	    
-	    beta.cache.diagonalForm = outputMatrix;
-	    return gwClass(outputMatrix)
+	-- Add on the anisotropic part
+	diagOutputMatrix = safeBlockSum(diagOutputMatrix, anisotropicPart);
+	
+	-- Cache and return
+	beta.cache.diagonalForm = diagOutputMatrix;
+	return gwClass(diagOutputMatrix)
 	
 	);
     
-    A := beta.matrix;
-    D := diagonalize(A);
-    beta.cache.diagonalForm = gwClass(D);
-    return gwClass(D) 
-    )
+    betaMatrix := beta.matrix;
+    diagonalFormOfBetaMatrix := diagonalize(betaMatrix);
+    beta.cache.diagonalForm = gwClass(diagonalFormOfBetaMatrix);
+    return gwClass(diagonalFormOfBetaMatrix) 
+    );
