@@ -16,7 +16,7 @@ Morphism = new Type of Matrix
 
 GeneratingMorphism = new Type of Morphism
 
-STDIsomorphism = new Type of Matrix
+STDIsomorphism = new Type of Morphism
 
 ----------------------------------------------------------------------------------------------
 -- ModuleClass and Morphism
@@ -37,24 +37,31 @@ moduleClass Module := ModuleClass => M -> new ModuleClass from M
 
 morphism = method()
 
-morphism Matrix := Morphism => f -> 
-( 
-    M := moduleClass source f;
-    N := moduleClass target f;
-    new Morphism from map( N, M, matrix f )
-)
+morphism Matrix := g -> new Morphism from g
 
+-- morphism Matrix := Morphism => f -> 
+-- ( 
+--     M := moduleClass source f;
+--     N := moduleClass target f;
+--     stdMap new Morphism from map( N, M, matrix f )
+-- )
+
+-- must make this associative
+Morphism * Morphism := ( f, g ) -> 
+(
+    if target g != source f then error "Maps are not composable";
+    i := inducedMap( source f, target g );
+    f*i*g
+)
+    
 -- Putting modules and homomorphisms in a form that can be easily frobenified    
 
 stdIsomorphism = method()
 
 -- stdIsomorphism(M) returns an isomorphism M' --> M, where M' is a quotient of a free module 
-stdIsomorphism ModuleClass := STDIsomorphism => 
+stdIsomorphism Module := STDIsomorphism => 
     ( cacheValue symbol stdIsomorphism )( M ->
 (
-    -- If M is already a quotient of a free module, don't mess with it.
-    -- BUT... maybe it would be good to simplify it, if possible.  
---    if isQuotientModule M then return new STDIsomorphism from id_M;    
     P := minimalPresentation M;
     local g;
     if P#cache#?pruningMap then g = P#cache#pruningMap
@@ -80,9 +87,11 @@ stdMap = method()
 stdMap Morphism := Morphism => ( cacheValue symbol stdMap )( f ->
 ( 
     g := stdIsomorphism source f;
-    h := stdIsomorphism target f;
-    morphism( inverse(h) )*morphism( f*g )
+    h := stdIsomorphism  target f;
+    inverse(h)*(f*g)
 ))
+
+stdMap Matrix := Morphism => g -> stdMap morphism g
 
 ----------------------------------------------------------------------------------------------
 -- Frobenius Functor
@@ -135,18 +144,20 @@ generatingMorphism Morphism := GeneratingMorphism => f ->
         error "generatingMorphism: map is not well defined";
     if target f != FF( source f ) then 
         error "generatingMorphism: map does not map a module M to F(M)";
-    new GeneratingMorphism from f
+    new GeneratingMorphism from stdMap f
 )
 
--- Standardizes a map and tries to make a GeneratingMorphism from it.
 generatingMorphism Matrix := GeneratingMorphism => f -> generatingMorphism morphism f
+
+-- Standardizes a map and tries to make a GeneratingMorphism from it.
+--generatingMorphism Matrix := GeneratingMorphism => f -> generatingMorphism morphism f
     
 makeFModule = method()
 
 makeFModule GeneratingMorphism := FModule => g -> 
     new FModule from { generatingMorphism => g, cache => new CacheTable }
 
-makeFModule Matrix := FModule => g -> makeFModule generatingMorphism g
+makeFModule Matrix := FModule => g -> makeFModule generatingMorphism  g
 
 --- Compute a generating morphism for H_I^i(R)
 
@@ -413,7 +424,7 @@ limitClosure BasicList := Ideal => L ->
 (
     if #L == 0 then error "limitClosure: limit closure should be the 0 ideal, but cannot check the ring it lives in since the list is empty.";
     p := char ring L#0;
-    ascendingIdealEquality(j -> frobenius^j(ideal L) : ideal product( L, x -> x^(p^j-1) )) )
+    ascendingIdealEquality(j -> (frobenius^j(ideal(L)):ideal(product(L,x->x^(p^j-1)))))
 )
 
 lowerLimit = method()
@@ -434,13 +445,9 @@ lowerLimit ( BasicList, Ring ) := Ideal => ( L, R ) ->
 lowerLimit RingElement := Ideal => f -> lowerLimit { f }
     
 ----------------------------------------------------------------------------------------------
-
 -- Calculating the Lyubeznik numbers-----
-
 ---ERROR: Still not computing values when i=j correctly except for highest Lyubeznik #
-
 lyubeznikNumber = method()
-
 lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
 (
     n := dim R;
