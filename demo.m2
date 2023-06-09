@@ -70,3 +70,30 @@ isVexillary v -- not 2143 avoiding
 
 ----------------
 
+--Regularity demo--
+
+--Two computations are the same.--
+for n from 1 to 5 do (
+    apply(permutations(toList(1..n)),w->assert(matrixSchubertReg(w)==matrixSchubertRegADI(w)));
+);
+
+--Comparing reg with raj implementation and ADI implementation. --
+
+setRandomSeed 50;
+
+apply(1..10,i-> elapsedTime matrixSchubertRegADI(random toList (1..7)));
+
+setRandomSeed 50;
+
+apply(1..10,i-> elapsedTime matrixSchubertReg(random toList (1..7)));
+
+
+--The speed on larger permutations. --
+setRandomSeed 1001;
+
+apply(1..10,i-> elapsedTime matrixSchubertReg(random toList (1..50)));
+
+
+setRandomSeed 1001;
+
+apply(1..5,i-> elapsedTime matrixSchubertReg(random toList (1..100)));

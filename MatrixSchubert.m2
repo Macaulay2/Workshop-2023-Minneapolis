@@ -247,6 +247,17 @@ for i from 1 to 4 do (
     for w in permutations(toList (1..i)) do rajTest(w);
 );
 
+setRandomSeed 50;
+
+for i from 1 to 10 do (
+     i = random toList (1..7);
+     << i << endl;
+     print elapsedTime matrixSchubertRegADI(i);
+     << endl << endl;
+);
+
+
+
 ------------------------------------
 --Development Section
 ------------------------------------
