@@ -44,10 +44,6 @@ genMat (ZZ,ZZ) := o -> (n,m) -> (
     )
 
 
--*
-findIndices(List, List) := (L, Bs) -> (for ell in L list position(Bs, b -> (b == ell)))
-*-
-
 --------------------------------
 --auxiliary function for getting the index of a variable in a ring
 --INPUT: an indexed variable

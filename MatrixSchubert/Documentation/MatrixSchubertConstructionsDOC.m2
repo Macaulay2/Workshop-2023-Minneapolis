@@ -15,6 +15,23 @@ doc ///
        This package provides functions for constructing and investigating matrix Schubert varieties.
        Many of the functions in this package can take as input either a permutation matrix in 1-line notation,
        or an alternating sign matrix.
+      Text
+      	  @UL {
+	      {"Allen Knutson and Ezra Miller, ",
+		  HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
+		  " , Annals of Mathematics (2005): 1245-1318."},
+	      {"Anna Weigandt, ",
+		  HREF("https://arxiv.org/abs/1708.07236", EM "Prism Tableaux for alternating sign matrix varieties"),
+		  " , arXiv preprint 1708.07236."}
+	      }@
+      Text
+      	  @SUBSECTION "Contributors"@
+      Text
+      	  The following people have generously contributed code, improved existing code, or enhanced the documentation:
+	  @HREF("https://sites.google.com/illinois.edu/shiliang-gao", "Shiliang Gao")@,
+	  @HREF("daojihuang.me", "Daoji Huang")@,
+	  and
+	  @HREF("https://www.math.tamu.edu/directory/graduate.html", "Pooja Joshi")@.
       Example
 	   w = {1,5,3,4,2};
 	   essentialBoxes w   
