@@ -5,7 +5,7 @@ Date => "June 5, 2023",
 Authors => {{Name => "Hugh Geller"},{Name => "Rebecca R.G."}},
 Headline => "canonical forms of neural ideals",
 Keywords => {"Commutative Algebra", "Squarefree monomial ideals"},
-DebuggingMode => true,
+DebuggingMode => false,
 PackageImports => {"PrimaryDecomposition","PseudomonomialPrimaryDecomposition"},
 Reload => false
 )
@@ -384,7 +384,9 @@ polarizePseudomonomial = method();
 --get rid of specifying source ring? because a ring element already has one
 polarizePseudomonomial(RingElement,Ring,Ring) := RingElement => (P,R,S) -> (  -----ring element, the ring you want the element to currently live in, the ring you want the polarization to live in----
     if not isPseudomonomial(P) then error "Expected input to be a Pseudomonomial";
+    if (numgens ring P) > numgens R then error "Pseudomonomial not from source ring";
     if (numgens S)%2 != 0 then error "Second ring must have an even number of generators";
+    if 2*(numgens ring P) > numgens S then error "Target ring does not have enough generators for polarization";
     d := (numgens S)//2;
     st := sigmaTau(P);
     sigma := st_0;
@@ -408,6 +410,16 @@ polarizePseudomonomial RingElement := RingElement => P -> (
     R := ring P;
     polarizePseudomonomial(P,R)
     )
+
+polarizedCanonicalIdeal = method();
+
+polarizedCanonicalIdeal(NeuralCode,Ring,Ring) := Ideal => (C,R,S) -> (
+    L := canonicalForm(C,R);
+    polarL := for P in L list polarizePseudomonomial(P,R,S);
+    ideal(polarL)
+    )
+
+-------------------------------------------------
 
 polarizedCanonicalResolution = method();
 

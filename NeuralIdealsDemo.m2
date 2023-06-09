@@ -10,6 +10,14 @@ J=ideal(x_1*(1-x_2),x_2*(1-x_3))
 canonicalForm(J,Factor=>true)
 f=x_1*(1-x_3)
 f%J
-canonicalCode(canonicalForm(J))
+D=canonicalCode(canonicalForm(J))
 
 --Hugh: add polarization demo
+
+S = ZZ/2[x_1..x_3,y_1..y_3]
+
+polarizedCanonicalResolution(C,R,S)
+
+polarizedCanonicalResolution(C,S)
+
+polarizedCanonicalResolution(C)
