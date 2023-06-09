@@ -9,7 +9,7 @@ newPackage(
             HomePage => "http://sites.google.com/view/ayah-almousa"},
 	{Name=> "Sean Grate",
 	    Email => "sean.grate@auburn.edu",
-	    HomePage => " "},
+	    HomePage => "https://seangrate.com"},
         {Name => "Patricia Klein", 
             Email => "pjklein@tamu.edu", 
             HomePage => " "},
