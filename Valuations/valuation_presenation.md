@@ -100,7 +100,17 @@ m_1 > m_2
 ## Kaveh-Manon Example
 
 ```
-Load example code
+load "example77V2.m2"
+R = QQ[x_1, x_2, x_3];
+A = subring {
+    x_1 + x_2 + x_3,
+    x_1*x_2 + x_1*x_3 + x_2*x_3,
+    x_1*x_2*x_3,
+    (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3)
+    };
+S = QQ[e_1, e_2, e_3, y];
+presMap = map(R, S, gens A);
+I = ker presMap
 ```
 
 ### Valuation on \(\mathbb{C}[x_1,x_2,x_3]^{A_3}\)
@@ -115,122 +125,43 @@ Load example code
 ### Step 1:
 Use tropical geometry to build valuation on \(\mathbb{C}[e_1,e_2,e_3,y]\)
 ```
-needsPackage "Valuations"
-needsPackage "SubalgebraBases"
-R1 = QQ[x_1, x_2, x_3]
-R2 = QQ[e_1, e_2, e_3, y]
-a_1 = x_1 + x_2 + x_3
-a_2 = x_1*x_2 + x_1*x_3 + x_2*x_3
-a_3 = x_1*x_2*x_3
-w = (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3)
-
-A = subring {a_1, a_2, a_3, w}
-
-S = QQ[z_1 .. z_4] -- z_i ~ e_i, z_4 ~ y
-
-m = map(R, S, gens A)
-I = ker m
-
-needsPackage "Tropical"
-needsPackage "gfanInterface"
-needsPackage "Binomials"
-
-primeConesOfIdeal = I -> (
-    F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
-    r:=rays(F);
-    c:=maxCones(F);
-    cns := for i in c list(r_i);
-    inCns := for c in cns list (flatten entries( c * transpose matrix{toList(numColumns(c) : 1)}));
-    L:= for i from 0 to #cns-1 list (J = gfanBuchberger(I, "w" => -1*(inCns#i));
-        H := gfanInitialForms(J, -1*(inCns#i), "ideal" =>true);
-        K := H_1;
-        if binomialIsPrime(ideal(K)) then cns#i);
-    return delete(null,L))
-
 C = primeConesOfIdeal I
-
-
-coneToMatrix = coneRays -> (
-    v1 := coneRays_0 + coneRays_1;
-    v2 := coneRays_0 + 2*coneRays_1;
-    transpose matrix {v1, v2}
-    )
-
-positivity = (f, matL) -> (
-    l := transpose linealitySpace(f);
-    finalScaledMats := {};
-    matList := for i from 0 to #matL-1 list entries matL_i;
-    
-    for i from 0 to #matList-1 do (
-	scaledRows = {};
-	for j from 0 to #(matList_i)-1 do (
-		coeff := -1*floor(min apply(#(matList_i)_j, k -> (((matList_i)_j)_k)/(flatten entries l)_k));
-		scaledRows = append(scaledRows, (1/gcd(flatten entries (coeff*l + matrix{(matList_i)_j})))*(coeff*l + matrix{(matList_i)_j}));
-		);
-	mat := scaledRows_0;
-	for i from 1 to #scaledRows-1 do mat = mat || scaledRows_i;
-	finalScaledMats = append(finalScaledMats, mat);
-    );
-finalScaledMats
-)
-
-F = tropicalVariety(I)
-M = coneToMatrix(C#1)
-P = positivity(F, {M})
-
-coneToValuation = coneRays -> (
-    M := coneToMatrix(coneRays);
-    scaledM := (positivity(F, {M}))/(i -> sub(i, ZZ));
-    T := QQ[z_1 .. z_4, MonomialOrder=>{Weights=>((entries scaledM_0)_0), Weights=>((entries scaledM_0)_1)}];
-    val := leadTermValuation(T);
-    orderedM := orderedQQn(2, {Lex});
-    func := (f -> (
-	    valf := val(sub(f, T));
-	    if valf == infinity then infinity else (
-		(gens orderedM)*(scaledM_0)*(valf)
-		)
-	    )
-	);
-    valuation(func, S, orderedM)
-    )
-
-val = coneToValuation(C#0)
--- Show this off, maybe.
+flatten (C/coneToMatrix/(i -> positivity(tropicalVariety I, {i})))
+```
+```
+v0 = coneToValuation(C#0, I);
+v1 = coneToValuation(C#1, I);
+v2 = coneToValuation(C#2, I);
+use S;
+```
+```
+v0(e_1^2 + e_2*e_3 - y^3) -- lead term from e_1^2
+v1(e_1^2 + e_2*e_3 - y^3) -- lead term from y^3
+v2(e_1^2 + e_2*e_3 - y^3) -- lead term from e_2*e_3
 ```
 
 ### Step 2:
 Induce valuation on \(\mathbb{C}[x_1,x_2,x_3]^{A_3}\)
 ```
-valM = (f, T, valMTwiddle) -> (
-    valMfunc = (g) -> (
-        R := QQ[x_1, x_2, x_3, e_1, e_2, e_3, y, MonomialOrder => Eliminate 3];
-        I := ideal{x_1 + x_2 + x_3 - e_1, x_1*x_2 + x_1*x_3 + x_2*x_3 - e_2, x_1*x_2*x_3 - e_3, (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3) - y};
-        S := valMTwiddle#"domain";
-	m := map(S, R, matrix{{0,0,0}} | vars S);
-        gTwiddle := m (sub(g, R) % I);
-        maxTwiddle := gTwiddle % ideal(sub(f, S));
-        valMTwiddle(maxTwiddle)
-    );
-    valuation(valMfunc, T, valMTwiddle#"codomain")
-    )
+vA0 = valM(R, v0);
+vA1 = valM(R, v1);
+vA2 = valM(R, v2);
+use R;
 ```
 
 ### Example:
 ```
-f = e_1^2*e_2^2 - 4*e_2^3 - 4*e_3*e_1^3 + 18*e_1*e_2*e_3 - 27*e_3^2 - y^2;
-W = QQ[x_1, x_2, x_3]
-finalValuation = valM(f, W, val)
-use W
-finalValuation(x_1 + x_2 + x_3)
-use W
-finalValuation((x_1^2 - x_2^2)*(x_1^2 - x_3^2)*(x_2^2 - x_3^2))
-use W
-finalValuation(0_W)
-use W
-finalValuation(x_1)
-use W
-finalValuation(x_1*x_2*x_3)
--- val = coneToValuation(C#0) can also do this for C#1 and C#2
+vA0(x_1^2 + x_2^2 + x_3^2)
+vA1(x_1^2 + x_2^2 + x_3^2)
+vA2(x_1^2 + x_2^2 + x_3^2)
+```
+```
+vA0((x_1^2 - x_2^2)*(x_1^2 - x_3^2)*(x_2^2 - x_3^2))
+vA1((x_1^2 - x_2^2)*(x_1^2 - x_3^2)*(x_2^2 - x_3^2))
+vA2((x_1^2 - x_2^2)*(x_1^2 - x_3^2)*(x_2^2 - x_3^2))
+```
+```
+vA0(0_R)
 ```
 
 
