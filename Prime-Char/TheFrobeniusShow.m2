@@ -204,6 +204,49 @@ associatedPrimes FModule := List => o -> M -> associatedPrimes( root M, o )
 -- HSL subgroup
 ----------------------------------------------------------------------------------------------
 
+HSL = method()
+
+
+HSL (Module,Matrix) := (A,u) -> (
+    A1:=matrix(entries(presentation(A)));
+    u1:=matrix(entries(u));
+    e:=0;
+    M:=gens(target(u1));
+    while true do (
+	newM:=matrix(entries(frobeniusRoot(1,u1*M)));
+	if image(newM)+image(A1) == image(M)+image(A1) then return e;
+	e=e+1;
+	M=newM;
+	)
+    )
+
+
+HSL (Matrix,Matrix) := (A,u) -> (
+    HSL(coker(A),u)
+    )
+
+
+FrobeniusonExt=method()
+FrobeniusonExt(Ideal,ZZ) := (I,i) -> (
+    -- This function takes an ideal in a polynomial ring and a local cohomology index and returns the frobenius map on the Matlis dual of local Cohomology of the quotient module.
+R := ring(I);
+d :=dim R;   
+M2 := R^1/I;
+j := d-i;
+M1 := R^1/frobenius(1,I);
+phi := map(M2,M1,1);
+Ext^j (phi,R^1)
+)
+
+
+HSLNumber = (I,i) -> (
+    R := ring(I);
+    d := dim(R);
+    j := d - i;
+    u := FrobeniusonExt(I,i);
+    A := Ext^j (R^1/I, R^1);
+    HSL(A,u)
+    )
 
 ----------------------------------------------------------------------------------------------
 -- Big Matrices subgroup
