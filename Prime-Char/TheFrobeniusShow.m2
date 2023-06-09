@@ -61,3 +61,14 @@ associatedPrimes localCohomology( 6, J, R )
 ----------------------------------------------------------------------------------------------
 -- Big Matrices subgroup
 ----------------------------------------------------------------------------------------------
+R = ZZ/2[x,y,z]; 
+f = z^2-x*y;
+for i from 1 to 4 do print fSplittingNumberNonGor(R,i,f);
+S = ZZ/3[x,y,z]; 
+g = z^2-x*y;
+for i from 1 to 2 do print fSplittingNumberNonGor(S,i,g);
+
+AKmatrix(R,1,f)
+
+A = AKmatrix(S,3,g);
+print(numRows(A), numColumns(A));
