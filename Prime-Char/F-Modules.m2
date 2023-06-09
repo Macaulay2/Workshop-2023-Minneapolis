@@ -6,6 +6,13 @@ needsPackage "Saturation"
 -- Auxiliary Functions
 ----------------------------------------------------------------------------------------------
 
+FrobeniusFunctor = new Type of MethodFunction
+
+FModule = new Type of HashTable
+
+ModuleClass = new Type of Module
+
+Morphism = new Type of Matrix
 
 GeneratingMorphism = new Type of Morphism
 
