@@ -277,9 +277,10 @@ X = matrix toList apply(1..r, i -> toList apply(1..s, j -> x_(i,j) ) )
 
 I = minors( r, X );
 
-localCohomology( s - r + 1, I, R ) == 0
-
 cohomDim I
+
+localCohomology( 5, I, R ) == 0
+
 
 all( 0..(s-r), i -> localCohomology( i, I, R ) == 0 )
 
