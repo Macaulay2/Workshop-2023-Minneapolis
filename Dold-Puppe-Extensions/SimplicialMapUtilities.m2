@@ -42,11 +42,11 @@ faceMapZero = (n,len) -> (
     -- If bounded => true then do this
     -- TODO implement option toggle for bounded complexes
     -- (otherwise why sum these binomial coefficients)
-    topDeg = sum(len+1,i->binomial(n-1,i));
+    maxRows = sum(len+1,i->binomial(n-1,i));
     -- The number of rows, taking into account complex length bound
     -- When len is larger than n, we'll have 2^n many rows
     offset = 0; -- keeps track of what the top zero pad should be
-    verticalStrips = for k to len list (
+    verticalStrips = for k to maxK list (
     -- First loop over the vertical strips of columns
 	bink=binomial(n,k); -- Each strip is width binomial(n,k)
     	topZeros = zeroMatrix(offset,bink);
@@ -59,14 +59,14 @@ faceMapZero = (n,len) -> (
 	    else splice{row:0, -k-1,(bink-1-row):0}
     -- -k-1 to keep track of which identity map we'll need (identity map of C_k)
 	    );
-	botZeros = zeroMatrix(topDeg-offset-binomial(n,k),binomial(n,k));
+	botZeros = zeroMatrix(maxRows-offset-binomial(n,k),binomial(n,k));
     -- Create appropriately sized bottom pad of zeros
     	offset = offset + binomial(n-1,k-1);
     -- Update the offset
     	verticalStrip = flatten{topZeros,modifiedMat,botZeros}
     -- Concat the modified matrix with the pads
 	);
-    for row to topDeg-1 list (
+    for row to maxRows-1 list (
     -- This concats the rows of the vertical strips together
     	flatten apply(verticalStrips, strip->strip#row)
 	)
@@ -80,9 +80,7 @@ faceMapnk = (n,k) -> (
     -- I think we need to zero pad extra rows at when faceMapi is called below
 	{{0}}
     else (
-    	print("whoa");
 	Abigvector = apply(ABuilder(n,k), row->row_n);
-    	print("argh");
     -- Selects the nth column of AMat(n,k)
 	Asmallvector = apply(ABuilder(n-1,k), row->row_(n-1));
     -- Selects the (n-1)th column of AMat(n-1,k)
@@ -117,19 +115,22 @@ faceMapi = (n,i,C) -> (
     -- and then saving the creation of the matrix option till the very end
     maxK = min(length C,n-1);
     -- Are we running till maxK? or until maxK+1?
-    if i==0 then promoteFaceMapZerotoComplex(faceMapZero(n,maxK),C)
+    if i==0 then (
+	maxK = min(length C,n);
+	promoteFaceMapZerotoComplex(faceMapZero(n,maxK),C)
+	)
     else if i==n then (
 	preMat = fold(directSum,for k from 0 to maxK list (
 	    promoteMaptoComplex(faceMapnk(n,k),k,C)
     	    -- Notice that we only pass in k at most n-1, so the check for k==n in faceMapi isn't needed
 	    )); 
-	preMat | map(target preMat,C_maxK,0) 
+	preMat | map(target preMat,C_n,0) 
 	)
     else (
     	preMat = fold(directSum,for k from 0 to maxK list (
 	     promoteMaptoComplex(faceMapik(n,k,i),k,C)
 	    )); 
-	preMat | map(target preMat,C_maxK,0) 
+	preMat | map(target preMat,C_n,0) 
 	)
     )
 
@@ -153,12 +154,12 @@ degenMapik = (n, k, i) -> (
     )
 
 degenMapi = (n,i,C) -> (
-    maxK = min(length C-1,n-1);
+    maxK = min(length C,n);
     preMat = fold(directSum,for k from 0 to maxK list (
 	    promoteMaptoComplex(degenMapik(n,k,i),k,C)
 	    )
 	);
-    preMat || map(C_maxK,source preMat,0)
+    preMat || map(C_(n+1),source preMat,0)
     )
     
 promoteMaptoComplex = (d,k,C) -> (matrix d)**id_(C_k)

@@ -32,6 +32,18 @@ topDegree SimplicialModule := ZZ => S -> S.topDegree
    
 ring SimplicialModule := Ring => S -> S.ring
 
+moduleMaker = (C,d) -> (
+    moduleList := new MutableHashTable;
+    for b to d do (
+    	maxK = min (b, length C);
+	for k to maxK do (
+	moduleList#(b,k) = directSum toList(
+	    binomial(b,k):(C_k));
+	    );    
+    	);
+    for i in (sort keys moduleList) list (i,moduleList#i)
+    )
+    
 --H1 is the face maps, H2 is the degeneracy maps
 simplicialModule = method(Options => {Base=>0})
 simplicialModule(Complex,HashTable,HashTable,ZZ) := SimplicialModule => opts -> (C,H1,H2,d) -> (
@@ -64,7 +76,7 @@ simplicialModule(Complex,ZZ) := SimplicialModule => opts -> (C,d) -> (
      if not instance(opts.Base, ZZ) then
       error "expected Base to be an integer";
      if instance(C,Complex) then (
-	 degenmapHash := hashTable flatten for n from 1 to d list (
+	 degenmapHash := hashTable flatten for n from 1 to d-1 list (
 	    for i from 0 to n list (
 		(n,i) => degenMapi(n,i,C)
 		)
@@ -82,7 +94,7 @@ simplicialModule(Complex,ZZ) := SimplicialModule => opts -> (C,d) -> (
 SimplicialModule _ Sequence := Module => (S,p) -> (
     if #p =!= 2 then
     	error ("Expected a pair of integer indices");
-    if C.module#?(p#0,p#1) then C.module#(p#0,p#1) else (ring C)^0
+    if S.module#?(p#0,p#1) then S.module#(p#0,p#1) else (ring S)^0
     )
 SimplicialModule _ ZZ := Module => (S,n) -> directSum(for k from 0 to n list S_(n,k))
 
@@ -118,8 +130,6 @@ isHomogeneous SimplicialModuleMap := (f) -> all(values f.map, isHomogeneous)
 map(SimplicialModule, SimplicialModule, HashTable) := SimplicialModuleMap => opts -> (tar, src, maps) -> (
     if not(topDegree tar == topDegree src) then error "expected source and target to have the same top degree";
     R := ring tar;
-    print (src);
-    print (maps);
     if ring src =!= R or any(values maps, f -> ring f =!= R) then
         error "expected source, target and maps to be over the same ring";
     deg := if opts.Degree === null 
@@ -135,15 +145,11 @@ map(SimplicialModule, SimplicialModule, HashTable) := SimplicialModuleMap => opt
         -- note: we use != instead of =!= in the next 2 tests,
         -- since we want to ignore any term order differences
         if source f != src_(k#0) then (
-    	    print f;
-	    print k;
-	    print src;
-	    print src_(k#0);
             error ("map with index "|toString(k)|" has inconsistent source");
 	);
         if target f != tar_(k#0+deg) then
             error ("map with index "|toString(k)|" has inconsistent target");
-        if k#0 < lo or k#0 > hi then continue else (k#0,f)
+        if k#0 < lo or k#0 > hi then continue else (k,f)
         );
     new SimplicialModuleMap from {
         symbol source => src,
@@ -199,6 +205,12 @@ map(SimplicialModule, SimplicialModule, List) := SimplicialModuleMap => opts -> 
 SimplicialModuleMap _ ZZ := Matrix => (f,i) -> (
     if f.map#?i then f.map#i else map((target f)_(i + degree f), (source f)_i, 0))
 
+SimplicialModuleMap _ Sequence := Matrix => (f,s) -> (
+    if f.map#?s then f.map#s else map((target f)_(s#0 + degree f), (source f)_(s#0), 0))
+
+
+    
+    
 expression SimplicialModuleMap := Expression => f -> (
     d := degree f;
     s := sort keys f.map;
