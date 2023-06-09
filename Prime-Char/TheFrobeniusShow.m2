@@ -24,6 +24,18 @@
 -- F-Modules subgroup
 ----------------------------------------------------------------------------------------------
 
+R = ZZ/2[x_(1,1)..x_(2,6)]
+X = matrix toList apply(1..2, i -> toList apply(1..6, j -> x_(i,j) ) )
+
+I = minors( 2, X );
+
+localCohomology( 5, I, R ) == 0
+
+cohomDim I
+
+all( 0..4, i -> localCohomology( i, I, R ) == 0 )
+
+associatedPrimes localCohomology( 5, I, R )
 
 ----------------------------------------------------------------------------------------------
 -- HSL subgroup
