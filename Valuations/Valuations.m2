@@ -139,8 +139,8 @@ OrderedQQVector ? OrderedQQVector := (a, b) -> (
     aMonomial := product for i from 0 to numgens R-1 list (R_i)^(sub(aScaled_i - c_i,ZZ));
     bMonomial := product for i from 0 to numgens R-1 list (R_i)^(sub(bScaled_i - c_i,ZZ));
 
-    if aMonomial < bMonomial then symbol <
-    else if aMonomial > bMonomial then symbol >
+    if aMonomial > bMonomial then symbol <
+    else if aMonomial < bMonomial then symbol >
     else symbol ==
     )
 

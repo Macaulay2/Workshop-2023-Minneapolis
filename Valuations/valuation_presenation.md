@@ -1,30 +1,32 @@
 # Valuations
-## Setup and Motivation
+## Introduction and Motivation
 
 ### What is a valuation?
 
-A valuation is a map \(v: R \rightarrow \Gamma\) between a ring \(R\) and an ordered semigroup \(\Gamma\) such that:
+Valuation: map \(v: R \rightarrow \Gamma\)
+
+\(R\): ring
+
+\(\Gamma\): ordered semigroup
 
 * \(v(ab) = v(a) + v(b)\)
 * \(v(a+b) \ge \min\{v(a), v(b)\}\)
+* \(v(x)=\infty\) iff \(x=0\)
 * (For \(k\)-algebras) \(v(\lambda a) = v(a)\)
 
-They are fundamental for the definition of:
+Fundamental for:
 
-* Tropical varieties (polyhedral complexes that encode data about the original variety)
-* Khovanskii bases (a generating set for an algebra analogous to Groebner bases)
+* Tropical varieties (polyhedral shadows of varieties)
+* Khovanskii bases (algebra analogues of Groebner bases)
 
 ### Let's define a valuation
 
-Load the package:
-
 ```
+restart
 needsPackage "Valuations"
 ```
 
-* The \(p\)-adic valuation
-
-The *\(p\)-adic valuation* of \(x \in \QQ\) is the highest exponent of \(p\) dividing \(x\).
+*\(p\)-adic valuation* of \(x \in \QQ\): power of \(p\) in \(x\)
 
 ```
 v = padicValuation(3)
@@ -36,13 +38,13 @@ v(81)
 v(1/18)
 ```
 
-* The leading term valuation
+*leading term valuation* of a polynomial: exponent of leading term
 
-The *leading term valuation* of a polynomial \(f \in K[x_1 \dots x_n]\) with respect to a monomial order is the exponent of the leading term of \(f\).
 
 ```
 R = QQ[x,y,z, MonomialOrder => Lex];
 v = leadTermValuation R;
+netList pairs v
 ```
 ```
 f = x^3*y^2*z^2 + x^3*y*z^3 + y^10 + z^8
@@ -50,29 +52,19 @@ leadTerm f
 v(f)
 ```
 
-The values of the valuations are ordered:
-```
-g = x^4*y*z^4 + x^3 + z^4
-v(g)
-```
-```
-v(f) < v(g)
-```
+## Ordered \(\mathbb{Q}\)-modules
 
-## Ordered \(Q\)-modules
-Valuations can return results in a custom made linearly ordered free \(Q^n\)-module type.  As an example
-```
-R = QQ[x,y]
-f = x^2 + y
-g = y^2 + y
+Valuations can return in custom linearly ordered \(\mathbb{Q}^n\)-module type
 
-val = leadTermValuation(R)
+```
+R = QQ[x,y];
+f = x^2 + y;
+g = y^2 + y;
+val = leadTermValuation(R);
 ```
 
 ```
 val(f)
-```
-```
 val(g)
 ```
 
@@ -80,64 +72,64 @@ val(g)
 val(f) > val(g)
 ```
 
-One can also create ordered \(Q^n\)-modules directly by providing the desired rank and an order to use in comparing \(Q^n\)-module elements.
+Creation from rank and monomial ordering
 ```
 M = orderedQQn(3, {Lex})
 ```
 
 ```
-m_0
+M_0
+M_1
 ```
 
 ```
-m_1
-```
-
-```
-m_1 > m_2
+M_0 < M_1
 ```
     
 ## Kaveh-Manon Example
 
-```
-load "example77V2.m2"
-R = QQ[x_1, x_2, x_3];
-A = subring {
-    x_1 + x_2 + x_3,
-    x_1*x_2 + x_1*x_3 + x_2*x_3,
-    x_1*x_2*x_3,
-    (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3)
-    };
-S = QQ[e_1, e_2, e_3, y];
-presMap = map(R, S, gens A);
-I = ker presMap
-```
-
 ### Valuation on \(\mathbb{C}[x_1,x_2,x_3]^{A_3}\)
 * Not induced from monomial order on \(\mathbb{C}[x_1,x_2,x_3]\)
-* Construction involves: tropical geometry, Khovanskii bases, invariant theory, toric geometry, ...
+* Construction involves: tropical geometry, Khovanskii bases, invariant theory, ...
     
 ### Construction:
 \[\mathbb{C}[e_1,e_2,e_3,y]\rightarrow\mathbb{C}[x_1,x_2,x_3]^{A_3}\subseteq \mathbb{C}[x_1,x_2,x_3]\]
 * \(e_i\): elementary symmetric polynomial
 * \(y\): Vandermonde determinant
 
+```
+load "example77.m2"
+S = QQ[e_1, e_2, e_3, y];
+R = QQ[x_1, x_2, x_3];
+-- SubalgebraBases package
+A = subring {
+    x_1 + x_2 + x_3,
+    x_1*x_2 + x_1*x_3 + x_2*x_3,
+    x_1*x_2*x_3,
+    (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3)}; 
+presMap = map(R, S, gens A);
+I = ker presMap
+```
+
 ### Step 1:
 Use tropical geometry to build valuation on \(\mathbb{C}[e_1,e_2,e_3,y]\)
 ```
+--- Tropical and BinomialIdeals packages
 C = primeConesOfIdeal I
-flatten (C/coneToMatrix/(i -> positivity(tropicalVariety I, {i})))
+flatten (C/coneToMatrix/(i -> 
+     positivity(tropicalVariety I, {i})))
 ```
 ```
 v0 = coneToValuation(C#0, I);
 v1 = coneToValuation(C#1, I);
 v2 = coneToValuation(C#2, I);
+```
+```
 use S;
-```
-```
-v0(e_1^2 + e_2*e_3 - y^3) -- lead term from e_1^2
-v1(e_1^2 + e_2*e_3 - y^3) -- lead term from y^3
-v2(e_1^2 + e_2*e_3 - y^3) -- lead term from e_2*e_3
+f = e_1^2 + e_2*e_3 - y^3
+v0(f) -- lead term from e_1^2
+v1(f) -- lead term from y^3
+v2(f) -- lead term from e_2*e_3
 ```
 
 ### Step 2:
@@ -146,30 +138,30 @@ Induce valuation on \(\mathbb{C}[x_1,x_2,x_3]^{A_3}\)
 vA0 = valM(R, v0);
 vA1 = valM(R, v1);
 vA2 = valM(R, v2);
-use R;
 ```
 
 ### Example:
 ```
-vA0(x_1^2 + x_2^2 + x_3^2)
-vA1(x_1^2 + x_2^2 + x_3^2)
-vA2(x_1^2 + x_2^2 + x_3^2)
+use R;
+g = x_1^2 + x_2^2 + x_3^2
+vA0(g)
+vA1(g)
+vA2(g)
 ```
 ```
-vA0((x_1^2 - x_2^2)*(x_1^2 - x_3^2)*(x_2^2 - x_3^2))
-vA1((x_1^2 - x_2^2)*(x_1^2 - x_3^2)*(x_2^2 - x_3^2))
-vA2((x_1^2 - x_2^2)*(x_1^2 - x_3^2)*(x_2^2 - x_3^2))
-```
-```
-vA0(0_R)
+h = (x_1^2 - x_2^2)*(x_1^2 - x_3^2)*(x_2^2 - x_3^2)
+vA0(h)
+vA1(h)
+vA2(h)
 ```
 
 
 ## Future Directions
-1. General development
-2. Use valuations in other M2 pacakges:
-   - [Tropical](http://www2.macaulay2.com/Macaulay2/doc/Macaulay2-1.17/share/doc/Macaulay2/Tropical/html/index.html) --  the main M2 package for tropical computations
-   - [FormalGroupLaws](http://www2.macaulay2.com/Macaulay2/doc/Macaulay2-1.17/share/doc/Macaulay2/FormalGroupLaws/html/index.html) -- commutative formal group laws
-   - [SubalgebraBases](http://www2.macaulay2.com/Macaulay2/doc/Macaulay2-1.18/share/doc/Macaulay2/SubalgebraBases/html/index.html) -- A package for finding canonical subalgebra bases (Sagbi bases)
-3. Puiseux series
-4. Any suggestions?
+* General development
+* Use valuations in other M2 pacakges:
+
+1. [Tropical](http://www2.macaulay2.com/Macaulay2/doc/Macaulay2-1.17/share/doc/Macaulay2/Tropical/html/index.html) -- tropical computations
+2. [FormalGroupLaws](http://www2.macaulay2.com/Macaulay2/doc/Macaulay2-1.17/share/doc/Macaulay2/FormalGroupLaws/html/index.html) -- commutative formal group laws
+3. [SubalgebraBases](http://www2.macaulay2.com/Macaulay2/doc/Macaulay2-1.18/share/doc/Macaulay2/SubalgebraBases/html/index.html) -- canonical subalgebra bases (Sagbi bases)
+* Puiseux series
+* Suggestions?
