@@ -380,10 +380,9 @@ sigmaTau(RingElement) := List => P -> (
 --or no rings and it will create them
 polarizePseudomonomial = method();
 
---get rid of specifying source ring? because a ring element already has one
-polarizePseudomonomial(RingElement,Ring,Ring) := RingElement => (P,R,S) -> (  -----ring element, the ring you want the element to currently live in, the ring you want the polarization to live in----
+
+polarizePseudomonomial(RingElement,Ring) := RingElement => (P,S) -> (
     if not isPseudomonomial(P) then error "Expected input to be a Pseudomonomial";
-    if (numgens ring P) > numgens R then error "Pseudomonomial not from source ring";
     if (numgens S)%2 != 0 then error "Second ring must have an even number of generators";
     if 2*(numgens ring P) > numgens S then error "Target ring does not have enough generators for polarization";
     d := (numgens S)//2;
@@ -397,17 +396,13 @@ polarizePseudomonomial(RingElement,Ring,Ring) := RingElement => (P,R,S) -> (  --
     mon
     )
 
-polarizePseudomonomial(RingElement,Ring) := RingElement => (P,R) -> (
-     d := numgens R;
-     y := getSymbol "y";
-     x := getSymbol "x";
-     S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
-     polarizePseudomonomial(P,R,S)
-     )
-
 polarizePseudomonomial RingElement := RingElement => P -> (
     R := ring P;
-    polarizePseudomonomial(P,R)
+    d := numgens R;
+    y := getSymbol "y";
+    x := getSymbol "x";
+    S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
+    polarizePseudomonomial(P,S)
     )
 
 --given a neural code, puts it in canonical form in R and then polarizes the canonical form to S
