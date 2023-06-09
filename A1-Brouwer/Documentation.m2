@@ -1,4 +1,4 @@
--Type: GrothendieckWittClass
+{*-Type: GrothendieckWittClass
 
     (1). Matrix -> GrothendieckWittClass
                 gwClass (Matrix)
@@ -45,7 +45,7 @@
             -Returns the Witt Index of q and the matrix representing q_a on V_a.
     (8). wittDecompInexact (Matrix, InexactFieldFamily) -> (ZZ, Matrix)
             -InexactFieldFamily must be RR or CC
-            -Returns the Witt Index of q and the matrix representing q_a on V_a as \pm I, after changing basis.
+            -Returns the Witt Index of q and the matrix representing q_a on V_a as \pm I, after changing basis.*}
 
 
 
@@ -92,7 +92,61 @@ document {
 	Usage => "wittDecomp(M)",
 	Inputs => {"M"},
 	Outputs => { (ZZ,Matrix) => { "the number of hyperbolic forms that make up the bilinear form represented by ", TT "M", ", and the anisotropic part of the form represented as a matrix." }},
-	PARA {"Given an invertible matrix ", TT "M", ", which represents a non-degenerate bilinear form, ", TT "b"," , this command gives us ", TT "(n,A)", " where ", TT "b="},
+	PARA {"Given an invertible matrix, ", TT "M", ", over any field that isn't the real or complex numbers which represents a non-degenerate bilinear form, ",TEX///$\beta$///,
+                ", this commmand outputs", TEX///$n$ ///, " and ", TEX///$A$ ///, " where", 
+                TEX/// $\beta = n\mathbb{H} + \beta_a///, ", and ", TEX///$A$///, " represents ", TEX///$\beta_a///, "."},
+	EXAMPLE lines ///
+		 R = QQ[x,y]
+		 F = {y^2-x^2-1,x-y^2+4*y-2}
+		 I = ideal F
+		 regularRep(y,I)
+		 S = R/I
+		 regularRep(y)
+	 	 ///,
+        }
+
+document {
+        Key => {(gwClass, Matrix), gwClass},
+	Usage => "gwClass(M)",
+	Inputs => {"M"},
+	Outputs => { GrothendieckWittClass => { "the isomorphism class of a symmetric bilinear form represented by ", TT "M", "." }},
+	PARA {"Given a symmetric matrix, ", TT "M", ", this command outputs an object of type ", TT "GrothendieckWittClass", ". ",
+                "This output has the representing matrix, ", TT "M", ", and the base field of the matrix stored in its CacheTable."},
+	EXAMPLE lines ///
+		 R = QQ[x,y]
+		 F = {y^2-x^2-1,x-y^2+4*y-2}
+		 I = ideal F
+		 regularRep(y,I)
+		 S = R/I
+		 regularRep(y)
+	 	 ///,
+        }
+
+document {
+        Key => {(baseField, GrothendieckWittClass), baseField},
+	Usage => "baseField(beta)",
+	Inputs => {"beta"},
+	Outputs => { Ring => { "the base field of the Grothendieck-Witt class ", TT "beta", "." }},
+	PARA {"Given the isomorphism class of a symmetric bilinear form, ", TT "beta", 
+                ", this command outputs the base field of the form."},
+	EXAMPLE lines ///
+		 R = QQ[x,y]
+		 F = {y^2-x^2-1,x-y^2+4*y-2}
+		 I = ideal F
+		 regularRep(y,I)
+		 S = R/I
+		 regularRep(y)
+	 	 ///,
+        }
+
+document {
+        Key => {(wittDecomp, Matrix), wittDecomp},
+	Usage => "wittDecomp(M)",
+	Inputs => {"M"},
+	Outputs => { (ZZ,Matrix) => { "the number of hyperbolic forms that make up the bilinear form represented by ", TT "M", ", and the anisotropic part of the form represented as a matrix." }},
+	PARA {"Given an invertible matrix, ", TT "M", ", over any field that isn't the real or complex numbers which represents a non-degenerate bilinear form, ",TEX///$\beta$///,
+                ", this commmand outputs", TEX///$n$ ///, " and ", TEX///$A$ ///, " where", 
+                TEX/// $\beta = n\mathbb{H} + \beta_a///, ", and ", TEX///$A$///, " represents ", TEX///$\beta_a///, "."},
 	EXAMPLE lines ///
 		 R = QQ[x,y]
 		 F = {y^2-x^2-1,x-y^2+4*y-2}
