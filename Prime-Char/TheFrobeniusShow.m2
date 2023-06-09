@@ -309,24 +309,19 @@ fSplittingNumberNonGor = (R,e,f) -> (
 --********************************************************************************************
 
 ----------------------------------------------------------------------------------------------
--- F-Modules subgroup
+-- Big Matrices subgroup
 ----------------------------------------------------------------------------------------------
+R = ZZ/2[x,y,z]; 
+f = z^2-x*y;
+for i from 1 to 4 do print fSplittingNumberNonGor(R,i,f);
+S = ZZ/3[x,y,z]; 
+g = z^2-x*y;
+for i from 1 to 2 do print fSplittingNumberNonGor(S,i,g);
 
-p = 3;
-r = 2;
-s = 6;
-R = ZZ/p[x_(1,1)..x_(r,s)]
-X = matrix toList apply(1..r, i -> toList apply(1..s, j -> x_(i,j) ) )
+AKmatrix(R,1,f)
 
-I = minors( r, X );
-
-cohomDim I
-
-localCohomology( 5, I, R ) == 0
-
-all( 0..(s-r), i -> localCohomology( i, I, R ) == 0 )
-
-associatedPrimes localCohomology( 5, I, R )
+A = AKmatrix(S,3,g);
+print(numRows(A), numColumns(A));
 
 ----------------------------------------------------------------------------------------------
 
@@ -348,10 +343,6 @@ associatedPrimes localCohomology( 6, J, S )
 -- HSL subgroup
 ----------------------------------------------------------------------------------------------
 
-restart
-needsPackage "FInvariants"
-needsPackage "TestIdeals"
-
 R=ZZ/2[x1,x2,x3,x4,x5]
 I=ideal((x2)^2+(x1)*(x3),(x1)*(x2)*(x4)^2+(x3)^3*(x5),(x1)^2*(x4)^2+(x2)*(x3)^2*(x5))
 HSLNumber(I,3)
@@ -361,18 +352,23 @@ R=ZZ/11[x,y,z]
 I=ideal(x^5+y^5+z^5)
 HSLNumber(I,2)
 
-
 ----------------------------------------------------------------------------------------------
--- Big Matrices subgroup
+-- F-Modules subgroup
 ----------------------------------------------------------------------------------------------
-R = ZZ/2[x,y,z]; 
-f = z^2-x*y;
-for i from 1 to 4 do print fSplittingNumberNonGor(R,i,f);
-S = ZZ/3[x,y,z]; 
-g = z^2-x*y;
-for i from 1 to 2 do print fSplittingNumberNonGor(S,i,g);
 
-AKmatrix(R,1,f)
+p = 3;
+r = 2;
+s = 6;
+R = ZZ/p[x_(1,1)..x_(r,s)]
+X = matrix toList apply(1..r, i -> toList apply(1..s, j -> x_(i,j) ) )
 
-A = AKmatrix(S,3,g);
-print(numRows(A), numColumns(A));
+I = minors( r, X );
+
+cohomDim I
+
+localCohomology( 5, I, R ) == 0
+
+all( 0..(s-r), i -> localCohomology( i, I, R ) == 0 )
+
+associatedPrimes localCohomology( 5, I, R )
+
