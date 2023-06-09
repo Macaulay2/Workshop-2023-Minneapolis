@@ -1,5 +1,6 @@
 load ("/home/macaulay/A1-Brouwer/GW-type.m2")
 load ("/home/macaulay/A1-Brouwer/diagonalize.m2")
+load ("/home/macaulay/A1-Brouwer/diagonalizeOverInt.m2")
 load ("/home/macaulay/A1-Brouwer/easyIsomorphicGW.m2")
 --This file tests both diagonalize and easyIsomorphicGW and diagonalizeOverInt;
 
