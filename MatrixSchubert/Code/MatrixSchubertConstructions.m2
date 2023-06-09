@@ -125,7 +125,7 @@ antiDiagInit Matrix := MonomialIdeal => (A) -> (
     	boxSubmatrix := zMatrix^{0..(box_0-1)}_{0..(box_1-1)};
     	for x in subsets(numrows boxSubmatrix, ranks_pos+1) do (
     	    for y in subsets(numcols boxSubmatrix, ranks_pos+1) do (
-                indicesList = apply(pack(2, mingle(x, reverse y)), i -> toSequence i); --should this be a local variable?
+                indicesList := apply(pack(2, mingle(x, reverse y)), i -> toSequence i);
                 antiDiagGens#(#antiDiagGens) = product(apply(indicesList, i -> boxSubmatrix_i));
 	    	);
 	    );
