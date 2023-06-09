@@ -470,6 +470,8 @@ document{
   Caveat => "In progress"
   }
 
+--document NeuralCode ?
+
 document{
   Key => {neuralCode},
   Headline => "Creates a NeuralCode",
@@ -483,20 +485,32 @@ document{
   ///
   }
 
+--document isWellDefined neuralCode?
+
+--document polarRing(NeuralCode)
+
+--document allCodeWords(ZZ)
+
 document{
-  Key => {neuralIdeal, (neuralIdeal,NeuralCode)},
+  Key => {neuralIdeal, (neuralIdeal,NeuralCode),(neuralIdeal,NeuralCode,Ring)},
   Headline => "Neural ideal.",
-  TEX "A method which computes the neural ideal for a given neural code.",
-  Usage => "neuralIdeal(neuralCode(code))",
-  Inputs => {"neuralCode"},
-  Outputs => {"The neural ideal corresponding to the given neural code"},
+  TEX "A method which computes the neural ideal for a given neural code (not necessarily in canonical form).",
+  Usage => "neuralIdeal(neuralCode(code)) or neuralIdeal(neuralCode(code),Ring)",
+  Inputs => {"neuralCode or neuralCode,Ring"},
+  Outputs => {"The neural ideal corresponding to the given neural code, in the given Ring or in ZZ/2[x_1..x_d] where d is the dimension of the neural code"},
   TEX "We compute an example",
   EXAMPLE lines ///
   C=neuralCode("000","001");
   neuralIdeal(C)
   ///,
+  EXAMPLE line ///
+  C=neuralCode("000","001");
+  R=ZZ/2[x_1..x_3];
+  neuralIdeal(C,R)
+  ///,
 }
 
+--make sure to talk about Factor and Iterative
 document{
   Key => {canonicalForm, (canonicalForm,Ideal),(canonicalForm,NeuralCode,Ring),(canonicalForm,NeuralCode),[canonicalForm,Factor],[canonicalForm,Iterative]},
   Headline => "Canonical Form",
@@ -522,9 +536,12 @@ document{
   ///,
   EXAMPLE lines ///
   R=ZZ/2[x_1..x_3];
-  C=neuralCode({"000","001"},R,Iterative=>true)
+  C=neuralCode("000","001");
+  canonicalForm(C,R,Iterative=>true)
   ///,
 }
+
+--document codeSupport(neuralCode)
 
 document{
   Key => {canonicalCode, (canonicalCode,List)},
@@ -545,6 +562,17 @@ document{
   canonicalCode(M)
   ///,
 }
+
+--document isPseudomonomial(RingElement) by Veliz-Cuba
+
+--document sigmaTau(RingElement)
+
+--document polarizePseudomonomial (still working on inputs
+
+--document polarizedCanonicalResolution
+--Key => {polarizedCanonicalResolution, (polarizedCanonicalResolution,NeuralCode,Ring,Ring), (polarizedCanonicalResolution,NeuralCode,Ring), (polarizedCanonicalForm,NeuralCode)}
+
+--document depolarizationMap
 
 
 -- **TEST0**
@@ -579,6 +607,8 @@ TEST ///
     L={x_1*x_2};
     assert(canonicalCode(L)==neuralCode("00","10","01"))
 ///
+
+--need tests for code support, allCodeWords, isPseudomonomial, sigmaTau, polarizePseudomonomial, polarizedCanonicalResolution, depolarizationMap
 
 
 end
