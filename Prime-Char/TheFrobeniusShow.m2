@@ -38,6 +38,22 @@ all( 0..4, i -> localCohomology( i, I, R ) == 0 )
 associatedPrimes localCohomology( 5, I, R )
 
 ----------------------------------------------------------------------------------------------
+
+p = 2;
+n = (2,2,3);
+d = #n;
+variables = fold( apply(d, i -> x_(i+1,0)..x_(i+1,n#i)), (i,j) -> i|j );
+R = ZZ/p[variables]
+B = apply(d, i -> transpose matrix toList apply(n#i, j-> { x_(i+1,j), x_(i+1,j+1) }) );
+B = fold( B, (a,b) -> a | b )
+
+J = minors( 2, B );
+
+cohomDim J
+
+associatedPrimes localCohomology( 6, J, R )
+
+----------------------------------------------------------------------------------------------
 -- HSL subgroup
 ----------------------------------------------------------------------------------------------
 

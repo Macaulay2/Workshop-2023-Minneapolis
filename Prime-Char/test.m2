@@ -30,10 +30,26 @@ n = 2;
 d = 3;
 R = ZZ/p[x_(1,0)..x_(d,n)];
 B = apply(1..d, i -> transpose matrix toList apply(n, j-> { x_(i,j), x_(i,j+1) }) );
-B = fold( B, (a,b) -> a | b );
+B = fold( B, (a,b) -> a | b )
 J = minors( 2, B );
-time cohomDim J == n*d - 1
+
+cohomDim J == n*d - 1
+
 time cohomDim( J, Strategy => Filter ) == n*d - 1 -- Takes too long!
+
+p = 2;
+n = (2,2,3);
+d = #n;
+N = max(n)
+variables = fold( apply(d, i -> x_(i+1,0)..x_(i+1,n#i)), (i,j) -> i|j )
+R = ZZ/p[variables]
+
+B = apply(d, i -> transpose matrix toList apply(n#i, j-> { x_(i+1,j), x_(i+1,j+1) }) )
+B = fold( B, (a,b) -> a | b )
+
+J = minors( 2, B );
+
+cohomDim J == sum( toList n ) - 1
 
 -------------------
 -- Result mentioned intro of in E.E. Witt / Advances in Mathematics 231 (2012) 1998–2012 
