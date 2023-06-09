@@ -2,6 +2,11 @@ load("/home/macaulay/A1-Brouwer/globalA1Degree.m2")
 --load("/home/macaulay/A1-Brouwer/localA1Degree.m2")
 load("/home/macaulay/A1-Brouwer/wittDecomp.m2")
 --load("/home/macaulay/A1-Brouwer/localAlgebraBasis.m2")
+load "/home/macaulay/A1-Brouwer/GW-type.m2"
+load "/home/macaulay/A1-Brouwer/matrixBooleans.m2"
+load "/home/macaulay/A1-Brouwer/squarefreePart.m2"
+load "/home/macaulay/A1-Brouwer/easyUpperLeftTriangular.m2"
+load "/home/macaulay/A1-Brouwer/diagonalize.m2"
 
 T1 = QQ[z_1..z_2];
 f1 = {(z_1-1)*z_1*z_2, (3/5)*z_1^2 - (17/3)*z_2^2};
