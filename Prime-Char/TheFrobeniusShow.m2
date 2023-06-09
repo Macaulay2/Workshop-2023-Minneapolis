@@ -208,6 +208,58 @@ associatedPrimes FModule := List => o -> M -> associatedPrimes( root M, o )
 ----------------------------------------------------------------------------------------------
 -- Big Matrices subgroup
 ----------------------------------------------------------------------------------------------
+needsPackage "Depth"; -- for the Gorenstein case 
+needsPackage "TestIdeals";
+
+expDecomp = (R,p,e,f) -> apply(exponents(f),
+      exponent->{coefficient(R_exponent,f)*R_(exponent //p^e),exponent%p^e});
+--Gets the exponent vectors of each monomial X^u of the polynomial f, and associates to u the two-element list whose
+        --first entry is cX^v and second entry is w, where c is the coefficient of X^u in f and u = p^e*v + w.
+
+simpExpDecomp = (e,f) -> (
+    -- returns a MutableHashTable whose keys are (sequences representing) exponents of monomial basis vectors
+    R:= ring f; 
+    p:= char R; 
+    dec := expDecomp(R,p,e,f);
+    hashT := new MutableHashTable;
+    for t in dec do (ex:=toSequence t#1; coe:=t#0;
+        if hashT#?ex then 
+        hashT#ex = hashT#ex+coe else hashT#ex = coe);
+    hashT
+    )        
+
+-- returns number which is the sequence as a base p expansion
+getIndex = (seq,p,e) -> sum for i from 0 to #seq-1 list (seq#i*p^(e*i));
+
+
+-- Sparse Version
+AKmatrix = (R,e,f) -> (
+    p:=char R;
+    d:=dim R;
+    n:=p^e;
+    I:=frobenius^e(ideal(vars R));
+    monBasis:=(entries basis(R^1/I))#0;
+    expBasis:=flatten(apply(monBasis,exponents));
+    L:=for i from 0 to p^(e*d)-1 list f*(monBasis#i);
+    -- OLD VERSION
+    -- T#i is a hashtable whose keys are exponents & values are coeefs
+    --     appearing in f*(ith monomial)
+    T:=flatten (for i from 0 to p^(e*d)-1 list ( expList := simpExpDecomp(e,L#i);
+       for key in keys expList list (getIndex(key,p,e), i)=>expList#key));
+    map(R^(n^d),R^(n^d),T)
+)
+
+fSplittingNumberNonGor = (R,e,f) -> (
+    p=char R;
+    n=p^e;
+    S:=R/ideal(f);
+    M:=coker(sub(AKmatrix(R,e,f),S));
+    I:=ideal(vars S);
+    phi:=inducedMap(S^1,module(I));
+    return numgens source basis(coker(Hom(M,phi)))
+)
+
+
 
 --********************************************************************************************
 -- Examples 
