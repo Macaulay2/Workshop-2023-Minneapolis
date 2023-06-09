@@ -702,6 +702,8 @@ stronglyLinearStrand Module := M -> (
     toricLL ker mat_cols    
     )
 
+
+
 --TESTS
 restart
 load "MultigradedBGG.m2"
