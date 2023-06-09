@@ -427,18 +427,10 @@ polarizedCanonicalIdeal(NeuralCode) := Ideal => C -> (
 polarizedCanonicalResolution = method();
 
 --change order of rings to S,R
-polarizedCanonicalResolution(NeuralCode,Ring,Ring) := Resolution => (C,R,S) -> (
-    L := canonicalForm(C,R);
-    polarL := for P in L list polarizePseudomonomial(P,R,S);
-    res ideal(polarL)
-    )
-
 polarizedCanonicalResolution(NeuralCode,Ring) := Resolution => (C,S) -> (
-    if (numgens S)%2 != 0 then error "Second ring must have an even number of generators";
-    d := (numgens S)//2;
-    x := getSymbol "x";
-    R := (ZZ/2)(monoid[x_1..x_d]);
-    polarizedCanonicalResolution(C,R,S)
+    L := canonicalForm(C,R);
+    polarL := for P in L list polarizePseudomonomial(P,S);
+    res ideal(polarL)
     )
 
 polarizedCanonicalResolution(NeuralCode) := Resolution => C -> (
