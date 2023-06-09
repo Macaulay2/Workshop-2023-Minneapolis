@@ -1,20 +1,22 @@
--*
+
 newPackage("DifferentialModules",
     Version => "1.1",
     Date => "5 June 2023",
     Headline => "Computing Free Resolutions of Differential Modules",
     Authors => {
-        {Name => "Michael K. Brown",         Email => "mkb0096@auburn.edu",    HomePage => "http://webhome.auburn.edu/~mkb0096/" }
-	{Name => "Daniel Erman",    	     Email => "erman@wisc.edu",        HomePage => "https://people.math.wisc.edu/~erman/" }
-	{Name => "Tara Gomes",	    	     Email => "gomes072@umn.edu",      HomePage => "Fill in" }
-	{Name => "Pouya	Layeghi",    	     Email => "layeg001@umn.edu",      HomePage => "Fill in" }
-	{Name => "Prashanth Sridhar",	     Email => "pzs0094@auburn.ed",     HomePage => "https://sites.google.com/view/prashanthsridhar/home" }
-	{Name => "Andrew Tawfeek",   	     Email => "atawfeek@uw.edu",       HomePage => "https://www.atawfeek.com/" }
-	{Name => "Eduardo Torres Davila",    Email => "torre680@umn.edu",      HomePage => "https://etdavila10.github.io/" }
-	{Name => "Jay Yang",         	     Email => "jayy@wustl.edu",        HomePage => "https://www.math.wustl.edu/~jayy/" }
-	{Name => "Sasha	Zotine",    	     Email => "18az45@queensu.ca",     HomePage => "https://sites.google.com/view/szotine/home" }
+	{Name => "Maya Banks",             Email => "mdbanks@wisc.edu",      HomePage => "https://sites.google.com/wisc.edu/mayabanks" },
+    {Name => "Michael K. Brown",       Email => "mkb0096@auburn.edu",    HomePage => "http://webhome.auburn.edu/~mkb0096/" },
+	{Name => "Daniel Erman",           Email => "erman@wisc.edu",        HomePage => "https://people.math.wisc.edu/~erman/" },
+	{Name => "Tara Gomes",             Email => "gomes072@umn.edu",      HomePage => "Fill in" },
+	{Name => "Pouya Layeghi",          Email => "layeg001@umn.edu",      HomePage => "Fill in" },
+	{Name => "Prashanth Sridhar",      Email => "pzs0094@auburn.ed",     HomePage => "https://sites.google.com/view/prashanthsridhar/home" },
+	{Name => "Andrew Tawfeek",         Email => "atawfeek@uw.edu",       HomePage => "https://www.atawfeek.com/" },
+	{Name => "Eduardo Torres Davila",  Email => "torre680@umn.edu",      HomePage => "https://etdavila10.github.io/" },
+	{Name => "Jay Yang",               Email => "jayy@wustl.edu",        HomePage => "https://www.math.wustl.edu/~jayy/" },
+	{Name => "Sasha Zotine",           Email => "18az45@qiueensu.ca",    HomePage => "Fill in" }
+
 	    },
-  DebuggingMode => true
+  DebuggingMode => false
   )
 
 export {
@@ -24,9 +26,9 @@ export {
     "foldComplex",
     "resDM",  
     "resKC",    
-    "minimize"
+    "minimizeDM",
+    "differential"
     }
-*-
 
 --Input:    A list of matrices with the same number of rows.
 --Output:   The concatenation of those matrices.
@@ -67,6 +69,7 @@ differentialModule ChainComplex := C -> (
 ---MAYA: changed this so that source and target are the same, map may be nonzero degree
 differentialModule Matrix := phi -> (
     --check if the source and target are the same up to a twist
+    if phi^2 != 0 then error "The differential does not square to zero.";
     R := ring phi;
     -- MAYA d := (degrees source phi)_0 - (degrees target phi)_0;
     -- MAYA if target phi != source phi**R^{d} then error "source and target of map are not the same, up to a twist"; 
@@ -83,7 +86,7 @@ differentialModule Matrix := phi -> (
     --if target phi != source phi then error "source and target of map are not the same"; 
     new DifferentialModule from (chainComplex(phi**R^{d},phi)[1]));
     --new DifferentialModule from (chainComplex(phi,phi)[1]));
-    *-
+ *-
 
 
 ring(DifferentialModule) := Ring => D -> D.ring;
@@ -364,14 +367,8 @@ foldComplex(ChainComplex,ZZ) := DifferentialModule => (F,d)->(
     differentialModule(chainComplex(degFDiff,degFDiff)[1]) --maya added
     )
 
-end;
-restart
-load "DifferentialModules.m2"
 
-
--*
 beginDocumentation()
-
 
 doc ///
    Key 
@@ -387,22 +384,24 @@ doc ///
 doc ///
    Key 
     differentialModule
-    (differentialModule,Matrix)
+    (differentialModule, map)
    Headline
     converts a square zero matrix into a differential module
    Usage
     differentialModule(f)
    Inputs
-    f: Matrix
+    f: module map with the same source and target
    Outputs
-    : DifferentialModule
+    : DifferentialModule 
    Description
     Text
-      Given a square zero matrix $f: M\to M$ this creates a differential module from
-      f represented as as 3-term chain complex in degree -1, 0, 1.  You probably
-      get an error if $f$ is not homogeneous.
+      Given a module $f: M\to M$ of degree a this creates a degree a differential module from
+      f represented as as 3-term chain complex in degree -1, 0, 1. If you want a nonzero, 
+      you should specify the degree of the map explicitly.
+      An error is returned if the source and target of f are not equal.
     Example
-      phi = matrix{{0,1},{0,0}}
+      R = QQ[x]
+      phi = map(R^1/(x^2),R^1/(x^2),x, Degree=>1)
       differentialModule(phi)
 ///
 
@@ -473,13 +472,12 @@ doc ///
    Description
     Text
       Given a differential module D it creates a free flag resolution of D, using a Cartan-Eilenberg
-      construction, up to the optional LengthLimit.  There may be a bug if the dimension of the ring
-      is at least 3, which would produce matrices which don't square to zero.  So you should double
+      construction, up to the optional LengthLimit. So you should double
       check that.
     Example
       R = QQ[x,y];
       M = R^1/ideal(x^2,y^2);
-      phi = map(M,M**R^{-2},x*y);
+      phi = map(M,M,x*y, Degree=>2);
       D = differentialModule phi;
       r = resDM(D)
       r.dd_1
@@ -489,7 +487,7 @@ doc ///
       LengthLimit to get more information.
     Example
       R = QQ[x]/(x^3);
-      phi = map(R^1,R^{-2},x^2);
+      phi = map(R^1,R^1,x^2,Degree=>2);
       D = differentialModule phi;
       r = resDM(D)
       r.dd_1      
@@ -522,7 +520,7 @@ doc ///
     Example
       R = QQ[x,y];
       M = R^1/ideal(x^2,y^2);
-      phi = map(M,M**R^{-2},x*y);
+      phi = map(M,M,x*y, Degree=>2);
       D = differentialModule phi;
       r = resKC(D)
       r.dd_1
@@ -531,7 +529,7 @@ doc ///
       Adding the number of steps as a second argument is like adding a LengthLimit.
     Example
       R = QQ[x]/(x^3);
-      phi = map(R^1,R^{-2},x^2);
+      phi = map(R^1,R^1,x^2, Degree=>2);
       D = differentialModule phi;
       r = resKC(D)
       r.dd_1      
@@ -555,12 +553,12 @@ doc ///
 
 doc ///
    Key 
-    minimize
-    (minimize,DifferentialModule)
+    minimizeDM
+    (minimizeDM,DifferentialModule)
    Headline
     minimizes a sqaure matrix or a differential module
    Usage
-    minimize(D)
+    minimizeDM(D)
    Inputs
     D: DifferentialModule
    Outputs
@@ -573,45 +571,115 @@ doc ///
     Example
       R = QQ[x,y];
       M = R^1/ideal(x^2,y^2);
-      phi = map(M,M**R^{-2},x*y);
+      phi = map(M,M,x*y, Degree=>2);
       D = differentialModule phi;
       r = resKC(D)
       r.dd_1
-      mr = minimize(r)
+      mr = minimizeDM(r)
       mr.dd_1   
 ///
-*-
 
-TEST ///
+
+TEST /// --test basic diff mod stuff 
     S = QQ[x,y]
     m = matrix{{0,x,y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
     phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
     D = differentialModule phi
-    assert(degree D==2) --test degree of differential module
+    assert(D.dd_0^2==0)
+    assert(isHomogeneous D.dd_0)
+    assert(degree D=={2})
+    assert(prune homology D==cokernel matrix{{x,y}})
 ///
 
-TEST ///
+TEST /// --test basic diff mod stuff 2
     S = QQ[x,y]
-    m = matrix{{0,x,y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
-    phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
+    m = matrix{{0,x^2,x*y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
+    phi = map(S^{0,1,1,3}, S^{0,1,1,3} ,m, Degree=>3)
     D = differentialModule phi
-    assert(prune homology D==cokernel matrix{{x,y}}) --test homology
+    assert(D.dd_0^2==0)
+    assert(isHomogeneous D.dd_0)
+    assert(degree D=={3})
+    assert(prune homology D==cokernel matrix{{x*y,x^2}})
 ///
 
-TEST ///
+TEST /// --test minimizeDM 
     S = QQ[x,y]
     m = matrix{{0,x,y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
     phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
     D = differentialModule phi
     M = minimizeDM D
-    assert(degree M==2)
+    assert(M.dd_1^2==0)
+    assert(isHomogeneous M.dd_0)
+    assert(degrees M_0=={{-1},{-1}})
+    assert(degree M=={2})
 ///
 
-TEST ///
+TEST /// --test minimizeDM 2
     S = QQ[x,y]
-    m = matrix{{0,x,y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
-    phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
+    m = matrix{{0,x^2,x*y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
+    phi = map(S^{0,1,1,3}, S^{0,1,1,3} ,m, Degree=>3)
     D = differentialModule phi
     M = minimizeDM D
-    assert(degrees M_0==2)
+    delM = map(S^{1,1},S^{1,1},matrix{{x^2*y,x*y^2},{-x^3,-x^2*y}},Degree=>3)
+    assert(differential M==delM)
 ///
+
+TEST /// --test resDM
+    S = QQ[x,y]
+    m = matrix{{x*y,y^2},{-x^2,-x*y}}
+    phi = map(S^2, S^2, m, Degree=>2)
+    D = differentialModule phi
+    F = resDM D
+    del = map(S^{-1,0,0,1},S^{-1,0,0,1},matrix{{0,x,y,1},{0,0,0,y},{0,0,0,-x},{0,0,0,0}}, Degree=>2)
+    assert(F.dd_0^2==0)
+    assert(isHomogeneous F.dd_0)
+    assert(degree F=={2})
+    assert(differential F==del)
+///
+
+
+TEST /// --test resKC
+    S = QQ[x,y]
+    m = matrix{{x*y,y^2},{-x^2,-x*y}}
+    phi = map(S^2, S^2, m, Degree=>2)
+    D = differentialModule phi
+    F = resKC D
+    del = map(S^{-1,0,0,1},S^{-1,0,0,1},matrix{{0,-y,-x,-1},{0,0,0,x},{0,0,0,-y},{0,0,0,0}}, Degree=>2)
+    assert(F.dd_0^2==0)
+    assert(isHomogeneous F.dd_0)
+    assert(degree F=={2})
+    assert(differential F==del)
+///
+
+TEST /// --test foldComplex
+    S = QQ[x,y,z]
+    K = koszul vars S
+    F0 = foldComplex(K,0)
+    F1 = foldComplex(K,1)
+    F4 = foldComplex(K,4)
+    assert(isHomogeneous differential F1)
+    assert(degree F0=={0})
+    assert(degree F1=={1})
+    assert(degree F4=={4})
+    assert(F4.dd_0^2==0)
+///
+
+TEST /// --test unfold
+    S = QQ[x,y]
+    phi = map(S^{1,1},S^{1,1},matrix{{x^2*y,x*y^2},{-x^3,-x^2*y}},Degree=>3)
+    D = differentialModule phi
+    C = unfold(D,-2,2)
+    assert(C.dd_0==D.dd_0)
+    assert(C.dd_1==C.dd_0)
+    assert(degree C.dd_0=={3})
+    assert(C_-2==C_3)
+///
+
+TEST /// --resDM 3 vars
+    S = QQ[x,y,z]
+    phi = map(S^4, S^4, matrix{{x*y,y^2,z,0},{-x^2,-x*y,0,z},{0,0,-x*y,-y^2},{0,0,x^2,x*y}})
+    D = differentialModule phi
+    F = resDM D    
+    assert(F.dd_0^2==0)
+///
+end;
