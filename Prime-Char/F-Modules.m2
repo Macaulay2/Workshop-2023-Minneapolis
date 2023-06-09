@@ -430,40 +430,35 @@ lowerLimit (RingElement) := Ideal => f ->
 
 -- Calculating the Lyubeznik numbers-----
 
-lyubeznikNumber=method()
+lyubeznikNumber = method()
 
-lyubeznikNumber(ZZ,ZZ,Ideal,Ring) := ZZ => (i,j,I,R) ->
+lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
 (
-    n:= dim R;
-    d:= dim (R/I);
-    p:= char R;
-    if (i<0 or j<0 or j<i or i>d or j>d) then return 0;
-    
-    if i==0 then i=2;
-    m=ideal R_*;
-    
-    LC:=localCohomology(n-j,I,R);
-    r:= root(LC);
-    frs1:= randomFilterRegSeq(i+1,m,r); --frs1 has one more elm than frs
-    frs:= drop(frs1,-1);
-    c1:=lowerLimit(frs1);
-    c:=lowerLimit(frs);
-    
-    K:= relations r;
-    F:= target K;
-    M:=minimalPresentation (((c1*F+image K): last frs1)/(c*F + (frs#-1)*F+image K));
-    
-    pii:=product(frs,x->x^(p-1));
-    --M:= r/(c*r);
-    --print pii;
-    U:= matrix entries LC#generatingMorphism;
-    print U;
-    print M;
-    print (FF M);
-    N:= makeFModule generatingMorphism map( FF M, M, pii*U);
-    r1:= root N;
-    socle:= Hom(R^1/m,r1);
-    degree socle
+    n := dim R;
+    d := dim( R/I );
+    p := char R;
+    if i < 0 or j < 0 or j < i or i > d or j > d then return 0;
+--    if i == 0 then i = 2;
+    m = ideal R_*;
+    LC := localCohomology( n-j, I, R );
+    r := root LC;
+    frs1 := randomFilterRegSeq( i+1, m, r ); --frs1 has one more elm than frs
+    frs := drop( frs1, -1 );
+    c1 := lowerLimit frs1;
+    c := lowerLimit frs;    
+    K := matrix entries relations r;
+    F := target K;
+    P := ( c1*F + image K ) : last frs1;
+    Q := c*F + (last frs)*F + image K;
+    P1 := ((frobenius c1)*F + image frobenius K) : (last frs1)^p;
+    Q1 := (frobenius c)*F + (last frs)^p*F + image frobenius K;
+    M = P/Q; --ker inducedMap( F/P, F/Q );   
+    FM = P1/Q1; -- ker inducedMap( F/P1, F/Q1 );
+    pii := product( frs, x -> x^(p-1) );
+    U := matrix entries LC#generatingMorphism;
+    N := makeFModule inducedMap( FM, M, pii*U );
+    root N;
+    degree Hom( R^1/m, root N )
 )
 
 lyubeznikTable=method()
