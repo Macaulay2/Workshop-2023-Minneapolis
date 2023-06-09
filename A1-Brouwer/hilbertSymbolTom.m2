@@ -7,6 +7,8 @@
 -- so that all diagonal elements are integers.
 
 -- Goals  (6/9/23)
+-- 0. Expand code to have function that outputs all the invariants for a rational quadratic form over Qp 
+--     Done with function invariantFormQp
 -- 1.  Expand code to have function that outputs all the invariants for a rational quadratic form.  
 -- 2.  Use invariant to determine if a rational q. form is anisotropic
 -- 3.  Use invatiants of two forms to tell whether two rational forms are isomorphic over Q
@@ -17,6 +19,7 @@
 -- Output: The Hilbert symbol, (a,b)_p
 
 load "simplifyForm.m2"
+load "squarefreepart.m2"
 
 exponentPrimeFact = method()
 
@@ -150,4 +153,26 @@ hasseWittInvariant (List, ZZ) := ZZ => (f,p) -> (
 	   );
        
        return a;          
+    );
+
+
+invariantFormQp =method()
+
+-- Input: (Q, p): Quadratic form Q given by list of diagonal elements.  For now, assume list to to be integers
+--                p is a prime number
+-- Output:  (Rank, Disc, Hasse Invariant)
+
+invariantFormQp (List, ZZ):= (ZZ, ZZ, ZZ) => (f, p) -> (
+    -- currently will export the discriminant as a square free integer
+    len:=#f;
+    for i from 0 to (len-1) do (
+	if (f_i==0) then (print"Error: Form is degenerate");
+	if (not ring(f_i)===ZZ ) then (print "Error: Diagonal elements of form should be integers");
+	);
+    a:=len;
+    b:=1;
+    for i from 0 to len-1 do (b=b*f_i);
+    b=squarefreePart(sub(b, QQ));
+    c:=hasseWittInvariant(f, p);
+    return(a, b, c);
     );
