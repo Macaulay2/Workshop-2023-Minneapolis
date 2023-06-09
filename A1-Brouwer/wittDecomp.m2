@@ -1,10 +1,15 @@
 needsPackage "RationalPoints2"
 
---load "GW-type.m2"
---load "matrixBooleans.m2"
---load "squarefreePart.m2"
---load "easyUpperLeftTriangular.m2"
-load "diagonalize.m2"
+--load "./GW-type.m2"
+--load "./matrixBooleans.m2"
+--load "./squarefreePart.m2"
+--load "./easyUpperLeftTriangular.m2"
+--load "./diagonalize.m2"
+load "/home/macaulay/A1-Brouwer/GW-type.m2"
+load "/home/macaulay/A1-Brouwer/matrixBooleans.m2"
+load "/home/macaulay/A1-Brouwer/squarefreePart.m2"
+load "/home/macaulay/A1-Brouwer/easyUpperLeftTriangular.m2"
+load "/home/macaulay/A1-Brouwer/diagonalize.m2"
 
 --Nikita Borisov and Frenly Espino
 
