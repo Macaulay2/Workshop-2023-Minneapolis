@@ -408,11 +408,15 @@ polarizePseudomonomial RingElement := RingElement => P -> (
 --given a neural code, puts it in canonical form in R and then polarizes the canonical form to S
 polarizedCanonicalIdeal = method();
 
---change order of rings to S,R
-polarizedCanonicalIdeal(NeuralCode,Ring,Ring) := Ideal => (C,R,S) -> (
-    L := canonicalForm(C,R);
-    polarL := for P in L list polarizePseudomonomial(P,R,S);
+polarizedCanonicalIdeal(NeuralCode,Ring) := Ideal => (C,S) -> (
+    L := canonicalForm(C);
+    polarL := for P in L list polarizePseudomonomial(P,S);
     ideal(polarL)
+    )
+
+polarizedCanonicalIdeal(NeuralCode) := Ideal => C -> (
+    S = polarring C;
+    polarizedCanonicalIdeal(C,S)
     )
 
 -------------------------------------------------
