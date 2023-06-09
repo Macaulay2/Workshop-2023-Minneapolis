@@ -46,7 +46,7 @@ C = fold(apply(0..5, i-> basis(2, ring X, Variables => (entries X)#i)), (a,b) ->
 D = det C; -- D = 0 if and only if the six points lie on a single conic
 q1 = toBracketPolynomial(D, B) --ouptut the GC expression of the determinant of the matrix C with respect to the bracketRing B
 
--*
+-*`
 Write down the conditions for Pascal's "mystic hexagon"
 *-
 abLine = (a * b)_G -- Line joining a and b
