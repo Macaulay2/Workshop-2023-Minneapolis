@@ -390,50 +390,48 @@ randomFilterRegSeq ( ZZ , Ideal, Ring ) := List => o -> ( n, I, R ) ->
 -- generates limit closure and lower limit ideal
 
 
-ascendingIdealEquality = method( Options => {MaxTries => infinity})
+ascendingIdealEquality = method( Options => { MaxTries => infinity } )
 -----this function should eventually check to make sure the chain of ideals is ascending
 
 -----this function specifically finds the FIRST spot that we retain equlaity and returns
 -----the union of ideals up to that spot (equivalently the ideal at that spot)
-ascendingIdealEquality (Function) := Ideal => o -> f ->
+ascendingIdealEquality Function := Ideal => o -> f ->
 (
-    i:=1;
+    i := 1;
     isEqual = false;
-    while (not isEqual and i<o.MaxTries) do (
-	isEqual = (f(i)==f(i+1));
-	i=i+1;
-	);
+    while not isEqual and i < o.MaxTries do 
+    (
+	isEqual = ( f(i) == f(i+1) );
+	i = i+1;
+    );
     if not isEqual then error "ascendingIdealEquality: Reached maximum limit of tries.";
     f(i)
 )
 
 limitClosure = method()
-limitClosure(BasicList) := Ideal => L ->
+limitClosure BasicList := Ideal => L -> 
 (
-    if #L==0 then error "limitClosure: The ideal should be the 0 ideal but cannot check the ring it lives in since the list is empty.";
-    p:= char ring L#0;
-    ascendingIdealEquality(j -> (frobenius^j(ideal(L)):ideal(product(L,x->x^(p^j-1)))))
+    if #L == 0 then error "limitClosure: limit closure should be the 0 ideal, but cannot check the ring it lives in since the list is empty.";
+    p := char ring L#0;
+    ascendingIdealEquality(j -> frobenius^j(ideal L) : ideal product( L, x -> x^(p^j-1) )) )
 )
 
 lowerLimit = method()
-lowerLimit(BasicList,Ring) := Ideal => (L,R) ->
+lowerLimit ( BasicList, Ring ) := Ideal => ( L, R ) ->
 (
     --By convention, I am pretty certain that we return the 0 ideal in the case of an empty
     --list. See Example 6.5 from "Lyubeznik numbers, F-modules, and modules of generalized fractions
-    if #L==0 then return ideal(0_R);
+    if #L == 0 then return ideal 0_R;
     local LC;
-    if #L==1 then (
-	if L#0==0_R then return ideal(0_R);
-	LC=ideal(0_R);
-	)
-     else LC=limitClosure(drop(L,-1));
-    ascendingIdealEquality( j -> (LC:(L#(-1)^j)))
+    if #L == 1 then (
+	if L#0 == 0_R then return ideal 0_R;
+	LC = ideal 0_R;
+    )
+    else LC = limitClosure drop( L, -1 );
+    ascendingIdealEquality( j -> LC : L#(-1)^j )
 )
 
-lowerLimit (RingElement) := Ideal => f ->
-(
-    lowerLimit({f})
-)
+lowerLimit RingElement := Ideal => f -> lowerLimit { f }
     
 ----------------------------------------------------------------------------------------------
 
@@ -453,6 +451,7 @@ lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
     m := ideal R_*;
     LC := localCohomology( n-j, I, R );
     r := root LC;
+    if r == 0 then return 0;
     frs1 := randomFilterRegSeq( i+1, m, r ); --frs1 has one more elm than frs
     frs := drop( frs1, -1 );
     c1 := lowerLimit(frs1,R);
@@ -474,26 +473,17 @@ lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
     degree Hom( R^1/m, root N )
 )
 
-lyubeznikTable=method()
+lyubeznikTable = method()
 
 --ADJUSTING THIS TO ONLY DO ELMS NOT ON THE DIAGONAL, just comment out the line above the comment
 --and un-comment-out the comment
-lyubeznikTable(Ideal,Ring) := Matrix => (I,R) ->
+lyubeznikTable ( Ideal, Ring ) := Matrix => ( I, R ) ->
 (
-    d:=dim(R/I);
-    M:={};
-    local M1;
-    local j;
-    local LN;
-    for i from 0 to d do (
-	M1=toList((i+1):0);
-	--M1=toList(i:0);
-	for j from i to d do (
-            LN = try lyubeznikNumber(i,j,I,R) else -1;
-            -- putting -1 at all "buggy" places
-            M1=append(M1,LN);
-        );
-	M=append(M,M1);
-	);
-    matrix M
+    d := dim( R/I );
+    LT := apply( toList(0..d), i ->  
+        apply( toList(0..d), j ->
+            try lyubeznikNumber( i, j, I, R ) else -1
+        )
+    );
+    matrix LT
 )
