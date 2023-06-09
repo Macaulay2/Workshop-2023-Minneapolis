@@ -1,7 +1,8 @@
-load ("/home/macaulay/A1-Brouwer/GW-type.m2")
-load ("/home/macaulay/A1-Brouwer/diagonalize.m2")
-load ("/home/macaulay/A1-Brouwer/diagonalizeOverInt.m2")
-load ("/home/macaulay/A1-Brouwer/easyIsomorphicGW.m2")
+path = append(path, "/home/macaulay/A1-Brouwer/");
+load ("GW-type.m2")
+load ("diagonalize.m2")
+load ("diagonalizeOverInt.m2")
+load ("easyIsomorphicGW.m2")
 --This file tests both diagonalize and easyIsomorphicGW and diagonalizeOverInt;
 
 testMatrix1 = matrix(QQ,{{6/1,-1/1},{2/1,3/1}});
