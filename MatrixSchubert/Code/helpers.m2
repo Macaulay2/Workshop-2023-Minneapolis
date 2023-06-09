@@ -13,14 +13,13 @@ genMat = (n,m) -> (
     zEntries := flatten table (n,m,(i,j) -> (i,j));
     z := getSymbol "z";
     degs := apply(zEntries,i-> i_1-i_0 + m); --are there better ways to make the antidiagonal weights? prob
-    Q:=k(monoid[z_(1,1)..z_(n,m)]);
-    Mmut:=mutableMatrix(Q,n,m);
+    Q := k(monoid[z_(1,1)..z_(n,m)]);
+    Mmut := mutableMatrix(Q,n,m);
     for box in zEntries do (
-        Mmut_(box) = Q_(n*(box_0) +box_1);
-        );
+        Mmut_(box) = Q_(n*(box_0) + box_1);
+    );
     matrix Mmut
 )
-
 
 -*
 findIndices(List, List) := (L, Bs) -> (for ell in L list position(Bs, b -> (b == ell)))
@@ -30,7 +29,7 @@ findIndices(List, List) := (L, Bs) -> (for ell in L list position(Bs, b -> (b ==
 --auxiliary function for getting the index of a variable in a ring
 --INPUT: an indexed variable
 --OUTPUT: the index of the variable
---TODO: add docs and tests
+--TODO: add docs
 --SUGGESTION: (from Anton) `indexOfVariable = v -> ( i:= index v; last toList R.generatorSymbols#i )`  -- need `debug Core` to use `R.generatorSymbols`
 --SUGGESTION: (from Ayah) `(expression(x_1))#1`
 --SUGGESTION: (from Mahrud) `last baseName x_(1,2)`
