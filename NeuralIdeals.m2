@@ -428,7 +428,7 @@ polarizedCanonicalResolution = method();
 
 --change order of rings to S,R
 polarizedCanonicalResolution(NeuralCode,Ring) := Resolution => (C,S) -> (
-    L := canonicalForm(C,R);
+    L := canonicalForm(C);
     polarL := for P in L list polarizePseudomonomial(P,S);
     res ideal(polarL)
     )
