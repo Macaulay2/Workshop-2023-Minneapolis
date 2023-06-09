@@ -125,20 +125,19 @@ hilbertSymbolReal (ZZ, ZZ):=(ZZ) => (a,b)->(
     );
 
     
- -- Two Q forms over Q_p are isomorphic if they have same rank, same discriminant, and same eps
- -- invariant   
+ -- Two Q forms over Q_p are isomorphic if they have same rank, same discriminant, and same Hasse-Witt invariant   
     
     
     
       
-epsilonHilbert = method()
+hasseWittInvariant = method()
 
 -- epsilonHilbert computes the epsilon function for a diagonal quadratic form over Q_p
 -- Function requires the list of the diagonal elements of the quadratic form, to be integers
 -- Input:  A list of the diagonal elements (f_i) for the quadratic form, assumed to be integers, and a prime p
--- Output: The epsilon function for the quadratic form (f_i) for Q_p
+-- Output: The hasseWittInvariant function for the quadratic form (f_i) for Q_p
 
-epsilonHilbert (List, ZZ) := ZZ => (f,p) -> (
+hasseWittInvariant (List, ZZ) := ZZ => (f,p) -> (
        a:=1;
        len:=#f;
        for i from 0 to len-1 do (
