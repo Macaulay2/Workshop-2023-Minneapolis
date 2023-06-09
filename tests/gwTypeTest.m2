@@ -1,4 +1,5 @@
-load ("/home/macaulay/A1-Brouwer/GW-type.m2")
+path = append(path, "/home/macaulay/A1-Brouwer/");
+load "GW-type.m2"
 print(currentDirectory());
 M = matrix(QQ,{{1,0},{0,1}});
 N = matrix(QQ, {{1, 2}, {3, 4}})
