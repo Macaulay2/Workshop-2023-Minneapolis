@@ -183,35 +183,35 @@ simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta 
 	          );
 	    
 	    -- Set up output matrix and string
-	    simplifiedForm := matrix(k,{{}});
-	    outputString := "";	    
+	    simplifiedFormGFSquare := matrix(k,{{}});
+	    outputStringGFSquare := "";	    
 	    
 	    -- Number of hyperbolic forms
-            wittIndex := floor(numSquares/2) + floor(numNonSquares/2);
+            wittIndexGFSquare := floor(numSquares/2) + floor(numNonSquares/2);
 	    print("Witt index");
-	    print(wittIndex);
+	    print(wittIndexGFSquare);
 	    
 	    -- If there are hyperbolic forms add them to the matrix and string
-	    if wittIndex > 0 then(
-		outputString = outputString | toString(wittIndex) | "H";
-		for i in 1..(wittIndex) do(
-		    simplifiedForm = safeBlockSum(simplifiedForm,H);
+	    if wittIndexGFSquare > 0 then(
+		outputStringGFSquare = outputStringGFSquare | toString(wittIndexGFSquare) | "H";
+		for i in 1..(wittIndexGFSquare) do(
+		    simplifiedFormGFSquare = safeBlockSum(simplifiedFormGFSquare,H);
 		    );
 		);
 	    
 	    -- There will be at most one extra square or one extra nonsquare left over	
 	    if odd numSquares then(
-		outputString = outputString | " + <1>";		
-		simplifiedForm = safeBlockSum(simplifiedForm,matrix(k,{{1}}));		
+		outputStringGFSquare = outputStringGFSquare | " + <1>";		
+		simplifiedFormGFSquare = safeBlockSum(simplifiedFormGFSquare ,matrix(k,{{1}}));		
 		);
 	    
 	    if odd numNonSquares then(
-		outputString = outputString | " + <" | toString(nonSquareRepresentative) | ">";		
-		simplifiedForm = safeBlockSum(simplifiedForm,((-1)*matrix(k,{{nonSquareRepresentative}})));
+		outputStringGFSquare = outputStringGFSquare | " + <" | toString(nonSquareRepresentative) | ">";		
+		simplifiedFormGFSquare = safeBlockSum(simplifiedFormGFSquare,((-1)*matrix(k,{{nonSquareRepresentative}})));
 		
 		);
 		
-	    return(gwClass(simplifiedForm),outputString)
+	    return(gwClass(simplifiedFormGFSquare),outputStringGFSquare)
 	    
 	    
 	    ); -- End "-1 is a square in GF"
@@ -224,42 +224,42 @@ simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta 
 	          );
 	      	            
 	       -- Set up output matrix and string
-	       simplifiedForm := matrix(k,{{}});
-	       outputString := "";
+	       simplifiedFormGFNonSquare := matrix(k,{{}});
+	       outputStringGFNonSquare := "";
 	       
 	       
 	       -- Number of hyperbolic forms
-	       wittIndex := min(numSquares,numNonSquares);
-	       print("witt index is " | toString(wittIndex));
+	       wittIndexGFNonSquare := min(numSquares,numNonSquares);
+	       print("witt index is " | toString(wittIndexGFNonSquare));
 	       
 	       
 	       -- Look at any remaining squares or nonsquares. One of these must be zero
-	       numSquares = numSquares - wittIndex;
-	       numNonSquares = numNonSquares - wittIndex;
+	       numSquares = numSquares - wittIndexGFNonSquare;
+	       numNonSquares = numNonSquares - wittIndexGFNonSquare;
 	       
 	       
 	       -- Add on hyperbolic part
-	       if wittIndex > 0 then(
-		   for i in 1..(wittIndex) do(
-		       simplifiedForm = safeBlockSum(simplifiedForm,H);
+	       if wittIndexGFNonSquare > 0 then(
+		   for i in 1..(wittIndexGFNonSquare) do(
+		       simplifiedFormGFNonSquare = safeBlockSum(simplifiedFormGFNonSquare, H);
 		       
 		       );
-		   outputString = outputString | toString(wittIndex) | "H";
+		   outputStringGFNonSquare = outputStringGFNonSquare | toString(wittIndexGFNonSquare) | "H";
 		   
 		   );
 	       
 	       -- Add any anisotropic part
 	       if numSquares > 0 then(
-		   simplifiedForm = safeBlockSum(simplifiedForm, matrix(mutableIdentity(k,numSquares)));
-		   outputString = outputString | " + " | toString(numSquares) | "<1>";
+		   simplifiedFormGFNonSquare = safeBlockSum(simplifiedFormGFNonSquare, matrix(mutableIdentity(k,numSquares)));
+		   outputStringGFNonSquare = outputStringGFNonSquare | " + " | toString(numSquares) | "<1>";
 		   );
 		   
 	      if numNonSquares > 0 then(
-		   simplifiedForm = safeBlockSum(simplifiedForm, ((-1)*matrix(mutableIdentity(k,numNonSquares))));
-		   outputString = outputString | " + " | toString(numNonSquares) | "<-1>";
+		   simplifiedFormGFNonSquare = safeBlockSum(simplifiedFormGFNonSquare, ((-1)*matrix(mutableIdentity(k,numNonSquares))));
+		   outputStringGFNonSquare = outputStringGFNonSquare | " + " | toString(numNonSquares) | "<-1>";
 		   );
 	       
-	       return (gwClass(simplifiedForm), outputString)		   
+	       return (gwClass(simplifiedFormGFNonSquare), outputStringGFNonSquare)		   
 	       
 	       ); -- End "-1 is not a square in GF"
 	
@@ -284,8 +284,8 @@ simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta 
 	
 	
 	-- Set up output form and matrix
-	simplifiedForm := matrix(k,{{}});
-        outputString := "";
+	simplifiedFormQQ := matrix(k,{{}});
+        outputStringQQ := "";
 	
 	-- Get number of confirmed hyperbolic forms and remainder from wittDecomp
 	(numHypForms,B) := wittDecomp(A);
@@ -294,19 +294,19 @@ simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta 
 	if numHypForms > 0 then(
 	    for i in 1..(numHypForms) do(
 		
-		simplifiedForm = safeBlockSum(simplifiedForm,H);
-		outputString = outputString | toString(numHypForms) | "H + potentially anisotropic part";
+		simplifiedFormQQ = safeBlockSum(simplifiedFormQQ, H);
+		outputStringQQ = outputStringQQ | toString(numHypForms) | "H + potentially anisotropic part";
 		
 		);
 	    );
 	
 	if numHypForms == 0 then(
-	    outputString = outputString | " potentially anisotropic part";
+	    outputStringQQ = outputStringQQ | " potentially anisotropic part";
 	    
 	    );
-	 simplifiedForm = safeBlockSum(simplifiedForm,B);
+	 simplifiedFormQQ = safeBlockSum(simplifiedFormQQ, B);
 	 
-	 return (gwClass(simplifiedForm),outputString)
+	 return (gwClass(simplifiedFormQQ),outputStringQQ)
 		
        
 	
