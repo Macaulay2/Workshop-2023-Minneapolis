@@ -6,18 +6,17 @@
 
 --INPUT: A list w
 --OUTPUT: TRUE if w is a permutation; else FALSE
-
 isPerm = method()
 isPerm List := Boolean => (w) -> (
     n := #w;
     (sort w) == toList(1..n)
-    )
+)
 
 isIdentity = method()
 isIdentity List := Boolean => (w) -> (
     n := #w;
     w == toList(1..n)
-    )
+)
 
 lastDescent = method()
 lastDescent List := ZZ => (w) -> (
@@ -26,9 +25,9 @@ lastDescent List := ZZ => (w) -> (
     n := #w;
    
     ans := -1;
-    scan (reverse (0..n-2), i-> if w_i > w_(i+1) then (ans = i+1; break));
+    scan (reverse (0..n-2), i -> if w_i > w_(i+1) then (ans = i+1; break));
     ans
-    )
+)
 
 firstDescent = method()
 firstDescent List := ZZ => (w) -> (
@@ -39,18 +38,22 @@ firstDescent List := ZZ => (w) -> (
     ans := -1;
     scan ((0..n-2), i-> if w_i > w_(i+1) then (ans = i+1; break));
     ans
-    )
+)
 
 permLength = method()
 permLength List:= ZZ => (p) -> (
     if not(isPerm p) then error("The input must be a permutation.");
     l := 0;
-    scan(#p, i->scan(i..#p-1, j ->(if p#i>p#j then l=l+1)));
-     l)
+    scan(#p, i -> scan(i..#p-1, j -> (if p#i > p#j then l = l+1)));
+    l
+)
  
-swap = (L,i,j) -> (apply(#L, k-> if k!=i and k!=j then L_k
-	                         else if k == i then L_j
-				 else L_i))
+swap = (L,i,j) -> (
+    apply(#L, k -> if k != i and k != j then L_k
+	               else if k == i then L_j
+				   else L_i)
+)
+
 --------------------------------
 --auxiliary function for making a permutation matrix out of a perm in 1-line notation
 --INPUT: a list w, which is a permutation in 1-line notation
@@ -63,7 +66,7 @@ permToMatrix List := Matrix => (w) -> (
     if not(isPerm w) then error("The input must be a permutation.");
     n := #w;
     transpose (id_(ZZ^n))_(apply(w, i-> i-1))
-    )
+)
 
 ------------------------------------
 --INPUT: A transposition in cycle notation, and the n for which to regard perm 
@@ -106,7 +109,7 @@ composePerms (List, List) := List => (u,v) -> (
     u0 := apply(u, i->i-1);
     v0 := apply(v, i->i-1);
     apply(u0_v0, i-> i+1)
-    )
+)
 
 --------------------------------
 --checks if a permutation is pattern-avoiding
@@ -137,7 +140,6 @@ isPatternAvoiding (List,List) := Boolean => (perm, pattern) -> (
 --------------------------------
 isVexillary = method()
 isVexillary List := Boolean => (perm) -> (
-    --input validation
     if not (isPerm perm) then error(toString perm | " is not a permutation.");
     isPatternAvoiding(perm, {2,1,4,3})
 )
@@ -199,7 +201,7 @@ isCDG List := Boolean => (perm) -> (
 --INPUT: longestIncrSeq, takes a previous value, a previous size, and a permutation in one line notation
 --OUTPUT: returns the length of the longest consecutive permutation plus the previous size
 --        that starts at the beginning of the permutation and has the elements of the sequence larger than the previous value
---TO DO: Document
+--TODO: Document
 ------------------------------------------
 longestIncrSeq = method()
 longestIncrSeq (ZZ,ZZ,List) := List => memoize ((preVal,prevSZ,w) -> (
@@ -208,12 +210,11 @@ longestIncrSeq (ZZ,ZZ,List) := List => memoize ((preVal,prevSZ,w) -> (
     longestSZ := prevSZ;
     currSZ := prevSZ;
     currVal := preVal;
-    
     for i from 0 to #w-1 do (
     	currVal = w_i;
-	if (currVal < preVal) then currSZ = longestIncrSeq(preVal,prevSZ,w_{i+1..#w-1})
-	else currSZ = longestIncrSeq(currVal,prevSZ+1,w_{i+1..#w-1});
-	longestSZ = max(longestSZ,currSZ);
+	if (currVal < preVal) then currSZ = longestIncrSeq(preVal, prevSZ, w_{i+1..#w-1})
+	else currSZ = longestIncrSeq(currVal, prevSZ+1, w_{i+1..#w-1});
+	longestSZ = max(longestSZ, currSZ);
     );
     return longestSZ;
 ))
@@ -222,16 +223,15 @@ longestIncrSeq (ZZ,ZZ,List) := List => memoize ((preVal,prevSZ,w) -> (
 --INPUT: rajCode, takes a permutation in one line notation
 --OUTPUT: returns the rajCode of the permutation
 ------------------------------------------
-
 rajCode = method()
 rajCode List := ZZ => (w) -> (
     if not (isPerm w) then error ("Expecting a permutation.");
     rajCodeVec := {};
     for k from 0 to #w-1 do (
-    	rajCodeVec = append(rajCodeVec,(#w-k) - longestIncrSeq(w_k,1,w_{k+1..#w-1}));
+    	rajCodeVec = append(rajCodeVec, (#w-k) - longestIncrSeq(w_k, 1, w_{k+1..#w-1}));
     );
     return rajCodeVec;
-);
+)
 
 ------------------------------------------
 --INPUT: rajIndex, takes a permutation in one line notation
@@ -239,10 +239,7 @@ rajCode List := ZZ => (w) -> (
 --TO DO: document
 ------------------------------------------
 rajIndex = method()
-rajIndex List := ZZ => (w) -> (
-  
+rajIndex List := ZZ => (w) -> ( 
     if not (isPerm w) then error ("Expecting a permutation.");
-    
     return sum rajCode w;
-    
-);
+)
