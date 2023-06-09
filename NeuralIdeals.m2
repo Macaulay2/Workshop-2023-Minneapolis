@@ -415,7 +415,7 @@ polarizedCanonicalIdeal(NeuralCode,Ring) := Ideal => (C,S) -> (
     )
 
 polarizedCanonicalIdeal(NeuralCode) := Ideal => C -> (
-    S = polarring C;
+    S := polarRing C;
     polarizedCanonicalIdeal(C,S)
     )
 

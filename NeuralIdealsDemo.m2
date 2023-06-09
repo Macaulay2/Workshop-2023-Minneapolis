@@ -14,7 +14,9 @@ D=canonicalCode(canonicalForm(J))
 
 S = ZZ/2[x_1..x_3,y_1..y_3]
 
-polarizedCanonicalResolution(C,R,S)
+polarizedCanonicalIdeal(C,S)
+
+polarizedCanonicalIdeal(C)
 
 polarizedCanonicalResolution(C,S)
 
