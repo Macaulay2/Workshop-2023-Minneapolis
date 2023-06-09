@@ -149,14 +149,6 @@ makeFModule GeneratingMorphism := FModule => g ->
 makeFModule Matrix := FModule => g -> makeFModule generatingMorphism g
 
 --- Compute a generating morphism for H_I^i(R)
-localCohomology = method( Options => { Strategy => Ext } )
-
-localCohomology ( ZZ, Ideal, Ring ) := FModule => o -> ( i, I, R ) -> 
-(
-    -- TODO: check that I is ideal of R, positive characteristic, etc.
-    if o.Strategy === Ext then localCohomologyExt( i, I, R )
-    else localCohomologyFilter( i, I, R )
-)
 
 localCohomologyExt := ( i, I, R ) -> 
 (
@@ -183,6 +175,15 @@ localCohomologyFilter := ( i, I, R ) ->
     M := makeFModule rtMorphism;
     M#cache#(symbol root) = rtMorphism;
     M
+)
+
+localCohomology = method( Options => { Strategy => Ext } )
+
+localCohomology ( ZZ, Ideal, Ring ) := FModule => o -> ( i, I, R ) -> 
+(
+    -- TODO: check that I is ideal of R, positive characteristic, etc.
+    if o.Strategy === Ext then localCohomologyExt( i, I, R )
+    else localCohomologyFilter( i, I, R )
 )
   
 root = method()
@@ -449,7 +450,7 @@ lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
     p := char R;
     if i < 0 or j < 0 or j < i or i > d or j > d then return 0;
 --    if i == 0 then i = 2;
-    m: = ideal R_*;
+    m := ideal R_*;
     LC := localCohomology( n-j, I, R );
     r := root LC;
     frs1 := randomFilterRegSeq( i+1, m, r ); --frs1 has one more elm than frs
@@ -483,10 +484,15 @@ lyubeznikTable(Ideal,Ring) := Matrix => (I,R) ->
     M:={};
     local M1;
     local j;
+    local LN;
     for i from 0 to d do (
 	M1=toList((i+1):0);
 	--M1=toList(i:0);
-	for j from i to d do M1=append(M1,lyubeznikNumber(i,j,I,R));
+	for j from i to d do (
+            LN = try lyubeznikNumber(i,j,I,R) else -1;
+            -- putting -1 at all "buggy" places
+            M1=append(M1,LN);
+        );
 	M=append(M,M1);
 	);
     matrix M
