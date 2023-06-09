@@ -2,7 +2,8 @@
 -- Given an endomorphism of affine space f=(f1,...,fn) given as a list of polynomials, return the Bezoutian corresponding to the endomorphism
 --for notation: input domain is kk[x_1..x_n] while Bezoutian computed in kk[X_1..Y_n]
 
-load "localAlgebraBasis.m2"
+--load "localAlgebraBasis.m2"
+load "/home/macaulay/A1-Brouwer/localAlgebraBasis.m2"
 --load("/home/macaulay/A1-Brouwer/localAlgebraBasis.m2")
 
 localA1Degree = method()
