@@ -22,6 +22,17 @@ genMat = (n,m) -> (
 )
 
 -*
+genMat = method(
+    Options => {
+	CoefficientRing => KK,
+	Variable => getSymbol "z"
+	}
+    )
+
+genMat (ZZ,ZZ) := opts ->(
+*-
+
+-*
 findIndices(List, List) := (L, Bs) -> (for ell in L list position(Bs, b -> (b == ell)))
 *-
 

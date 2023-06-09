@@ -7,12 +7,21 @@ newPackage(
         {Name => "Ayah Almousa", 
             Email => "almou007@umn.edu", 
             HomePage => "http://sites.google.com/view/ayah-almousa"},
+	{Name=> "Sean Grate",
+	    Email => "sean.grate@auburn.edu",
+	    HomePage => " "},
         {Name => "Patricia Klein", 
             Email => "pjklein@tamu.edu", 
             HomePage => " "},
+	{Name => "Adam LaClair",
+	    Email => "",
+	    HomePage=> " "},
         {Name => "Yuyuan Luo",
             Email => "",
-            HomePage=> ""}
+            HomePage=> " "},
+	{Name => "Joe McDonough",
+	    Email => " ",
+	    HomePage=> " "}
     },
     Headline => "functions for investigating ASM and matrix Schubert varieties",
     PackageExports => {
