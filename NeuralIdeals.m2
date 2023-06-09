@@ -131,7 +131,7 @@ polarRing(NeuralCode) := C -> (
 --gives a list of all code words on a given number of neurons
 allCodeWords = method();
 allCodeWords ZZ := List => d ->(
-    L1 := apply(d,i->(
+    L1 := apply(d+1,i->(
 	    apply(i,i->1)|apply(d-i,j->0)
 	    ));
     L2 := unique flatten apply(L1,i->permutations i);
@@ -503,7 +503,7 @@ document{
   C=neuralCode("000","001");
   neuralIdeal(C)
   ///,
-  EXAMPLE line ///
+  EXAMPLE lines ///
   C=neuralCode("000","001");
   R=ZZ/2[x_1..x_3];
   neuralIdeal(C,R)
