@@ -1,17 +1,11 @@
 needsPackage "RationalPoints2"
 
---load "./GW-type.m2"
---load "./matrixBooleans.m2"
---load "./squarefreepart.m2"
---load "./easyupperlefttriangular.m2"
---load "./diagonalize.m2"
-
---These files should be loaded as follows in GitHub version in order to pass automated testing on degreeTesting.m2
-load "/home/macaulay/A1-Brouwer/GW-type.m2"
-load "/home/macaulay/A1-Brouwer/matrixBooleans.m2"
-load "/home/macaulay/A1-Brouwer/squarefreepart.m2"
-load "/home/macaulay/A1-Brouwer/easyupperlefttriangular.m2"
-load "/home/macaulay/A1-Brouwer/diagonalize.m2"
+path = append(path, "/home/macaulay/A1-Brouwer/");
+load "GW-type.m2"
+load "matrixBooleans.m2"
+load "squarefreepart.m2"
+load "easyupperlefttriangular.m2"
+load "diagonalize.m2"
 
 --Nikita Borisov and Frenly Espino
 
