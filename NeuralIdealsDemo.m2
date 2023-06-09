@@ -12,8 +12,6 @@ f=x_1*(1-x_3)
 f%J
 D=canonicalCode(canonicalForm(J))
 
---Hugh: add polarization demo
-
 S = ZZ/2[x_1..x_3,y_1..y_3]
 
 polarizedCanonicalResolution(C,R,S)

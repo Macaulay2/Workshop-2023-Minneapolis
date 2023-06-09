@@ -131,9 +131,8 @@ polarRing(NeuralCode) := C -> (
 --gives a list of all code words on a given number of neurons
 allCodeWords = method();
 allCodeWords ZZ := List => d ->(
-    D := d+1;
-    L1 := apply(D,i->(
-	    apply(i,i->1)|apply(D-i,j->0)
+    L1 := apply(d,i->(
+	    apply(i,i->1)|apply(d-i,j->0)
 	    ));
     L2 := unique flatten apply(L1,i->permutations i);
     apply(L2, i-> concatenate(apply(i,j->toString j)))
@@ -411,8 +410,10 @@ polarizePseudomonomial RingElement := RingElement => P -> (
     polarizePseudomonomial(P,R)
     )
 
+--given a neural code, puts it in canonical form in R and then polarizes the canonical form to S
 polarizedCanonicalIdeal = method();
 
+--change order of rings to S,R
 polarizedCanonicalIdeal(NeuralCode,Ring,Ring) := Ideal => (C,R,S) -> (
     L := canonicalForm(C,R);
     polarL := for P in L list polarizePseudomonomial(P,R,S);
@@ -421,8 +422,11 @@ polarizedCanonicalIdeal(NeuralCode,Ring,Ring) := Ideal => (C,R,S) -> (
 
 -------------------------------------------------
 
+--given a neural code, computes its canonical form, polarizes it, and computes a minimal resolution
+--can input both rings, just the polarized ring, or no rings
 polarizedCanonicalResolution = method();
 
+--change order of rings to S,R
 polarizedCanonicalResolution(NeuralCode,Ring,Ring) := Resolution => (C,R,S) -> (
     L := canonicalForm(C,R);
     polarL := for P in L list polarizePseudomonomial(P,R,S);
@@ -445,6 +449,7 @@ polarizedCanonicalResolution(NeuralCode) := Resolution => C -> (
     polarizedCanonicalResolution(C,S)
     )
 
+--sets up a depolarization map from the polarized ring to a polynomial ring in half the variables
 depolarizationMap = method();
 
 depolarizationMap(Ring,Ring) := (R,S) -> ( ----Target ring followed by source ring
@@ -468,7 +473,7 @@ document{
 
 document{
   Key => {neuralCode},
-  Headline => "The type neuralCode",
+  Headline => "Creates a NeuralCode",
   TEX "Turns a list of binary strings of the same length into a NeuralCode type.",
   Usage => "neuralCode(code)",
   Inputs => {"Binary strings of the same length like 000"},
