@@ -32,6 +32,7 @@ export{--types
     "isPseudomonomial",
     "sigmaTau",
     "polarizePseudomonomial",
+    "polarizedCanonicalIdeal",
     "allCodeWords",
     "polarizedCanonicalResolution",
     "depolarizationMap",
