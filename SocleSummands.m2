@@ -472,6 +472,19 @@ socleSummands F
 socleSummandsSemigroup(I,7)
 
 -- COUNTEREXAMPLE
+installPackage "QuadraticIdealExamplesByRoos"
+netList values roosTable
+I = roosTable#59
+S = ring I
+R = S/I
+socleSummands(res(coker vars R, LengthLimit => 7))
+socleSummandsSemigroup(I,7)
+
+--Roos' almost koszul example
+R = almostKoszul(ZZ/32003, 4)
+describe R
+F = res (coker vars R, LengthLimit =>6)
+betti F
 
 
 
