@@ -125,16 +125,22 @@ hilbertSymbolReal (ZZ, ZZ):=(ZZ) => (a,b)->(
       
 epsilonHilbert = method()
 
-epsilonHilbert(list) := ZZ => f -> (
+-- epsilonHilbert computes the epsilon function for a diagonal quadratic form over Q_p
+-- Function requires the list of the diagonal elements of the quadratic form, to be integers
+-- Input:  A list of the diagonal elements (f_i) for the quadratic form, assumed to be integers, and a prime p
+-- Output: The epsilon function for the quadratic form (f_i) for Q_p
+
+epsilonHilbert (List, ZZ) := ZZ => (f,p) -> (
        a:=1;
-       len:=#f
-       for i from 0 to len -1 do (
-	   if (not ring(f_i) == ZZ) then print"Error:  Hilbert symbol evaluated at a non-integer";
+       len:=#f;
+       for i from 0 to len-1 do (
+	   if (not ring(f_i) === ZZ) then (print"Error:  Hilbert symbol evaluated at a non-integer");
+	   );
        for i from 0 to len-2 do (
        	   for j from i+1 to len-1 do (
-	       a= a* hilbertSymbol(f_i, f_j);
+	       a= a * hilbertSymbol(f_i, f_j, p);
 	       );
 	   );
+       
        return a;          
     );
-    
