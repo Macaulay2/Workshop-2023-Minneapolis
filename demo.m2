@@ -6,6 +6,8 @@
 ----------------------------------
 ----------------------------------
 
+--Pooja starts
+
 restart
 uninstallPackage "MatrixSchubert"
 restart
@@ -38,12 +40,15 @@ isPartialASM A
 J = schubertDetIdeal A;
 netList J_*
 
+
+--Sean
 --we can see which Schubert Determintanl Ideals are the prime components of an ASM variety
 primePerms = schubertDecomposition J
 primes = apply(primePerms, i -> schubertDetIdeal i)
 netList transpose{(intersect(primes_0,sub(primes_1,(vars ring primes_0))))_*,(trim J)_*} --they agree!
 
 
+--Joe
 --we can more effectivey compute the regularity of a matrix Schubert variety using antiDiagInit
 time regularity comodule (schubertDetIdeal A)
 time matrixSchubertReg A
@@ -63,6 +68,8 @@ netList transpose {sort((inI)_*), sort((ideal leadTerm I)_*)}
 --------------------------------
 --operations for permutations
 --------------------------------
+--Sean
+
 v
 rajCode v
 permLength v
@@ -85,8 +92,9 @@ betti res antiDiagInit u
 ----------------
 
 --Regularity demo--
+--Adam
 
---Two computations are the same.--
+--Two computations are the same.
 for n from 1 to 5 do (
     apply(permutations(toList(1..n)),w->assert(matrixSchubertReg(w)==matrixSchubertRegADI(w)));
 );
