@@ -404,7 +404,7 @@ limitClosure(BasicList) := Ideal => L ->
 (
     if #L==0 then error "limitClosure: The ideal should be the 0 ideal but cannot check the ring it lives in since the list is empty.";
     p:= char ring L#0;
-    ascendingIdealEquality(j -> (frobenius^j(ideal(L)):ideal(product(apply(L,x->x^(p^j-1))))))
+    ascendingIdealEquality(j -> (frobenius^j(ideal(L)):ideal(product(L,x->x^(p^j-1)))))
 )
 
 lowerLimit = method()
@@ -439,14 +439,45 @@ lyubeznikNumber(ZZ,ZZ,Ideal,Ring) := ZZ => (i,j,I,R) ->
     p:= char R;
     if (i<0 or j<0 or j<i or i>d or j>d) then return 0;
     
+    if i==0 then i=2;
     m=ideal R_*;
     
-    r:= root(localCohomology(n-j,I,R));
-    frs:= randomFilterRegSeq(i,m,r);
+    LC:=localCohomology(n-j,I,R);
+    r:= root(LC);
+    frs1:= randomFilterRegSeq(i+1,m,r); --frs1 has one more elm than frs
+    frs:= drop(frs1,-1);
+    c1:=lowerLimit(frs1);
     c:=lowerLimit(frs);
-    prod:=product(apply(frs,x->x^(p-1)));
-    r
     
-    --compute root of ?
-    --Compute socle and take dim -- see if determining length of socleDegrees =dim Socle
+    K:= relations r;
+    F:= target K;
+    M:=minimalPresentation (((c1*F+image K): last frs1)/(c*F + (frs#-1)*F+image K));
+    
+    pii:=product(frs,x->x^(p-1));
+    --M:= r/(c*r);
+    --print pii;
+    U:= matrix entries LC#generatingMorphism;
+    print U;
+    print M;
+    print (FF M);
+    N:= makeFModule generatingMorphism map( FF M, M, pii*U);
+    r1:= root N;
+    socle:= Hom(R^1/m,r1);
+    degree socle
+)
+
+lyubeznikTable=method()
+
+lyubeznikTable(Ideal,Ring) =: Matrix => (I,R) ->
+(
+    d:=dim(R/I);
+    M:={};
+    local M1;
+    local j;
+    for i from 0 to d do (
+	M1=toList(i:0);
+	for j from i to d do M1=append(M1,lyubeznikNumber(i,j,I,R));
+	M=append(M,M1);
+	);
+    matrix M
 )
