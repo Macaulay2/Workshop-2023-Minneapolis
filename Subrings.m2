@@ -145,7 +145,7 @@ Subring == Subring := (S1, S2) -> (
   	);
     -- check whether S2 \subseteq S1
     for j from 0 to (numgens2 - 1) do (
-	if isSubringElement(gens2_j, S2) then continue
+	if isSubringElement(gens2_j, S1) then continue
 	else return false;
   	);
     return true     
