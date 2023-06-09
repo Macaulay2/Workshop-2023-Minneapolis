@@ -1,7 +1,13 @@
 restart
 needsPackage "Brackets"
 
+viewHelp GCAlgebra
+viewHelp BracketRing
+
 B = bracketRing(4,2)
+help bracketRing
+viewHelp bracketRing
+
 pluecker = [1 2]_B*[3 4]_B - [1 3]_B*[2 4]_B+[1 4]_B*[2 3]_B
 normalForm pluecker
 

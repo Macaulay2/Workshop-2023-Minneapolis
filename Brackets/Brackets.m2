@@ -411,14 +411,12 @@ Key
 Description
   Text
     An object of class BracketRing represents the bracket ring $B_{n,d}$.
-    For example, let $n=6, d=2,$ so that
+    For example, let $n=4, d=2,$ so that
       $$X=\begin{pmatrix}
         x_{1,1}&x_{1,2}\\
         x_{2,1}&x_{2,2}\\
         x_{3,1}&x_{3,2}\\
         x_{4,1}&x_{4,2}\\
-        x_{5,1}&x_{5,2}\\
-        x_{6,1}&x_{6,2}
         \end{pmatrix}.$$
       There are $6=\binom{4}{2}$ brackets, and the matrix $X$ represents a configuration of $6$ points on the projective line $\mathbb{P}^1.$
       These brackets are not algebraically independent, as they satisfy the quadratic Plücker relation,
