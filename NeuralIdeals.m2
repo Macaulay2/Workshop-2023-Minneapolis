@@ -48,6 +48,7 @@ protect Iterative
 NeuralCode = new Type of HashTable
 NeuralCode.synonym = "neural code"
 
+--constructs a neural code object from a list of codewords given as binary strings of the same length
 neuralCode=method List := codeList -> (
     d := #(codeList#0);
     X:=new NeuralCode from {
@@ -57,10 +58,13 @@ neuralCode=method List := codeList -> (
 	};
     X
     )
- 
+
+--short way to get the dimension of a neural code 
 dim NeuralCode := C -> C.dimension
 
+--defines a ring for a given neural code, can set R=ring(NeuralCode) if you don't want to define one yourself
 --issue: if user is already using another ring, may be confused if they call ring C and it's not the ring they're already using
+--other issue: if you do this a second time, you'll get a new ring instead of the same one
 ring NeuralCode := C -> (
     d := dim C;
     x := getSymbol "x";
@@ -68,6 +72,7 @@ ring NeuralCode := C -> (
     )
 
 
+--checks whether a NeuralCode is well-defined
 isWellDefined NeuralCode := Boolean => X -> (
     --check keys
     K:=keys X;
@@ -113,6 +118,7 @@ isWellDefined NeuralCode := Boolean => X -> (
 	--);
     true);
 
+--given a neural code, this constructs a ring for polarizations of the neural ideal to live in
 polarRing = method();
 
 polarRing(NeuralCode) := C -> (
@@ -122,16 +128,19 @@ polarRing(NeuralCode) := C -> (
     S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d])
     )
 
+--gives a list of all code words on a given number of neurons
 allCodeWords = method();
-allCodeWords ZZ := List => n ->(
-    N := n+1;
-    L1 := apply(N,i->(
-	    apply(i,i->1)|apply(n-i,j->0)
+allCodeWords ZZ := List => d ->(
+    D := d+1;
+    L1 := apply(D,i->(
+	    apply(i,i->1)|apply(D-i,j->0)
 	    ));
     L2 := unique flatten apply(L1,i->permutations i);
     apply(L2, i-> concatenate(apply(i,j->toString j)))
     )
 
+--not exported
+--given a neural code, gives the list of code words not in it
 neuralCodeComplement = method();
 neuralCodeComplement NeuralCode := List => C ->(
     d := dim C;
@@ -144,6 +153,7 @@ neuralCodeComplement NeuralCode := List => C ->(
 --input: a NeuralCode, outputs a neural ideal by the method of The Neural Ring, not necessarily in canonical form
 neuralIdeal = method();
 
+--if specify the ring, will return an ideal in that ring (recommended)
 neuralIdeal(NeuralCode,Ring) := Ideal => (C,R) -> (
     d:=dim C;
     if numgens R =!= d then error "Expected ring of the same dimension as the neuralCode";
@@ -158,6 +168,7 @@ neuralIdeal(NeuralCode,Ring) := Ideal => (C,R) -> (
     ideal genList
     )
 
+--if don't specify the ring, it will create one but you won't be able to use it externally
 neuralIdeal NeuralCode := Ideal => C -> (
     d:=dim C;
     x:=getSymbol "x"; 
@@ -166,6 +177,7 @@ neuralIdeal NeuralCode := Ideal => C -> (
     )
 
 --not exported, used as an option for canonicalForm below it, iterative method from NeuralIdeals in SageMath paper
+--may want to change this to avoid using append a lot
 iterCanonicalForm = method();
 iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
     d := dim C;
@@ -222,7 +234,11 @@ iterCanonicalForm NeuralCode := List => C -> (
     )
 
 
---inputs a squarefree pseudomonomial ideal or a NeuralCode, outputs the canonical form of its neural ideal
+--inputs a squarefree pseudomonomial ideal or a neural code, 
+--outputs the canonical form of its neural ideal
+--can decide to display it factored (best if you're not using the result in future computations)
+--if the input is a neural code, you can use the iterative method to compute the canonical form as an option
+--iterative is likely faster
 canonicalForm = method(
     Options => {
 	Factor => false,
@@ -237,8 +253,8 @@ canonicalForm Ideal := List => opts -> I -> (
     booleanIdeal := ideal(apply(d,i->(R_i*(1-R_i))));
     booleanR := R/booleanIdeal;
     reducedGens := apply(first entries gens multipliedGens,i->sub(i,booleanR));
-    noDuplicateGens := delete(sub(0,booleanR),reducedGens);
-    almostGens := unique apply(noDuplicateGens,i->(sub(i,R)));
+    noZeroGens := delete(sub(0,booleanR),reducedGens);
+    almostGens := unique apply(noZeroGens,i->(sub(i,R)));
     actualGens := for i in almostGens list (
 	isDivisible := false;
 	for j in almostGens do (
@@ -266,9 +282,9 @@ canonicalForm NeuralCode := List => opts -> C -> (
     canonicalForm(neuralIdeal(C),Factor => opts.Factor)
     )
 
---finds the support of a given neural code
+--finds the support of a given neural code (every squarefree pseudomonomial that's 0 on it)
 codeSupport = method();
-codeSupport NeuralCode := C -> (
+codeSupport NeuralCode := List => C -> (
     fullSupport := {};
     L := C.codeWords;
     for c in L do (
@@ -282,11 +298,13 @@ codeSupport NeuralCode := C -> (
 canonicalCode = method();
 
 canonicalCode List := NeuralCode => L -> (
-    --want to check that elements in L are in same ring, return error otherwise
     R := ring L#0;
     d := numgens R;
-    if isSquarefreePseudomonomialIdeal(ideal(L))==false then error "Expected elements that generate a squarefree pseudomonomial ideal.";
+    --checks that entries in list are squarefree pseudomonomials
+    if not isSquarefreePseudomonomialIdeal(ideal(L)) then error "Expected elements that generate a squarefree pseudomonomial ideal.";
+    --checks that generators don't generate the unit ideal
     if ideal(L)==sub(ideal(1),R) then error "Expected generators of a non-unit ideal.";
+    --checks that all elements in list are in the same ring
     for ell in L do (if ring ell =!= R then error "Expected elements of the same ring.");
     allCodes := allCodeWords(d);
     codeList := for i in allCodes list (
@@ -311,7 +329,7 @@ canonicalCode List := NeuralCode => L -> (
 -- Output:
 -- true or false
 isPseudomonomial = method();
-isPseudomonomial RingElement := P -> ( 
+isPseudomonomial RingElement := Boolean => P -> ( 
     -- check if polynomial is a unit or zero
     if P == 0 then return false;
     if isUnit P then return true;
@@ -339,9 +357,11 @@ isPseudomonomial RingElement := P -> (
 
 --------------------------------------
 
+--input a pseudomonomial, return a list sigma of the x's that divide it
+--and tau of the 1-x's that divide it
 sigmaTau = method();
 
-sigmaTau(RingElement) := P -> (
+sigmaTau(RingElement) := List => P -> (
     if isPseudomonomial(P) == false then error "Expected input to be a Pseudomonomial";
     R := ring P;
     d := numgens R;
@@ -355,8 +375,13 @@ sigmaTau(RingElement) := P -> (
     )
 	
 
+--input a pseudomonomial, outputs the polarization.
+--can specify the ring it comes from and the ring it goes to
+--or the ring it goes to (recommended at least this)
+--or no rings and it will create them
 polarizePseudomonomial = method();
 
+--get rid of specifying source ring? because a ring element already has one
 polarizePseudomonomial(RingElement,Ring,Ring) := RingElement => (P,R,S) -> (  -----ring element, the ring you want the element to currently live in, the ring you want the polarization to live in----
     if not isPseudomonomial(P) then error "Expected input to be a Pseudomonomial";
     if (numgens S)%2 != 0 then error "Second ring must have an even number of generators";
