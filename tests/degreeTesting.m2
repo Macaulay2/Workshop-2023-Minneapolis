@@ -4,8 +4,8 @@ load("/home/macaulay/A1-Brouwer/wittDecomp.m2")
 --load("/home/macaulay/A1-Brouwer/localAlgebraBasis.m2")
 load "/home/macaulay/A1-Brouwer/GW-type.m2"
 load "/home/macaulay/A1-Brouwer/matrixBooleans.m2"
-load "/home/macaulay/A1-Brouwer/squarefreePart.m2"
-load "/home/macaulay/A1-Brouwer/easyUpperLeftTriangular.m2"
+load "/home/macaulay/A1-Brouwer/squarefreepart.m2"
+load "/home/macaulay/A1-Brouwer/easyupperlefttriangular.m2"
 load "/home/macaulay/A1-Brouwer/diagonalize.m2"
 
 T1 = QQ[z_1..z_2];
