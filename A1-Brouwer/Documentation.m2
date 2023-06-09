@@ -88,6 +88,22 @@ document {
         }
 
 document {
+        Key => {(diagonalizeCB, Matrix), diagonalizeCB},
+	Usage => "diagonalizeCB(M)",
+	Inputs => {"M"},
+	Outputs => { Matrix => { "the n x k matrix whose first n columns have been row/column reduced to a diagonal matrix." }},
+	PARA {"Given an n x k matrix, ", TT "M", ", this command outputs the n x k matrix whose first n columns have been row/column reduced to a diagonal matrix."},
+	EXAMPLE lines ///
+		 R = QQ[x,y]
+		 F = {y^2-x^2-1,x-y^2+4*y-2}
+		 I = ideal F
+		 regularRep(y,I)
+		 S = R/I
+		 regularRep(y)
+	 	 ///,
+        }
+
+document {
         Key => {(wittDecomp, Matrix), wittDecomp},
 	Usage => "wittDecomp(M)",
 	Inputs => {"M"},
@@ -147,6 +163,23 @@ document {
 	PARA {"Given an invertible matrix, ", TT "M", ", over any field that isn't the real or complex numbers which represents a non-degenerate bilinear form, ",TEX///$\beta$///,
                 ", this commmand outputs", TEX///$n$ ///, " and ", TEX///$A$ ///, " where", 
                 TEX/// $\beta = n\mathbb{H} + \beta_a///, ", and ", TEX///$A$///, " represents ", TEX///$\beta_a///, "."},
+	EXAMPLE lines ///
+		 R = QQ[x,y]
+		 F = {y^2-x^2-1,x-y^2+4*y-2}
+		 I = ideal F
+		 regularRep(y,I)
+		 S = R/I
+		 regularRep(y)
+	 	 ///,
+        }
+
+document {
+        Key => {(squarefreePart, QQ or ZZ), squarefreePart},
+	Usage => "squarefreePart(n)",
+	Inputs => {"n"},
+	Outputs => { ZZ => { "the smallest magnitude integer in the square class of ", TT "n", "." }},
+	PARA {"Given a rational number, ", TT "n", ", this command outputs the smallest magnitude integer, ",
+                TEX///$m$///, ", such that "},
 	EXAMPLE lines ///
 		 R = QQ[x,y]
 		 F = {y^2-x^2-1,x-y^2+4*y-2}
