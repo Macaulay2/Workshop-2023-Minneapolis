@@ -197,50 +197,7 @@ Description
     summandExamples
 ///
 
-doc ///
-Key
- almostKoszul
-Headline
- Examples discovered by Jan-Erik Roos
-Usage
- R = alomostKoszul(kk,a)
-Inputs
- kk:Ring
-  the field over which R will be defined
- a: ZZ
-  length of the linear part of the resolution of kk over R
-Outputs
- R:Ring
-Description
-  Text
-   A standard graded ring R is Koszul if the
-   minimal R-free resolution F of its residue field kk
-   is linear. Roos' examples, which are 2-dimensional rings of
-   depth 0 in 6 variables, show that it is not enough to require
-   that F be linear for a steps, no matter how large a is.
-   
-   The examples are also remarkable in that (as far as we could check)
-   the (a+1)-st syzygy, and all subsequent syzygies
-   of kk have socle summands, but none before the (a+1)-st do.
-   This shows that the the socle summands do NOT all come from the
-   Koszul complex, but leaves open the conjecture that 
-   (with the one exception) the socle summand persist once they start.
-   
-   It's also striking that (in this case) the first socle
-   summands come from the linear strand of the resolution,
-   though they begin to appear exactly where the resolution
-   ceases to be linear.
-   
-  Example
-   R = almostKoszul(ZZ/32003, 2)
-   F = res (coker vars R, LengthLimit =>4)
-   betti F
-   socleSummands F
-   socleSummands linearPart F
-References
-SeeAlso
-   socleSummands
-///
+
 
 doc ///
 Key
@@ -440,13 +397,7 @@ socleSummandsSemigroup(I,7)
 ))
 assert (L == {{0}, {0,2,3}, {0,3,4,5}, {0,4,5,6,7}, {0,4,6,7}})
 ///
-TEST///
-R = almostKoszul(ZZ/101, 3)
-F = res(coker vars R, LengthLimit => 5)
-assert( degree prune socle coker F.dd_2 == 3 and
-degree prune socle coker F.dd_3 == 18)
-assert(socleSummands F ==socleSummands linearPart F)
-///
+
 
 end--
 
@@ -463,16 +414,19 @@ needsPackage "RandomIdeals"
 setRandomSeed 0
 
 --FOR DEMO
+restart
+needsPackage "SocleSummands"
 I = summandExamples#5
 isBurch(I)
 isGolod(ring I/I)
 
 F = res(coker vars (ring I/I), LengthLimit => 7)
+betti F
 socleSummands F
 socleSummandsSemigroup(I,7)
 
 -- COUNTEREXAMPLE
-installPackage "QuadraticIdealExamplesByRoos"
+needsPackage "QuadraticIdealExamplesByRoos"
 netList values roosTable
 I = roosTable#59
 S = ring I
