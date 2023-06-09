@@ -281,10 +281,9 @@ cohomDim I
 
 localCohomology( 5, I, R ) == 0
 
-
 all( 0..(s-r), i -> localCohomology( i, I, R ) == 0 )
 
-associatedPrimes localCohomology( s-r+1, I, R )
+associatedPrimes localCohomology( 5, I, R )
 
 ----------------------------------------------------------------------------------------------
 
