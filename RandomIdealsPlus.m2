@@ -407,6 +407,16 @@ restart
 installPackage "RandomIdealsPlus"
 viewHelp "RandomIdealsPlus"
 
+
+--DEMO
+S = ZZ/101[a..d]
+hf = {4,7,10}
+I = randomMonomialIdealHilbertFunction(S,hf)
+for i from 1 to 3 do(
+    print hilbertFunction(i,I)
+    )
+J = mixedIdeal(S, {2,3,4},{2,3})
+
 	"randomMonomial",
 	"randomArtinIdeal",
 	"randomArtinDegreeIdeal",
