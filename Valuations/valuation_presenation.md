@@ -60,42 +60,42 @@ v(f) < v(g)
 ```
 
 ## Ordered \(Q\)-modules
-    Valuations can return results in a custom made linearly ordered free \(Q^n\)-module type.  As an example
-    ```
-    R = QQ[x,y]
-    f = x^2 + y
-    g = y^2 + y
+Valuations can return results in a custom made linearly ordered free \(Q^n\)-module type.  As an example
+```
+R = QQ[x,y]
+f = x^2 + y
+g = y^2 + y
 
-    val = leadTermValuation(R)
-    ```
+val = leadTermValuation(R)
+```
 
-    ```
-    val(f)
-    ```
-    ```
-    val(g)
-    ```
+```
+val(f)
+```
+```
+val(g)
+```
 
-    ```
-    val(f) > val(g)
-    ```
+```
+val(f) > val(g)
+```
 
-    One can also create ordered \(Q^n\)-modules directly by providing the desired rank and an order to use in comparing \(Q^n\)-module elements.
-    ```
-    M = orderedQQn(3, {Lex})
-    ```
+One can also create ordered \(Q^n\)-modules directly by providing the desired rank and an order to use in comparing \(Q^n\)-module elements.
+```
+M = orderedQQn(3, {Lex})
+```
 
-    ```
-    m_0
-    ```
+```
+m_0
+```
 
-    ```
-    m_1
-    ```
+```
+m_1
+```
 
-    ```
-    m_1 > m_2
-    ```
+```
+m_1 > m_2
+```
     
 ## Kaveh-Manon Example
 
