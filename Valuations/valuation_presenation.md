@@ -24,6 +24,7 @@ Fundamental for:
 ```
 restart
 needsPackage "Valuations"
+viewHelp "Valuations"
 ```
 
 *\(p\)-adic valuation* of \(x \in \QQ\): power of \(p\) in \(x\)
