@@ -17,8 +17,8 @@ newPackage(
 	    Email => "",
 	    HomePage=> " "},
         {Name => "Yuyuan Luo",
-            Email => "",
-            HomePage=> " "},
+            Email => "lyuyuan@mit.edu",
+            HomePage=> "https://www.mit.edu/~lyuyuan/"},
 	{Name => "Joe McDonough",
 	    Email => " ",
 	    HomePage=> " "}
