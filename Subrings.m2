@@ -109,29 +109,9 @@ net Subring := S -> (
     )
 
 
--*
--membership test: (x,S) -> boolean
--equality of subrings: S_1 == S_2
 
 
-
-
---Subring == Subring := (S_1, S_2) -> (
-    -- if generators S_1 in S_2 and generators S_2 in S_1 return true, else false
-   
-  --  g_1 := S_1#generators;
-  --  g_2 := S_2#generators;
-    
-  --  for i from 0 to #g_1-1 do (
---	if !(isElement(g_i, S_2)) 
-  --	)
-     
-  --  )
-
--- given an element of S, write it in terms of the p_i's
-
-*-
-
+-- given a subring S and an element x of the ambient ring, checks whether x is in S
 isSubringElement = method()
 isSubringElement(RingElement, Subring) := (AGOODNAME, S) -> (
     R := ambient S;
@@ -149,6 +129,36 @@ isSubringElement(RingElement, Subring) := (AGOODNAME, S) -> (
     M := matrix {{R2T(AGOODNAME) % I}};
     selectInSubring(1, M) == M
     )
+
+
+-- equality of subrings
+Subring == Subring := (S1, S2) -> (
+    gens1 := flatten entries S1#generators;
+    numgens1 := #gens1;
+    gens2 := flatten entries S2#generators;
+    numgens2 := #gens2;
+    
+    -- check whether S1 \subseteq S2 
+    for i from 0 to (numgens1 - 1) do (
+	if isSubringElement(gens1_i, S2) then continue
+	else return false;
+  	);
+    -- check whether S2 \subseteq S1
+    for j from 0 to (numgens2 - 1) do (
+	if isSubringElement(gens2_j, S2) then continue
+	else return false;
+  	);
+    return true     
+   )
+
+
+
+-*
+
+-- given an element of S, write it in terms of the p_i's
+
+*-
+
 
 
 beginDocumentation()
@@ -276,3 +286,13 @@ You can write anything you want down here.  I like to keep examples
 as I’m developing here.  Clean it up before submitting for
 publication.  If you don't want to do that, you can omit the "end"
 above.
+
+restart
+installPackage "Subrings"
+R = QQ[x]
+S1 = subring {x, x^2}
+S2 = subring {x^2}
+S3 = subring {x}
+S1 == S3 --true
+S1 == S2 --false
+
