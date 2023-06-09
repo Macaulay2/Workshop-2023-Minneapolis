@@ -1,30 +1,31 @@
 newPackage(
-        "MatrixSchubert",
-	AuxiliaryFiles => true,
-        Version => "0.1", 
-        Date => "",
-        Authors => {
-	    {Name => "Ayah Almousa", 
-                Email => "almou007@umn.edu", 
-                HomePage => "http://sites.google.com/view/ayah-almousa"},
-            {Name => "Patricia Klein", 
-                Email => "pjklein@tamu.edu", 
-                HomePage => " "},
-	    {Name => "Yuyuan Luo",
-		Email => "",
-		HomePage=> ""}
-        },
-        Headline => "functions for investigating ASM and matrix Schubert varieties",
-        PackageExports => {
-            "Depth",
-	    "SimplicialComplexes",
-	    "SimplicialDecomposability",
-	    "Posets",
-            "MinimalPrimes"
-            },
-        DebuggingMode => true
-        )
+    "MatrixSchubert",
+    AuxiliaryFiles => true,
+    Version => "0.1", 
+    Date => "",
+    Authors => {
+        {Name => "Ayah Almousa", 
+            Email => "almou007@umn.edu", 
+            HomePage => "http://sites.google.com/view/ayah-almousa"},
+        {Name => "Patricia Klein", 
+            Email => "pjklein@tamu.edu", 
+            HomePage => " "},
+        {Name => "Yuyuan Luo",
+            Email => "",
+            HomePage=> ""}
+    },
+    Headline => "functions for investigating ASM and matrix Schubert varieties",
+    PackageExports => {
+        "Depth",
+        "SimplicialComplexes",
+        "SimplicialDecomposability",
+        "Posets",
+        "MinimalPrimes"
+    },
+    DebuggingMode => true
+)
 
+--TODO: organize the exports
 export{
     "isPartialASM",
     "partialASMToASM",
@@ -70,7 +71,7 @@ export{
     "lastDescent",
     "firstDescent",
     "indexOfVariable" -- todo, figure out a way to test this without exporting it
-    }
+}
     
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
@@ -246,14 +247,6 @@ for i from 1 to 4 do (
     for w in permutations(toList (1..i)) do rajTest(w);
 );
 
-restart
-needsPackage "MatrixSchubert"
-I = schubertDetIdeal {2,1,6,3,5,4}
-isASMIdeal I
-I.cache.ASM
-getASM(I)
-
-
 ------------------------------------
 --Development Section
 ------------------------------------
@@ -266,6 +259,3 @@ restart
 needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
-
-
-
