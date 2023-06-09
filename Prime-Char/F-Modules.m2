@@ -12,14 +12,10 @@ FModule = new Type of HashTable
 
 ModuleClass = new Type of Module
 
-Morphism = new Type of Matrix
-
 GeneratingMorphism = new Type of Morphism
 
-STDIsomorphism = new Type of Morphism
-
 ----------------------------------------------------------------------------------------------
--- ModuleClass and Morphism
+-- ModuleClass 
 ----------------------------------------------------------------------------------------------
 
 -- Module classes are equal if they have the same minimal presentation
@@ -35,64 +31,6 @@ moduleClass = method()
 
 moduleClass Module := ModuleClass => M -> new ModuleClass from M
 
-morphism = method()
-
-morphism Matrix := g -> new Morphism from g
-
--- morphism Matrix := Morphism => f -> 
--- ( 
---     M := moduleClass source f;
---     N := moduleClass target f;
---     stdMap new Morphism from map( N, M, matrix f )
--- )
-
--- must make this associative
-Morphism * Morphism := ( f, g ) -> 
-(
-    if target g != source f then error "Maps are not composable";
-    i := inducedMap( source f, target g );
-    f*i*g
-)
-    
--- Putting modules and homomorphisms in a form that can be easily frobenified    
-
-stdIsomorphism = method()
-
--- stdIsomorphism(M) returns an isomorphism M' --> M, where M' is a quotient of a free module 
-stdIsomorphism Module := STDIsomorphism => 
-    ( cacheValue symbol stdIsomorphism )( M ->
-(
-    P := minimalPresentation M;
-    local g;
-    if P#cache#?pruningMap then g = P#cache#pruningMap
-    else 
-    (
-        n := rank source generators M;
-        g = map( M, P, entries identityMatrix n )
-    );
-    new STDIsomorphism from g 
-))
-
-stdMap = method()
-
--- Given a module homomophism f: M --> N, stdMap(f) returns the homomorphism f': M' --> N' 
--- induced by the standard isomorphisms M' --> M and N' --> N. That is, f' makes the following 
--- diagram commute:
---         f 
---     M  --->  N
---     ^        ^
---     |   f'   |
---     M' --->  N'
-
-stdMap Morphism := Morphism => ( cacheValue symbol stdMap )( f ->
-( 
-    g := stdIsomorphism source f;
-    h := stdIsomorphism  target f;
-    inverse(h)*(f*g)
-))
-
-stdMap Matrix := Morphism => g -> stdMap morphism g
-
 ----------------------------------------------------------------------------------------------
 -- Frobenius Functor
 ----------------------------------------------------------------------------------------------
@@ -101,27 +39,38 @@ FF = method()
 
 -- TODO: need to check if ring is a polynomial ring (or regular) 
 
-FF ( ZZ, ModuleClass ) := ModuleClass => ( e, C ) -> 
+FF ( ZZ, Module ) := Module => ( e, M ) -> 
 (
-    if isFreeModule C or C == 0 then return C; 
-    R := ring C;
+    if isFreeModule M or M == 0 then return M; 
+    R := ring M;
     p := char R;
-    Rel := relations source stdIsomorphism C;
-    -- adjustments of degrees are needed to keep things homogeneous and maps composable
-    degsource := - p^e * ( degrees source Rel );
-    degtarget := - p^e * ( degrees target Rel );
-    new ModuleClass from coker map( R^degtarget, R^degsource, entries frobenius^e Rel )
+    local N; local degsource; local degtarget;
+    if isSubmodule M then
+    (   --submodule of a free module
+        N = gens M;
+        -- adjustments of degrees are needed to keep things homogeneous and maps composable
+        degsource = - p^e * ( degrees source N );
+        degtarget = - p^e * ( degrees target N );
+        image map( R^degtarget, R^degsource, entries frobenius^e N )
+    ) 
+    else if isQuotientModule M then
+    (
+        N = relations M;
+        -- adjustments of degrees are needed to keep things homogeneous and maps composable
+        degsource = - p^e * ( degrees source N );
+        degtarget = - p^e * ( degrees target N );
+        coker map( R^degtarget, R^degsource, entries frobenius^e N )
+    )
+    else
+    (   -- assuming that this means subquotient
+        N = image gens M;
+        K := image relations M;
+        FF( e, N )/FF( e, K )
+    )    
 )
 
-FF ( ZZ, Module ) := ModuleClass => ( e, M ) -> FF( e, moduleClass M )
-
-FF ( ZZ, Morphism ) := Morphism => ( e, g ) -> 
-(
-    f := stdMap g;
-    new Morphism from map( FF(e, target f), FF(e, source f), frobenius^e f )
-)
-
-FF ( ZZ, Matrix ) := Morphism => ( e, f ) -> FF( e, morphism f )   
+FF ( ZZ, Matrix ) := Matrix => ( e, f ) -> 
+    map( FF(e, target f), FF(e, source f), entries frobenius^e f )
 
 FF Thing := M -> FF( 1, M )
 
@@ -137,7 +86,7 @@ generatingMorphism = method()
 
 -- Given a standard map f, generatingMorphism(f) verifies whether f well defined, and whether
 -- f maps a module M to F(M). If so, it returns a GeneratingMorphism identical to f.
-generatingMorphism Morphism := GeneratingMorphism => f ->
+generatingMorphism Matrix := Matrix => f ->
 (
     if f == 0 then return new GeneratingMorphism from f;
     if not isWellDefined f then 
