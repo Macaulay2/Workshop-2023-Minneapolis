@@ -1,15 +1,17 @@
 restart
 needsPackage "Brackets"
 
+viewHelp Brackets
+
 viewHelp GCAlgebra
 viewHelp BracketRing
 
-B = bracketRing(4,2)
+B = bracketRing(4,2) -- bracket ring B4,2
 help bracketRing
 viewHelp bracketRing
 
-pluecker = [1 2]_B*[3 4]_B - [1 3]_B*[2 4]_B+[1 4]_B*[2 3]_B
-normalForm pluecker
+pluecker = [1 2]_B*[3 4]_B - [1 3]_B*[2 4]_B+[1 4]_B*[2 3]_B -- pluecker relationns for G(2,4)
+normalForm pluecker -- expected to be zero
 
 
 B = bracketRing(6,3) -- ring of maximal minors of 6 points in P^2
