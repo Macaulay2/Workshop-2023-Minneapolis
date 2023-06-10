@@ -1,3 +1,24 @@
+doc ///
+    Key
+	    (toOneLineNotation, List, ZZ)
+        toOneLineNotation
+    Headline
+    	rewrites a transposition in 1-line notation
+    Usage
+        toOneLineNotation(perm, maxIdx)
+    Inputs
+    	perm:List
+        maxIdx:ZZ
+    Description
+    	Text
+    	    Converts a transposition $(a,b)$ to 1-line notation.
+            {\tt maxIdx} is the $n$ for which to regard {\tt perm} as an 
+            element of $S_n$, the symmetric group on $n$ letters.
+        Example
+            perm = {2,4}
+            maxIdx = 5
+            toOneLineNotation(perm, maxIdx)
+///
 
 doc ///
     Key

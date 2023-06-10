@@ -75,9 +75,6 @@ permToMatrix List := Matrix => (w) -> (
 --TODO: docs and tests
 ------------------------------------
 toOneLineNotation = method()
-toOneLineNotation (Sequence, ZZ) := List => (perm, maxIdx) -> (
-    switch(perm_0-1, perm_1-1, toList(1..maxIdx))
-)
 toOneLineNotation (List, ZZ) := List => (perm, maxIdx) -> (
     switch(perm_0-1, perm_1-1, toList(1..maxIdx))
 )

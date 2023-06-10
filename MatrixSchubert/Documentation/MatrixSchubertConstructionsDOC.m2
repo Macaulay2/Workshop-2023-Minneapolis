@@ -146,7 +146,6 @@ doc ///
 	    
 ///
 
-
 doc ///
     Key
     	(antiDiagInit, List)
@@ -180,9 +179,41 @@ doc ///
         Example
             schubertDetIdeal({1,3,2})
             schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
-
 ///
 
+-*
+--TODO: figure out error in isSchubertCM doc node
+doc ///
+    Key
+    	(isSchubertCM, Matrix)
+    	(isSchubertCM, List)
+    	isSchubertCM
+    Headline
+    	whether $R/I_A$ is Cohen-Macaulay
+    Usage
+    	isSchubertCM(A)
+    	isSchubertCM(w)
+    Inputs
+		A:Matrix
+			or {\tt w} is a @TO List@
+	Outputs
+		:Boolean
+    Description
+    	Text
+			Given an alternating sign matrix $A$ (resp. permutation $w$),
+			checks whether $R/I_A$ (resp. $R/I_w$) is Cohen-Macaulay.
+
+			If the input is a permutation $w$, the output is always true
+			since $I_w$ is a Schubert determinantal ideal, and a theorem
+			of Fulton says $R/I_w$ is always Cohen-Macaulay.
+        Example
+            A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}
+			isSchubertCM(A)
+
+			w = {1,3,2}
+            isSchubertCM(w)
+///
+*-
 
 doc ///
     Key
@@ -232,15 +263,72 @@ doc ///
         (isIntersectionSchubIdeals, Ideal)
         isIntersectionSchubIdeals
     Headline
-        whether an ideal is ASM
+        whether an ideal is the intersection of Schubert determinantal ideals
     Usage
         isIntersectionSchubIdeals(I)
     Inputs
         I:Ideal
     Description
         Text
-            An ideal I is ASM if I is radical and I = I_{w_1} \cap ... \cap I_{w_k},
-            where the I_{w_i} are Schubert determinantal ideals.
+            Checks if the input ideal I can be written as $I = I_{w_1} \cap ... \cap I_{w_k}$,
+            where each $I_{w_i}$ is a Schubert determinantal ideal.
+///
+
+doc ///
+    Key
+        (isASMIdeal, Ideal)
+        isASMIdeal
+    Headline
+        whether an ideal is ASM
+    Usage
+        isASMIdeal(I)
+    Inputs
+        I:Ideal
+    Description
+        Text
+            An ideal is ASM if it is radical and can be written as the intersection
+			of Schubert determinantal ideals.
+///
+
+doc ///
+    Key
+        (getASM, Ideal)
+        getASM
+    Headline
+        gets the ASM of an ideal (if it exists)
+    Usage
+        getASM(I)
+    Inputs
+        I:Ideal
+    Description
+        Text
+            Gets the alternating sign matrix (ASM) of an ideal $I$, if it exists.
+			If the ASM has not been computed yet, then an attempt will be made 
+			to compute the ASM. Once the ASM is computed, it is stored in the 
+			cache of $I$.
+///
+
+doc ///
+	Key
+		(isMinRankTable, Matrix)
+		isMinRankTable
+	Headline
+		whether {\tt A} is a valid rank table
+	Usage
+		isMinRankTable(A)
+	Inputs
+		A:Matrix
+	Outputs
+		:Boolean
+	Description
+		Text
+			Checks whether {\tt A} is a valid rank table.
+		Example
+			T = matrix {{0,1,1},{1,1,2},{1,2,3}}
+			isMinRankTable T
+
+			T = matrix {{1,1,1,1,1},{1,2,2,2,2},{1,2,2,2,3},{1,2,2,3,3},{1,2,3,3,3}}
+			isMinRankTable T
 ///
 
 doc ///

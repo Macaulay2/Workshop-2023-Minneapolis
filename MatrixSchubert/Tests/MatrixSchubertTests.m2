@@ -74,8 +74,11 @@ I = schubertDetIdeal({1,3,2});
 assert(I == ideal((z_(1,1))_(ring I) * (z_(2,2))_(ring I) - (z_(1,2))_(ring I) * (z_(2,1))_(ring I)));
 ///
 
+-*
+--NOTE: it would be nice to keep this test, but it would also be nice to not 
+--      have to export it as well
 TEST ///
---variableIndex
+--indexOfVariable
 R = QQ[x_1..x_5]
 assert(indexOfVariable x_1 == 1)
 
@@ -88,6 +91,7 @@ assert(indexOfVariable x_(2,3) == (2,3))
 R = QQ[x_{1,1}..x_{4,4}]
 assert(indexOfVariable x_{2,3} == {2,3})
 ///
+*-
 
 TEST ///
 --composePerms

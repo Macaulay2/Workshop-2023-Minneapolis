@@ -79,7 +79,6 @@ export{
     "nonCohenMacaulayASMsList",
     "lastDescent",
     "firstDescent",
-    "indexOfVariable" -- todo, figure out a way to test this without exporting it
 }
     
 ------------------------------------------------------------------------------
