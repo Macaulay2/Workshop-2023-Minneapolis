@@ -199,6 +199,10 @@ equalUptoPadicSquare = method()
 
 equalUptoPadicSquare (ZZ, ZZ, ZZ):= (Boolean) => (a, b, p) -> (
 -- Given a, b integers, determines if a, b differ by a square in Q_p
+-- One has to handle the cases when p is odd, and p=2 differently
+if (odd p) then (
+    -- p is odd and we need to check that the powers of p have the same parity, and the units
+    -- differ by a square in GF(p)
     a1:=squarefreePart(a);
     b1:=squarefreePart(b);
     if (exponentPrimeFact(a1, p ) != exponentPrimeFact(b1, p)) then (
@@ -209,7 +213,23 @@ equalUptoPadicSquare (ZZ, ZZ, ZZ):= (Boolean) => (a, b, p) -> (
 	c1:= squarefreePart(a1*b1);
 	return (legendreBoolean( sub(c1, GF(p, Variable => x)))); 
 	);
-    
+    )
+else (
+    -- Case when p=2.  Then we have to check that the powers of p have the same parity, and 
+    -- that the units agree mod 8.
+    a1=squarefreePart(a);
+    b1=squarefreePart(b);
+    if (exponentPrimeFact(a1, p ) != exponentPrimeFact(b1, p)) then (
+	return false;
+        )
+    else (
+    	-- c1 will be an integer prime to p
+	c1= squarefreePart(a1*b1);
+	c1 = c1 % 8;
+	-- if c1 =1, then the two odd units are congruent mod 8, and are squares in Q2
+	return (c1==1); 
+	);
+    );
   );  
  
 isIsomorphicFormQp = method ()
