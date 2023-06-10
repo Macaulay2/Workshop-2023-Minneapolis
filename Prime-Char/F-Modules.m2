@@ -424,7 +424,7 @@ lyubeznikTable ( Ideal, Ring ) := Matrix => ( I, R ) ->
 (
     d := dim( R/I );
     LT := toList apply( 0..d, i ->  
-        toList( (d:0) | apply( i..d, j -> lyubeznikNumber( i, j, I, R ) ) )
+        toList( (i:0) | apply( i..d, j -> lyubeznikNumber( i, j, I, R ) ) )
     );
     matrix LT
 )
