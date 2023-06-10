@@ -105,3 +105,26 @@ I = intersect(ideal(x_1, x_2), ideal(x_3, x_4), ideal(x_5, x_6, x_7));
 
 lyubeznikTable( I, R )
 
+-------------------
+-- examples from https://arxiv.org/pdf/1409.7531.pdf
+
+p = 3
+R = ZZ/p[x_1..x_4]
+I = intersect( ideal(x_1,x_2), ideal(x_3,x_4) )
+
+lyubeznikTable( I, R )
+
+p = 2
+R = ZZ/p[x_(1,1)..x_(2,3)]
+I = minors( 2, matrix apply({1,2},i-> apply({1,2,3},j-> x_(i,j)) ) )
+
+lyubeznikTable( I, R ) -- trivial
+
+--------------------
+-- example from https://web.mat.upc.edu/josep.alvarez/pdf/IRTACTA_Alvarez.pdf
+
+p = 2
+R = ZZ/p[x_1..x_6]
+I = ideal(x_1*x_2*x_3, x_1*x_2*x_4, x_1*x_3*x_5, x_2*x_4*x_5, x_3*x_4*x_5, x_2*x_3*x_6, x_1*x_4*x_6, x_3*x_4*x_6, x_1*x_5*x_6, x_2*x_5*x_6)
+
+lyubeznikTable( I, R )
