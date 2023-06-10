@@ -10,26 +10,7 @@ FrobeniusFunctor = new Type of MethodFunction
 
 FModule = new Type of HashTable
 
-ModuleClass = new Type of Module
-
 GeneratingMorphism = new Type of Matrix
-
-----------------------------------------------------------------------------------------------
--- ModuleClass 
-----------------------------------------------------------------------------------------------
-
--- Module classes are equal if they have the same minimal presentation
-ModuleClass == ModuleClass := ( M, N ) -> 
-( 
-    M1 := new Module from minimalPresentation M; 
-    -- because sometimes minimalPresentation returns ModuleClass, causing infinte recursion
-    N1 := new Module from minimalPresentation N;
-    M1 == N1
-)
-
-moduleClass = method()
-
-moduleClass Module := ModuleClass => M -> new ModuleClass from M
 
 ----------------------------------------------------------------------------------------------
 -- Frobenius Functor
@@ -91,7 +72,7 @@ generatingMorphism Matrix := GeneratingMorphism => f ->
     if f == 0 then return new GeneratingMorphism from f;
     if not isWellDefined f then 
         error "generatingMorphism: map is not well defined";
-    if moduleClass( target f ) != moduleClass( FF( source f ) ) then 
+    if minimalPresentation( target f ) != minimalPresentation( FF( source f ) ) then 
         error "generatingMorphism: does not map a module M to F(M)";
     new GeneratingMorphism from f
 )
@@ -105,7 +86,7 @@ makeFModule Matrix := FModule => g -> makeFModule generatingMorphism  g
 
 --- Compute a generating morphism for H_I^i(R)
 
-localCohomologyExt := ( i, I, R ) -> 
+localCohomologyExt = ( i, I, R ) -> 
 (
     -- TODO: check that I is ideal of R, positive characteristic, etc.
     M := R^1/I;
@@ -115,7 +96,7 @@ localCohomologyExt := ( i, I, R ) ->
 )
 
 --- Compute a generating morphism for H_I^i(R)
-localCohomologyFilter := ( i, I, R ) -> 
+localCohomologyFilter = ( i, I, R ) -> 
 (
     filterSeq := randomFilterRegSeq( i, I, R );
     J := ideal filterSeq;
@@ -214,40 +195,37 @@ randomGeneratingMorphism ModuleClass := generatingMorphism => o -> M ->
 --- I-filter regular sequences ---
 isFilterRegElement = method()
 
-isFilterRegElement (RingElement,Ideal,Module,Module) := Boolean => (x,I,M,N) ->
+isFilterRegElement ( RingElement, Ideal, Module, Module ) := Boolean => ( x, I, M, N ) ->
 (
-    T:=ker (x*id_(M/N));
-    J:=radical(ann(T));
-    isSubset(I,J)
+    T := ker( x*id_( M/N ) );
+    J := radical ann T;
+    isSubset( I, J )
 )
 
 isFilterRegSeq = method()
 
-isFilterRegSeq (BasicList,Ideal,Module) := Boolean => (L,I,M) ->
+isFilterRegSeq ( BasicList, Ideal, Module ) := Boolean => ( L, I, M ) ->
 (
-    if not isSubset(ideal(L),I) then error "isFilterRegSeq: The sequence is not contained in the ideal.";
-    l:=#L;
-    R:=ring I;
-    isFRE = isFilterRegElement(L#0,I,M,ideal(0_R)*M);
-    N:=ideal(L#0)*M;
-    i:=1;
-    while (isFRE and i<l) do (
-	isFRE = isFilterRegElement(L#i,I,M,N);
-	N=N+ideal(L#i)*M;
-	i=i+1;
-	);
+    if not isSubset( ideal L, I ) then error "isFilterRegSeq: The sequence is not contained in the ideal";
+    l := #L;
+    R := ring I;
+    isFRE := isFilterRegElement( L#0, I, M, ( ideal 0_R )*M );
+    N := ( ideal L#0 )*M;
+    i := 1;
+    while isFRE and i < l do 
+    (
+	isFRE = isFilterRegElement( L#i, I, M, N );
+	N = N + ( ideal L#i )*M;
+	i = i + 1;
+    );
     isFRE
 )
 
-isFilterRegSeq (BasicList,Ideal,Ring) := Boolean => (L,I,R) ->
-(
-    isFilterRegSeq(L,I,module R)
-)
+isFilterRegSeq ( BasicList, Ideal, Ring ) := Boolean => ( L, I, R ) ->
+    isFilterRegSeq( L, I, module R )
 
-isFilterRegSeq (BasicList,Ideal,Ideal) := Boolean => (L,I,R) ->
-(
-    isFilterRegSeq(L,I,module R)
-)
+isFilterRegSeq ( BasicList, Ideal, Ideal ) := Boolean => ( L, I, J ) ->
+    isFilterRegSeq( L, I, module J )
 
 filterRegSeq = method()
 
@@ -314,7 +292,7 @@ randomFilterRegSeq ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) ->
     G := (trim I)_*;
     minDeg := min apply( G, k -> first degree k );
     minDensity := 0.1;
-    R = ring I;
+    R := ring I;
     J := ideal( 0_R ); 
     counter := 0;
     local candidate; local deg; local density;
@@ -336,14 +314,11 @@ randomFilterRegSeq ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) ->
 )
 
 randomFilterRegSeq ( ZZ , Ideal, Ring ) := List => o -> ( n, I, R ) ->
-    randomFilterRegSeq( n, I, R^1 )
+    randomFilterRegSeq( n, I, module R )
     
-
-
 ----------------------------------------------------------------------------------------------
 
 -- generates limit closure and lower limit ideal
-
 
 ascendingIdealEquality = method( Options => { MaxTries => infinity } )
 -----this function should eventually check to make sure the chain of ideals is ascending
