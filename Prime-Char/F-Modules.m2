@@ -80,15 +80,16 @@ generatingMorphism Matrix := GeneratingMorphism => f ->
 makeFModule = method()
 
 makeFModule GeneratingMorphism := FModule => g -> 
-    new FModule from { generatingMorphism => g, cache => new CacheTable }
+    new FModule from { cache => new CacheTable from { generatingMorphism => g } }
 
 makeFModule Matrix := FModule => g -> makeFModule generatingMorphism  g
 
 --- Compute a generating morphism for H_I^i(R)
 
-localCohomologyExt = ( i, I, R ) -> 
+localCohomologyExt = ( i, I ) -> 
 (
     -- TODO: check that I is ideal of R, positive characteristic, etc.
+    R := ring I;
     M := R^1/I;
     f := inducedMap( M, FF M );
     E := Ext^i( f, R^1 );
@@ -96,8 +97,9 @@ localCohomologyExt = ( i, I, R ) ->
 )
 
 --- Compute a generating morphism for H_I^i(R)
-localCohomologyFilter = ( i, I, R ) -> 
+localCohomologyFilter = ( i, I ) -> 
 (
+    R := ring I;
     filterSeq := randomFilterRegSeq( i, I, R );
     J := ideal filterSeq;
     p := char R;
@@ -115,18 +117,26 @@ localCohomologyFilter = ( i, I, R ) ->
 
 localCohomology = method( Options => { Strategy => Ext } )
 
-localCohomology ( ZZ, Ideal, Ring ) := FModule => o -> ( i, I, R ) -> 
+localCohomology ( ZZ, Ideal ) := FModule => o -> ( i, I ) -> 
+(   -- TODO: check that I is ideal of R, positive characteristic, etc.
+    if (I#cache)#?(localCohomology, i) then return I#cache#(localCohomology, i);
+    lc := if o.Strategy === Ext then localCohomologyExt( i, I )
+    else localCohomologyFilter( i, I );
+    I#cache#(localCohomology, i) = lc;
+    lc
+)
+
+localCohomology ( ZZ, Ideal, Ring ) := FModule => o -> ( i, I, R ) ->
 (
-    -- TODO: check that I is ideal of R, positive characteristic, etc.
-    if o.Strategy === Ext then localCohomologyExt( i, I, R )
-    else localCohomologyFilter( i, I, R )
+    if R =!= ring I then "error: expected an ideal of the given ring";
+    localCohomology( i, I, o )
 )
   
 root = method()
 
 root FModule := Module => ( cacheValue symbol root )( M ->
 (
-    g := M#generatingMorphism;
+    g := M#cache#generatingMorphism;
     K := ker g;
     if K == 0  then 
     (    
@@ -157,20 +167,19 @@ FModule == ZZ := ( M, n ) ->
 (
     if n =!= 0 then error "Attempted to compare an FModule to nonzero integer";
     -- check while generating root == 0
-    root( M )  == 0
+    ( root M )  == 0
 )
 
 cohomDim = method( Options => { Strategy => Ext } )
 
-cohomDim Ideal := ZZ => o -> I ->
+cohomDim Ideal := ZZ => o -> ( cacheValue symbol cohomDim )( I ->
 (
-    R := ring I;
     n := #(trim I)_*;
-    while localCohomology( n, I, R, o) == 0 do n = n-1;
+    while localCohomology( n, I, o) == 0 do n = n-1;
     n
-)
+))
 
-associatedPrimes FModule := List => o -> M -> associatedPrimes( root M, o )
+associatedPrimes FModule := List => M -> associatedPrimes( root M )
 
 ----------------------------------------------------------------------------------------------
 -- Generating random generating morphisms and FModules
@@ -179,7 +188,7 @@ associatedPrimes FModule := List => o -> M -> associatedPrimes( root M, o )
 randomGeneratingMorphism = method( Options=> { Degree => 1 } )
 
 -- produces a random generating morphism M --> F(M)
-randomGeneratingMorphism ModuleClass := generatingMorphism => o -> M ->
+randomGeneratingMorphism Module := GeneratingMorphism => o -> M ->
 (
     H := Hom( M, FF M );
     n := numgens H;
@@ -387,7 +396,7 @@ lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
     g := if #frs==0 then 0_R else last frs;
     M := (( c1*F + image K ) : g1)/(c*F + (g)*F + image K);
     pii := product( frs, x -> x^(p-1) );
-    U := matrix entries LC#generatingMorphism;
+    U := matrix entries LC#cache#generatingMorphism;
     N := makeFModule inducedMap( FF M, M, pii*U );
     root N;
     degree Hom( R^1/m, root N )
