@@ -38,8 +38,10 @@ exponentPrimeFact (ZZ, ZZ) := (ZZ) => (n, p) -> (
 
 squareSymbol = method()
 
--- Given a number a and a prime p
--- Output: 1, if a is a unit square,  -1, if a=p^even (unit square), 0 otherwise
+-- Input: An integer a and a prime p
+-- Output: 1, if a is a unit square,  -1, if a=p^(even power)x  (non-square unit), 0 otherwise
+-- Note:  The terminology "Square Symbol" comes from John Voight's Quaternion Algebra book
+
 squareSymbol(ZZ, ZZ) := (ZZ) => (a, p) -> (
     R:=GF(p, Variable => x);
     e1:=exponentPrimeFact(a,p);
@@ -86,7 +88,13 @@ omegaHilbert(ZZ):= ZZ  => (a) -> (
 hilbertSymbol = method()
 
 hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
+-- Note: The Hilbert symbol (a,b)_p is defined for a, b p-adic numbers
+-- We will be assuming that the a, b are integers.
+-- We need to distinguish 
+    
     if (odd p) then (
+	-- when p is odd, the Hilbert symbol (a,b)_p can be expressed by a formula using Legendre symbols
+	-- or equivalently, be defined, by the follwoing condition.  
 	if (squareSymbol(a, p)==1 or squareSymbol(b, p)==1 or 
 	    squareSymbol(-1*a*b, p) ==1 or
 	    (squareSymbol(a,p)*squareSymbol(b,p)==1)) then (
@@ -103,7 +111,11 @@ hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
 	 b1:=sub(b/p^e2, ZZ);
 	 c1:= eps2Hilbert(a1);
 	 c2:= eps2Hilbert(b1);
-	 d:= c1*c2+e1*c2+e2*c1;
+	 d1:= omegaHilbert(a1);
+	 d2:= omegaHilbert(b1);
+	 
+	 d:= c1*c2+e1*d2+e2*d1;
+	 -- when p=2, the Hilbert symbol (a,b)_2 equals (-1)^d
 	 if (even d) then (
 	     return 1;
 	     )
@@ -164,6 +176,10 @@ invariantFormQp =method()
 
 invariantFormQp (List, ZZ):= (ZZ, ZZ, ZZ) => (f, p) -> (
     -- currently will export the discriminant as a square free integer
+    -- Note:  Still need a way to treat two integers as defining the same discriminant, if they differ by a
+    --  square in Z_p.  They need to have the same parity of power of prime p, and the quotient of their 
+    -- (prime-to-p) parts must define a unit square in Z_p^*.
+
     len:=#f;
     for i from 0 to (len-1) do (
 	if (f_i==0) then (print"Error: Form is degenerate");
@@ -176,3 +192,42 @@ invariantFormQp (List, ZZ):= (ZZ, ZZ, ZZ) => (f, p) -> (
     c:=hasseWittInvariant(f, p);
     return(a, b, c);
     );
+
+-- Need routine 
+
+equalUptoPadicSquare = method()
+
+equalUptoPadicSquare (ZZ, ZZ, ZZ):= (Boolean) => (a, b, p) -> (
+-- Given a, b integers, determines if a, b differ by a square in Q_p
+    a1:=squarefreePart(a);
+    b1:=squarefreePart(b);
+    if (exponentPrimeFact(a1, p ) != exponentPrimeFact(b1, p)) then (
+	return false;
+        )
+    else (
+    	-- c1 will be an integer prime to p
+	c1:= squarefreePart(a1*b1);
+	return (legendreBoolean( sub(c1, GF(p, Variable => x)))); 
+	);
+    
+  );  
+ 
+isIsomorphicFormQp = method ()
+
+isIsomorphicFormQp (List, List, ZZ):= (Boolean) => (f, g, p) -> (
+    -- Input: (f,g ,p):  f, g are lists of diagonal elements (in integers) of two forms over Qp
+    --         p is a prime number
+    -- Output: true if f, g are isomorphic over Qp
+    
+    -- Should check that the elements in the list are all integers. 
+    a:= invariantFormQp(f,p);
+    b:= invariantFormQp(g,p);
+    if (a_0 == b_0 and a_2 == b_2 and  equalUptoPadicSquare(a_1, b_1, p)) then (
+	-- all three of the invariant are the same, so the forms are isom. over Qp
+	return true;
+	)
+    else (
+	-- one of the invariants differ, so the forms are different.
+	return false;
+    );
+);
