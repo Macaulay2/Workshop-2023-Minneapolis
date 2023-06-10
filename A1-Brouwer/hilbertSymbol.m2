@@ -7,12 +7,12 @@
 -- so that all diagonal elements are integers.
 
 -- Goals  (6/9/23)
-Done:
+-- Done:
 -- 0. Expand code to have function that outputs all the invariants for a rational quadratic form over Qp 
 --     Done with function invariantFormQp
 -- 1.  Use invatiants of two forms to tell whether two rational forms are isomorphic over Q
 
-Todo:
+-- Todo:
 -- 1.  Expand code to have function that outputs all the invariants for a rational quadratic form.  
 -- 2.  Use invariant to determine if a rational q. form is anisotropic
 -- 3.  Expand code so that it works for any quadratic form over a number field (should be very similar to the code below).
