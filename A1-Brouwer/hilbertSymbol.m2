@@ -366,3 +366,63 @@ isIsomorphicFormQ (Matrix, Matrix):= (Boolean) => (f, g) -> (
     
     
     
+isIsotropicDiagFormQp = method()
+
+isIsotropicDiagFormQp (List, ZZ):=(Boolean) => (f, p) -> (
+    -- Input: (f, p): Diagonal Form with Integer coeffs, p a prime
+    -- Output: true if form represents 0 over Qp
+    
+    n:=#f;
+    d:=discForm(f);
+    e:=hasseWittInvariant(f, p);
+    if (n==2) then (
+    -- need to compare d ==-1 in Qp^*/Qp^2	
+	if (equalUptoPadicSquare(sub(-1, ZZ), d, p)) then (
+	    return true;
+	    )
+	else (return false);
+	)
+    else (
+	if (n==3) then (
+	    if (hilbertSymbol(-1, -d, p) == hasseWittInvariant(f, p)) then (
+		return true;
+		)
+	    else (return false);
+	    )
+	else (
+	    if (n==4) then (
+		if ((not equalUptoPadicSquare( d, 1, p)) or (equalUptoPadicSquare(d, 1, p) and (hilbertSymbol(-1,-1,p) == hasseWittInvariant(f, p)))) then (
+		    return true;
+		    )
+		else (return false);
+		)
+	    else (
+		return true;
+		)
+	    )
+	)
+    );
+
+
+-- Not Finished
+isIsotropicDiagFormQ = method()
+
+isIsotropicDiagFormQ (List):=(Boolean) => (f) ->(
+    -- need to check if anisotropic over RR and all Qp
+    n:= #f;
+    a:=signatureRealQForm(f);
+    -- if real form is definite then form f is not isotropic
+    if (a_0 * a_1 <=0 ) then (
+	return true;
+	) else
+    ( 
+	-- know that we are indefinite at real place
+	-- need to fill in code
+    );  
+)  
+		
+		    
+	
+    
+    
+  
