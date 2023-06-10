@@ -3,16 +3,19 @@
 --  Very preliminary version of Invariant Calculations (hilbert symbol, etc.) for quadratic functions over Q
 -- 6/9/23
 -- Tom Hagedorn
--- Currently, all calculations are done for a quadratic form, diagonalized, and we work with an isomorphic rational form, scaled 
+-- Currently, all calculations are done for a  quadratic form, diagonalized, and we work with an isomorphic rational form, scaled 
 -- so that all diagonal elements are integers.
 
 -- Goals  (6/9/23)
+Done:
 -- 0. Expand code to have function that outputs all the invariants for a rational quadratic form over Qp 
 --     Done with function invariantFormQp
+-- 1.  Use invatiants of two forms to tell whether two rational forms are isomorphic over Q
+
+Todo:
 -- 1.  Expand code to have function that outputs all the invariants for a rational quadratic form.  
 -- 2.  Use invariant to determine if a rational q. form is anisotropic
--- 3.  Use invatiants of two forms to tell whether two rational forms are isomorphic over Q
--- 4.  Expand code so that it works for any quadratic form over a number field (should be very similar to the code below).
+-- 3.  Expand code so that it works for any quadratic form over a number field (should be very similar to the code below).
 
 
 -- Input: Integers a, b, and prime p 
@@ -20,6 +23,7 @@
 
 load "simplifyForm.m2"
 load "squarefreepart.m2"
+load "diagonalize.m2"
 
 exponentPrimeFact = method()
 
@@ -62,28 +66,6 @@ squareSymbol(ZZ, ZZ) := (ZZ) => (a, p) -> (
     );
     
     
-eps2Hilbert = method()
-
-eps2Hilbert(ZZ):= ZZ => (a) -> (
-	    if (odd a) then (
-		return (a-1)/2;
-	        )
-	    else (
-		print "Error: epsilonHilbert applied to even integer";
-	    );    
-    );
-
-omegaHilbert = method()
-
-omegaHilbert(ZZ):= ZZ  => (a) -> (
-    if (odd a) then (
-		return (a^2-1)/8;
-	        )
-	    else (
-		print "Error: omegaHilbert applied to even integer";
-	    );    
-    
-    );
 
 hilbertSymbol = method()
 
@@ -109,10 +91,11 @@ hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
 	 a1:=sub(a/p^e1,ZZ);
 	 e2:=exponentPrimeFact(b, p);
 	 b1:=sub(b/p^e2, ZZ);
-	 c1:= eps2Hilbert(a1);
-	 c2:= eps2Hilbert(b1);
-	 d1:= omegaHilbert(a1);
-	 d2:= omegaHilbert(b1);
+	 c1:= (a1-1)/2;
+	 c2:= (b1-1)/2;
+	 d1:= (a1^2-1)/8;
+	 d2:= (b1^2-1)/8;
+	 
 	 
 	 d:= c1*c2+e1*d2+e2*d1;
 	 -- when p=2, the Hilbert symbol (a,b)_2 equals (-1)^d
@@ -251,3 +234,135 @@ isIsomorphicFormQp (List, List, ZZ):= (Boolean) => (f, g, p) -> (
 	return false;
     );
 );
+
+
+signatureRealQForm = method ()
+
+signatureRealQForm (List):=(ZZ, ZZ, ZZ) => (f) -> (
+    -- Input: f = list of diagonal elements of quadratic form
+    -- Output: (r, s, t): Signature of form over the reals. 
+    --      r= # of positive entries, s= # of negative entries, t= number of zeros
+    posEntries :=0;
+    negEntries:= 0;
+    zeroEntries:=0;
+    --for loop counts the number of negative diagonal entries
+    n:=#f;
+    for i from 0 to (n-1) do(
+            if f_(i)>0 then(
+                posEntries=posEntries+1;
+            	)
+	    else (
+		if f_(i)<0 then(
+                    negEntries=negEntries+1;
+            	)
+	    else (
+		zeroEntries = zeroEntries +1;
+		)
+	    )
+	);
+    return (posEntries, negEntries, zeroEntries);
+    
+	     
+    );
+
+discForm = method ()
+
+discForm (List):=(ZZ) => (f) -> (
+    -- Input: f = list of diagonal elements of quadratic form
+    -- Output: Product of the entries
+    disc:=1;
+    --for loop counts the number of negative diagonal entries
+    n:= #f ;
+    for i from 0 to (n-1) do(
+	 disc = disc* f_i;
+	 );
+    return disc;
+    
+   	     
+    );
+
+
+
+isIsomorphicDiagFormQ = method ()
+
+isIsomorphicDiagFormQ (List, List):= (Boolean) => (f, g) -> (
+    -- Input: (f,g):  f, g are lists of diagonal elements (in integers) of two forms over Q
+    --         
+    -- Output: true if f, g are isomorphic over Q
+    
+    -- Method:  Calculate rank, discriminant over Q, signature over R
+    --          These must all agree.
+    --	      	If so, then need to see if Hasse invariant agrees for all primes p.
+    --          Hasse symbol is 1 if prime p doesn't divide any of the diagonal elts of form
+    --          So (i) determine the list of primes dividing any of the diagonal elts. 
+    --             (ii) Calculate and compare Hasse invariant at each p.  If equal for all p,
+    --                  then isomorphic forms
+
+    -- Compare signatures over R
+    disc1 := squarefreePart(discForm(f));
+    disc2 := squarefreePart(discForm(g));
+    
+    if (signatureRealQForm(f) == signatureRealQForm(g) and disc1 == disc2) then (
+	    -- signature and discriminants agree. Now need to test Hasse invariant
+	    d:= disc1 * disc2;
+	    if (d<0) then (d = -d);
+	    if (d==0) then print"Error: Form is degenerate";
+	    H:=hashTable (factor d);
+	    k:= keys H;    
+	    i:=0;
+	    flag:=0;
+	    while (i< #k and flag==0)  do (
+		p:=k_i;
+		if (hasseWittInvariant(f, p) != hasseWittInvariant(g, p)) then (
+		    flag=1;
+		    );
+		i=i+1;
+		);
+    	    if flag==0 then (
+		return true;
+		)
+    	    else (
+		return false;
+		);
+	    )
+	else (
+	    return false;
+	    );
+    );
+
+
+isIsomorphicFormQ = method ()
+
+isIsomorphicFormQ (Matrix, Matrix):= (Boolean) => (f, g) -> (
+    -- Input: (f,g):  f, g are two square bilinar forms over Q, represented by matrices
+    -- Output: true if f, g are isomorphic over Q
+    
+    -- Check same size
+    if (numRows f != numRows g) then (return false;);
+    
+    -- First, we diagonalize both matrices
+    df:= diagonalize f;
+    dg:= diagonalize g;
+    
+   
+    -- Then make all entries integers, by multiplying by denominator squared, and clearing squares
+    -- create list of diagonal entries in integers
+    n:=numRows f;
+    f1:=apply(n, i-> df_(i,i));
+    g1:=apply(n, i-> dg_(i,i));
+    
+  
+    -- convert rational diagonals to square-free integers by multiplying by squares
+    
+    f2:= apply(n, i-> squarefreePart(sub(numerator(f1_i) * denominator(f1_i),ZZ)));
+    g2:= apply(n, i-> squarefreePart(sub(numerator(g1_i) * denominator(g1_i),ZZ)));
+    
+    print f2;
+    print g2; 
+    -- Now compare forms
+    return isIsomorphicDiagFormQ(f2, g2);
+    
+    );
+    
+    
+    
