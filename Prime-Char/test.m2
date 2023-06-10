@@ -87,4 +87,21 @@ f = inducedMap(R^1/I, R^1/(frobenius I) )
 
 E = Ext^4( f, R^1 )
 
+------------------
+-- examples of Lyubeznik Tables from Katzman--Sharp
+-- 6.5
+
+p = 2
+R = ZZ/p[x_1..x_5];
+I = intersect(ideal(x_1..x_4), ideal(x_2,x_3,x_5), ideal(x_1-x_5,x_2-x_5,x_3-x_4));
+
+lyubeznikTable( I, R )
+
+-- 6.6
+
+p = 2
+R = ZZ/p[x_1..x_7];
+I = intersect(ideal(x_1, x_2), ideal(x_3, x_4), ideal(x_5, x_6, x_7));
+
+lyubeznikTable( I, R )
 

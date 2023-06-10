@@ -12,7 +12,7 @@ FModule = new Type of HashTable
 
 ModuleClass = new Type of Module
 
-GeneratingMorphism = new Type of Morphism
+GeneratingMorphism = new Type of Matrix
 
 ----------------------------------------------------------------------------------------------
 -- ModuleClass 
@@ -86,20 +86,15 @@ generatingMorphism = method()
 
 -- Given a standard map f, generatingMorphism(f) verifies whether f well defined, and whether
 -- f maps a module M to F(M). If so, it returns a GeneratingMorphism identical to f.
-generatingMorphism Matrix := Matrix => f ->
+generatingMorphism Matrix := GeneratingMorphism => f ->
 (
     if f == 0 then return new GeneratingMorphism from f;
     if not isWellDefined f then 
         error "generatingMorphism: map is not well defined";
-    if target f != FF( source f ) then 
+    if moduleClass( target f ) != moduleClass( FF( source f ) ) then 
         error "generatingMorphism: map does not map a module M to F(M)";
-    new GeneratingMorphism from stdMap f
+    new GeneratingMorphism from f
 )
-
-generatingMorphism Matrix := GeneratingMorphism => f -> generatingMorphism morphism f
-
--- Standardizes a map and tries to make a GeneratingMorphism from it.
---generatingMorphism Matrix := GeneratingMorphism => f -> generatingMorphism morphism f
     
 makeFModule = method()
 
@@ -416,15 +411,16 @@ lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
     F := target K;
     g1 := last frs1;
     g := if #frs==0 then 0_R else last frs;
-    P := ( c1*F + image K ) : g1;
-    Q := c*F + (g)*F + image K;
-    P1 := ((frobenius c1)*F + image frobenius K) : (g1)^p;
-    Q1 := (frobenius c)*F + (g)^p*F + image frobenius K;
-    M := P/Q; --ker inducedMap( F/P, F/Q );
-    FM := P1/Q1; -- ker inducedMap( F/P1, F/Q1 );
+    -- P := ( c1*F + image K ) : g1;
+    -- Q := c*F + (g)*F + image K;
+    -- P1 := ((frobenius c1)*F + image frobenius K) : (g1)^p;
+    -- Q1 := (frobenius c)*F + (g)^p*F + image frobenius K;
+    -- M := P/Q; --ker inducedMap( F/P, F/Q );
+    -- FM := P1/Q1; -- ker inducedMap( F/P1, F/Q1 );
+    M := (( c1*F + image K ) : g1)/(c*F + (g)*F + image K);
     pii := product( frs, x -> x^(p-1) );
     U := matrix entries LC#generatingMorphism;
-    N := makeFModule inducedMap( FM, M, pii*U );
+    N := makeFModule inducedMap( FF M, M, pii*U );
     root N;
     degree Hom( R^1/m, root N )
 )
@@ -443,3 +439,5 @@ lyubeznikTable ( Ideal, Ring ) := Matrix => ( I, R ) ->
     );
     matrix LT
 )
+
+
