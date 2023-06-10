@@ -24,14 +24,6 @@ doc ///
 		  HREF("https://arxiv.org/abs/1708.07236", EM "Prism Tableaux for alternating sign matrix varieties"),
 		  " , arXiv preprint 1708.07236."}
 	      }@
-      Text
-      	  @SUBSECTION "Contributors"@
-      Text
-      	  The following people have generously contributed code, improved existing code, or enhanced the documentation:
-	  @HREF("https://sites.google.com/illinois.edu/shiliang-gao", "Shiliang Gao")@,
-	  @HREF("daojihuang.me", "Daoji Huang")@,
-	  and
-	  @HREF("https://www.math.tamu.edu/directory/graduate.html", "Pooja Joshi")@.
       Example
 	   w = {1,5,3,4,2};
 	   essentialBoxes w   
@@ -40,7 +32,15 @@ doc ///
        	   This package also contains functions for studying homological properties of ASM varieties.
       Example
       	  grothendieckPoly w
-	  betti res antiDiagInit w	   
+	  betti res antiDiagInit w	  
+      Text
+      	  @SUBSECTION "Contributors"@
+      Text
+      	  The following people have generously contributed code, improved existing code, or enhanced the documentation:
+	  @HREF("https://sites.google.com/illinois.edu/shiliang-gao", "Shiliang Gao")@,
+	  @HREF("daojihuang.me", "Daoji Huang")@,
+	  and
+	  @HREF("https://www.math.tamu.edu/directory/graduate.html", "Pooja Joshi")@. 
 ///
 
 
