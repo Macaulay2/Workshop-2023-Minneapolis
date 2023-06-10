@@ -1,0 +1,54 @@
+* Frobenius Functor
+
+** TODO Check that ring is regular. Cache result in ring.
+
+* FModules
+
+FModule Type stores a generating morphism. Cache stores a root.
+
+** localCohomology
+
+*** DONE localCohomology should cache result in ideal.
+CLOSED: [2023-06-10 Sat 15:47]
+
+
+*** PROJECT Improve filter sequence version
+
+** root
+
+*** TODO Should also cache a root morphism
+
+** cohomDim
+
+*** DONE cohomDim should cache result in ideal
+CLOSED: [2023-06-10 Sat 15:48]
+
+** associatedPrimes
+
+*** DONE Broken! Fix it!
+CLOSED: [2023-06-10 Sat 15:58]
+
+
+*** DONE Cache results in the FModule
+CLOSED: [2023-06-10 Sat 16:02]
+
+* Filter Regular Sequences
+
+** randomFilterRegSeq
+
+Given ideal I and module M, attempts to find an I-filter regular sequence on M.
+
+User should have control over number of attempts, whether to preserve homogeneity, and over various strategies used.
+
+*** TODO Replace generators of I with a minimal system, sorted by complexity (number of terms, degree)
+
+*** DONE Try first to use the generators as terms of the sequence
+CLOSED: [2023-06-10 Sat 12:23]
+
+*** DONE Try linear combinations. User could control the "sparseness" of these LCs
+CLOSED: [2023-06-10 Sat 12:23]
+
+** lyubeznikNumber and lyubeznikTable
+
+*** DONE lyubeznikNumber should cache results 
+CLOSED: [2023-06-10 Sat 16:20]
