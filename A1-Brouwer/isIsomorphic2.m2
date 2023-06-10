@@ -1,7 +1,8 @@
---tests whether two quadratic forms are isomorphic; only implemented over RR and CC.
+--tests whether two quadratic forms are isomorphic; only implemented over QQ, RR, and CC.
 
 load "GW-type.m2"
 load "diagonalize.m2"
+load "hilbertSymbol.m2"
 
 isIsomorphic2 = method()
 
@@ -66,5 +67,8 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
             )
         else return false;
         )
-    else error "Only implemented if both base fields are RR or both base fields are CC";
+    else if ((k1 === QQ) and (k2 === QQ)) then (
+        return isIsomorphicFormQ(A,B);
+        )
+    else error "Only implemented if both base fields are QQ, RR, or CC";
     )
