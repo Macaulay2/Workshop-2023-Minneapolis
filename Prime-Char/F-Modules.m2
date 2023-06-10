@@ -84,7 +84,7 @@ FrobeniusFunctor ^ ZZ := ( f, n ) -> ( x -> f( n, x ) )
 
 generatingMorphism = method()
 
--- Given a standard map f, generatingMorphism(f) verifies whether f well defined, and whether
+-- Given f, generatingMorphism(f) verifies whether f well defined, and whether
 -- f maps a module M to F(M). If so, it returns a GeneratingMorphism identical to f.
 generatingMorphism Matrix := GeneratingMorphism => f ->
 (
@@ -92,7 +92,7 @@ generatingMorphism Matrix := GeneratingMorphism => f ->
     if not isWellDefined f then 
         error "generatingMorphism: map is not well defined";
     if moduleClass( target f ) != moduleClass( FF( source f ) ) then 
-        error "generatingMorphism: map does not map a module M to F(M)";
+        error "generatingMorphism: does not map a module M to F(M)";
     new GeneratingMorphism from f
 )
     
@@ -111,7 +111,7 @@ localCohomologyExt := ( i, I, R ) ->
     M := R^1/I;
     f := inducedMap( M, FF M );
     E := Ext^i( f, R^1 );
-    makeFModule generatingMorphism E
+    makeFModule E
 )
 
 --- Compute a generating morphism for H_I^i(R)
@@ -398,7 +398,6 @@ lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
     d := dim( R/I );
     p := char R;
     if i < 0 or j < 0 or j < i or i > d or j > d then return 0;
---    if i == 0 then i = 2;
     m := ideal R_*;
     LC := localCohomology( n-j, I, R );
     r := root LC;
@@ -411,12 +410,6 @@ lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
     F := target K;
     g1 := last frs1;
     g := if #frs==0 then 0_R else last frs;
-    -- P := ( c1*F + image K ) : g1;
-    -- Q := c*F + (g)*F + image K;
-    -- P1 := ((frobenius c1)*F + image frobenius K) : (g1)^p;
-    -- Q1 := (frobenius c)*F + (g)^p*F + image frobenius K;
-    -- M := P/Q; --ker inducedMap( F/P, F/Q );
-    -- FM := P1/Q1; -- ker inducedMap( F/P1, F/Q1 );
     M := (( c1*F + image K ) : g1)/(c*F + (g)*F + image K);
     pii := product( frs, x -> x^(p-1) );
     U := matrix entries LC#generatingMorphism;
@@ -427,15 +420,11 @@ lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
 
 lyubeznikTable = method()
 
---ADJUSTING THIS TO ONLY DO ELMS NOT ON THE DIAGONAL, just comment out the line above the comment
---and un-comment-out the comment
 lyubeznikTable ( Ideal, Ring ) := Matrix => ( I, R ) ->
 (
     d := dim( R/I );
-    LT := apply( toList(0..d), i ->  
-        apply( toList(0..d), j ->
-            try lyubeznikNumber( i, j, I, R ) else -1
-        )
+    LT := toList apply( 0..d, i ->  
+        toList( (d:0) | apply( i..d, j -> lyubeznikNumber( i, j, I, R ) ) )
     );
     matrix LT
 )
