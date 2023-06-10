@@ -14,21 +14,36 @@ globalA1Degree (List) := (Matrix) => (Endo) -> (
     S:=ring(Endo#0); -- S is the ring in which the defining polynomials of f live
     R := kk[X_1..Y_n]; -- inititalize this new ring for the computation of the Bezoutian.
     D := mutableMatrix id_((frac R)^n); -- Create a matrix which will be populated by \Delta_{ij} in the paper
+    
+    
+    
     for i from 0 to (n-1) do (
 	for j from 0 to (n-1) do(
 	    -- iterate through the entries of the matrix D and populate it with the following information ...
 	    targetList1 := toList (Y_1..Y_j|X_(j+1)..X_n); -- create the list {x_1 => Y_1, ..., x_j-1 => Y_j-1, x_j => X_j, ..., x_n => X_n}
 	    targetList2 := toList (Y_1..Y_(j+1)| X_(j+2)..X_n); -- create the list {x_1 => Y_1, ..., x_j => Y_j, x_j+1 => X_j+1, ..., x_n => X_n}
-        numeratorD = ((map(R,S,targetList1))(Endo_i)-(map(R,S,targetList2))(Endo_i)); -- map f_i(x) to f_i(Y_1, ..., Y_j-1, X_j, ..., X_n) resp. 
+            numeratorD = ((map(R,S,targetList1))(Endo_i)-(map(R,S,targetList2))(Endo_i)); -- map f_i(x) to f_i(Y_1, ..., Y_j-1, X_j, ..., X_n) resp. 
 	    D_(i,j)= numeratorD/(X_(j+1)-Y_(j+1)); -- this is \Delta_{i,j} from the paper
-	); 
-    );
-    bezDet:= numerator (det(D)); -- typecast to kk[X_1, ..., Y_n]
+	    ); 
+        );
+
+
+    -- The determinant of D is interpreted as living in Frac(k[x_1..x_n]).
+    -- Applying lift(-,R) won't work here, so we lift the numerator and then
+    -- divide out by a lift of the denominator (which will be a scalar) to the
+    -- coefficient ring 
+    fracFieldBezDet := det(D);
+    bezDet := lift(numerator(det(D)), R) / lift(denominator(det(D)),coefficientRing R);
+    
     RX:=kk[X_1..X_n]; 
     RY:=kk[Y_1..Y_n];
     mapxtoX:= (map(RX,S,toList(X_1..X_n))); -- defines the map f_i(x_1, ..., x_n) to f_i(X_1, ..., X_n)
     mapxtoY:=(map(RY,S,toList(Y_1..Y_n))); -- defines the map f_i(x_1, ..., x_n) to f_i(Y_1, ..., Y_n)
     standBasisX := basis (RX/(ideal (leadTerm (mapxtoX ideal Endo)))); -- Compute the standard basis of kk[X_1, ..., X_n]/(f_1, ..., f_n)
+    
+    -- print("Standard basis is:");
+    -- print(standBasisX)
+    
     standBasisY := basis (RY/(ideal (leadTerm (mapxtoY ideal Endo)))); -- Compute the standard basis of kk[Y_1, ..., Y_n]/(f_1, ..., f_n)
     id1 := (ideal apply(toList(0..n-1), i-> mapxtoX(Endo_i))); -- defines an ideal (f_1(X), ..., f_n(X))
     id2 := (ideal apply(toList(0..n-1), i-> mapxtoY(Endo_i))); -- defines an ideal (f_1(Y), ..., f_n(Y))
@@ -36,7 +51,14 @@ globalA1Degree (List) := (Matrix) => (Endo) -> (
     Rquot:= R/promotedEndo; -- defines the quotient ring kk[X_1..Y_n]/(f(X),f(Y)) which is Q(f)\otimes_{k}Q(f) in the paper
     sBXProm :=sub(standBasisX,Rquot); -- moves the standard bases to the quotient ring
     sBYProm :=sub(standBasisY,Rquot); -- moves the standard bases to the quotient ring 
+    -- print("Bez det is:");
+    -- print(bezDet)
+    
     bezDetRed := bezDet % promotedEndo; --reduces bezDet mod promotedEndo 
+    -- print("bezDetRed is:");
+    -- print(bezDetRed);
+    
+    
     ------------------------
     phi0 := map(kk,Rquot,(toList ((2*n):0))); -- define a ring map that takes the coefficients to the field kk instead of considering it as an element of the quotient ring (RMK is this even needed?)
     --will return matrix B
@@ -49,10 +71,5 @@ globalA1Degree (List) := (Matrix) => (Endo) -> (
         );
     );
     return matrix(B);
+    --print(B);
 );
-
-
-
-
-
-

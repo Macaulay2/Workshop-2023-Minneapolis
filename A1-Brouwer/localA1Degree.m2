@@ -27,6 +27,7 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     -- Initialize a polynomial ring in X_i's and Y_i's to compute the Bezoutian in
     R := kk[X_1..Y_n];
     
+    print("R is " | toString(R));
     -- Create an (n x n) matrix D which will be populated by \Delta_{ij} in the pape
     D := mutableMatrix id_((frac R)^n);
     
@@ -34,7 +35,7 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     
     -- Iterate through the entries of the matrix D and populate it with the Delta_{ij}'s
     for i from 0 to (n-1) do (
-	for j from 0 to (n-1) do(-- TODO let's just run 1 to n instead (?)
+	for j from 0 to (n-1) do(-- TODO let's rewrite this to just run 1 to n instead (?)
 	    
 	    
 	     -- Creates the list {x_1 => Y_1, ..., x_j-1 => Y_j-1, x_j => X_j, ..., x_n => X_n}
@@ -51,9 +52,13 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
 	); 
     );
 
-    -- bezDet is the determinant of the (n x n) matrix D
-    bezDet:= numerator (det(D)); -- typecast to kk[X_1, ..., Y_n]
-
+    -- The determinant of D is interpreted as living in Frac(k[x_1..x_n]).
+    -- Applying lift(-,R) won't work here, so we lift the numerator and then
+    -- divide out by a lift of the denominator (which will be a scalar) to the
+    -- coefficient ring k
+    fracFieldBezDet := det(D);
+    bezDet := lift(numerator(det(D)), R) / lift(denominator(det(D)),coefficientRing R);
+        
     -- Define formal variables X_i, Y_i that replace x_i
     RX:=kk[X_1..X_n]; 
     RY:=kk[Y_1..Y_n];
@@ -106,5 +111,6 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     );
     return matrix(B);
 );
+
 
 

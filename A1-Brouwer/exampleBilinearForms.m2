@@ -75,3 +75,45 @@ diagonalForm(hyp1an)
 h2 = matrix(RR,{{0,0,0,1},{0,0,1,0},{0,1,0,0},{1,0,0,0}});
 hyp2 = gwClass(h2);
 diagonalForm(hyp2)
+
+
+
+Crk3 = gwClass(matrix(CC,{{2,3},{3,5}}));
+Crk3
+
+print(simplifyForm(Crk3))
+
+
+HypR = gwClass(matrix(RR,{{0,1},{1,0}}));
+HypR
+
+print(simplifyForm(HypR))
+
+
+
+
+
+M = matrix(GF(5),{{1,0,0},{0,3,0},{0,0,4}})
+beta = gwClass(M)
+print(simplifyForm(beta))
+
+
+
+
+
+
+T1 = QQ[z_1..z_2];
+f1 = {(z_1-1)*z_1*z_2, (3/5)*z_1^2 - (17/3)*z_2^2};
+q=ideal {z_1,z_2};
+r=ideal {z_1-1,z_2^2-(9/85)};
+loc1= localA1Degree(f1,q)
+loc1
+
+
+
+
+T=QQ[x_1..x_4];
+Endo = {x_2-x_1*x_3, x_4-x_1-x_3^2, 1-x_1*x_4, -x_2-x_3*x_4};
+U= globalA1Degree(Endo);
+U
+diagonalize(U)

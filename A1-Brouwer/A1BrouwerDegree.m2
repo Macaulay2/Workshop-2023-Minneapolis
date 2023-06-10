@@ -38,3 +38,93 @@ newPackage(
     DebuggingMode=>true
     )
 
+
+export{
+    -- methods
+    
+    }
+
+
+---------------
+-- Types
+---------------
+
+
+-- New type of hash table called "GrothendieckWittType"
+-- GW-type.m2
+
+
+---------------
+-- Operations with matrices
+---------------
+
+-- Diagonalization of symmetric bilinear forms
+-- diagonalize.m2
+
+
+-- basic booleans about matrices
+-- matrixBooleans.m2
+
+
+-- Checks if a Gram matrix can easily be seen to be upper left triangular
+-- easyUpperTriangular.m2
+
+---------------
+-- Operations with k-algebras
+---------------
+
+-- localAlgebraBasis.m2
+
+
+---------------
+-- Diagonalization over QQ
+---------------
+
+-- Takes in a rational number or integer and outputs the smallest magnitude integer in its square class
+-- squarefreepart.m2
+
+-- Given diagonal matrix, split off any <a>+<-a> and return number of times we can do this as well as smaller matrix with none of these
+-- splitoffobvioushyperbolics.m2
+
+-- Takes in symmetric matrix over QQ and diagonalizes, removes squares from entries, and splits off hyperbolic forms that immediately appear as <a> + <-a>
+-- rationalsimplify.m2
+
+
+
+
+
+-- Checks if 
+-- easyIsomorphicGW
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+load();
+
+
+
+
+
+
+
+
+TEST ///
+    assert(1==1);
+    
+
+///
+
+
+end
