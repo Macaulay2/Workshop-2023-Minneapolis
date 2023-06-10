@@ -85,10 +85,9 @@ isCartwrightSturmfels w
 
 --Gorenstein example
 --takes some time
-u = {3,7,1,4,8,2,6,5}
-betti res trim schubertDetIdeal u
-
-betti res antiDiagInit u
+--u = {3,7,1,4,8,2,6,5}
+--betti res trim schubertDetIdeal u
+--betti res antiDiagInit u
 ----------------
 
 --Regularity demo--
@@ -119,3 +118,4 @@ apply(1..10,i-> elapsedTime matrixSchubertReg(random toList (1..50)));
 setRandomSeed 1001;
 
 apply(1..5,i-> elapsedTime matrixSchubertReg(random toList (1..100)));
+
