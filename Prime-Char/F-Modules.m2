@@ -128,7 +128,7 @@ localCohomology ( ZZ, Ideal ) := FModule => o -> ( i, I ) ->
 
 localCohomology ( ZZ, Ideal, Ring ) := FModule => o -> ( i, I, R ) ->
 (
-    if R =!= ring I then "error: expected an ideal of the given ring";
+    if R =!= ring I then error "localCohomology: expected an ideal of the given ring";
     localCohomology( i, I, o )
 )
   
@@ -179,7 +179,16 @@ cohomDim Ideal := ZZ => o -> ( cacheValue symbol cohomDim )( I ->
     n
 ))
 
-associatedPrimes FModule := List => M -> associatedPrimes( root M )
+associatedPrimes FModule := List => o -> M -> 
+(
+    if M#cache#?associatedPrimes then M#cache#associatedPrimes
+    else
+    (
+        ap := associatedPrimes( root M, o );
+        M#cache#associatedPrimes = ap;
+        ap
+    )
+)
 
 ----------------------------------------------------------------------------------------------
 -- Generating random generating morphisms and FModules
@@ -329,7 +338,7 @@ randomFilterRegSeq ( ZZ , Ideal, Ring ) := List => o -> ( n, I, R ) ->
 
 -- generates limit closure and lower limit ideal
 
-ascendingIdealEquality = method( Options => { MaxTries => infinity } )
+ascendingIdealEquality = method( Options => { Tries => infinity } )
 -----this function should eventually check to make sure the chain of ideals is ascending
 
 -----this function specifically finds the FIRST spot that we retain equlaity and returns
@@ -338,7 +347,7 @@ ascendingIdealEquality Function := Ideal => o -> f ->
 (
     i := 1;
     isEqual = false;
-    while not isEqual and i < o.MaxTries do 
+    while not isEqual and i < o.Tries do 
     (
 	isEqual = ( f(i) == f(i+1) );
 	i = i+1;
@@ -376,8 +385,11 @@ lowerLimit RingElement := Ideal => f -> lowerLimit { f }
 -- Calculating the Lyubeznik numbers-----
 ---ERROR: Still not computing values when i=j correctly except for highest Lyubeznik #
 lyubeznikNumber = method()
-lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
+
+lyubeznikNumber( ZZ, ZZ, Ideal ) := ZZ => ( i, j, I ) -> 
 (
+    ln := ( cacheValue ( symbol lyubeznikNumber, i, j ) )( I -> (
+    R := ring I;
     n := dim R;
     d := dim( R/I );
     p := char R;
@@ -400,6 +412,14 @@ lyubeznikNumber( ZZ, ZZ, Ideal, Ring ) := ZZ => ( i, j, I, R ) ->
     N := makeFModule inducedMap( FF M, M, pii*U );
     root N;
     degree Hom( R^1/m, root N )
+    ));
+    ln I
+)
+
+lyubeznikNumber ( ZZ, ZZ, Ideal, Ring ) := ( i, j, I, R ) ->
+(
+    if R =!= ring I then error "lyubeznikNumber: expected an ideal of the given ring";
+    lyubeznikNumber( i, j, I )
 )
 
 lyubeznikTable = method()

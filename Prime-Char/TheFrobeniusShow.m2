@@ -355,6 +355,6 @@ localCohomology( 5, I, R ) == 0
 
 all( 0..(s-r), i -> localCohomology( i, I, R ) == 0 )
 
-time associatedPrimes localCohomology( 5, I, R ) 
+associatedPrimes localCohomology( 5, I, R ) 
 
 
