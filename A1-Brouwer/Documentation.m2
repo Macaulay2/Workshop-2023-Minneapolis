@@ -189,3 +189,20 @@ document {
 		 regularRep(y)
 	 	 ///,
         }
+
+document {
+        Key => {(globalA1Degree, List), globalA1Degree},
+	Usage => "globalA1Degree(f)",
+	Inputs => {"An endomorphism" TEX///$f=(f_{1},...,f_{n}):\mathbb{A}^{n}_{k}\to\mathbb{A}^{n}_{k}$///, "as a list" TT"f={f_1, ..., f_n}"},
+	Outputs => { gwClass => { "the Grothendieck-Witt class defining the" TEX///$\mathbb{A}^{1}$/// "degree of the endomorphism" TT "f", "." }},
+	PARA {"Given an endomorphism of affine space, ", TT "n", ", this command outputs the smallest magnitude integer, ",
+                TEX///$m$///, ", such that "},
+	EXAMPLE lines ///
+		 R = QQ[x,y]
+		 F = {y^2-x^2-1,x-y^2+4*y-2}
+		 I = ideal F
+		 regularRep(y,I)
+		 S = R/I
+		 regularRep(y)
+	 	 ///,
+        }
