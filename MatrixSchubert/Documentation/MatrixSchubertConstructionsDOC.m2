@@ -215,15 +215,49 @@ doc ///
         (isIntersectionSchubIdeals, Ideal)
         isIntersectionSchubIdeals
     Headline
-        whether an ideal is ASM
+        whether an ideal is the intersection of Schubert determinantal ideals
     Usage
         isIntersectionSchubIdeals(I)
     Inputs
         I:Ideal
     Description
         Text
-            An ideal I is ASM if I is radical and I = I_{w_1} \cap ... \cap I_{w_k},
-            where the I_{w_i} are Schubert determinantal ideals.
+            Checks if the input ideal I can be written as $I = I_{w_1} \cap ... \cap I_{w_k}$,
+            where each $I_{w_i}$ is a Schubert determinantal ideal.
+///
+
+doc ///
+    Key
+        (isASMIdeal, Ideal)
+        isASMIdeal
+    Headline
+        whether an ideal is ASM
+    Usage
+        isASMIdeal(I)
+    Inputs
+        I:Ideal
+    Description
+        Text
+            An ideal is ASM if it is radical and can be written as the intersection
+			of Schubert determinantal ideals.
+///
+
+doc ///
+    Key
+        (getASM, Ideal)
+        getASM
+    Headline
+        gets the ASM of an ideal (if it exists)
+    Usage
+        getASM(I)
+    Inputs
+        I:Ideal
+    Description
+        Text
+            Gets the alternating sign matrix (ASM) of an ideal $I$, if it exists.
+			If the ASM has not been computed yet, then an attempt will be made 
+			to compute the ASM. Once the ASM is computed, it is stored in the 
+			cache of $I$.
 ///
 
 doc ///
