@@ -1,10 +1,10 @@
-* Frobenius Functor
-
-** TODO Check that ring is regular. Cache result in ring.
-
-* FModules
+* F-Modules
 
 FModule Type stores a generating morphism. Cache stores a root.
+
+** FF (Frobenius Functor)
+
+*** TODO Check that ring is regular. Cache result in ring.
 
 ** localCohomology
 
@@ -31,8 +31,6 @@ CLOSED: [2023-06-10 Sat 15:58]
 
 *** DONE Cache results in the FModule
 CLOSED: [2023-06-10 Sat 16:02]
-
-* Filter Regular Sequences
 
 ** randomFilterRegSeq
 
