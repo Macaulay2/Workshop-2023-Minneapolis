@@ -26,14 +26,14 @@ genMat = (n,m) -> (
 
 genMat = method(
     Options => {
-	CoefficientRing => QQ
---	Variable => getSymbol "z"
+	CoefficientRing => QQ,
+	Variable => getSymbol "z"
 	}
     )
 genMat (ZZ,ZZ) := o -> (n,m) -> (
     k := o.CoefficientRing;
     zEntries := flatten table (n,m,(i,j) -> (i,j));
-    z := getSymbol "z";
+    z := o.Variable;
     degs := apply(zEntries,i-> i_1-i_0 + m); --are there better ways to make the antidiagonal weights? prob
     Q := k(monoid[z_(1,1)..z_(n,m)]);
     Mmut := mutableMatrix(Q,n,m);

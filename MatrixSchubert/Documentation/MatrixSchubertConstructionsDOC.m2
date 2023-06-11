@@ -20,8 +20,11 @@ doc ///
 	      {"Allen Knutson and Ezra Miller, ",
 		  HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
 		  " , Annals of Mathematics (2005): 1245-1318."},
+	      {"Oliver Pechenik, David Speyer, and Anna Weigandt, ",
+		  HREF("https://arxiv.org/abs/2111.10681", EM "Castelnuovo-Mumford regularity of matrix Schubert varieties"),
+		  " , arxiv preprint 2111.10681."},
 	      {"Anna Weigandt, ",
-		  HREF("https://arxiv.org/abs/1708.07236", EM "Prism Tableaux for alternating sign matrix varieties"),
+		  HREF("https://arxiv.org/abs/1708.07236", EM "Prism tableaux for alternating sign matrix varieties"),
 		  " , arXiv preprint 1708.07236."}
 	      }@
       Example
@@ -39,8 +42,8 @@ doc ///
       	  The following people have generously contributed code, improved existing code, or enhanced the documentation:
 	  @HREF("https://sites.google.com/illinois.edu/shiliang-gao", "Shiliang Gao")@,
 	  @HREF("daojihuang.me", "Daoji Huang")@,
-	  and
-	  @HREF("https://www.math.tamu.edu/directory/graduate.html", "Pooja Joshi")@. 
+	  @HREF("https://www.math.tamu.edu/directory/graduate.html", "Pooja Joshi")@, and
+	  @HREF("https://www.clemson.edu/science/academics/departments/mathstat/about/profiles/arakoto", "Antsa Tantely Fandresena Rakotondrafara")@.
 ///
 
 

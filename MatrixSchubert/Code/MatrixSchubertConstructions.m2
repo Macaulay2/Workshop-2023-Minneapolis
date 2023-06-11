@@ -98,12 +98,13 @@ partialASMToASM Matrix := Matrix => (A) -> (
 ----------------------------------------
 antiDiagInit = method(
     Options => {
-	CoefficientRing => QQ
+	CoefficientRing => QQ,
+	Variable => getSymbol "z"
 	}
     )
 antiDiagInit Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    zMatrix := genMat(numrows A, numcols A, CoefficientRing => o.CoefficientRing); --generic matrix
+    zMatrix := genMat(numrows A, numcols A, CoefficientRing => o.CoefficientRing, Variable=> o.Variable); --generic matrix
     rankMat := rankMatrix A; --rank matrix for A
     essBoxes := essentialBoxes A;
     if essBoxes == {} then (
@@ -128,7 +129,7 @@ antiDiagInit Matrix := o -> A -> (
 antiDiagInit List := o -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     A := permToMatrix w;
-    antiDiagInit(A, CoefficientRing => o.CoefficientRing)
+    antiDiagInit(A, CoefficientRing => o.CoefficientRing, Variable=> o.Variable)
 )
 
 ----------------------------------------
@@ -201,6 +202,7 @@ rotheDiagram List := List => (w) -> (
     	--OR an alternating sign matrix A
 --OUTPUT: A list of boxes in the Rothe diagram for A, with their corresponding rank values 
 --TODO: add documentation + examples
+--Could be sped up by only computing ranks of boxes in rothe diagram
 -----------------------
 augmentedRotheDiagram = method()
 augmentedRotheDiagram List := List => w -> (
@@ -238,12 +240,13 @@ essentialBoxes List := List => (w) -> (
 --------------------------------------------
 schubertDetIdeal = method(
     Options => {
-	CoefficientRing => QQ
+	CoefficientRing => QQ,
+	Variable => getSymbol "z"
     }
 )
 schubertDetIdeal Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    zMatrix := genMat(numrows A, numcols A, CoefficientRing=> o.CoefficientRing); --generic matrix
+    zMatrix := genMat(numrows A, numcols A, CoefficientRing=> o.CoefficientRing, Variable => o.Variable); --generic matrix
     rankMat := rankMatrix A; --rank matrix for A
     essBoxes := essentialBoxes A;
     if essBoxes == {} then (
@@ -262,7 +265,7 @@ schubertDetIdeal Matrix := o -> A -> (
 schubertDetIdeal List := o -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");    
     A := permToMatrix w;
-    schubertDetIdeal(A,CoefficientRing=>o.CoefficientRing)
+    schubertDetIdeal(A,CoefficientRing=>o.CoefficientRing, Variable => o.Variable)
 )
 
 ----------------------------------------
@@ -271,35 +274,17 @@ schubertDetIdeal List := o -> w -> (
 ---------------------------------------
 fultonGens = method(
     Options => {
-	CoefficientRing => QQ
+	CoefficientRing => QQ,
+	Variable => getSymbol "z"
 	}
     )
 fultonGens Matrix := o -> A -> (
-    (schubertDetIdeal(A,CoefficientRing => o.CoefficientRing))_*
+    (schubertDetIdeal(A,CoefficientRing => o.CoefficientRing, Variable => o.Variable))_*
 )
 
 fultonGens List := o -> w -> (
-    (schubertDetIdeal(w,CoefficientRing=> o.CoefficientRing))_*
+    (schubertDetIdeal(w,CoefficientRing=> o.CoefficientRing, Variable => o.Variable))_*
 )
-
-----------------------------------------
---INPUT: a list w corresponding to a permutation in 1-line notation or an ASM ideal
---OUTPUT: whether or not R/I_A is CM
----------------------------------------
-isSchubertCM = method()
-isSchubertCM Matrix := Boolean => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    R := ring(antiDiagInit A);
-    codim(antiDiagInit A) == pdim(comodule (antiDiagInit A))
-)
-isSchubertCM List := Boolean => (w) -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    print "We know from a theorem of Fulton that the quotient by any Schubert determinantal ideal is actually Cohen--Macaulay!";
-    true
-)
-
---TODO: Don't think the line below this should be here
--- isSchubertCM(matrix{{0,1,0},{1,-1,1},{0,1,0}})
 
 ----------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
@@ -312,13 +297,13 @@ grothendieckPoly(Matrix):= (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     I := schubertDetIdeal A;
     Q := newRing(ring I, DegreeRank => numcols A);
-    numerator reduceHilbert hilbertSeries sub(I, Q)
+    numerator hilbertSeries sub(I, Q)
 )
 grothendieckPoly(List) := (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     I := schubertDetIdeal w;
     Q := newRing(ring I, DegreeRank => #w);
-    numerator reduceHilbert hilbertSeries sub(I, Q)
+    numerator hilbertSeries sub(I, Q)
 )
 
 
@@ -365,18 +350,19 @@ doubleSchubertPoly(List) := (w) -> (
 ----------------------------------------
 diagLexInit = method(
     Options => {
-	CoefficientRing => QQ
+	CoefficientRing => QQ,
+	Variable => getSymbol "z"
 	}
     )
 diagLexInit Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubertDetIdeal(A,CoefficientRing => o.CoefficientRing);
+    I := schubertDetIdeal(A,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
     R := newRing(ring I, MonomialOrder=>Lex); --making new ring with lex diagonal term order 
     monomialIdeal leadTerm sub(I, R)
 )
 diagLexInit List := o -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubertDetIdeal(w,CoefficientRing => o.CoefficientRing);
+    I := schubertDetIdeal(w,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
     R := newRing(ring I, MonomialOrder=>Lex); --making new ring with lex diagonal term order 
     monomialIdeal leadTerm sub(I, R)
 )
@@ -388,7 +374,7 @@ diagLexInit List := o -> w -> (
 diagRevLexInit = method()
 diagRevLexInit Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubertDetIdeal(A, CoefficientRing => o.CoefficientRing);
+    I := schubertDetIdeal(A, CoefficientRing => o.CoefficientRing, Variable => o.Variable);
     k := numrows A;
     R := ring I;
     oldvars := R_*;
@@ -399,7 +385,7 @@ diagRevLexInit Matrix := o -> A -> (
 )
 diagRevLexInit List := o -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubertDetIdeal(w,CoefficientRing => o.CoefficientRing);
+    I := schubertDetIdeal(w,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
     k := #w;
     R := ring I;
     oldvars := R_*;
@@ -415,7 +401,7 @@ diagRevLexInit List := o -> w -> (
 --TODO: extend to more general subword complexes from Coxeter groups, not just these?
 -------------------------------------------
 subwordComplex = method()
-subwordComplex List := simplicialComplex => (w) -> (
+subwordComplex List := simplicialComplex => w -> (
     if not(isPerm w) then error("The input must be a permutation.");
     simplicialComplex antiDiagInit w
 );
@@ -426,7 +412,7 @@ subwordComplex List := simplicialComplex => (w) -> (
 --TODO: tests, documentation
 ------------------------------------------
 entrywiseMinRankTable = method()
-entrywiseMinRankTable List := Matrix => (L) -> (
+entrywiseMinRankTable List := Matrix => L -> (
     if (#L == 0) then error("The input must be a nonempty list.");
     n := #(entries L#0);
     minimalRankMtx := mutableMatrix(ZZ, n, n);
@@ -459,7 +445,7 @@ entrywiseMinRankTable List := Matrix => (L) -> (
 --TODO: tests, documentation
 ------------------------------------------
 entrywiseMaxRankTable = method()
-entrywiseMaxRankTable List := Matrix => (L) -> (
+entrywiseMaxRankTable List := Matrix => L -> (
     if (#L == 0) then error("The input must be a nonempty list.");
     n := #(entries L#0);
     maximalRankMtx := mutableMatrix(ZZ, n, n);
@@ -486,7 +472,7 @@ entrywiseMaxRankTable List := Matrix => (L) -> (
 --TODO: input validation/type checking
 -------------------------------------------
 schubertDecomposition = method()
-schubertDecomposition Ideal := List => (I) -> (
+schubertDecomposition Ideal := List => I -> (
     primeDecomp := decompose ideal leadTerm I;
     maxIdx := max((flatten entries vars ring I) / indexOfVariable // max);
     -- varWeights := (monoid ring I).Options.MonomialOrder#1#1;
@@ -506,7 +492,7 @@ schubertDecomposition Ideal := List => (I) -> (
 --TODO: input validation/type checking
 -------------------------------------------
 isIntersectionSchubIdeals = method()
-isIntersectionSchubIdeals Ideal := List => (I) -> (
+isIntersectionSchubIdeals Ideal := List => I -> (
     isIntersection := true;
     if (I == radical(I)) then {
         schubDecomp := schubertDecomposition I;
