@@ -98,8 +98,9 @@ hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
 	 
 	 
 	 d:= c1*c2+e1*d2+e2*d1;
+	  
 	 -- when p=2, the Hilbert symbol (a,b)_2 equals (-1)^d
-	 if (even d) then (
+	 if (even sub(d,ZZ)) then (
 	     return 1;
 	     )
 	 else (
