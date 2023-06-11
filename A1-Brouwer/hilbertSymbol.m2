@@ -11,10 +11,10 @@
 -- 0. Expand code to have function that outputs all the invariants for a rational quadratic form over Qp 
 --     Done with function invariantFormQp
 -- 1.  Use invatiants of two forms to tell whether two rational forms are isomorphic over Q
+-- 2.  Use invariant to determine if a rational q. form is anisotropic
 
 -- Todo:
 -- 1.  Expand code to have function that outputs all the invariants for a rational quadratic form.  
--- 2.  Use invariant to determine if a rational q. form is anisotropic
 -- 3.  Expand code so that it works for any quadratic form over a number field (should be very similar to the code below).
 
 
@@ -176,13 +176,14 @@ invariantFormQp (List, ZZ):= (ZZ, ZZ, ZZ) => (f, p) -> (
     return(a, b, c);
     );
 
--- Need routine 
+
 
 equalUptoPadicSquare = method()
 
 equalUptoPadicSquare (ZZ, ZZ, ZZ):= (Boolean) => (a, b, p) -> (
 -- Given a, b integers, determines if a, b differ by a square in Q_p
 -- One has to handle the cases when p is odd, and p=2 differently
+
 if (odd p) then (
     -- p is odd and we need to check that the powers of p have the same parity, and the units
     -- differ by a square in GF(p)
@@ -404,8 +405,8 @@ isIsotropicDiagFormQp (List, ZZ):=(Boolean) => (f, p) -> (
     );
 
 
--- Not Finished
 isIsotropicDiagFormQ = method()
+
 
 isIsotropicDiagFormQ (List):=(Boolean) => (f) ->(
     -- need to check if anisotropic over RR and all Qp
@@ -413,16 +414,70 @@ isIsotropicDiagFormQ (List):=(Boolean) => (f) ->(
     a:=signatureRealQForm(f);
     -- if real form is definite then form f is not isotropic
     if (a_0 * a_1 <=0 ) then (
-	return true;
-	) else
-    ( 
-	-- know that we are indefinite at real place
-	-- need to fill in code
-    );  
-)  
-		
-		    
+	return false;
+	) 
+    else (
+	if (n>4) then (return true; ) 
+	else (
+	    if (n==1 ) then (return false; );
+	    -- for n=2,3,4, the form is isotropic if p!=2 and p doesn't divide any of the 
+	    -- diagonal terms as the conditions in Q_p are automatically satisfied.
+	    d:= discForm(f);
+	    d1:= d;
+	    if (d1<0) then (d1=-d1);
+	    H:= hashTable( factor d1);
+	    k:= keys H;
+	    i:=0;
+	    l:= #k;
+	    if (not isIsotropicDiagFormQp(f, 2)) then (return false);
+	    while (i< l) do (
+	    	p = k_i;
+		if ( not isIsotropicDiagFormQp(f, p)) then (return false);
+		i=i+1;
+		);
+	    return true;
+	    );
+	);
+    );	
+			
+			
 	
+	
+	
+invariantFormQ =method()
+
+-- Input: (Q): Quadratic form Q given by list of diagonal elements.  
+--  	Assume list constists of integers
+-- Output:  (Rank, Disc, Signature, Hasse Invariant for all primes p when not 1)
+
+invariantFormQ (List):= (ZZ, ZZ, List, List) => (f) -> (
+    -- currently will export the discriminant as a square free integer
+    -- Note:  Still need a way to treat two integers as defining the same discriminant, if they differ by a
+    --  square in Z_p.  They need to have the same parity of power of prime p, and the quotient of their 
+    -- (prime-to-p) parts must define a unit square in Z_p^*.
+
+    len:=#f;
+    for i from 0 to (len-1) do (
+	if (f_i==0) then (print"Error: Form is degenerate");
+	if (not ring(f_i)===ZZ ) then (print "Error: Diagonal elements of form should be integers");
+	);
+    a:=len;
+    b:=discForm(f);
+    c:=signatureRealQForm(f);
+    d:=b;
+    if (b<0) then (d=-b);
+    -- The keys of H contain all primes dividing coefficients
+    H:= hashTable( factor d);
+    k:= keys H;
+    l:={};
+    if ((not H#?2) and hasseWittInvariant(f, 2) == -1) then l=append(l, 2);
+    for i from 0 to #k-1 do (
+	if  (hasseWittInvariant(f, k_i) == -1) then (
+	    l=append(l,k_i);
+	    );
+	);
+    l=sort(l);
+    return (a, b, c, l);
     
-    
+    );
   
