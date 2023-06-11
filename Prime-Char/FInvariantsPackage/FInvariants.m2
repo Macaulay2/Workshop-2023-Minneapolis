@@ -40,7 +40,9 @@ export {
     "limitClosure",
     "lowerLimit",
     "lyubeznikNumber",
-    "lyubeznikTable"
+    "lyubeznikTable",
+    "Tries",
+    "MaxDegree"
 }
 
 load "./FInvariants/F-Modules.m2"

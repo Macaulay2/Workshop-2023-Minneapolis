@@ -301,7 +301,7 @@ randomFilterRegSeq = method(
     { 
         Tries => infinity, 
         Homogeneous => false, 
-        Degree => infinity -- max degree 
+        MaxDegree => infinity 
     }
 )
 
@@ -315,7 +315,7 @@ randomFilterRegSeq ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) ->
     J := ideal( 0_R ); 
     counter := 0;
     local candidate; local deg; local density;
-    while counter < o.Tries and deg < o.Degree and #L < n do
+    while counter < o.Tries and deg < o.MaxDegree and #L < n do
     (
         deg = minDeg + ( counter // 100 );
         density = minDensity + 0.009*( counter % 100); 
@@ -328,7 +328,7 @@ randomFilterRegSeq ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) ->
         );
         counter = counter + 1;
     );
-    if #L < n then error "randomFilterRegSeg: could not find a sequence of the desired length; try increasing Tries or Degree";
+    if #L < n then error "randomFilterRegSeg: could not find a sequence of the desired length; try increasing Tries or MaxDegree";
     L
 )
 
