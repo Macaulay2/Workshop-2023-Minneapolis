@@ -42,7 +42,10 @@ getIndex = (seq,p,e) -> sum for i from 0 to #seq-1 list (seq#i*p^(e*i));
 
 
 -- Sparse Version
-AKmatrix = (R,e,f) -> (
+
+AKmatrix = method(TypicalValue=>Matrix)
+
+AKmatrixHelper = (R,e,f) -> (
     p:=char R;
     d:=dim R;
     n:=p^e;
@@ -57,6 +60,19 @@ AKmatrix = (R,e,f) -> (
        for key in keys expList list (getIndex(key,p,e), i)=>expList#key));
     map(R^(n^d),R^(n^d),T)
 )
+
+AKmatrix (Ring, ZZ, RingElement) := (R,e,f) -> AKmatrixHelper(R,e,f)
+
+-- why is this necessary? TODO figure out how to avoid
+AKmatrix (Ring, ZZ, ZZ) := (R,e,f) -> AKmatrixHelper(R,e,f)
+
+AKmatrix (Ring, ZZ, Ideal) := (R,e,I) -> (
+    p:=char R;
+    d:=dim R;
+    n:=p^e;
+    M:=fold((i,j) -> (i|j), for g in I_* list AKmatrixHelper(R,e,g));
+    return M
+    )
 
 
 -- encode all of our matrices as pairs (rHT, cHT), 
@@ -141,13 +157,61 @@ hashToMatrix = (R,rHT,cHT) -> (
     )
 )
 
+blockDiagRecursive = (rHT, cHT, startRow, startCol) -> (
+    -- construct a preliminary attempt at a block using 1st row & col
+    numRows := startRow; -- # rows in the top left block, including recursed
+    numCols := startCol; -- # cols in the top left block, including recursed
+    eligibleRows := sort select(keys cHT#startCol, t -> t>=startRow);
+    for i in eligibleRows do (
+        if i!=numRows then (
+            (rHT,cHT) = swapRows(rHT,cHT, numRows,i);
+        );
+        numRows = numRows + 1;
+    );
+    eligibleCols := sort select(keys rHT#startRow, t -> t>= startCol);
+    for j in eligibleCols do (
+        if j!=numCols then (
+            (rHT,cHT) = swapCols(rHT,cHT, numCols,j);
+        );
+        numCols = numCols+1;
+    );
+    -- check if this swapping already gave a block, or if we need to increase
+    needsCheck := true;
+    while needsCheck do (
+        needsCheck = false;
+        for i from startRow to numRows-1 do (
+            eligibleCols = sort select(keys rHT#i, 
+                            t-> t>=startCol+numCols);
+            for j in eligibleCols do (
+                if j!=startCol+numCols then (
+                    (rHT,cHT) = swapCols(rHT,cHT, numCols,j);
+                );
+                numCols = numCols+1;
+                needsCheck=true;
+            );
+        );
+        for j from startCol to startCol+numCols-1 do (
+            eligibleRows = sort select(keys cHT#j,
+                            t -> t>= startRow+numRows);
+            for i in eligibleRows do (
+                if i!=startRow+numRows then (
+                    (rHT,cHT) = swapRows(rHT,cHT,numRo)
+                )
+            )
+
+        )
+    );
+);
+
 blockDiagonalize = (rHT,cHT) -> (
     fixedRows := 0; -- number of already "fixed" rows 
     fixedCols :=0; -- number of already "fixed" cols 
     topRow := 0;
     topCol := 0;
     doRows := true; -- flag for whether to work on rows or cols
-    while ((fixedRows < #rHT and fixedCols < #cHT)) do (
+    -- account for not square blocks! may need that on the rectangular matrix
+    print(hashToMatrix(R,rHT,cHT));
+    while (fixedRows < #rHT and fixedCols < #cHT) do (
         if doRows then (
         topRow = fixedRows;
         eligableRows := sort select(keys cHT#fixedCols, t -> t>=fixedRows);
@@ -164,6 +228,7 @@ blockDiagonalize = (rHT,cHT) -> (
         fixedRows = topRow;
         print("Finished increasing rows; number is");
         print(fixedRows);
+        print(hashToMatrix(R,rHT,cHT));
         doRows = not doRows;
         ) else (
         topCol = fixedCols;
@@ -182,139 +247,49 @@ blockDiagonalize = (rHT,cHT) -> (
         doRows = not doRows;
         print("Finished increasing cols; number is");
         print(fixedCols);
+        print(hashToMatrix(R,rHT,cHT));
         )
     );
     (rHT,cHT)
 )
 
-R = ZZ/2[x,y]; g = 1+y;
-(rHT,cHT) = AKhashTable(R,1,g);
-smallMat = hashToMatrix(R, rHT,cHT)
-(rD,cD) = blockDiagonalize(rHT,cHT);
-diagMat = hashToMatrix(R,rD,cD)
+---------------------------------------------
 
-AKmatrixIdeal = (R,e,I) -> (
-    p:=char R;
-    d:=dim R;
-    n:=p^e;
-    M:=fold((i,j) -> (i|j), for g in I_* list AKmatrix(R,e,g));
-    return M
-    )
-    
+fSplittingNumber = method(
+    TypicalValue=>ZZ)
+    -- Options=>{isGorenstein=>false})
+-- TODO unify gor & nongor with an option
 
-fSplittingNumber = (R,e) -> (
+fSplittingNumberHelper = (R,e) -> (
     p:=char R;
     n:=p^e;
-    d:=dim(R);
     J:=systemOfParameters(R);
     I:=ideal(vars(R/J));
     delta:=sub(ann(I),R);
     return degree((frobenius^e(J)):delta^n)
     )
---Assumes R is Gorenstein
+--Assumes R is Gorenstein; computes number for R
 
-fSplittingNumberNonGor = (R,e,f) -> (
+fSplittingNumber (Ring, ZZ) := (R,e) -> fSplittingNumberHelper(R,e)
+fSplittingNumber (Ring, ZZ, Ideal) := (R,e,I) -> fSplittingNumberHelper(R/I,e)
+fSplittingNumber (Ring, ZZ, RingElement) := (R,e,f) -> fSplittingNumberHelper(R/ideal f, e)
+
+fSplittingNumberNonGor = method(TypicalValue=>ZZ)
+
+fSplittingNumberNonGorHelper = (R,e,f) -> (
     p=char R;
     n=p^e;
-    S:=R/ideal(f);
+    S:=R/f; -- will be right if f is ring elem OR an ideal
     M:=coker(sub(AKmatrix(R,e,f),S));
     I:=ideal(vars S);
     phi:=inducedMap(S^1,module(I));
     return numgens source basis(coker(Hom(M,phi)))
 )
+-- Computes number for R/f
 
-fSplittingNumberNonGorIdeal = (R,e,J) -> (
-    p=char R;
-    n=p^e;
-    S:=R/J;
-    M:=coker(sub(AKmatrixIdeal(R,e,J), S));
-    I:=ideal(vars S);
-    phi:=inducedMap(S^1,module(I));
-    return numgens source basis(coker(Hom(M,phi)))
-)
+fSplittingNumberNonGor (Ring, ZZ, RingElement) := (R,e,f) -> fSplittingNumberNonGorHelper(R,e,f)
 
--- ----- AKmatrix Tests -------------
-    R = ZZ/2[x]; 
-    f=1;
-    -- assert(AKmatrix(R,1,f) == matrix{{1,0},{0,1}})
+-- again, this feels unnecessary...
+fSplittingNumberNonGor (Ring, ZZ, ZZ) := (R,e,f) -> fSplittingNumberNonGorHelper(R,e,f)
 
-
--- -----AKhashTable Tests --------------
-    R = ZZ/2[x]; f = 1;
-    (rHT,cHT) = AKhashTable(R,1,f);
-    assert(keys (rHT#0) == {0});
-    assert(keys (rHT#1) == {1});
-    assert(rHT#0#0 == 1);
-    assert(rHT#1#1 == 1);
-    assert(keys (cHT#0) == {0});
-    assert(keys (cHT#1) == {1});
-    assert(cHT#0#0 == 1);
-    assert(cHT#1#1 == 1);
-
-    (rHT,cHT) = swapRows(rHT,cHT,0,1);
-    assert(pairs rHT#0 == {(1,1)});
-    assert(pairs rHT#1 == {(0,1)});
-    assert(pairs cHT#0 == {(1,1)});
-    assert(pairs cHT#1 == {(0,1)});
-
-    (rHT,cHT) = swapCols(rHT,cHT,0,1);
-    assert(pairs rHT#0 == {(0,1)});
-    assert(pairs rHT#1 == {(1,1)});
-    assert(pairs cHT#0 == {(0,1)});
-    assert(pairs cHT#1 == {(1,1)});
-    
-
-    -- note "pairs" has no guaranteed order; need to sort!
-    R = ZZ/3[x]; f=1+2*x;
-    (rHT,cHT) = AKhashTable(R,1,f);
-    assert(sort pairs rHT#0 == sort {(0,1),(2,2*x)});
-    assert(sort pairs rHT#1 == sort {(0,2),(1,1)});
-    assert(sort pairs rHT#2 == sort {(1,2),(2,1)});
-    assert(sort pairs cHT#0 == sort {(0,1),(1,2)});
-    assert(sort pairs cHT#1 == sort {(1,1),(2,2)});
-    assert(sort pairs cHT#2 == sort {(0,2*x),(2,1)});
-
--- fSplittingNumber Tests --------------
-    R = ZZ/2[x,y,z]; f = z^2-x*y;
-    aNum={2, 8, 32};
-    assert(fSplittingNumber(R/ideal f,1) == aNum#0)
-    assert(fSplittingNumber(R/ideal f,2) == aNum#1)
-    assert(fSplittingNumber(R/ideal f,3) == aNum#2)
-    assert(fSplittingNumberNonGor(R,1,f) == aNum#0)
-    assert(fSplittingNumberNonGor(R,2,f) == aNum#1)
-    assert(fSplittingNumberNonGor(R,3,f) == aNum#2)
-
-    R = ZZ/3[x,y,z]; f = z^2-x*y;
-    aNum = {5, 41};
-    assert(fSplittingNumber(R/ideal f,1) == aNum#0)
-    assert(fSplittingNumberNonGor(R,1,f) == aNum#0)
-    assert(fSplittingNumber(R/ideal f,2) == aNum#1)
-    assert(fSplittingNumberNonGor(R,2,f) == aNum#1)
-
-    R = ZZ/2[a,b,c,d,e,symbol f]; 
-    I = ideal(c*e+b*f, c*d+a*f, b*d+a*e);
-    aNum = {10, 135, 2010, 31076, 488840, 7755280};
-    assert(fSplittingNumberNonGorIdeal(R,1,I) == aNum#0)
-    -- even e=2 takes too long...  
-    -- assert(fSplittingNumberNonGorIdeal(R,2,I) == aNum#1)
-
-
--- Our running example:
-needsPackage "InvariantRing";
-
-S = ZZ/2[x,y,z]; f= z^2+x*y;
-A = AKmatrix(S,1,f);
-
-EMat = (i,j,n) -> matrix for k from 0 to n-1 list for ell from 0 to n-1 list (
-    if (k==i) and (j==ell) then 1 else 0
-)
-iMat = id_(S^8);
-M02 = iMat-z*EMat(0,2,8);
-M73 = iMat-z*EMat(7,3,8);
-P13=permutationMatrix(8,{[1,3]});
-P24=permutationMatrix(8,{[2,4]});
-P28=permutationMatrix(8,{[2,8]});
-P48=permutationMatrix(8,{[4,8]});
-P67=permutationMatrix(8,{[6,7]});
-P67*P48*P24*P13*M73*M02*A*M02*M73*P28*P67
-
+fSplittingNumberNonGor (Ring, ZZ, Ideal) := (R,e,J) -> fSplittingNumberNonGorHelper(R,e,J)
