@@ -16,11 +16,11 @@ GeneratingMorphism = new Type of Matrix
 -- Frobenius Functor
 ----------------------------------------------------------------------------------------------
 
-FF = method()
+FFmethod = method()
 
 -- TODO: need to check if ring is a polynomial ring (or regular) 
 
-FF ( ZZ, Module ) := Module => ( e, M ) -> 
+FFmethod ( ZZ, Module ) := Module => ( e, M ) -> 
 (
     if isFreeModule M or M == 0 then return M; 
     R := ring M;
@@ -50,12 +50,12 @@ FF ( ZZ, Module ) := Module => ( e, M ) ->
     )    
 )
 
-FF ( ZZ, Matrix ) := Matrix => ( e, f ) -> 
+FFmethod ( ZZ, Matrix ) := Matrix => ( e, f ) -> 
     map( FF(e, target f), FF(e, source f), entries frobenius^e f )
 
-FF Thing := M -> FF( 1, M )
+FFmethod Thing := M -> FF( 1, M )
 
-FF = new FrobeniusFunctor from FF
+FF = new FrobeniusFunctor from FFmethod
 
 FrobeniusFunctor ^ ZZ := ( f, n ) -> ( x -> f( n, x ) )
 
@@ -179,7 +179,7 @@ cohomDim Ideal := ZZ => o -> ( cacheValue symbol cohomDim )( I ->
     n
 ))
 
-associatedPrimes FModule := List => o -> M -> 
+associatedPrimes FModule := o -> M -> 
 (
     if M#cache#?associatedPrimes then M#cache#associatedPrimes
     else
@@ -254,6 +254,7 @@ filterRegSeq (ZZ,Ideal,Module) := List => (n,I,M) ->
     
     --Strategy of ordering these generators obtained from Eisenbud-Huneke-Vasconcelos.m2 in the
     ---PrimaryDecomposition package.
+    R := ring I;
     G:= sort(flatten entries mingens I, f -> (sum degree f, #terms f));
     k := coefficientRing ring I;
     f := 1_k;
@@ -300,8 +301,8 @@ randomFilterRegSeq = method(
     { 
         Tries => infinity, 
         Homogeneous => false, 
-        MaxDegree => infinity 
-    } 
+        Degree => infinity -- max degree 
+    }
 )
 
 randomFilterRegSeq ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) -> 
@@ -314,7 +315,7 @@ randomFilterRegSeq ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) ->
     J := ideal( 0_R ); 
     counter := 0;
     local candidate; local deg; local density;
-    while counter < o.Tries and deg < o.MaxDegree and #L < n do
+    while counter < o.Tries and deg < o.Degree and #L < n do
     (
         deg = minDeg + ( counter // 100 );
         density = minDensity + 0.009*( counter % 100); 
@@ -327,7 +328,7 @@ randomFilterRegSeq ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) ->
         );
         counter = counter + 1;
     );
-    if #L < n then error "randomFilterRegSeg: could not find a sequence of the desired length; try increasing Tries or MaxDegree";
+    if #L < n then error "randomFilterRegSeg: could not find a sequence of the desired length; try increasing Tries or Degree";
     L
 )
 
@@ -346,7 +347,7 @@ ascendingIdealEquality = method( Options => { Tries => infinity } )
 ascendingIdealEquality Function := Ideal => o -> f ->
 (
     i := 1;
-    isEqual = false;
+    isEqual := false;
     while not isEqual and i < o.Tries do 
     (
 	isEqual = ( f(i) == f(i+1) );

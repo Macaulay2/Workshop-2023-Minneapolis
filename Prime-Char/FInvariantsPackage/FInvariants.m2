@@ -11,11 +11,39 @@ newPackage(
 	{Name => "Austyn Simpson", Email => "austyn@umich.edu"},
 	{Name => "Pedro Teixeira", Email => "pteixeir@knox.edu"}
         },
-    PackageImports => {"TestIdeals"},
-    Headline => "A package for calculations of Frobenius invariant"
-    )
+    Headline => "A package for calculations of Frobenius invariants",
+    DebuggingMode => true,
+    Reload => true,
+    AuxiliaryFiles => true,
+    PackageExports => { "TestIdeals" },
+    PackageImports => { "Saturation", "PrimaryDecomposition", "ReesAlgebra" }
+)
 
-export {"HSL", "FrobeniusonExt", "HSLNumber"}
+export {
+    -- in this file
+    "HSL", 
+    "FrobeniusonExt", 
+    "HSLNumber",
+    -- in F-modules
+    "FModule",
+    "GeneratingMorphism",
+    "FF",
+    "generatingMorphism",
+    "makeFModule",
+    "localCohomology",
+    "root",
+    "cohomDim",
+    "randomGeneratingMorphism",
+    "isFilterRegElement",
+    "isFilterRegSeq",
+    "randomFilterRegSeq",
+    "limitClosure",
+    "lowerLimit",
+    "lyubeznikNumber",
+    "lyubeznikTable"
+}
+
+load "./FInvariants/F-Modules.m2"
 
 HSL = method()
 
@@ -64,8 +92,6 @@ HSLNumber = (I,i) -> (
 beginDocumentation()
 
 
-
-
 ----------------------------------------------------------------------
 -- Section for Tests ------------------------------------------------
 ---------------------------------------------------------------------
@@ -77,6 +103,8 @@ beginDocumentation()
 -- To run these tests, simply open m2 (probably from this folder), and do:
 -- needsPackage "FInvariants"
 -- check FInvariants
+
+load "./FInvariants/F-Modules_test.m2"
 
 --Test example, should output 2
 TEST ///
