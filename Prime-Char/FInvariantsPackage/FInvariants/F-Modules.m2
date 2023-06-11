@@ -104,7 +104,7 @@ localCohomologyFilter = ( i, I ) ->
     J := ideal filterSeq;
     p := char R;
     u := ( product filterSeq )^( p-1 );
-    time K := ascendingIdealEquality( 
+    time K := firstEquality( 
         e ->  frobeniusPower( p^e, J ) : ideal( u^(lift( (p^e-1)/(p-1), ZZ )) ) 
     );
     time M1 := saturate( R^1/(frobenius K), I );
@@ -339,21 +339,20 @@ randomFilterRegSeq ( ZZ , Ideal, Ring ) := List => o -> ( n, I, R ) ->
 
 -- generates limit closure and lower limit ideal
 
-ascendingIdealEquality = method( Options => { Tries => infinity } )
------this function should eventually check to make sure the chain of ideals is ascending
+firstEquality = method( Options => { Tries => infinity } )
 
------this function specifically finds the FIRST spot that we retain equlaity and returns
------the union of ideals up to that spot (equivalently the ideal at that spot)
-ascendingIdealEquality Function := Ideal => o -> f ->
+-- Given a function f defined on the positive integers, firstEquality finds the first 
+-- value f(i) that is equal to its successor, f(i+1).
+firstEquality Function := Ideal => o -> f ->
 (
-    i := 1;
+    i := 0;
     isEqual := false;
     while not isEqual and i < o.Tries do 
     (
-	isEqual = ( f(i) == f(i+1) );
 	i = i+1;
+	isEqual = f(i) == f(i+1)
     );
-    if not isEqual then error "ascendingIdealEquality: Reached maximum limit of tries.";
+    if not isEqual then error "firstEquality: Reached maximum limit of tries.";
     f(i)
 )
 
@@ -362,7 +361,7 @@ limitClosure BasicList := Ideal => L ->
 (
     if #L == 0 then error "limitClosure: limit closure should be the 0 ideal, but cannot check the ring it lives in since the list is empty.";
     p := char ring L#0;
-    ascendingIdealEquality(j -> (frobenius^j(ideal(L)):ideal(product(L,x->x^(p^j-1)))))
+    firstEquality(j -> (frobenius^j(ideal(L)):ideal(product(L,x->x^(p^j-1)))))
 )
 
 lowerLimit = method()
@@ -377,7 +376,7 @@ lowerLimit ( BasicList, Ring ) := Ideal => ( L, R ) ->
 	LC = ideal 0_R;
     )
     else LC = limitClosure drop( L, -1 );
-    ascendingIdealEquality( j -> LC : L#(-1)^j )
+    firstEquality( j -> LC : L#(-1)^j )
 )
 
 lowerLimit RingElement := Ideal => f -> lowerLimit { f }
