@@ -293,17 +293,15 @@ fultonGens List := o -> w -> (
 --This function is incorrect and needs to be rewritten!
 ----------------------------
 grothendieckPoly = method()
-grothendieckPoly(Matrix):= (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubertDetIdeal A;
-    Q := newRing(ring I, DegreeRank => numcols A);
-    numerator hilbertSeries sub(I, Q)
-)
-grothendieckPoly(List) := (w) -> (
+grothendieckPoly(List) := w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     I := schubertDetIdeal w;
-    Q := newRing(ring I, DegreeRank => #w);
-    numerator hilbertSeries sub(I, Q)
+    R := ring I;
+    kk := coefficientRing R;
+    possibleDegs := apply(#w, i-> toList insert(i,1,(#w-1):0));
+    degs := splice apply(possibleDegs, i->#w:i);
+    Q := kk[R_*, Degrees => degs];
+    numerator hilbertSeries sub(I,Q)
 )
 
 

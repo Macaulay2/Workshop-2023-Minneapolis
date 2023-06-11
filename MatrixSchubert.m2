@@ -124,56 +124,20 @@ end---------------------------------------------------------------------------
 restart
 debug needsPackage "MatrixSchubert"
 
-M = matrix{{0,0,1,0,0},{0,1,-1,1,0}}
-fultonGens M
-schubertDetIdeal M
-
-w = {3,2,5,1,4}
-schubertDetIdeal w
-
-schubertDetIdeal {1,2,3}
-
-
-permToMatrix w
-isPartialASM M
-rotheDiagram M
-essentialBoxes M
-grothendieckPoly M
-netList fultonGens M
-subwordComplex M
-betti res diagLexInit M
-betti res antiDiagInit M
-
-
-w = {4,1,3,5,2}
-A = (permToMatrix w)_{0,1,2}
-
-time if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-time zMatrix = genMat(numrows A, numcols A); --generic matrix
-rankMat = rankMatrix A; --rank matrix for A
-essBoxes = essentialBoxes A;
-if essBoxes == {} then (
-    R = ring zMatrix;
-    return ideal(0_R)
-    );
-zBoxes = apply(essBoxes, i-> flatten table(i_0,i_1, (j,k)->(j+1,k+1))); --smaller matrix indices for each essential box
-ranks = apply(essBoxes, i-> rankMat_(i_0-1,i_1-1)); --ranks for each essential box
-antiDiagGens = new MutableList;
-for box in essBoxes do (
-    pos = position(essBoxes, i-> i==box);
-    boxSubmatrix = zMatrix^{0..(box_0-1)}_{0..(box_1-1)};
-    for x in subsets(numrows boxSubmatrix,ranks_pos+1) do (
-    	for y in subsets(numcols boxSubmatrix,ranks_pos+1) do(
-	    indicesList = apply(pack(2,mingle(x,reverse y)),i->toSequence i);
-	    antiDiagGens#(#antiDiagGens) =  product(apply(indicesList,i->boxSubmatrix_i));
-	    );
-	);
-    );
-ideal(unique flatten toList antiDiagGens)
-
-
-
-
+w = {2,1,4,3}
+I = schubertDetIdeal w;
+R = ring I;
+kk = coefficientRing R;
+apply(#w, i-> toList insert(i,1,(#w-1):0))
+degs = splice apply(oo, i-> #w:i)
+Q = kk[R_*, Degrees => degs]
+G = numerator hilbertSeries sub(I, Q)
+factor G
+S =  ring G
+F = map(S,S, {T_0=>1-T_0, T_1 => 1-T_1, T_2 => 1-T_2})
+F G
+factor oo
+schubertPoly {2,1,4,3}
 
 -----------------------------------------
 --Adam's Testing for matrixSchubertReg --
