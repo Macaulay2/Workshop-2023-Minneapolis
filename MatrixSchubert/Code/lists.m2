@@ -33,3 +33,17 @@ nonCohenMacaulayASMsList ZZ := List => (n) -> (
     listOfMatrices := apply(lines get filename, i -> matrix value i);
     listOfMatrices
 );
+
+------------------------------
+-- INPUT: an integer n between 3 and 6
+-- OUTPUT: a list of matrices containing all antidiagonal initial ideals of size n
+-- TODO: test and docs
+------------------------------
+initialIdealsList = method()
+initialIdealsList ZZ := List => (n) -> (
+    if (n < 3 or n > 6) then error("There is no available list for this n.");
+    filename := concatenate("./MatrixSchubert/ASMData/antiDiagIniIdeal/ideals", toString n, ".txt");
+    S := QQ(monoid[z_(1,1)..z_(n,n)]);
+    listOfIdeals := apply(lines get filename, i -> sub(value i,S));
+    listOfIdeals
+);

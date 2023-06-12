@@ -77,8 +77,9 @@ export{
     "ASMFullList",
     "cohenMacaulayASMsList",
     "nonCohenMacaulayASMsList",
+    "idealsList",
     "lastDescent",
-    "firstDescent",
+    "firstDescent"
 }
     
 ------------------------------------------------------------------------------
@@ -239,6 +240,6 @@ uninstallPackage "MatrixSchubert"
 restart
 installPackage "MatrixSchubert"
 restart
-debug needsPackage "MatrixSchubert"
+needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
