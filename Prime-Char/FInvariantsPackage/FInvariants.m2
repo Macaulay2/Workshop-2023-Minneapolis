@@ -16,8 +16,10 @@ newPackage(
     Reload => true,
     AuxiliaryFiles => true,
     PackageExports => { "TestIdeals" },
-    PackageImports => { "Saturation", "PrimaryDecomposition", "ReesAlgebra" }
+    PackageImports => { "Saturation", "PrimaryDecomposition" }
 )
+
+importFrom( "ReesAlgebra", { "Tries" } )
 
 export {
     -- in this file
@@ -41,7 +43,6 @@ export {
     "lowerLimit",
     "lyubeznikNumber",
     "lyubeznikTable",
-    "Tries",
     "MaxDegree"
 }
 
