@@ -1,4 +1,4 @@
-
+-*
 newPackage("DifferentialModules",
     Version => "1.1",
     Date => "5 June 2023",
@@ -29,7 +29,7 @@ export {
     "minimizeDM",
     "differential"
     }
-
+*-
 --Input:    A list of matrices with the same number of rows.
 --Output:   The concatenation of those matrices.
 concatMatrices=method()
@@ -367,7 +367,7 @@ foldComplex(ChainComplex,ZZ) := DifferentialModule => (F,d)->(
     differentialModule(chainComplex(degFDiff,degFDiff)[1]) --maya added
     )
 
-
+-*
 beginDocumentation()
 
 doc ///
@@ -682,4 +682,5 @@ TEST /// --resDM 3 vars
     F = resDM D    
     assert(F.dd_0^2==0)
 ///
+*-
 end;
