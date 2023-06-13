@@ -400,8 +400,9 @@ lyubeznikNumber( ZZ, ZZ, Ideal ) := ZZ => ( i, j, I ) ->
     R := ring I;
     n := dim R;
     d := dim( R/I );
-    p := char R;
-    if i < 0 or j < 0 or j < i or i > d or j > d then return 0;
+    p := char R; 
+    if i < 0 or j < 0 then error "lyubeznikNumber: expected nonnegative integers"; 
+    if i > j or j > d then return 0;
     m := ideal R_*;
     LC := localCohomology( n-j, I, R );
     r := root LC;
