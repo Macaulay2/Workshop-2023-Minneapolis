@@ -22,3 +22,13 @@ s=ideal{w-1};
 t=ideal{w};
 assert(wittDecomp(localA1Degree(f2,t)++localA1Degree(f2,s))==(1,matrix(QQ,{{}})));
 
+ff = ZZ/17;
+T3 = ff[y_1..y_3];
+f3 = {y_1^2, y_2^2, y_3^2};
+f4 = {y_2^2, y_3^2, y_1^2};
+u = ideal {y_1, y_2, y_3};
+assert(globalA1Degree(f3) == localA1Degree(f3, u));
+assert(globalA1Degree(f4) == localA1Degree(f4, u));
+assert(globalA1Degree(f3) == globalA1Degree(f4));
+assert(globalA1Degree(f3) == localA1Degree(f4, u));
+assert(globalA1Degree(f4) == localA1Degree(f3, u));
