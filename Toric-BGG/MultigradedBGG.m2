@@ -120,7 +120,6 @@ SY = dualRingToric(E);
 assert(degrees SY == degrees S)
 ///
 
-
 --I think toricRR works well
 toricRR = method();
 --Input: (M,LL) M a (multi)-graded S-module.
@@ -151,6 +150,13 @@ toricRR(Module,List) := (N,LL) ->(
     if E^df0 == E^0 then chainComplex map(E^0, E^0, 0) else (
     	differentialModule(chainComplex{map(E^df0,E^df0, -g', Degree => degree 1_S | {-1}),map(E^df0,E^df0, -g',  Degree => degree 1_S | {-1})}[1])
     	)
+    )
+
+-- if no degree range is inputted, makes a simple choice.
+toricRR Module := M -> (
+    LL := if length M < infinity then unique flatten degrees basis M
+    else apply(degrees ring M, d -> (degrees M)_0 + d);
+    toricRR(M,LL)
     )
 
 TEST ///
@@ -220,8 +226,7 @@ kk = ZZ/101
 -- ring of hirzebruchSurface 3
 S = kk[x_0, x_1, x_2, x_3, Degrees =>{{1,0},{-3,1},{1,0},{0,1}}]
 M = S^1/(ideal {x_0^2, x_1^2, x_2^2, x_3^2})
-L = unique ((ideal 1_S)_* | (ideal {x_0..x_3})_* | ((ideal {x_0..x_3})^2)_* | ((ideal {x_0..x_3})^3)_* | {x_0*x_1*x_2*x_3})/degree
-RM = toricRR(M,L)
+RM = toricRR M
 assert(RM.dd^2 == 0)
 assert(isHomogeneous RM)
 ///
@@ -733,6 +738,7 @@ end;
 
 
 
+--TESTS
 
 
 --DEMO. We should delete this eventually, but leaving it here for now in case it's useful.
@@ -787,8 +793,7 @@ D = toricRR(M, {0,1,2,3})
 tail = (resDM(D, LengthLimit => 3))
 --each H^2(X, O(j)) can be computed by picking off the socle generators of the
 --summands of the tail
-bggCohomologyCheck = method();
-bggCohomologyCheck ZZ := j -> (
+bggCohomologyCheck j -> (
     kk = coker vars ring tail_0;
     sum flatten entries basis({j,-3}, Hom(kk, tail_0)) == rank HH^2(X, sheaf(S^{{j}}))
     )    
