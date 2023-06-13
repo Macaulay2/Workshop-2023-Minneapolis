@@ -16,14 +16,18 @@ GeneratingMorphism = new Type of Matrix
 -- Frobenius Functor
 ----------------------------------------------------------------------------------------------
 
-FFmethod = method()
+isGoodRing = method()
 
--- TODO: need to check if ring is a polynomial ring (or regular) 
+isGoodRing Ring := Boolean => R -> isPolynomialRing R and char R > 0
+-- TODO In the future, this should check regularity instead. 
+
+FFmethod = method()
 
 FFmethod ( ZZ, Module ) := Module => ( e, M ) -> 
 (
     if isFreeModule M or M == 0 then return M; 
     R := ring M;
+    if not isGoodRing R then error "FF is only implemented for modules and morphisms over regular rings of positive characteristic";
     p := char R;
     local N; local degsource; local degtarget;
     if isSubmodule M then
@@ -88,7 +92,6 @@ makeFModule Matrix := FModule => g -> makeFModule generatingMorphism  g
 
 localCohomologyExt = ( i, I ) -> 
 (
-    -- TODO: check that I is ideal of R, positive characteristic, etc.
     R := ring I;
     M := R^1/I;
     f := inducedMap( M, FF M );
@@ -118,7 +121,10 @@ localCohomologyFilter = ( i, I ) ->
 localCohomology = method( Options => { Strategy => Ext } )
 
 localCohomology ( ZZ, Ideal ) := FModule => o -> ( i, I ) -> 
-(   -- TODO: check that I is ideal of R, positive characteristic, etc.
+(   
+    R := ring I;
+    if not isGoodRing R then error "localCohomology is only implemented for regular rings of positive characteristic";
+    print "oi";
     if (I#cache)#?(localCohomology, i) then return I#cache#(localCohomology, i);
     lc := if o.Strategy === Ext then localCohomologyExt( i, I )
     else localCohomologyFilter( i, I );
@@ -157,8 +163,10 @@ root FModule := Module => ( cacheValue symbol root )( M ->
         counter = counter + 1;
         if debugLevel > 1 then 
             print( "generatingRoot: computed kernel #" | toString counter )
-    );   
-    (source g)/K
+    );  
+    N := (source g)/K;
+    M#cache#(symbol rootMorphism) = map( FF N, N, g );  
+    N
 ))
            
 ZZ == FModule := ( n, M ) -> M == n

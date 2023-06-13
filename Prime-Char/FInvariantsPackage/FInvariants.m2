@@ -34,6 +34,7 @@ export {
     "makeFModule",
     "localCohomology",
     "root",
+    "rootMorphism",
     "cohomDim",
     "randomGeneratingMorphism",
     "isFilterRegElement",
