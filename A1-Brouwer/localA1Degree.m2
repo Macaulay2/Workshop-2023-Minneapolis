@@ -62,6 +62,7 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     -- coefficient ring k
     fracFieldBezDet := det(D);
     bezDet := lift(numerator(det(D)), R) / lift(denominator(det(D)),coefficientRing R);
+    bezDetR := lift(bezDet, R);
         
     -- Define formal variables X_i, Y_i that replace x_i
     RX:=kk[X_1..X_n]; 
@@ -93,7 +94,7 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     sBYProm :=apply(toList(0..#standBasisY-1),i-> sub(standBasisY_i,Rquot));
    
     -- Now reduce the bezDet determinant subject ot the local ideal in both the X's, Y's.
-    bezDetRed := bezDet % localIdeal;
+    bezDetRed := bezDetR % localIdeal;
    
     
     ------------------------
