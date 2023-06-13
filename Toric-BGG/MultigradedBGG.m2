@@ -274,17 +274,17 @@ toricLL Module := N -> (
 
 stronglyLinearStrand = method();
 stronglyLinearStrand Module := M -> (
-S := ring M;
-h := heft S;
-if h === null then error("--ring M does not have heft vector");
-if not same degrees M then error("--M needs to be generated in same degree");
-degM := first degrees M;
-degrange := unique prepend(degM, apply(degrees S, d -> d - degM));
-RM := toricRR(M,degrange);
-mat := RM.dd_0;
-cols := positions(degrees source mat, x -> drop(x,-1) == degM);
-N := ker mat_cols;
-toricLL ker mat_cols
+    S := ring M;
+    h := heft S;
+    if h === null then error("--ring M does not have heft vector");
+    if not same degrees M then error("--M needs to be generated in same degree");
+    degM := first degrees M;
+    degrange := unique prepend(degM, apply(degrees S, d -> d - degM));
+    RM := toricRR(M,degrange);
+    mat := RM.dd_0;
+    cols := positions(degrees source mat, x -> drop(x,-1) == degM);
+    N := ker mat_cols;
+    toricLL ker mat_cols
 )
 
 TEST///
@@ -719,23 +719,6 @@ sheafCohomologyBGG(S^1,1,-6)
 ///
 
 end;
-
-stronglyLinearStrand = method();
-stronglyLinearStrand Module := M -> (
-    S := ring M;
-    h := heft S;    
-    if h === null then error("--ring M does not have heft vector");    		
-    if not same degrees M then error("--M needs to be generated in same degree");
-    degM := first degrees M;
-    degrange := unique prepend(degM, apply(degrees S, d -> d - degM));
-    RM := toricRR(M,degrange);
-    mat := RM.dd_0;
-    cols := positions(degrees source mat, x -> drop(x,-1) == degM)
-    N := ker mat_cols
-    toricLL ker mat_cols    
-    )
-
-
 
 --TESTS
 
