@@ -4,12 +4,11 @@ newPackage("MultigradedBGG",
     Date => "5 June 2023",
     Headline => "Computing with the multigraded BGG correspondence",
     Authors => {
+	{Name => "Maya Banks",         	     Email => "mdbanks@wisc.edu",      HomePage => "https://sites.google.com/wisc.edu/mayabanks" }
         {Name => "Michael K. Brown",         Email => "mkb0096@auburn.edu",    HomePage => "http://webhome.auburn.edu/~mkb0096/" }
 	{Name => "Daniel Erman",    	     Email => "erman@wisc.edu",        HomePage => "https://people.math.wisc.edu/~erman/" }
 	{Name => "Tara Gomes",	    	     Email => "gomes072@umn.edu",      HomePage => "Fill in" }
-	{Name => "Pouya	Layeghi",    	     Email => "layeg001@umn.edu",      HomePage => "Fill in" }
-	{Name => "Prashanth Sridhar",	     Email => "pzs0094@auburn.ed",     HomePage => "https://sites.google.com/view/prashanthsridhar/home" }
-	{Name => "Andrew Tawfeek",   	     Email => "atawfeek@uw.edu",       HomePage => "https://www.atawfeek.com/" }
+	{Name => "Prashanth Sridhar",	     Email => "pzs0094@auburn.edu",    HomePage => "https://sites.google.com/view/prashanthsridhar/home" }
 	{Name => "Eduardo Torres Davila",    Email => "torre680@umn.edu",      HomePage => "https://etdavila10.github.io/" }
 	{Name => "Sasha	Zotine",    	     Email => "18az45@queensu.ca",     HomePage => "https://sites.google.com/view/szotine/home" }
 	    },
@@ -63,6 +62,7 @@ exports {
 needsPackage "Depth";
 needsPackage "Polyhedra";
 needsPackage "NormalToricVarieties";
+--path=prepend("../",path)
 load "DifferentialModules.m2";
 ---
 ---
@@ -90,7 +90,7 @@ dualRingToric = method(
     );
 
 dualRingToric PolynomialRing := opts -> S ->(
---  Input: a polynomial ring OR an exterior algebra
+    --  Input: a polynomial ring OR an exterior algebra
 --  Output:  the Koszul dual exterior algebra, but with an additional 
 --           ZZ-degree, the ``standard grading'' where elements of \bigwedge^k
 --           have degree k.
@@ -279,21 +279,36 @@ stronglyLinearStrand Module := M -> (
     if h === null then error("--ring M does not have heft vector");
     if not same degrees M then error("--M needs to be generated in same degree");
     degM := first degrees M;
-    degrange := unique prepend(degM, apply(degrees S, d -> d - degM));
+    canonical := sum flatten degrees vars S;
+    degrange := unique prepend(degM, apply(degrees S, d -> d + degM));
     RM := toricRR(M,degrange);
     mat := RM.dd_0;
-    cols := positions(degrees source mat, x -> drop(x,-1) == degM);
+    cols := positions(degrees source mat, x -> drop(x,-1) == degM + canonical);
     N := ker mat_cols;
     toricLL ker mat_cols
 )
 
+
 TEST///
 restart
 load "MultigradedBGG.m2"
-loadPackage "NormalToricVarieties"
+needsPackage "NormalToricVarieties"
 S = ring hirzebruchSurface 3;
 M = coker vars S;
-stronglyLinearStrand(M)
+stronglyLinearStrand(M)--should give Koszul complex, and it does.
+M = coker matrix{{x_1, x_2^2}}
+stronglyLinearStrand(M)--gives correct answer.
+S = ring weightedProjectiveSpace {1,1,1,2,2}
+I = minors(2, matrix{{x_0, x_1, x_2^2, x_3}, {x_1, x_2, x_3, x_4}})
+M = Ext^3(module S/I, S^{{-7}})
+C = stronglyLinearStrand(M)
+--Wrong answer. The terms are correct, and C.dd_2 is correct.
+--But C.dd_1 is, bizarrely, 0. I believe the correct matrix is:
+--matrix{{-x_0, 0, -x_3, 0, x_1, 0}, {-x_1, -x_0, -x_4, -x_3, x_2, x_1}, {0, -x_1, 0, -x_4, 0, x_2}}
+--I think stronglyLinearStrand is correct. The problem is with toricLL. Not sure yet what
+--the problem is. In particular, I'm not sure if this is the same problem as before or a new problem.
+--Aside: M is the canonical module of the coordinate ring of a copy of P^1 embedded in
+--the weighted projective space P(1,1,1,2,2). 
 ///
 
 TEST///
@@ -722,14 +737,17 @@ end;
 
 --TESTS
 
---DEMO
+
+--DEMO. We should delete this eventually, but leaving it here for now in case it's useful.
+restart
 load "MultigradedBGG.m2"
 --We introduce a new type: a differential module.
---There is a method that turns any map A such that A^2 = 0 into a differential module:
+--There is a method that turns any map A such that A^2 = 0 into a differential module.
 --Here is an example from the talk over the weekend:
 R = ZZ/101[x, y]
 M = map(R^2, R^2, matrix{{x*y, -x^2}, {y^2, -x*y}})
 D = differentialModule(M)
+oo.dd
 --We can compute its homology, as in the exercises:
 mingens HH(D)
 --We can take its free resolution in two ways. First, we execute
@@ -767,7 +785,7 @@ oo.dd
 --Given an S-module M, we can compute H^i(X,\widetilde{M}(j)) using BGG. Here is an example.
 M = S^1
 --Compute R(M) (in a certain degree range):
-D = toricRR(M, {0,1,2,3})
+ = toricRR(M, {0,1,2,3})
 --Resolve it:
 tail = (resDM(D, LengthLimit => 3))
 --each H^2(X, O(j)) can be computed by picking off the socle generators of the
@@ -785,3 +803,4 @@ for k from -7 to 7 do (
 bggCohomologyCheck(-8)
 --we get the wrong answer eventually, because our window for R(M) and its resolution 
 --is only so big. To get more cohomology, one must widen the window.
+
