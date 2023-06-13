@@ -50,6 +50,7 @@ globalA1Degree (List) := (Matrix) => (Endo) -> (
     -- coefficient ring 
     fracFieldBezDet := det(D);
     bezDet := lift(numerator(det(D)), R) / lift(denominator(det(D)),coefficientRing R);
+    bezDetR := lift(bezDet, R);
     
     RX:=kk[X_1..X_n]; 
     RY:=kk[Y_1..Y_n];
@@ -70,7 +71,7 @@ globalA1Degree (List) := (Matrix) => (Endo) -> (
     -- print("Bez det is:");
     -- print(bezDet)
     
-    bezDetRed := bezDet % promotedEndo; --reduces bezDet mod promotedEndo 
+    bezDetRed := bezDetR % promotedEndo; --reduces bezDet mod promotedEndo 
     -- print("bezDetRed is:");
     -- print(bezDetRed);
     
