@@ -58,7 +58,9 @@ beginDocumentation()
 document {
 	Key => {(diagonalize, Matrix), diagonalize},
 	Usage => "diagonalize(M)",
-	Inputs => {"M"},
+	Inputs => {
+		Matrix => "M" => {"a symmetric matrix over any field"}
+		},
 	Outputs => { Matrix => { "a diagonal matrix congruent to", TT "M" }},
 	PARA {"Given a symmetric matrix ", TT "M", " over any field, this command gives a diagonal matrix congruent to", TT "M","."},
 	EXAMPLE lines ///
@@ -72,9 +74,11 @@ document {
      	}
 
 document {
-        Key => {(diagonalizeOverInt, Matrix), diagonalizeOverInt},
+    Key => {(diagonalizeOverInt, Matrix), diagonalizeOverInt},
 	Usage => "diagonalizeOverInt(M)",
-	Inputs => {"M"},
+	Inputs => {
+		Matrix => "M" => {"a symmetric matrix with integer entries"}
+		},
 	Outputs => { Matrix => { "a diagonal matrix congruent to ", TT "M", "." }},
 	PARA {"Given a symmetric matrix ", TT "M", " over the integers, this command gives a diagonal matrix congruent to", TT "M","."},
 	EXAMPLE lines ///
@@ -88,9 +92,11 @@ document {
         }
 
 document {
-        Key => {(diagonalizeCB, Matrix), diagonalizeCB},
+    Key => {(diagonalizeCB, Matrix), diagonalizeCB},
 	Usage => "diagonalizeCB(M)",
-	Inputs => {"M"},
+	Inputs => {
+		Matrix => "M" => {"an n x k matrix"}
+		},
 	Outputs => { Matrix => { "the n x k matrix whose first n columns have been row/column reduced to a diagonal matrix." }},
 	PARA {"Given an n x k matrix, ", TT "M", ", this command outputs the n x k matrix whose first n columns have been row/column reduced to a diagonal matrix."},
 	EXAMPLE lines ///
@@ -104,9 +110,11 @@ document {
         }
 
 document {
-        Key => {(wittDecomp, Matrix), wittDecomp},
+    Key => {(wittDecomp, Matrix), wittDecomp},
 	Usage => "wittDecomp(M)",
-	Inputs => {"M"},
+	Inputs => {
+		Matrix => "M" => {"an invertible matrix over any field that isn't the real or complex numbers"}
+		},
 	Outputs => { (ZZ,Matrix) => { "the number of hyperbolic forms that make up the bilinear form represented by ", TT "M", ", and the anisotropic part of the form represented as a matrix." }},
 	PARA {"Given an invertible matrix, ", TT "M", ", over any field that isn't the real or complex numbers which represents a non-degenerate bilinear form, ",TEX///$\beta$///,
                 ", this commmand outputs", TEX///$n$ ///, " and ", TEX///$A$ ///, " where", 
@@ -122,9 +130,11 @@ document {
         }
 
 document {
-        Key => {(gwClass, Matrix), gwClass},
+    Key => {(gwClass, Matrix), gwClass},
 	Usage => "gwClass(M)",
-	Inputs => {"M"},
+	Inputs => {
+		Matrix => "M" => {"a symmetric matrix"}
+		},
 	Outputs => { GrothendieckWittClass => { "the isomorphism class of a symmetric bilinear form represented by ", TT "M", "." }},
 	PARA {"Given a symmetric matrix, ", TT "M", ", this command outputs an object of type ", TT "GrothendieckWittClass", ". ",
                 "This output has the representing matrix, ", TT "M", ", and the base field of the matrix stored in its CacheTable."},
@@ -139,9 +149,11 @@ document {
         }
 
 document {
-        Key => {(baseField, GrothendieckWittClass), baseField},
+    Key => {(baseField, GrothendieckWittClass), baseField},
 	Usage => "baseField(beta)",
-	Inputs => {"beta"},
+	Inputs => {
+		GrothendieckWittClass => "beta" => {"the isomorphism class of a symmetric bilinear form"}
+		},
 	Outputs => { Ring => { "the base field of the Grothendieck-Witt class ", TT "beta", "." }},
 	PARA {"Given the isomorphism class of a symmetric bilinear form, ", TT "beta", 
                 ", this command outputs the base field of the form."},
@@ -156,9 +168,11 @@ document {
         }
 
 document {
-        Key => {(wittDecomp, Matrix), wittDecomp},
+    Key => {(wittDecomp, Matrix), wittDecomp},
 	Usage => "wittDecomp(M)",
-	Inputs => {"M"},
+	Inputs => {
+		Matrix => "M" => {"an invertible matrix over any field that isn't the real or complex numbers"}
+		},
 	Outputs => { (ZZ,Matrix) => { "the number of hyperbolic forms that make up the bilinear form represented by ", TT "M", ", and the anisotropic part of the form represented as a matrix." }},
 	PARA {"Given an invertible matrix, ", TT "M", ", over any field that isn't the real or complex numbers which represents a non-degenerate bilinear form, ",TEX///$\beta$///,
                 ", this commmand outputs", TEX///$n$ ///, " and ", TEX///$A$ ///, " where", 
@@ -174,12 +188,17 @@ document {
         }
 
 document {
-        Key => {(squarefreePart, QQ or ZZ), squarefreePart},
-	Usage => "squarefreePart(n)",
-	Inputs => {"n"},
+    Key => {(squarefreePart, QQ), (squarefreePart, ZZ), squarefreePart},
+	Usage => "squarefreePart(q)
+				squarefreePart(n)",
+	Inputs => {
+		QQ => "q" => {a rational number},
+		ZZ => "n" => {an integer}
+		},
 	Outputs => { ZZ => { "the smallest magnitude integer in the square class of ", TT "n", "." }},
-	PARA {"Given a rational number, ", TT "n", ", this command outputs the smallest magnitude integer, ",
-                TEX///$m$///, ", such that "},
+	PARA {"Given a rational number (or integer), ", TT "q", ", this command outputs the smallest magnitude integer, ",
+                TEX///$m$///, ", such that ", TEX///$q=lm$///, " for some rational number (or integer) ",
+				TEX///$l$///, "."},
 	EXAMPLE lines ///
 		 R = QQ[x,y]
 		 F = {y^2-x^2-1,x-y^2+4*y-2}
@@ -191,7 +210,47 @@ document {
         }
 
 document {
-        Key => {(globalA1Degree, List), globalA1Degree},
+    Key => {(bezoutian, List), bezoutian},
+	Usage => "bezoutian(endo)",
+	Inputs => {
+		List => "endo" => {"list of polynomials representing an endomorphism of affine space"}
+		},
+	Outputs => { List => { "the Bezoutian corresponding to the endomorphism, ", TT "endo", "." }},
+	PARA {"Given an endomorphism of affine space, ", TEX///$f=(f_1,\dots ,f_n)$///,
+			", given as a list of polynomials called ", TT "endo", ", this command returns the Bezoutian corresponding to this endomorphism."},
+	EXAMPLE lines ///
+		 R = QQ[x,y]
+		 F = {y^2-x^2-1,x-y^2+4*y-2}
+		 I = ideal F
+		 regularRep(y,I)
+		 S = R/I
+		 regularRep(y)
+	 	 ///,
+        }
+
+document {
+    Key => {(localAlgebraBasis, List, Ideal), localAlgebraBasis},
+	Usage => "localAlgebraBasis(L,p)",
+	Inputs => {
+		List => "L" => {},
+		Ideal => "p" => {}
+	},
+	Outputs => { ZZ => { "the smallest magnitude integer in the square class of ", TT "n", "." }},
+	PARA {"Given a rational number (or integer), ", TT "n", ", this command outputs the smallest magnitude integer, ",
+                TEX///$m$///, ", such that ", TEX///$n=lm$///, " for some rational number (or integer) ",
+				TEX///$l$///, "."},
+	EXAMPLE lines ///
+		 R = QQ[x,y]
+		 F = {y^2-x^2-1,x-y^2+4*y-2}
+		 I = ideal F
+		 regularRep(y,I)
+		 S = R/I
+		 regularRep(y)
+	 	 ///,
+        }
+
+document {
+    Key => {(globalA1Degree, List), globalA1Degree},
 	Usage => "globalA1Degree(f)",
 	Inputs => {"An endomorphism", TEX///$f=(f_{1},...,f_{n}):\mathbb{A}^{n}_{k}\to\mathbb{A}^{n}_{k}$///, "as a list", TT "f={f_1, ..., f_n}"},
 	Outputs => { gwClass => { "the Grothendieck-Witt class defining the", TEX///$\mathbb{A}^{1}$///, "-degree of the endomorphism" TT "f", "." }},
