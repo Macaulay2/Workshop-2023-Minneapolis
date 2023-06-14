@@ -49,3 +49,16 @@ CLOSED: [2023-06-10 Sat 12:23]
 
 *** DONE lyubeznikNumber should cache results 
 CLOSED: [2023-06-10 Sat 16:20]
+
+** Support
+
+*** TODO Implement computation of support
+
+**** TODO Strategy 1: use roots
+
+**** TODO Strategy 2: use Katzman--Zhang algorithm
+
+** FModule == 0
+
+*** TODO If root is not computed, it should use Katzman--Zhang strategy
+
