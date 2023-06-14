@@ -14,7 +14,10 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     n := #Endo; -- n is the no. of polynomials
     
     -- Get the underlying field    
-    kk := coefficientRing(ring(Endo#0));
+    kk := coefficientRing(ring(Endo#0));    
+    if isField(kk) == false then(
+    	kk = toField(kk);
+    	);
     
     -- Let S = k[x_1..x_n] be the ambient polynomial ring
     S:=ring(Endo#0);
@@ -27,9 +30,10 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     -- Initialize a polynomial ring in X_i's and Y_i's to compute the Bezoutian in
     R := kk[X_1..Y_n];
     
-    print("R is " | toString(R));
     -- Create an (n x n) matrix D which will be populated by \Delta_{ij} in the pape
-    D := mutableMatrix id_((frac R)^n);
+    D := "";
+    try D = mutableMatrix id_((frac R)^n) else D= mutableMatrix id_(R^n);
+
     
     
     
@@ -58,6 +62,7 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     -- coefficient ring k
     fracFieldBezDet := det(D);
     bezDet := lift(numerator(det(D)), R) / lift(denominator(det(D)),coefficientRing R);
+    bezDetR := lift(bezDet, R);
         
     -- Define formal variables X_i, Y_i that replace x_i
     RX:=kk[X_1..X_n]; 
@@ -89,7 +94,7 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     sBYProm :=apply(toList(0..#standBasisY-1),i-> sub(standBasisY_i,Rquot));
    
     -- Now reduce the bezDet determinant subject ot the local ideal in both the X's, Y's.
-    bezDetRed := bezDet % localIdeal;
+    bezDetRed := bezDetR % localIdeal;
    
     
     ------------------------

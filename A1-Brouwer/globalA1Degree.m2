@@ -6,15 +6,31 @@
 globalA1Degree = method()
 
 globalA1Degree (List) := (Matrix) => (Endo) -> (
-    -- Endo is the list {f_i} of the polynomials f_i
-    -- first check if the morphism does not have isolated zeroes
-    if dim ideal(Endo) > 0  then (print "Error: morphism does not have isolated zeroes"; return Endo;);
-    n := #Endo; -- n is the no. of polynomials defining the morphism
-    kk := coefficientRing(ring(Endo#0)); -- kk is the field, where f is an endomorphsism between affine n-space over kk. 
-    S:=ring(Endo#0); -- S is the ring in which the defining polynomials of f live
-    R := kk[X_1..Y_n]; -- inititalize this new ring for the computation of the Bezoutian.
-    D := mutableMatrix id_((frac R)^n); -- Create a matrix which will be populated by \Delta_{ij} in the paper
+    -- Endo is the list {f_1, f_2, ..., f_n} of polynomials kk^n -> kk^n
     
+    -- n is the number of polynomials
+    n := #Endo; -- n is the no. of polynomials
+    
+    -- Get the underlying field    
+    kk := coefficientRing(ring(Endo#0));    
+    if isField(kk) == false then(
+    	kk = toField(kk);
+    	);
+    
+    -- Let S = k[x_1..x_n] be the ambient polynomial ring
+    S:=ring(Endo#0);
+    
+    -- First check if the morphism does not have isolated zeroes
+    if dim ideal(Endo) > 0  then (print "Error: morphism does not have isolated zeroes"; return Endo;);
+    
+    -- Create internal rings/matrices
+    
+    -- Initialize a polynomial ring in X_i's and Y_i's to compute the Bezoutian in
+    R := kk[X_1..Y_n];
+    
+    -- Create an (n x n) matrix D which will be populated by \Delta_{ij} in the pape
+    D := "";
+    try D = mutableMatrix id_((frac R)^n) else D= mutableMatrix id_(R^n);
     
     
     for i from 0 to (n-1) do (
@@ -34,6 +50,7 @@ globalA1Degree (List) := (Matrix) => (Endo) -> (
     -- coefficient ring 
     fracFieldBezDet := det(D);
     bezDet := lift(numerator(det(D)), R) / lift(denominator(det(D)),coefficientRing R);
+    bezDetR := lift(bezDet, R);
     
     RX:=kk[X_1..X_n]; 
     RY:=kk[Y_1..Y_n];
@@ -54,7 +71,7 @@ globalA1Degree (List) := (Matrix) => (Endo) -> (
     -- print("Bez det is:");
     -- print(bezDet)
     
-    bezDetRed := bezDet % promotedEndo; --reduces bezDet mod promotedEndo 
+    bezDetRed := bezDetR % promotedEndo; --reduces bezDet mod promotedEndo 
     -- print("bezDetRed is:");
     -- print(bezDetRed);
     
