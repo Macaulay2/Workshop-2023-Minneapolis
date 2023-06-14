@@ -174,6 +174,18 @@ assert all (L, i -> schubertCodim i == codim schubertDetIdeal i)
 ///
 
 TEST ///
+L = {
+    {2,9,3,4,1,7,5,6,8}, -- example 1.2 in PSW
+    {2,1},
+    matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}},
+    matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
+}
+expected = {5, 0, 1,4}
+
+assert all (#L, i -> matrixSchubertReg L#i == expected#i)
+///
+
+TEST ///
 -- isMinRankTable
 T1 = matrix {{0,1,1},{1,1,2},{1,2,3}}
 T2 = matrix {{1,1,1,1,1},{1,2,2,2,2},{1,2,2,2,3},{1,2,2,3,3},{1,2,3,3,3}}
