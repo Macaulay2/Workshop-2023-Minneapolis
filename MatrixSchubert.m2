@@ -20,7 +20,7 @@ newPackage(
             Email => "lyuyuan@mit.edu",
             HomePage=> "https://www.mit.edu/~lyuyuan/"},
 	{Name => "Joseph McDonough",
-	    Email => " ",
+	    Email => "mcdo1248@umn.edu",
 	    HomePage=> " "}
     },
     Headline => "functions for investigating ASM and matrix Schubert varieties",

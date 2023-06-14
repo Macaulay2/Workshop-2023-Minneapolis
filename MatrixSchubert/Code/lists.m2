@@ -43,6 +43,7 @@ initialIdealsList = method()
 initialIdealsList ZZ := List => (n) -> (
     if (n < 3 or n > 6) then error("There is no available list for this n.");
     filename := concatenate("./MatrixSchubert/ASMData/antiDiagIniIdeal/ideals", toString n, ".txt");
+    z := getSymbol "z";
     S := QQ(monoid[z_(1,1)..z_(n,n)]);
     listOfIdeals := apply(lines get filename, i -> sub(value i,S));
     listOfIdeals
