@@ -253,23 +253,12 @@ toricLL Module := N -> (
 	    i => S^(apply((degrees sBasis#i)_1, j-> -drop(j,-1)))
 	    )
 	);
-    relationsN := presentation N;
-    SE := S**E;
-    EtoSE := map(SE,E,for i to dim S-1 list SE_(dim S + i));
-    tr := sum(dim S, i-> SE_i*SE_(dim S+i));
-    f0 := gens image basis N;
-    newf0 := (EtoSE f0)*tr;
-    -- weird fix. skew commutativity makes computations different, so we just... remove it.
-    SE' := (coefficientRing S)(monoid[gens S | gens E, Degrees => entries matrix {{matrix degrees S, 0}, {0,matrix degrees E}}]);
-    SEtoSE' := map(SE',SE,gens SE');
-    relationsNinSE := SEtoSE' EtoSE relationsN;
-    newf0 = (SEtoSE' newf0) % relationsNinSE;
-    newg := matrixContract(transpose sub(f0,SE'),newf0);
-    g' := sub(newg,S);
-    --Now we have to pick up pieces of g' and put them in the right homological degree.
-    --Note:  perhaps we want everything transposed??
+    EtoS := map(S,E,toList (numgens S:0));
+    differential := sum for i to numgens E-1 list (
+        S_i* EtoS matrix basis(-infinity, infinity, map(N,N,E_i))
+	);
     if #homDegs == 1 then (chainComplex map(S^0,FF#0,0))[1] else (
-	chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^(homDegs#0)*g'_(inds#(i+1))^(inds#(i))))[-homDegs#0]
+	chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^(homDegs#0)*differential_(inds#(i+1))^(inds#(i))))[-homDegs#0]
 	)
     )
 
@@ -302,7 +291,7 @@ stronglyLinearStrand(M)--gives correct answer.
 S = ring weightedProjectiveSpace {1,1,1,2,2}
 I = minors(2, matrix{{x_0, x_1, x_2^2, x_3}, {x_1, x_2, x_3, x_4}})
 M = Ext^3(module S/I, S^{{-7}})
-C = stronglyLinearStrand(M)
+N = stronglyLinearStrand M
 --Wrong answer. The terms are correct, and C.dd_2 is correct.
 --But C.dd_1 is, bizarrely, 0. I believe the correct matrix is:
 --matrix{{-x_0, 0, -x_3, 0, x_1, 0}, {-x_1, -x_0, -x_4, -x_3, x_2, x_1}, {0, -x_1, 0, -x_4, 0, x_2}}
