@@ -1,10 +1,10 @@
 load "./diagonalize.m2"
 loadPackage "RationalPoints2"
 load "GW-type.m2"
---getInvariants method spits out basic invariants of a matrix representing a bilinear form
---isIdenticalDiscriminant tells us whether two matrices representing bilinear forms have the same discriminant
+-- getInvariants method spits out basic invariants of a matrix representing a bilinear form
+-- isIdenticalDiscriminant tells us whether two matrices representing bilinear forms have the same discriminant
 
--- Frenly, Andrew
+-- Authors: Frenly, Andrew
 
 getInvariants = method()
 
