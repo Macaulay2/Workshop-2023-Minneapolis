@@ -140,7 +140,8 @@ toricRR(Module,List) := (N,LL) ->(
     df0 := apply(degrees source f0, d -> (-d | {0}) + wEtwist);
     SE := S**E;
     --the line below is better for degrees,it overwrites S somehow...
-    --SE := coefficientRing(S)[gens S|gens E, Degrees => apply(degrees S,d->d|{0}) | degrees E, SkewCommutative => gens E];
+    -- sasha edit: i edited the line below so that it wouldn't overwrite S. dunno if we want this.
+    --SE := (coefficientRing S)(monoid[gens S|gens E, Degrees => apply(degrees S,d->d|{0}) | degrees E, SkewCommutative => gens E]);
     tr := sum(dim S, i-> SE_(dim S+i)*SE_i);
     newf0 := sub(f0,SE)*tr;
     relationsMinSE := sub(relationsM,SE);
@@ -285,7 +286,7 @@ stronglyLinearStrand Module := M -> (
     mat := RM.dd_0;
     cols := positions(degrees source mat, x -> drop(x,-1) == degM + canonical);
     N := ker mat_cols;
-    toricLL ker mat_cols
+    toricLL N
 )
 
 
