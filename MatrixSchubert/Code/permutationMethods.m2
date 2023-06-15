@@ -86,7 +86,7 @@ toOneLineNotation (List, ZZ) := List => (perm, maxIdx) -> (
 ------------------------------------
 toAntiDiagTrans = method()
 toAntiDiagTrans (Sequence, ZZ) := List => (idx, maxIdx) -> (
-    transposition := (sum(toList idx)-1, sum(toList idx));
+    transposition := {sum(toList idx)-1, sum(toList idx)};
     toOneLineNotation(transposition, maxIdx)
 )
 toAntiDiagTrans (List, ZZ) := List => (idx, maxIdx) -> (
