@@ -1,5 +1,6 @@
 path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
+load "GW-type.m2"
 load "wittDecomp.m2"
 load "safeBlockSum.m2"
 load "diagonalize.m2"
