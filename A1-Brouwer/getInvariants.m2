@@ -11,7 +11,7 @@ getInvariants = method()
 getInvariants (GrothendieckWittClass) := (List) => (alpha) -> (
     A := alpha.matrix
     n := numRows(A);
-    kk : =ring A;
+    kk := ring A;
 
     --Representative of discriminant of bilinear form
     discrRep := det A;
