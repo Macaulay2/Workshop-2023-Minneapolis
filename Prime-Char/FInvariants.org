@@ -15,7 +15,8 @@ CLOSED: [2023-06-10 Sat 15:47]
 
 ** root
 
-*** TODO Should also cache a root morphism
+*** DONE Should also cache a root morphism
+CLOSED: [2023-06-16 Fri 14:57]
 
 ** cohomDim
 

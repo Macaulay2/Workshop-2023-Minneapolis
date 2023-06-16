@@ -106,16 +106,17 @@ localCohomologyFilter = ( i, I ) ->
     filterSeq := randomFilterRegSeq( i, I, R );
     J := ideal filterSeq;
     p := char R;
-    u := ( product filterSeq )^( p-1 );
-    time K := firstEquality( 
-        e ->  frobeniusPower( p^e, J ) : ideal( u^(lift( (p^e-1)/(p-1), ZZ )) ) 
-    );
-    time M1 := saturate( R^1/(frobenius K), I );
-    time N1 := saturate( R^1/K, I );
-    rtMorphism := generatingMorphism map( M1, N1, u );
-    M := makeFModule rtMorphism;
-    M#cache#(symbol root) = rtMorphism;
-    M
+    u := ( product filterSeq )^(p-1);
+    f := e -> if e == 0 then J else (frobenius f(e-1)) : u;
+    K := firstEquality f;
+    M := R^1/K;
+    g := map( FF M, M, u );
+    M0 := saturate( 0_M, I );
+    rtMorphism := generatingMorphism inducedMap( FF M0, M0, g );
+    H := makeFModule rtMorphism;
+    H#cache#(symbol rootMorphism) = rtMorphism;
+    H#cache#(symbol root) = M0;
+    H
 )
 
 localCohomology = method( Options => { Strategy => Ext } )
@@ -124,7 +125,6 @@ localCohomology ( ZZ, Ideal ) := FModule => o -> ( i, I ) ->
 (   
     R := ring I;
     if not isGoodRing R then error "localCohomology is only implemented for regular rings of positive characteristic";
-    print "oi";
     if (I#cache)#?(localCohomology, i) then return I#cache#(localCohomology, i);
     lc := if o.Strategy === Ext then localCohomologyExt( i, I )
     else localCohomologyFilter( i, I );
@@ -253,46 +253,6 @@ isFilterRegSeq ( BasicList, Ideal, Ring ) := Boolean => ( L, I, R ) ->
 isFilterRegSeq ( BasicList, Ideal, Ideal ) := Boolean => ( L, I, J ) ->
     isFilterRegSeq( L, I, module J )
 
-filterRegSeq = method()
-
-filterRegSeq (ZZ,Ideal,Module) := List => (n,I,M) ->
-(
-    --ap:= associatedPrimes M;
-    --ap:= select(ap,p -> (not isSubset(I,p)))
-    
-    --Strategy of ordering these generators obtained from Eisenbud-Huneke-Vasconcelos.m2 in the
-    ---PrimaryDecomposition package.
-    R := ring I;
-    G:= sort(flatten entries mingens I, f -> (sum degree f, #terms f));
-    k := coefficientRing ring I;
-    f := 1_k;
-    
-    i:=0;
-    while not isFilterRegElement(G#i,I,M,ideal(0_R)*M) do (i=i+1;);
-    L:={G#i};
-    i=0;
-        
-    while (#L < n and i<#G) do (
---	 if any(ap, p -> (G#i % p==0))
-    	if isFilterRegSeq(append(L,G#i),I,M) then (L=append(L,G#i);
-	    print L;
-	    );
-	i=i+1;
-	);
-    i=0;
-    while (#L<n and i<#G) do (
-	for j to (#G-1) do ( 
-	    if isFilterRegSeq(append(L,(G#i+f*G#j)),I,M) then (L=append(L,(G#i+f*G#j));
-		print L;
-		print "hi";
-		);
-	    if #L==n then return L;
-	    );
-	i=i+1;
-	);
-    L
-)
-
 ----------------------------------------------------------------------------------------------
 
 -- generates a random element of degree deg of the ideal I
@@ -316,7 +276,7 @@ randomFilterRegSeq = method(
 randomFilterRegSeq ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) -> 
 (
     L := {};
-    G := (trim I)_*;
+    G := sort(flatten entries mingens I, f -> (sum degree f, #terms f));
     minDeg := min apply( G, k -> first degree k );
     minDensity := 0.1;
     R := ring I;
