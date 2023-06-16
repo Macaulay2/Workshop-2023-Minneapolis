@@ -39,13 +39,14 @@ doc ///
     Headline
     	the class of finitely generated subrings of polynomial rings
     Description
-    	A subring of a @ ofClass{PolynomialRing} @ is a ring with
-	unity contained inside of another ambient ring that is closed
-	under the operations of the ambient ring.
-    Example
-    	R = QQ[x,y];
-	L = {x^2, y^2};
-	S = subring L
+	Text
+    		A subring of a @ ofClass{PolynomialRing} @ is a ring with unity 
+		contained inside of another ambient ring that is closed
+		under the operations of the ambient ring.
+    	Example
+    		R = QQ[x,y];
+		L = {x^2, y^2};
+		S = subring L
 ///
 
 
