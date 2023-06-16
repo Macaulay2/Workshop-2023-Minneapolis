@@ -1,6 +1,6 @@
 path = append(path, "/home/macaulay/A1-Brouwer/");
 
-load "./diagonalize.m2"
+load "diagonalize.m2"
 loadPackage "RationalPoints2"
 load "GW-type.m2"
 load "getInvariants.m2"
