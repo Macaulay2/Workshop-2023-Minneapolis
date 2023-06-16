@@ -1,7 +1,8 @@
-load "./GW-type.m2"
-load "./wittDecomp.m2"
-load "./safeBlockSum.m2"
-load "./diagonalize.m2"
+path = append(path, "/home/macaulay/A1-Brouwer/");
+load "GW-type.m2"
+load "wittDecomp.m2"
+load "safeBlockSum.m2"
+load "diagonalize.m2"
 ---------
 -- diagonalForm method
 -- inputs a GWClass and outputs its diagonal form as a GWClass
