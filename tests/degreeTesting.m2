@@ -1,4 +1,5 @@
 path = append(path, "/home/macaulay/A1-Brouwer/");
+path = append(path, "../A1-Brouwer/");
 load "globalA1Degree.m2"
 load "wittDecomp.m2"
 load "localAlgebraBasis.m2"
