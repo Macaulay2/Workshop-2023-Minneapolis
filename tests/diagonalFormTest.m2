@@ -1,7 +1,7 @@
 path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
+load "GW-type.m2"
 load "diagonalForm.m2"
---load "GW-type.m2"
 
 M1=matrix(RR, {{0, 1}, {1, 0}});
 G1=gwClass(M1);
