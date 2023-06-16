@@ -7,9 +7,8 @@ load "GW-type.m2"
 -- Authors: Frenly, Andrew
 
 getInvariants = method()
-
-getInvariants (GrothendieckWittClass) := (List) => (alpha) -> (
-    A := alpha.matrix
+getInvariants (GrothendieckWittClass) := List => (alpha) ->(
+    A := alpha.matrix;
     n := numRows(A);
     kk := ring A;
 
@@ -20,7 +19,6 @@ getInvariants (GrothendieckWittClass) := (List) => (alpha) -> (
         diagA := diagonalize(A);
         posEntries := 0;
         negEntries := 0;
-	
 	--For-loop counts the number of positive, negative, and zero diagonal entries of diagA
         zeroEntries := 0;
          for i from 0 to (n-1) do(
@@ -39,17 +37,17 @@ getInvariants (GrothendieckWittClass) := (List) => (alpha) -> (
         signature := {posEntries,zeroEntries,negEntries};
 
     	-- Signature is the 2nd entry of output list
-        return {n,signature,discrRep})
+        return {n,signature,discrRep});
 
     -- Do not output signature if not working over ordered fields
-    else return {n,discrRep};
-);
+    {n,discrRep}
+    )
 
 isIdenticalDiscriminant = method()
 
 isIdenticalDiscriminant (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alpha,beta) -> (
-    A := alpha.matrix
-    B := beta.matrix
+    A := alpha.matrix;
+    B := beta.matrix;
     a := det(A);
     b := det(B);
     kk := ring A;
