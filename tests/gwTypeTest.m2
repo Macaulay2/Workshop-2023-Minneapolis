@@ -1,4 +1,5 @@
 path = append(path, "/home/macaulay/A1-Brouwer/");
+path = append(path, "../A1-Brouwer/");
 load "GW-type.m2"
 print(currentDirectory());
 M = matrix(QQ,{{1,0},{0,1}});
