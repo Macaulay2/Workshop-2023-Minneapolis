@@ -63,16 +63,44 @@ document {
 		Matrix => "M" => {"a symmetric matrix over any field"}
 		},
 	Outputs => { Matrix => { "a diagonal matrix congruent to", TT "M" }},
-	PARA {"Given a symmetric matrix ", TT "M", " over any field, this command gives a diagonal matrix congruent to", TT "M","."},
+	PARA {"Given a symmetric matrix ", TT "M", " over any field, this command gives a diagonal matrix congruent to", TT "M",".",
+	"Note that the order in which the diagonal terms appear is not specified."},
 	EXAMPLE lines ///
-		 R = QQ[x,y]
-		 F = {y^2-x^2-1,x-y^2+4*y-2}
-		 I = ideal F
-		 regularRep(y,I)
-		 S = R/I
-		 regularRep(y)
+		 M=matrix(ZZ/17, {{7, 9}, {9, 6}});
+		 result=diagonalize(M);
+		 assert(result===matrix(ZZ/17, {{7, 0}, {0, -8}}));
 	 	 ///,
      	}
+
+document {
+	Key => {(diagonalForm, GrothendieckWittClass), GrothendieckWittClass},
+	Headline => "nice diagonal representative of a Grothendieck-Witt Class",
+	Usage => "diagonalize(G)",
+	Inputs => {
+		GrothendieckWittClass => "G" => {"a Grothendieck-Witt Class over", TEX ///$\mathbb{R}$///, "or",
+		TEX///$\mathbb{C}$///, "."},
+	},
+	Outputs => {GrothendieckWittClass => {"a Grothendieck-Witt Class isomorphic to", TT "G",
+	"whose matrix representative is diagonal."}},
+	PARA {"Given a Grothendieck-Witt Class," TT "G", "over", TEX///$\mathbb{R}$///, "or", TEX///$\mathbb{C}$///,
+	"returns a Grothendieck-Witt Class whose representing matrix has the following form: the first several diagonal blocks",
+	"are of the form" TEX///$\begin{bmatrix}1 & 0 \\ 0 & 1\end{bmatrix}$///, ", and the number of such blocks equals the number of",
+	"hyperbolic planes contained in the quadratic space; ",
+	"the rest forms an identity matrix whose rank equals the dimension of the anisotropic part of the quadratic space."},
+	EXAMPLE lines ///
+	M=matrix(RR, {{1, 2, 3, 4}, {2, 4, 5, 16}, {3, 5, 7, 8}, {4, 16, 8, 19}});
+	G=gwClass(M);
+	M'=diagonalForm(G);
+	A=matrix(RR, {{1, 0, 0, 0}, {0, -1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, -1}});
+	assert(M6.matrix===A);
+	///,
+	EXAMPLE lines ///
+	M=matrix(CC, {{1, 2, 3}, {2, 4, 5}, {3, 5, 7}});
+	G=gwClass(M);
+	M'=diagonalForm(G);
+	assert(M'.matrix===matrix(CC, {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}));
+	///,
+}
 
 document {
     Key => {(diagonalizeOverInt, Matrix), diagonalizeOverInt},
@@ -84,12 +112,9 @@ document {
 	Outputs => { Matrix => { "a diagonal matrix congruent to ", TT "M" }},
 	PARA {"Given a symmetric matrix ", TT "M", " over the integers, this command gives a diagonal matrix congruent to", TT "M","."},
 	EXAMPLE lines ///
-		 R = QQ[x,y]
-		 F = {y^2-x^2-1,x-y^2+4*y-2}
-		 I = ideal F
-		 regularRep(y,I)
-		 S = R/I
-		 regularRep(y)
+		M=matrix(ZZ, {{6, 5},{5, 9}});
+		A=matrix(ZZ, {{6, 0}, {0, 174}});
+		assert(diagonalizeOverInt(testMatrix6)===A);
 	 	 ///,
         }
 
@@ -152,6 +177,7 @@ document {
 		 regularRep(y)
 	 	 ///,
         }
+
 
 document {
     Key => {(baseField, GrothendieckWittClass), baseField},
