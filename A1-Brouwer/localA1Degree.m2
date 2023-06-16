@@ -2,7 +2,7 @@
 --for notation: input domain is kk[x_1..x_n] while Bezoutian computed in kk[X_1..Y_n]
 
 path = append(path, "/home/macaulay/A1-Brouwer/");
-load "./Gw-type.m2"
+load "GW-type.m2"
 load "localAlgebraBasis.m2"
 
 debugging = false;
