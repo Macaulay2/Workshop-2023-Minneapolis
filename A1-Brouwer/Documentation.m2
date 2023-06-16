@@ -15,6 +15,8 @@
                 Returns the tensor product of two GrothendieckWittClasses (isomorphism class of direct sum of two quadratic spaces)
         (e). isWellDefined (GrothendieckWittClass) -> (Boolean)
                 Returns true if matrix representing a GW class is defined over a field k, char(k)\neq 2, symmetric, nonsingular
+
+
 -Functions:
     (1). Basic Matrix Properties Check
         (a). isSquare (Matrix)-> (Boolean)
@@ -45,7 +47,8 @@
             -Returns the Witt Index of q and the matrix representing q_a on V_a.
     (8). wittDecompInexact (Matrix, InexactFieldFamily) -> (ZZ, Matrix)
             -InexactFieldFamily must be RR or CC
-            -Returns the Witt Index of q and the matrix representing q_a on V_a as \pm I, after changing basis.*}
+            -Returns the Witt Index of q and the matrix representing q_a on V_a as \pm I, after changing basis.
+*}
 
 
 
@@ -54,6 +57,17 @@
             ---------------------------- documentation starts here-------------
 
 beginDocumentation()
+
+
+undocumented {
+-- put undocumented commands here.
+    }
+
+document {
+	Key => GrothendieckWitt,
+	Headline => "Package for calculating Grothendieck-Witt groups and calculating local and global A1-degrees", 
+	Acknowledgement => {}
+}
 
 document {
 	Key => {(diagonalize, Matrix), diagonalize},
