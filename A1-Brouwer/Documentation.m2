@@ -247,7 +247,7 @@ document {
 	Headline => "basis for local k-alegbra ", TEX///$Q_p(f)$///,
 	Usage => "localAlgebraBasis(L,p)",
 	Inputs => {
-		List => "L" => {"list of polynomials ", TEX///$f=(f_1, \dots ,f_n)$///, " over the same the same ring"},
+		List => "L" => {"list of polynomials ", TEX///$f=(f_1, \dots ,f_n)$///, " over the same ring"},
 		Ideal => "p" => {"prime ideal of an isolated zero"}
 	},
 	Outputs => { List => {"a list of basis elements of the local k-algebra", TEX///$Q_p(f)$/// }},
@@ -273,5 +273,32 @@ document {
 		 S = QQ[z]
 		 f = {z^4 + z^3 - z^2 - z}
 		 globalA1Degree(f)
+	 	 ///,
+        }
+    
+document {
+    Key => {(locallA1Degree, List, Ideal), localA1Degree},
+    	Headline => "Bezoutian for local endomorphism f",     
+	Usage => "localA1Degree(L, p)",
+	Inputs => {
+	    List => "L" => {"List of polynomials ", TEX///$f=(f_{1},...,f_{n})$///, " over ring k defining an endomorphism ", 
+		TEX///$f:\mathbb{A}^{n}_{k}\to\mathbb{A}^{n}_{k}$///}
+	    Ideal => "p" => {"prime ideal of an isolated zero for " TT "f"}
+	    }, 
+	Outputs => { 
+	    Matrix => { "the Bezoutian defining the local ", TEX///$\mathbb{A}^{1}$///, "-degree of the endomorphism" TT "f", 
+		" for local ring R_(p), where R is the ring over which", TT "f", " is defined." }},
+	PARA {"For a local ring " TT k$ ", given an endomorphism of affine space, ", TEX///$f=(f_{1},...,f_{n}):\mathbb{A}^{n}_{k}\to\mathbb{A}^{n}_{k}$///, "as a list", TT "f={f_1, ..., f_n}", ", this method computes the local ", TEX///$\mathbb{A}^{1}$///, "-degree via Bezoutians."},
+	EXAMPLE lines ///
+		 S = QQ[z]
+		 p = ideal (z) 
+		 L = {z^4 + z^3 - z^2 - z}
+		 localA1Degree(L, p)
+	 	 ///,
+		 lines ///
+		 S=QQ[x,y]
+		 L = {x^2+y^2-1, x^2-y-1}
+		 p = ideal (x, y)
+		 localA1Degree(L, p)
 	 	 ///,
         }
