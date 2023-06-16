@@ -17,7 +17,7 @@ legendreBoolean (RingElement) := (Boolean) => a -> (
 )
 
 
-debugging = True;
+debugging = true;
 
 
 -- simplifyForm method
@@ -32,7 +32,7 @@ simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta 
     A := gamma.matrix;
     k := baseField(gamma);
     n := numRows(gamma.matrix);
-    if debugging == True then(
+    if debugging == true then(
 	print("Matrix A is");
 	print(A);
 	print("Base field is");
@@ -178,7 +178,7 @@ simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta 
 	-- If -1 is a square class in k, then 2<1> = H
 	if legendreBoolean(sub(-1,k)) then(
 	    
-	    if debugging == True then(
+	    if debugging == true then(
 	          print("In finite field, square case");
 	          );
 	    
@@ -219,7 +219,7 @@ simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta 
 	-- If -1 is not a square then it is a representative for the nonsquare class	  	   
 	   if not legendreBoolean(sub(-1,k)) then (
 	       
-	       if debugging == True then(
+	       if debugging == true then(
 	          print("In finite field, nonsquare case");
 	          );
 	      	            

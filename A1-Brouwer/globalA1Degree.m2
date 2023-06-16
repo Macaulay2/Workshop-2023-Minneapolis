@@ -1,27 +1,49 @@
 --Nikita, Gabriel, Jordy
 -- Given an endomorphism of affine space f=(f1,...,fn) given as a list of polynomials, return the Bezoutian corresponding to the endomorphism
 --for notation: input domain is kk[x_1..x_n] while Bezoutian computed in kk[X_1..Y_n]
+load "./GW-type.m2"
+load "./rankGlobalAlgebra.m2"
 
+globalA1DegreeCC = method()
+globalA1DegreeCC (List) := (GrothendieckWittClass) => (Endo) ->(
+    print("globalA1DegreeCC CALLED");
+    if dim ideal(Endo) > 0  then error "Error: morphism does not have isolated zeroes";
+    S:=ring(Endo#0);
+    rankAlgebra:=rankGlobalAlgebra(Endo);
+    return gwClass(matrix(mutableIdentity(CC,rankAlgebra)));  
+    );
 
 globalA1Degree = method()
-
-globalA1Degree (List) := (Matrix) => (Endo) -> (
+globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
     -- Endo is the list {f_1, f_2, ..., f_n} of polynomials kk^n -> kk^n
     
     -- n is the number of polynomials
     n := #Endo;
     
     -- Get the underlying field    
-    kk := coefficientRing(ring(Endo#0));    
+    kk := coefficientRing(ring(Endo#0));
     if isField(kk) == false then(
     	kk = toField(kk);
     	);
     
     -- Let S = k[x_1..x_n] be the ambient polynomial ring
-    S:=ring(Endo#0);
+    S:=ring(Endo#0);    
     
     -- First check if the morphism does not have isolated zeroes
-    if dim ideal(Endo) > 0  then (print "Error: morphism does not have isolated zeroes"; return Endo;);
+    if dim ideal(Endo) > 0  then error "Error: morphism does not have isolated zeroes";
+    
+    -- Check the number of variables matches the number of polynomials
+    if not #(gens S) == n then error "Error: the number of variables does not match the number of polynomials.";
+    
+    -- If the field is CC, run the much quicker globalA1DegreeCC method
+    if (kk === CC or instance(kk,ComplexField)) then(
+	print("Got here");
+    return globalA1DegreeCC(Endo)
+    );
+    
+    -- If the field is RR, ask the user to run it over QQ instead, then simplify over RR
+    if (kk === RR or instance(kk,RealField)) then error "Error: globalA1Degree method does not work over the reals. Instead, define the polynomials over QQ to output a GrothendieckWittClass. Then extract the matrix, base change it to RR, and then run simplifyForm().";
+    
     
     -- Create internal rings/matrices
     
@@ -95,4 +117,5 @@ globalA1Degree (List) := (Matrix) => (Endo) -> (
         );
     );
     return matrix(B);
+
 );
