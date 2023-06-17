@@ -2,7 +2,7 @@
 --     outputs a simple form for its Gram matrix,
 --     and something of the form aH+b
 
-load "./GW-type.m2"
+needs "./GW-type.m2"
 load "./wittDecomp.m2"
 load "./diagonalForm.m2"
 load "./safeBlockSum.m2"
