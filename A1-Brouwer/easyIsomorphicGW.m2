@@ -1,5 +1,5 @@
 needsPackage "RationalPoints2"
-load "./GW-type.m2"
+needs "./GW-type.m2"
 
 -- Tom, Andrew
 
