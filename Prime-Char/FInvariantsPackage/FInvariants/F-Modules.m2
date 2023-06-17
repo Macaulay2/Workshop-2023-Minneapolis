@@ -103,15 +103,17 @@ localCohomologyExt = ( i, I ) ->
 localCohomologyFilter = ( i, I ) -> 
 (
     R := ring I;
-    time filterSeq := filterRegularSequence( i, I, R, Homogeneous => isHomogeneous I );
-    J := ideal filterSeq;
+    filterSeq := filterRegularSequence( i, I, R, Homogeneous => isHomogeneous I );
+    J := sub( ideal filterSeq, R );
+    -- sub is for the case of an empty list. 
+    -- Maybe the case i = 0 should simply be handled separately. 
     p := char R;
     u := ( product filterSeq )^(p-1);
     f := e -> if e == 0 then J else (frobenius f(e-1)) : u;
-    time K := firstEquality f;
+    K := firstEquality f;
     M := R^1/K;
     g := map( FF M, M, u );
-    time M0 := saturate( 0_M, I );
+    M0 := saturate( 0_M, I );
     rtMorphism := generatingMorphism inducedMap( FF M0, M0, g );
     H := makeFModule rtMorphism;
     H#cache#(symbol rootMorphism) = rtMorphism;
@@ -223,9 +225,8 @@ isFilterRegularElement = method()
 
 isFilterRegularElement ( RingElement, Ideal, Module, Module ) := Boolean => ( x, I, M, N ) ->
 (
-    T := ker( x*id_( M/N ) );
-    J := radical ann T;
-    isSubset( I, J )
+    J := ann ker( x*id_( M/N ) );
+    isSubset( I, J ) or all( I_*, g -> radicalContainment( g, J, Strategy => "Kollar" ) )
 )
 
 isFilterRegularSequence = method()
@@ -276,19 +277,19 @@ filterRegularSequence = method(
 filterRegularSequence ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) -> 
 (
     L := {};
-    G := sort(flatten entries mingens I, f -> (sum degree f, #terms f));
     J := ideal( 0_(ring I) ); 
+    G := sort(flatten entries mingens I, f -> (sum degree f, #terms f));
     i := 0;
     -- first, try the generators of the ideal
     while i < #G and #L < n do
     (
         if isFilterRegularElement( G_i, I, M, J*M ) then
         (
-            print ("found");
+            --print ("found");
             L = append( L, G_i );
             J = J + ideal( G_i )
-        )
-        else print ("failed");
+        );
+--        else print ("failed");
         i = i + 1
     );
     local candidate; local deg; local density;
@@ -303,11 +304,11 @@ filterRegularSequence ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) ->
         candidate = randomElementInIdeal( deg, density, I, Homogeneous => o.Homogeneous);
         if isFilterRegularElement( candidate, I, M, J*M ) then 
         (
-            print ("found", deg, density );
+            --print ("found", deg, density );
             L = append( L, candidate );
             J = J + ideal( candidate )
-        )
-        else print ("failed", deg, density );
+        );
+--        else print ("failed", deg, density );
         i = i + 1;
     );
     if #L < n then error "filterRegSeg: could not find a sequence of the desired length; try increasing Tries or MaxDegree";
@@ -335,7 +336,7 @@ firstEquality Function := Ideal => o -> f ->
 	isEqual = f(i) == f(i+1)
     );
     if not isEqual then error "firstEquality: Reached maximum limit of tries.";
-    print i;
+--    print i;
     f(i)
 )
 
