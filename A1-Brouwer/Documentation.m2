@@ -292,7 +292,7 @@ document {
     
 document {
     Key => {(locallA1Degree, List, Ideal), localA1Degree},
-    	Headline => "Bezoutian for local endomorphism f",     
+    Headline => "Bezoutian for local endomorphism f",     
 	Usage => "localA1Degree(L, p)",
 	Inputs => {
 	    List => "L" => {"List of polynomials ", TEX///$f=(f_{1},...,f_{n})$///, " over ring k defining an endomorphism ", 

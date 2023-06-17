@@ -63,6 +63,10 @@ isIdenticalDiscriminant (GrothendieckWittClass,GrothendieckWittClass) := (Boolea
     else return true;
 );
 
+
+getHWinvariant = method()
+
+
 B = matrix{{1,0,2},{2,2,0},{1,0,0}}
 
 
