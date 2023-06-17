@@ -1,6 +1,6 @@
 --This function aims to find the radical of a quadratic space.
 load "diagonalize.m2"
-load "GW-type.m2"
+needs "GW-type.m2"
 
 
 
