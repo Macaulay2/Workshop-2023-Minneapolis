@@ -2,7 +2,7 @@ needsPackage "RationalPoints2"
 
 path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
-load "GW-type.m2"
+needs "GW-type.m2"
 load "matrixBooleans.m2"
 load "squarefreepart.m2"
 load "easyupperlefttriangular.m2"
