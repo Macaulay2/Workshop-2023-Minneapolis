@@ -1,6 +1,6 @@
 path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
-load ("GW-type.m2")
+needs ("GW-type.m2")
 load ("diagonalize.m2")
 load ("diagonalizeOverInt.m2")
 load ("easyIsomorphicGW.m2")
