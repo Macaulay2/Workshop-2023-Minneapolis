@@ -44,10 +44,7 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
                 nonzeroEntriesB = nonzeroEntriesB + 1;
                 );
             );
-        if nonzeroEntriesA == nonzeroEntriesB then (
-            return true;
-            )
-        else return false;
+        return (nonzeroEntriesA == nonzeroEntriesB);
         )
     --Over RR, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of positive entries and the same number of negative entries
     else if ((k1 === RR or instance(k1,RealField)) and (k2 === RR or instance(k2,RealField))) then (
@@ -69,10 +66,7 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
                 negEntriesB = negEntriesB + 1;
                 );
             );
-        if ((posEntriesA == posEntriesB) and (negEntriesA == negEntriesB)) then (
-            return true;
-            )
-        else return false;
+        return ((posEntriesA == posEntriesB) and (negEntriesA == negEntriesB));
         )
     -- Over QQ, call isIsomorphicFormQ, which checks equivalence over all completions
     else if ((k1 === QQ) and (k2 === QQ)) then (
@@ -94,10 +88,7 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
                 prodNonzeroDiagB = prodNonzeroDiagB * diagB_(i,i);
 		);
 	    );
-        if ((countNonzeroDiagA == countNonzeroDiagB) and (legendreBoolean(prodNonzeroDiagA) == legendreBoolean(prodNonzeroDiagB))) then (
-            return true;
-            )
-        else return false;
+        return ((countNonzeroDiagA == countNonzeroDiagB) and (legendreBoolean(prodNonzeroDiagA) == legendreBoolean(prodNonzeroDiagB)));
         )
     -- If we get here, the base fields are different, so the forms are not isomorphic
     else return false;
