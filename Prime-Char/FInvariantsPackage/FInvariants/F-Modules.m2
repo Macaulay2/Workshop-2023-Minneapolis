@@ -103,7 +103,7 @@ localCohomologyExt = ( i, I ) ->
 localCohomologyFilter = ( i, I ) -> 
 (
     R := ring I;
-    filterSeq := randomFilterRegSeq( i, I, R );
+    filterSeq := filterRegularSequence( i, I, R );
     J := ideal filterSeq;
     p := char R;
     u := ( product filterSeq )^(p-1);
@@ -219,39 +219,39 @@ randomGeneratingMorphism Module := GeneratingMorphism => o -> M ->
 ----------------------------------------------------------------------------------------------
 
 --- I-filter regular sequences ---
-isFilterRegElement = method()
+isFilterRegularElement = method()
 
-isFilterRegElement ( RingElement, Ideal, Module, Module ) := Boolean => ( x, I, M, N ) ->
+isFilterRegularElement ( RingElement, Ideal, Module, Module ) := Boolean => ( x, I, M, N ) ->
 (
     T := ker( x*id_( M/N ) );
     J := radical ann T;
     isSubset( I, J )
 )
 
-isFilterRegSeq = method()
+isFilterRegularSequence = method()
 
-isFilterRegSeq ( BasicList, Ideal, Module ) := Boolean => ( L, I, M ) ->
+isFilterRegularSequence ( BasicList, Ideal, Module ) := Boolean => ( L, I, M ) ->
 (
-    if not isSubset( ideal L, I ) then error "isFilterRegSeq: The sequence is not contained in the ideal";
+    if not isSubset( ideal L, I ) then error "isFilterRegularSequence: The sequence is not contained in the ideal";
     l := #L;
     R := ring I;
-    isFRE := isFilterRegElement( L#0, I, M, ( ideal 0_R )*M );
+    isFRE := isFilterRegularElement( L#0, I, M, ( ideal 0_R )*M );
     N := ( ideal L#0 )*M;
     i := 1;
     while isFRE and i < l do 
     (
-	isFRE = isFilterRegElement( L#i, I, M, N );
+	isFRE = isFilterRegularElement( L#i, I, M, N );
 	N = N + ( ideal L#i )*M;
 	i = i + 1;
     );
     isFRE
 )
 
-isFilterRegSeq ( BasicList, Ideal, Ring ) := Boolean => ( L, I, R ) ->
-    isFilterRegSeq( L, I, module R )
+isFilterRegularSequence ( BasicList, Ideal, Ring ) := Boolean => ( L, I, R ) ->
+    isFilterRegularSequence( L, I, module R )
 
-isFilterRegSeq ( BasicList, Ideal, Ideal ) := Boolean => ( L, I, J ) ->
-    isFilterRegSeq( L, I, module J )
+isFilterRegularSequence ( BasicList, Ideal, Ideal ) := Boolean => ( L, I, J ) ->
+    isFilterRegularSequence( L, I, module J )
 
 ----------------------------------------------------------------------------------------------
 
@@ -264,7 +264,7 @@ randomElementInIdeal ( ZZ, RR, Ideal ) := RingElement => o -> ( deg, density, I 
     else sum random( toList( 1..deg ), I, Density => density )
 )
 
-randomFilterRegSeq = method( 
+filterRegularSequence = method( 
     Options => 
     { 
         Tries => infinity, 
@@ -273,7 +273,7 @@ randomFilterRegSeq = method(
     }
 )
 
-randomFilterRegSeq ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) -> 
+filterRegularSequence ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) -> 
 (
     L := {};
     G := sort(flatten entries mingens I, f -> (sum degree f, #terms f));
@@ -289,19 +289,19 @@ randomFilterRegSeq ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) ->
         density = minDensity + 0.009*( counter % 100); 
         if counter < #G then candidate = G_counter
         else candidate = randomElementInIdeal( deg, density, I, Homogeneous => o.Homogeneous);
-        if isFilterRegElement( candidate, I, M, J*M ) then 
+        if isFilterRegularElement( candidate, I, M, J*M ) then 
         (
             L = append( L, candidate );
             J = J + ideal( candidate )
         );
         counter = counter + 1;
     );
-    if #L < n then error "randomFilterRegSeg: could not find a sequence of the desired length; try increasing Tries or MaxDegree";
+    if #L < n then error "filterRegSeg: could not find a sequence of the desired length; try increasing Tries or MaxDegree";
     L
 )
 
-randomFilterRegSeq ( ZZ , Ideal, Ring ) := List => o -> ( n, I, R ) ->
-    randomFilterRegSeq( n, I, module R )
+filterRegularSequence ( ZZ , Ideal, Ring ) := List => o -> ( n, I, R ) ->
+    filterRegularSequence( n, I, module R )
     
 ----------------------------------------------------------------------------------------------
 
@@ -321,6 +321,7 @@ firstEquality Function := Ideal => o -> f ->
 	isEqual = f(i) == f(i+1)
     );
     if not isEqual then error "firstEquality: Reached maximum limit of tries.";
+    print i;
     f(i)
 )
 
@@ -352,9 +353,9 @@ lowerLimit RingElement := Ideal => f -> lowerLimit { f }
 ----------------------------------------------------------------------------------------------
 -- Calculating the Lyubeznik numbers-----
 ---ERROR: Still not computing values when i=j correctly except for highest Lyubeznik #
-lyubeznikNumber = method()
+lyubeznikNumber = method( Options => { Strategy => Ext } )
 
-lyubeznikNumber( ZZ, ZZ, Ideal ) := ZZ => ( i, j, I ) -> 
+lyubeznikNumber( ZZ, ZZ, Ideal ) := ZZ => o -> ( i, j, I ) -> 
 (
     ln := ( cacheValue ( symbol lyubeznikNumber, i, j ) )( I -> (
     R := ring I;
@@ -364,10 +365,10 @@ lyubeznikNumber( ZZ, ZZ, Ideal ) := ZZ => ( i, j, I ) ->
     if i < 0 or j < 0 then error "lyubeznikNumber: expected nonnegative integers"; 
     if i > j or j > d then return 0;
     m := ideal R_*;
-    LC := localCohomology( n-j, I, R );
+    LC := localCohomology( n-j, I, R, Strategy => o.Strategy );
     r := root LC;
     if r == 0 then return 0;
-    frs1 := randomFilterRegSeq( i+1, m, r ); --frs1 has one more elm than frs
+    frs1 := filterRegularSequence( i+1, m, r ); --frs1 has one more elm than frs
     frs := drop( frs1, -1 );
     c1 := lowerLimit(frs1,R);
     c := lowerLimit(frs,R);    
@@ -385,19 +386,19 @@ lyubeznikNumber( ZZ, ZZ, Ideal ) := ZZ => ( i, j, I ) ->
     ln I
 )
 
-lyubeznikNumber ( ZZ, ZZ, Ideal, Ring ) := ( i, j, I, R ) ->
+lyubeznikNumber ( ZZ, ZZ, Ideal, Ring ) := o -> ( i, j, I, R ) ->
 (
     if R =!= ring I then error "lyubeznikNumber: expected an ideal of the given ring";
-    lyubeznikNumber( i, j, I )
+    lyubeznikNumber( i, j, I, o )
 )
 
-lyubeznikTable = method()
+lyubeznikTable = method( Options => { Strategy => Ext } )
 
-lyubeznikTable ( Ideal, Ring ) := Matrix => ( I, R ) ->
+lyubeznikTable ( Ideal, Ring ) := Matrix => o -> ( I, R ) ->
 (
     d := dim( R/I );
     LT := toList apply( 0..d, i ->  
-        toList( (i:0) | apply( i..d, j -> lyubeznikNumber( i, j, I, R ) ) )
+        toList( (i:0) | apply( i..d, j -> lyubeznikNumber( i, j, I, R, o ) ) )
     );
     matrix LT
 )
