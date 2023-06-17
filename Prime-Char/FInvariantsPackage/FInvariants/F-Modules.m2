@@ -103,15 +103,15 @@ localCohomologyExt = ( i, I ) ->
 localCohomologyFilter = ( i, I ) -> 
 (
     R := ring I;
-    filterSeq := filterRegularSequence( i, I, R );
+    time filterSeq := filterRegularSequence( i, I, R, Homogeneous => isHomogeneous I );
     J := ideal filterSeq;
     p := char R;
     u := ( product filterSeq )^(p-1);
     f := e -> if e == 0 then J else (frobenius f(e-1)) : u;
-    K := firstEquality f;
+    time K := firstEquality f;
     M := R^1/K;
     g := map( FF M, M, u );
-    M0 := saturate( 0_M, I );
+    time M0 := saturate( 0_M, I );
     rtMorphism := generatingMorphism inducedMap( FF M0, M0, g );
     H := makeFModule rtMorphism;
     H#cache#(symbol rootMorphism) = rtMorphism;
@@ -277,24 +277,38 @@ filterRegularSequence ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) ->
 (
     L := {};
     G := sort(flatten entries mingens I, f -> (sum degree f, #terms f));
+    J := ideal( 0_(ring I) ); 
+    i := 0;
+    -- first, try the generators of the ideal
+    while i < #G and #L < n do
+    (
+        if isFilterRegularElement( G_i, I, M, J*M ) then
+        (
+            print ("found");
+            L = append( L, G_i );
+            J = J + ideal( G_i )
+        )
+        else print ("failed");
+        i = i + 1
+    );
+    local candidate; local deg; local density;
     minDeg := min apply( G, k -> first degree k );
     minDensity := 0.1;
-    R := ring I;
-    J := ideal( 0_R ); 
-    counter := 0;
-    local candidate; local deg; local density;
-    while counter < o.Tries and deg < o.MaxDegree and #L < n do
+    i = 0;
+    -- now try random elements, with incresing density and degree 
+    while i < o.Tries and deg < o.MaxDegree and #L < n do
     (
-        deg = minDeg + ( counter // 100 );
-        density = minDensity + 0.009*( counter % 100); 
-        if counter < #G then candidate = G_counter
-        else candidate = randomElementInIdeal( deg, density, I, Homogeneous => o.Homogeneous);
+        deg = minDeg + ( i // 100 );
+        density = minDensity + 0.009*( i % 100); 
+        candidate = randomElementInIdeal( deg, density, I, Homogeneous => o.Homogeneous);
         if isFilterRegularElement( candidate, I, M, J*M ) then 
         (
+            print ("found", deg, density );
             L = append( L, candidate );
             J = J + ideal( candidate )
-        );
-        counter = counter + 1;
+        )
+        else print ("failed", deg, density );
+        i = i + 1;
     );
     if #L < n then error "filterRegSeg: could not find a sequence of the desired length; try increasing Tries or MaxDegree";
     L
