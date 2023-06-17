@@ -3,7 +3,7 @@ path = append(path, "../A1-Brouwer/");
 
 load "diagonalize.m2"
 --loadPackage "RationalPoints2"
-load "GW-type.m2"
+needs "GW-type.m2"
 load "getInvariants.m2"
 
 -- test code and assertions
