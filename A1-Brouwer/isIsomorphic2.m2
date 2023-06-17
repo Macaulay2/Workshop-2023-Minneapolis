@@ -1,6 +1,6 @@
 -- Tests whether two quadratic forms are isomorphic; only implemented over QQ, RR, CC, and finite fields.
 
-load "GW-type.m2"
+needs "GW-type.m2"
 load "diagonalize.m2"
 load "hilbertSymbol.m2"
 load "simplifyForm.m2"
