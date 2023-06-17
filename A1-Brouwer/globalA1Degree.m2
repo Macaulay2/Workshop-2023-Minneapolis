@@ -1,7 +1,7 @@
 --Nikita, Gabriel, Jordy
 -- Given an endomorphism of affine space f=(f1,...,fn) given as a list of polynomials, return the Bezoutian corresponding to the endomorphism
 --for notation: input domain is kk[x_1..x_n] while Bezoutian computed in kk[X_1..Y_n]
-load "./GW-type.m2"
+needs "./GW-type.m2"
 load "./rankGlobalAlgebra.m2"
 
 globalA1DegreeCC = method()
