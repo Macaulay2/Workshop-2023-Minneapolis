@@ -54,6 +54,20 @@ swap = (L,i,j) -> (
 				   else L_i)
 )
 
+inverseOf = method()
+inverseOf List := List => (w) -> (
+    if not (isPerm w) then error ("Expecting a permutation.");
+    winv := new MutableList;
+    scan(#w, i-> winv#(w_i-1)=i+1);
+    toList winv
+    )
+
+longestPerm = method()
+longestPerm ZZ := List => (n) -> (
+    if n < 1 then error ("Expecting a positive integer.");
+    toList (reverse (1..n))
+    )
+
 
 --------------------------------
 --auxiliary function for making a permutation matrix out of a perm in 1-line notation
