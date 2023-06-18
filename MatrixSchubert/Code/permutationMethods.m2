@@ -54,6 +54,7 @@ swap = (L,i,j) -> (
 				   else L_i)
 )
 
+
 --------------------------------
 --auxiliary function for making a permutation matrix out of a perm in 1-line notation
 --INPUT: a list w, which is a permutation in 1-line notation

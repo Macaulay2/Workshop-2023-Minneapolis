@@ -51,6 +51,7 @@ export{
     "toOneLineNotation",
     "composePerms",
     "isPerm",
+    "dividedDifference",
     "schubertPoly",
     "doubleSchubertPoly",
     "permLength",

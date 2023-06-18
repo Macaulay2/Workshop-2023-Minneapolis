@@ -340,6 +340,13 @@ doubleSchubertPoly(List) := (w) -> (
     schubertPolyHelper(w, Q, Double=>true)
 )
 
+dividedDifference = method()
+dividedDifference (RingElement, ZZ) := (f,i) -> (
+    Q:= ring f;
+    sf := sub(f, {Q_(i-1)=>Q_i, Q_i=>Q_(i-1)}); 
+    (f-sf) // (Q_(i-1)-Q_i)
+    )   
+
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: diagonal initial ideal, lex wrt lex, of Schubert determinantal ideal for w
