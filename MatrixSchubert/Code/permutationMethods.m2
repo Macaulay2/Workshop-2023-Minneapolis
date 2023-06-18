@@ -68,7 +68,15 @@ longestPerm ZZ := List => (n) -> (
     toList (reverse (1..n))
     )
 
-
+getOneReducedWord = method()
+getOneReducedWord List := List => (w) -> (
+    if not (isPerm w) then error ("Expecting a permutation.");
+    if isIdentity(w) then  {}
+    else (
+        i := firstDescent(w);
+        newPerm := swap(w, i-1, i);
+        getOneReducedWord(newPerm)) | {i}
+    )
 --------------------------------
 --auxiliary function for making a permutation matrix out of a perm in 1-line notation
 --INPUT: a list w, which is a permutation in 1-line notation

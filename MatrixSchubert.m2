@@ -68,6 +68,8 @@ export{
     "rajIndex",
     "isMinRankTable",
     "Double",
+    "Operator",
+    "PolyType",
     "rankTableToASM",
     "rankTableFromMatrix",
     "schubertCodim",

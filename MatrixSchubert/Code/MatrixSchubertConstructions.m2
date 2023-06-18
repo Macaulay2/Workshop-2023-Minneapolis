@@ -292,21 +292,30 @@ fultonGens List := o -> w -> (
 --TODO: rename variables?
 --This function is incorrect and needs to be rewritten!
 ----------------------------
-grothendieckPoly = method()
-grothendieckPoly(List) := w -> (
+grothendieckPoly = method(Options=>{Algorithm=>"DividedDifference"})
+grothendieckPoly(List) := opts -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubertDetIdeal w;
-    R := ring I;
-    kk := coefficientRing R;
-    possibleDegs := apply(#w, i-> toList insert(i,1,(#w-1):0));
-    degs := splice apply(possibleDegs, i->#w:i);
-    Q := kk[R_*, Degrees => degs];
-    numerator hilbertSeries sub(I,Q)
+    if opts.Algorithm == "Degree" then (
+        I := schubertDetIdeal w;
+        R := ring I;
+        kk := coefficientRing R;
+        possibleDegs := apply(#w, i-> toList insert(i,1,(#w-1):0));
+        degs := splice apply(possibleDegs, i->#w:i);
+        Q := kk[R_*, Degrees => degs];
+        numerator hilbertSeries sub(I,Q)
+    )
+    else if opts.Algorithm == "DividedDifference" then (
+        n := #w;
+        x := local x;
+        Q = QQ[x_1..x_n];
+        polyByDividedDifference(w, Q, PolyType => "Grothendieck")        	
+    )
+    else error("Invalid option for Algorithm.")
 )
 
 
 schubertPolyHelper = method(Options=>{Double=>false})
-schubertPolyHelper(List, Ring) := opts -> (w, Q) -> (
+schubertPolyHelper(List, PolynomialRing) := opts -> (w, Q) -> (
     isDouble := opts.Double;
     n := #w;
     if not (isPerm w) then error ("The input must be a permutation matrix.");
@@ -323,12 +332,18 @@ schubertPolyHelper(List, Ring) := opts -> (w, Q) -> (
         sum(toList(apply(us, u -> schubertPolyHelper(u, Q, Double=>isDouble)))) + (Q_r - Q_(n-1+v_r)) * schubertPolyHelper(v, Q, Double=>isDouble)
 )
 
-schubertPoly = method()
-schubertPoly(List) := (w) -> (
+schubertPoly = method(Options=>{Algorithm=>"DividedDifference"})
+schubertPoly(List) := opts-> (w) -> (
+    
     n := #w;
     x := local x;
     Q := QQ[x_1..x_n];
-    schubertPolyHelper(w, Q, Double=>false)
+    if opts.Algorithm == "Transition" then 
+        schubertPolyHelper(w, Q, Double=>false)
+    else if opts.Algorithm == "DividedDifference" then
+        polyByDividedDifference(w,Q)
+    else error("Invalid option for Algorithm.")
+    
 )
 
 doubleSchubertPoly = method()
@@ -340,12 +355,40 @@ doubleSchubertPoly(List) := (w) -> (
     schubertPolyHelper(w, Q, Double=>true)
 )
 
-dividedDifference = method()
-dividedDifference (RingElement, ZZ) := (f,i) -> (
+
+
+dividedDifference = method(Options=>{Operator=>null})
+dividedDifference (RingElement, ZZ) := opts-> (f,i) -> (
     Q:= ring f;
-    sf := sub(f, {Q_(i-1)=>Q_i, Q_i=>Q_(i-1)}); 
-    (f-sf) // (Q_(i-1)-Q_i)
-    )   
+    sf := sub(f, {Q_(i-1)=>Q_i, Q_i=>Q_(i-1)});
+    if opts.Operator === null then 
+        (f-sf) // (Q_(i-1)-Q_i)
+    else if opts.Operator == "Grothendieck" then
+        dividedDifference((1-Q_i)*f,i)
+    else error("Invalid option for Operator.")
+    )
+
+
+polyByDividedDifference = method(Options=>{PolyType=>"Schubert"})
+polyByDividedDifference (List, PolynomialRing) := opts -> (w, Q) -> (
+    n := #w;
+    w0 := longestPerm(n);
+    schubw0 := product(n, i->(Q_i)^(n-1-i));
+    curpoly := schubw0;
+    if (w0 == w) then schubw0
+    else (
+        v := composePerms(inverseOf(w), w0);
+        redword := getOneReducedWord(v);
+	if opts.PolyType == "Schubert" then
+            polys := apply(reverse redword, i-> (curpoly=dividedDifference(curpoly,i); curpoly))
+	else if opts.PolyType == "Grothendieck" then
+	    polys = apply(reverse redword, i-> (curpoly=dividedDifference(curpoly,i, Operator=>"Grothendieck"); curpoly))
+	else error ("Invalid option for PolyType.");
+	polys#(#polys-1)
+    )
+    )
+
+
 
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
