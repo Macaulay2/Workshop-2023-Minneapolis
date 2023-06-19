@@ -1,2 +1,1 @@
-MatrixSchubert/ASMData/ideals7.txt filter=lfs diff=lfs merge=lfs -text
 MatrixSchubert/ASMData/antiDiagIniIdeal/ideals7.txt filter=lfs diff=lfs merge=lfs -text
