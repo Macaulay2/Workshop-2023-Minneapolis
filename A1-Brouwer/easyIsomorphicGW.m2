@@ -22,8 +22,10 @@ easyIsomorphicGW = method(
     )
 
 easyIsomorphicGW (GrothendieckWittClass, GrothendieckWittClass) := Boolean => opts -> (beta, gamma) -> (
-    -- Returns error if the matrices are defined over different base fields
-    if not (baseField(beta)).order === (baseField(gamma)).order then error "Error: these classes have non-isomorphic underlying fields";
+    k1 := baseField(beta);
+    k2 := baseField(gamma);
+    -- Returns error if the matrices are defined over different base fields or a base field is not QQ or a finite field
+    if not ((k1 === QQ  and k2 === QQ) or (instance(k1, GaloisField) and instance(k2, GaloisField) and k1.order == k2.order)) then error "These classes have non-isomorphic underlying fields, or one of the underlying fields is not QQ or a finite field";
     
     A := beta.matrix;
     B := gamma.matrix;
@@ -31,21 +33,20 @@ easyIsomorphicGW (GrothendieckWittClass, GrothendieckWittClass) := Boolean => op
     -- Return false if the matrices are not of the same size
     if not numRows(A) == numRows(B) then return false;
     
-    k:= baseField(beta);
     n := numRows(A);
     
     -- Build a generic matrix P in indeterminants over our field
-    R := k[x_(1,1)..x_(n,n)];
+    R := k1[x_(1,1)..x_(n,n)];
     P := genericMatrix(R,n,n);
     
     -- Take the n^2 equations produced by this matrix equality
-    testZeroMatx := transpose(P)*A*P - substitute(B,ring A);
+    testZeroMatx := transpose(P)*A*P - substitute(B,k1);
     fullEqns := flatten entries testZeroMatx;
     I := ideal(fullEqns);
     
     -- Increasing the height bound, check for solutions at each stage
-    for i in 1..opts.HeightBound do(
-	L := rationalPoints(k, I, Bound=>i);
+    for i in 1..(opts.HeightBound) do(
+	L := rationalPoints(k1, I, Bound=>i);
 	if not #L === 0 then(
 	    return true;
 	    break;
@@ -58,11 +59,11 @@ easyIsomorphicGW (GrothendieckWittClass, GrothendieckWittClass) := Boolean => op
     return false;
     )
 
-
 load "isIsomorphic2.m2"
-M1=matrix(GF(7),{{1,2,3},{2,4,5},{3,5,7}});
-M2=matrix(GF(7),{{1,0,0},{0,3,0},{0,0,2}});
+M1=matrix(GF(5),{{1,2,3},{2,4,5},{3,5,7}});
+M2=matrix(GF(5),{{1,0,0},{0,3,0},{0,0,2}});
 G1=gwClass(M1);
 G2=gwClass(M2);
 time isIsomorphic2(G1,G2);
 time easyIsomorphicGW(G1,G2);
+
