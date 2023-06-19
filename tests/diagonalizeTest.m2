@@ -14,7 +14,7 @@ A=diagonalize(testMatrix2);
 E=gwClass(A);
 B=gwClass(resultMatrix1);
 C=gwClass(resultMatrix2);
-assert(easyIsomorphicGW(E, B)===true or easyIsomorphicGW(E, C)===true);
+assert(easyIsomorphicGW(E, B)===true);
 --easyIsomorphicGW works fine; returns height of solution correctly
 --no solutions up to height 1, ..., i; transition matrix has height i+1;
 --diagonalize works fine;
@@ -22,12 +22,12 @@ assert(easyIsomorphicGW(E, B)===true or easyIsomorphicGW(E, C)===true);
 testMatrix3 = matrix(QQ, {{0,1/2},{1/2, 0}});
 D=diagonalize(testMatrix3);
 F=gwClass(D);
-assert(easyIsomorphicGW(F, B)===true or easyIsomorphicGW(F, C)===true);
+assert(easyIsomorphicGW(F, B));
 
 --tests diagonalize over finite fields.
-testMatrix7=matrix(ZZ/17, {{7, 9}, {9, 6}});
+testMatrix7=matrix(GF(17), {{7, 9}, {9, 6}});
 G=gwClass(diagonalize(testMatrix7));
-H=gwClass(matrix(ZZ/17, {{7, 0}, {0, -8}}));
+H=gwClass(matrix(GF(17), {{7, 0}, {0, -8}}));
 assert(easyIsomorphicGW(G, H)===true);
 
 --------------------------------------------
@@ -40,4 +40,4 @@ assert(diagonalizeOverInt(testMatrix6)===matrix(ZZ, {{6, 0}, {0, 174}}));
 
 testMatrix8=(matrix(ZZ, {{3, 6}, {6, 2}}));
 J=diagonalizeOverInt(testMatrix8);
-print J;---This does not return the correct matrix either.
+assert(diagonalizeOverInt(testMatrix6)===matrix(ZZ, {{3, 0}, {0, -90}}));
