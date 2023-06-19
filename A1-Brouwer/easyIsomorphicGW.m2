@@ -23,7 +23,7 @@ easyIsomorphicGW = method(
 
 easyIsomorphicGW (GrothendieckWittClass, GrothendieckWittClass) := Boolean => opts -> (beta, gamma) -> (
     -- Returns error if the matrices are defined over different base fields
-  -- if not baseField(beta) === baseField(gamma) then error "Error: these classes have different underlying fields";
+    if not (baseField(beta)).order === (baseField(gamma)).order then error "Error: these classes have non-isomorphic underlying fields";
     
     A := beta.matrix;
     B := gamma.matrix;
