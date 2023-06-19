@@ -39,5 +39,4 @@ assert(diagonalizeOverInt(testMatrix6)===matrix(ZZ, {{6, 0}, {0, 174}}));
 
 
 testMatrix8=(matrix(ZZ, {{3, 6}, {6, 2}}));
-J=diagonalizeOverInt(testMatrix8);
---assert(diagonalizeOverInt(testMatrix6)===matrix(ZZ, {{3, 0}, {0, -90}}));
+assert(diagonalizeOverInt(testMatrix8)===matrix(ZZ, {{3, 0}, {0, -90}}));
