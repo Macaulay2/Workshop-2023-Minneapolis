@@ -67,22 +67,22 @@ isIdenticalDiscriminant (GrothendieckWittClass,GrothendieckWittClass) := (Boolea
 getHasseWittinvariant = method()
 
 getHasseWittinvariant (GrothendieckWittClass, ZZ) := ZZ => (alpha,p) -> (
-    diagAlpha := diagonalForm(alpha)
+    diagAlpha := diagonalForm(alpha);
     -- Diagonalize quadratic form
-    A := diagAlpha.matrix
-    n := numRows(A)
+    A := diagAlpha.matrix;
+    n := numRows(A);
     -- Make list of diagonal entries, and another list of the denominators of diagonal entries
-    diagEntries := new MutableList
-    denoDiagEntries := new MutableList
+    diagEntries := new MutableList;
+    denoDiagEntries := new MutableList;
     for i from 0 to (n-1) do(
-        append(diagEntries, A_(i,i))
-        append(denoDiagEntries, denominator(A_(i,i)))
+        append(diagEntries, A_(i,i));
+        append(denoDiagEntries, denominator(A_(i,i)));
     );
     --least common multiple of denominators
-    l := lcm(denoDiagEntries)
+    l := lcm(denoDiagEntries);
     --code in progress
 
-
+    return 1;  --temporarily added to make code compile
 );
 
 
