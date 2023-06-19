@@ -23,7 +23,7 @@ easyIsomorphicGW = method(
 
 easyIsomorphicGW (GrothendieckWittClass, GrothendieckWittClass) := Boolean => opts -> (beta, gamma) -> (
     -- Returns error if the matrices are defined over different base fields
-    if not baseField(beta) === baseField(gamma) then error "Error: these classes have different underlying fields";
+  -- if not baseField(beta) === baseField(gamma) then error "Error: these classes have different underlying fields";
     
     A := beta.matrix;
     B := gamma.matrix;
@@ -39,7 +39,7 @@ easyIsomorphicGW (GrothendieckWittClass, GrothendieckWittClass) := Boolean => op
     P := genericMatrix(R,n,n);
     
     -- Take the n^2 equations produced by this matrix equality
-    testZeroMatx := transpose(P)*A*P - B;
+    testZeroMatx := transpose(P)*A*P - substitute(B,ring A);
     fullEqns := flatten entries testZeroMatx;
     I := ideal(fullEqns);
     
