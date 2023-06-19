@@ -237,26 +237,6 @@ document {
         }
 
 document {
-    Key => {(bezoutian, List), bezoutian},
-	Headline => "Bezoutian of an endomorphism of affine space",
-	Usage => "bezoutian(endo)",
-	Inputs => {
-		List => "endo" => {"list of polynomials representing an endomorphism of affine space"}
-		},
-	Outputs => { List => { "the Bezoutian corresponding to the endomorphism, ", TT "endo" }},
-	PARA {"Given an endomorphism of affine space, ", TEX///$f=(f_1,\dots ,f_n)$///,
-			", given as a list of polynomials called ", TT "endo", ", this command returns the Bezoutian corresponding to this endomorphism."},
-	EXAMPLE lines ///
-		 R = QQ[x,y]
-		 F = {y^2-x^2-1,x-y^2+4*y-2}
-		 I = ideal F
-		 regularRep(y,I)
-		 S = R/I
-		 regularRep(y)
-	 	 ///,
-        }
-
-document {
     Key => {(localAlgebraBasis, List, Ideal), localAlgebraBasis},
 	Headline => "basis for local k-alegbra ", TEX///$Q_p(f)$///,
 	Usage => "localAlgebraBasis(L,p)",
