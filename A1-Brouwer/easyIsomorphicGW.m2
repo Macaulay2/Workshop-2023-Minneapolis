@@ -57,3 +57,12 @@ easyIsomorphicGW (GrothendieckWittClass, GrothendieckWittClass) := Boolean => op
     print("Height bound exceeded");
     return false;
     )
+
+
+load "isIsomorphic2.m2"
+M1=matrix(GF(7),{{1,2,3},{2,4,5},{3,5,7}});
+M2=matrix(GF(7),{{1,0,0},{0,3,0},{0,0,2}});
+G1=gwClass(M1);
+G2=gwClass(M2);
+time isIsomorphic2(G1,G2);
+time easyIsomorphicGW(G1,G2);
