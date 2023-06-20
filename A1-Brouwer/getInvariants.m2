@@ -71,18 +71,25 @@ getHasseWittinvariant (GrothendieckWittClass, ZZ) := ZZ => (alpha,p) -> (
     -- Diagonalize quadratic form
     A := diagAlpha.matrix;
     n := numRows(A);
-    -- Make list of diagonal entries, and another list of the denominators of diagonal entries
+    -- Make list of diagonal entries
+    -- Diagonal entries might not be integers, so we need to find an integer, n, such that when each diagonal
+    -- entry turns into an integer after being multiplied by n, the lcm of the denominators of the diagonal 
+    -- entries will do this, so we make a list of these denominators, and find the lcm
     diagEntries := new MutableList;
     denoDiagEntries := new MutableList;
     for i from 0 to (n-1) do(
         append(diagEntries, A_(i,i));
         append(denoDiagEntries, denominator(A_(i,i)));
     );
-    --least common multiple of denominators
+    -- Least common multiple of denominators
     l := lcm(denoDiagEntries);
-    --code in progress
+    -- multiply the diagonal entries by the square of the lcm in order for the new diagonal entries to 
+    -- represent the same quadratic form
+    diagEntriesInt := (l^2)*diagEntries;
 
-    return 1;  --temporarily added to make code compile
+    hwi := hasseWittInvariant(diagEntriesInt,p);
+
+    return hwi;
 );
 
 
