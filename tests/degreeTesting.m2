@@ -23,7 +23,7 @@ s=ideal{w-1};
 t=ideal{w};
 assert(wittDecomp(localA1Degree(f2,t)++localA1Degree(f2,s))==(1,matrix(QQ,{{}})));
 
-ff = ZZ/17;
+ff = GF(17);
 T3 = ff[y_1..y_3];
 f3 = {y_1^2, y_2^2, y_3^2};
 f4 = {y_2^2, y_3^2, y_1^2};
