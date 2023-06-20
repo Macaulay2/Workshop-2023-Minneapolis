@@ -24,5 +24,4 @@ assert(M6.matrix===A);
 M3=matrix(QQ, {{1, 2, 3}, {2, 4, 5}, {3, 5, 7}});
 G2=gwClass(M3);
 M4=diagonalForm(G2);
-print M4.matrix;
----------Testing for Q was not successful.
+assert(M4.matrix===matrix(QQ,{{1, 0, 0}, {0, -4, 0}, {0, 0, 1/4}}));
