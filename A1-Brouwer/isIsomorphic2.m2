@@ -48,30 +48,12 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
             );
         return (nonzeroEntriesA == nonzeroEntriesB);
         )
-    --Over RR, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of positive entries and the same number of negative entries
+    --Over RR, diagonal forms are equivalent if and only if they have the same number of positive, negative, and zero entries
     else if ((k1 === RR or instance(k1,RealField)) and (k2 === RR or instance(k2,RealField))) then (
         if (numRows(A) != numRows(B)) then (
             return false;
             );
-        posEntriesA := 0;
-        posEntriesB := 0;
-        negEntriesA := 0;
-        negEntriesB := 0;
-        for i from 0 to (numRows(A)-1) do (
-            if diagA_(i,i) > 0 then (
-                posEntriesA = posEntriesA + 1;
-                );
-            if diagA_(i,i) < 0 then (
-                negEntriesA = negEntriesA + 1;
-                );
-            if diagB_(i,i) > 0 then (
-                posEntriesB = posEntriesB + 1;
-                );
-            if diagB_(i,i) < 0 then (
-                negEntriesB = negEntriesB + 1;
-                );
-            );
-        return ((posEntriesA == posEntriesB) and (negEntriesA == negEntriesB));
+        return ((getInvariants(alpha))_1 == (getInvariants(beta))_1);
         )
     -- Over QQ, call isIsomorphicFormQ, which checks equivalence over all completions
     else if ((k1 === QQ) and (k2 === QQ)) then (
