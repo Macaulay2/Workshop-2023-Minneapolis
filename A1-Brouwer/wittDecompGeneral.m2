@@ -1,3 +1,6 @@
+path = append(path, "/home/macaulay/A1-Brouwer/");
+path = append(path, "../A1-Brouwer/");
+
 load "wittDecomp.m2"
 load "diagonalize.m2"
 
