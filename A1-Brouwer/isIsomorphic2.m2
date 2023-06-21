@@ -12,10 +12,10 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
     k2=baseField(beta);
     -- Ensure both base fields are supported
     if not (k1 === CC or instance(k1,ComplexField) or k1 === RR or instance(k1,RealField) or k1 === QQ or instance(k1, GaloisField)) then (
-        error "Only implemented over QQ, RR, CC, and finite fields";
+        error "Base field not supported; only implemented over QQ, RR, CC, and finite fields";
         );
     if not (k2 === CC or instance(k2,ComplexField) or k2 === RR or instance(k2,RealField) or k2 === QQ or instance(k2, GaloisField)) then (
-        error "Only implemented over QQ, RR, CC, and finite fields";
+        error "Base field not supported; only implemented over QQ, RR, CC, and finite fields";
         );
     A=alpha.matrix;
     B=beta.matrix;
@@ -90,6 +90,6 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
 	    );
         return ((countNonzeroDiagA == countNonzeroDiagB) and (legendreBoolean(prodNonzeroDiagA) == legendreBoolean(prodNonzeroDiagB)));
         )
-    -- If we get here, the base fields are different, so the forms are not isomorphic
-    else return false;
+    -- If we get here, the base fields are not isomorphic
+    else error "Base fields are not isomorphic"
     )
