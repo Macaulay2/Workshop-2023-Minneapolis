@@ -1,5 +1,8 @@
 --takes in symmetric matrix over QQ and diagonalizes, removes squares from entries, and splits off hyperbolic forms that immediately appear as <a> + <-a>
 
+path = append(path, "/home/macaulay/A1-Brouwer/");
+path = append(path, "../A1-Brouwer/");
+
 load "diagonalize.m2"
 load "matrixBooleans.m2"
 load "squarefreePart.m2"
