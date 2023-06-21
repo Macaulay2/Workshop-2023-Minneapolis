@@ -1,5 +1,8 @@
 -- Tests whether two quadratic forms are isomorphic; only implemented over QQ, RR, CC, and finite fields.
 
+path = append(path, "/home/macaulay/A1-Brouwer/");
+path = append(path, "../A1-Brouwer/");
+
 needs "GW-type.m2"
 load "diagonalize.m2"
 load "hilbertSymbol.m2"
