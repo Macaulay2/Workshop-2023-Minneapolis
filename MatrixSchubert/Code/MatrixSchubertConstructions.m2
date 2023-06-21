@@ -285,7 +285,7 @@ schubertDetIdeal List := o -> w -> (
 
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
---OUTPUT: list of fulton generators for matrix determinantal ideal w
+--OUTPUT: list of fulton generators for schubert determinantal ideal w
 ---------------------------------------
 fultonGens = method(
     Options => {
