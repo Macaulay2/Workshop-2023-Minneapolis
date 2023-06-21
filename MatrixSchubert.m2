@@ -83,6 +83,7 @@ export{
     "cohenMacaulayASMsList",
     "nonCohenMacaulayASMsList",
     "idealsList",
+    "ASMRandomList",
     "lastDescent",
     "firstDescent"
 }

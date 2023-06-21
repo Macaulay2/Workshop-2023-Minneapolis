@@ -11,6 +11,19 @@ ASMFullList ZZ := List => (n) -> (
 );
 
 ------------------------------
+-- INPUT: an integer n between 1 and 7 for the size of ASMs, and an integer m for number of random ASMs.
+-- OUTPUT: a list m random matrices from ASM(n).
+------------------------------
+ASMRandomList = method()
+ASMRandomList (ZZ,ZZ) := List => (n,m) -> (
+    if (n < 1 or n > 7) then error("There is no available list for this n.");
+    fullList := ASMFullList(n);
+    randNums := for i to m list random (#fullList-1);
+    listOfMatrices := apply(randNums, i -> fullList#i);
+    listOfMatrices
+);
+
+------------------------------
 -- INPUT: an integer n between 1 and 6
 -- OUTPUT: a list of matrices containing all CM ASMs of size n
 ------------------------------
