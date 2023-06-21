@@ -2,10 +2,13 @@
 --     outputs a simple form for its Gram matrix,
 --     and something of the form aH+b
 
-needs "./GW-type.m2"
-load "./wittDecomp.m2"
-load "./diagonalForm.m2"
-load "./safeBlockSum.m2"
+path = append(path, "/home/macaulay/A1-Brouwer/");
+path = append(path, "../A1-Brouwer/");
+
+needs "GW-type.m2"
+load "wittDecomp.m2"
+load "diagonalForm.m2"
+load "safeBlockSum.m2"
 
 
 -- Legendre boolean, returns true if an element of a finite field is a square and false otherwise
