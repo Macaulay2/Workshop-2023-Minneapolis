@@ -23,7 +23,7 @@ assert((wittDecomp(loc1++loc2))==(3,matrix(QQ,{{}})));
 
 T2 = QQ[w];
 f2 = {w^4 + w^3 - w^2 - w};
-f2GD= globalA1Degree(f2)
+f2GD = globalA1Degree(f2)
 f2GDmat = f2GD.matrix
 assert(wittDecomp(f2GDmat)==(2,matrix(QQ,{{}})));
 p=ideal {w+1/1};

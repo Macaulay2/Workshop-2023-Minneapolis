@@ -119,6 +119,6 @@ globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
             B_(i,j)=phi0(coefficient((sBXProm_(0,i)**sBYProm_(0,j))_(0,0), bezDetRed));
         );
     );
-    return gwclass(matrix(B));
+    return gwClass(matrix(B));
 
 );
