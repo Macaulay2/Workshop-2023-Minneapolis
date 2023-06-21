@@ -1,4 +1,8 @@
 --Nikita, Tom, Zhaobo
+
+path = append(path, "/home/macaulay/A1-Brouwer/");
+path = append(path, "../A1-Brouwer/");
+
 load "getInvariants.m2"
 
 --isAnisotropicQ takes n GWClass over QQ and returns a Boolean based on whether or not 
