@@ -7,43 +7,41 @@
 
 doc ///
     Key
-      MatrixSchubert
+        MatrixSchubert
     Headline
-      a package for investigating matrix Schubert varieties and ASM varieties
+        a package for investigating matrix Schubert varieties and ASM varieties
     Description
-      Text
-       This package provides functions for constructing and investigating matrix Schubert varieties.
-       Many of the functions in this package can take as input either a permutation matrix in 1-line notation,
-       or an alternating sign matrix.
-      Text
-      	  @UL {
-	      {"Allen Knutson and Ezra Miller, ",
-		  HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
-		  " , Annals of Mathematics (2005): 1245-1318."},
-	      {"Oliver Pechenik, David Speyer, and Anna Weigandt, ",
-		  HREF("https://arxiv.org/abs/2111.10681", EM "Castelnuovo-Mumford regularity of matrix Schubert varieties"),
-		  " , arxiv preprint 2111.10681."},
-	      {"Anna Weigandt, ",
-		  HREF("https://arxiv.org/abs/1708.07236", EM "Prism tableaux for alternating sign matrix varieties"),
-		  " , arXiv preprint 1708.07236."}
-	      }@
-      Example
-	   w = {1,5,3,4,2};
-	   essentialBoxes w   
-	   netList fultonGens w
-      Text
-       	   This package also contains functions for studying homological properties of ASM varieties.
-      Example
-      	  grothendieckPoly w
-	  betti res antiDiagInit w	  
-      Text
-      	  @SUBSECTION "Contributors"@
-      Text
-      	  The following people have generously contributed code, improved existing code, or enhanced the documentation:
-	  @HREF("https://sites.google.com/illinois.edu/shiliang-gao", "Shiliang Gao")@,
-	  @HREF("daojihuang.me", "Daoji Huang")@,
-	  @HREF("https://www.math.tamu.edu/directory/graduate.html", "Pooja Joshi")@, and
-	  @HREF("https://www.clemson.edu/science/academics/departments/mathstat/about/profiles/arakoto", "Antsa Tantely Fandresena Rakotondrafara")@.
+        Text
+            This package provides functions for constructing and investigating matrix Schubert varieties. Many of the functions in this package can take as input either a permutation matrix in 1-line notation, or an alternating sign matrix.
+        Text
+            @UL {
+            {"Allen Knutson and Ezra Miller, ",
+            HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
+            " , Annals of Mathematics (2005): 1245-1318."},
+            {"Oliver Pechenik, David Speyer, and Anna Weigandt, ",
+            HREF("https://arxiv.org/abs/2111.10681", EM "Castelnuovo-Mumford regularity of matrix Schubert varieties"),
+            " , arxiv preprint 2111.10681."},
+            {"Anna Weigandt, ",
+            HREF("https://arxiv.org/abs/1708.07236", EM "Prism tableaux for alternating sign matrix varieties"),
+            " , arXiv preprint 1708.07236."}
+            }@
+        Example
+            w = {1,5,3,4,2};
+            essentialBoxes w   
+            netList fultonGens w
+        Text
+            This package also contains functions for studying homological properties of ASM varieties.
+        Example
+            grothendieckPoly w
+            betti res antiDiagInit w	  
+        Text
+            @SUBSECTION "Contributors"@
+        Text
+            The following people have generously contributed code, improved existing code, or enhanced the documentation:
+            @HREF("https://sites.google.com/illinois.edu/shiliang-gao", "Shiliang Gao")@,
+            @HREF("daojihuang.me", "Daoji Huang")@,
+            @HREF("https://www.math.tamu.edu/directory/graduate.html", "Pooja Joshi")@, and
+            @HREF("https://www.clemson.edu/science/academics/departments/mathstat/about/profiles/arakoto", "Antsa Tantely Fandresena Rakotondrafara")@.
 ///
 
 
@@ -51,24 +49,24 @@ doc ///
 doc ///
     Key
         (rotheDiagram, List)
-	(rotheDiagram, Matrix)
-    	rotheDiagram
+        (rotheDiagram, Matrix)
+        rotheDiagram
     Headline
-    	to find the Rothe diagram of a partial alternating sign matrix
+        to find the Rothe diagram of a partial alternating sign matrix
     Usage
-    	rotheDiagram(w)
-	rotheDiagram(M)
+        rotheDiagram(w)
+        rotheDiagram(M)
     Inputs
-    	w:List
-	    or {\tt M} is a @TO Matrix@
+        w:List
+            or {\tt M} is a @TO Matrix@
     Description
-    	Text
-	 Given a permutation in 1-line notation or a partial alternating sign matrix returns the Rothe diagram.
-	Example
-    	    w = {2,5,4,1,3}
-	    rotheDiagram(w)
-	    M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
-	    rotheDiagram(M)
+        Text
+            Given a permutation in 1-line notation or a partial alternating sign matrix returns the Rothe diagram.
+        Example
+            w = {2,5,4,1,3}
+            rotheDiagram(w)
+            M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+            rotheDiagram(M)
 
 	    
 ///
@@ -76,98 +74,92 @@ doc ///
 doc ///
     Key
         (augmentedRotheDiagram, List)
-	(augmentedRotheDiagram, Matrix)
-    	augmentedRotheDiagram
+        (augmentedRotheDiagram, Matrix)
+        augmentedRotheDiagram
     Headline
-    	to find the Rothe diagram of a partial alternating sign matrix together with the rank conditions determining the alternating sign matrix variety
+        to find the Rothe diagram of a partial alternating sign matrix together with the rank conditions determining the alternating sign matrix variety
     Usage
-    	augmentedRotheDiagram(w)
-	augmentedRotheDiagram(M)
+        augmentedRotheDiagram(w)
+        augmentedRotheDiagram(M)
     Inputs
-    	w:List
-	    or {\tt M} is a @TO Matrix@
+        w:List
+            or {\tt M} is a @TO Matrix@
     Description
-    	Text
-	 Given a permutation in 1-line notation or a partial alternating sign matrix returns list of entries of Rothe diagram with the ranks of each entry.
-	Example
-    	    w = {2,5,4,1,3}
-	    augmentedRotheDiagram(w)
-	    M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
-	    augmentedRotheDiagram(M)
-
-	    
+        Text
+            Given a permutation in 1-line notation or a partial alternating sign matrix returns list of entries of Rothe diagram with the ranks of each entry.
+        Example
+            w = {2,5,4,1,3}
+            augmentedRotheDiagram(w)
+            M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+            augmentedRotheDiagram(M)
 ///
 
 
 doc ///
     Key
-	(isPartialASM, Matrix)
-    	isPartialASM
+        (isPartialASM, Matrix)
+        isPartialASM
     Headline
-    	whether a matrix is a partial alternating sign matrix.
+        whether a matrix is a partial alternating sign matrix.
     Usage
-    	isPartialASM(M)
+        isPartialASM(M)
     Inputs
-    	M:Matrix
+        M:Matrix
     Description
-    	Text
-	 Given an integer matrix, checks that the matrix is a partial alternating sign matrix.
-	 A partial alternating sign matrix is a matrix with entries in $\{-1,0,1\}$ such that:
-	 
-	     - The nonzero entries in each row and column alternate in sign,
-	     
-	     - Each row and column sums to $0$ or $1$, and
-	     
-	     - The first nonzero entry of any row or column (if there is one) is $1$.
-	Example
-    	    M = matrix{{0,0,1,0,0,0,0,0},{1,0,1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}}
-	    isPartialASM M
-	    N = matrix{{0,-1,0,1,1},{1,-1,1,-1,1},{0,1,1,0,-1},{1,1,-1,1,-1},{-1,1,0,0,1}}
-	    isPartialASM N
+        Text
+            Given an integer matrix, checks that the matrix is a partial alternating sign matrix. A partial alternating sign matrix is a matrix with entries in $\{-1,0,1\}$ such that:
 
-	    
+            - The nonzero entries in each row and column alternate in sign,
+
+            - Each row and column sums to $0$ or $1$, and
+
+            - The first nonzero entry of any row or column (if there is one) is $1$.
+        Example
+            M = matrix{{0,0,1,0,0,0,0,0},{1,0,1,0,1,0,0,0},{0,0,0,1,-1,0,0,1},{0,0,1,-1,1,0,0,0},{0,0,0,0,0,0,1,0},{0,0,0,0,0,1,0,0},{0,1,-1,1,0,0,0,0},{0,0,1,0,0,0,0,0}}
+            isPartialASM M
+            N = matrix{{0,-1,0,1,1},{1,-1,1,-1,1},{0,1,1,0,-1},{1,1,-1,1,-1},{-1,1,0,0,1}}
+            isPartialASM N
 ///
 
 
 doc ///
     Key
         (partialASMToASM, Matrix)
-    	partialASMToASM
+        partialASMToASM
     Headline
-    	to extend a partial alternating sign matrix to an alternating sign matrix
+        to extend a partial alternating sign matrix to an alternating sign matrix
     Usage
         partialASMToASM(M)
     Inputs
-    	M:Matrix
+        M:Matrix
     Description
-    	Text
-	 Given a partial alternating sign matrix returns the unique smallest alternating sign matrix by adding necessary number of rows and columns.
-	Example
-	    M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
-	    partialASMToASM(M)
+        Text
+            Given a partial alternating sign matrix returns the unique smallest alternating sign matrix by adding necessary number of rows and columns.
+        Example
+            M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+            partialASMToASM(M)
 
 	    
 ///
 
 doc ///
     Key
-    	(antiDiagInit, List)
-    	(antiDiagInit, Matrix)
-    	antiDiagInit
+        (antiDiagInit, List)
+        (antiDiagInit, Matrix)
+        antiDiagInit
     Headline
-    	Computes the (unique) antidiagonal initial ideal of an ASM ideal
+        compute the (unique) antidiagonal initial ideal of an ASM ideal
     Usage
-    	antiDiagInit(w)
-    	antiDiagInit(A)
+        antiDiagInit(w)
+        antiDiagInit(A)
     Inputs
         w:List
-	        or {\tt A} is a @TO Matrix@
+            or {\tt A} is a @TO Matrix@
     Description
-    	Text
-	        Let $Z = (z_{i,j})$ be a generic matrix and $R=k[Z]$ is a polynomial ring in the entries of Z over the ring k.  We call a term order on R antidiagonal if the lead term of the determinant of each submatrix $Z'$ of Z is the product of terms along the antidiagonal of $Z'$. 
-	
-	        This method relies on these theorems.  It computes the antidiagonal initial ideal of an alternating sign matrix ideal by directly forming 
-	        the ideal of the lead terms of the Fulton generators.  
+        Text
+            Let $Z = (z_{i,j})$ be a generic matrix and $R=k[Z]$ is a polynomial ring in the entries of Z over the ring k.  We call a term order on R antidiagonal if the lead term of the determinant of each submatrix $Z'$ of Z is the product of terms along the antidiagonal of $Z'$. 
+
+            This method relies on these theorems.  It computes the antidiagonal initial ideal of an alternating sign matrix ideal by directly forming the ideal of the lead terms of the Fulton generators.  
 
             @UL {{"[KM05]: Knutson and Miller, Gröbner geometry of Schubert polynomials (see ", arXiv "0110058", ")."},}@ 
             
@@ -178,7 +170,6 @@ doc ///
             and by 
             
             @UL {{"[Wei]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},}@
-	 
         Example
             schubertDetIdeal({1,3,2})
             schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
@@ -220,28 +211,26 @@ doc ///
 
 doc ///
     Key
-    	(schubertDetIdeal, List)
-    	(schubertDetIdeal, Matrix)
-    	schubertDetIdeal
+        (schubertDetIdeal, List)
+        (schubertDetIdeal, Matrix)
+        schubertDetIdeal
     Headline
-    	Computes an alternating sign matrix ideal
+        Computes an alternating sign matrix ideal
     Usage
-    	schubertDetIdeal(w)
-    	schubertDetIdeal(M)
+        schubertDetIdeal(w)
+        schubertDetIdeal(M)
     Inputs
-         w:List
-	    or {\tt M} is a @TO Matrix@
+        w:List
+            or {\tt M} is a @TO Matrix@
     Description
-    	Text
-	 Given a permutation in 1-line notation or, more generally, a (partial) alternating sign matrix, 
-	 outputs the associated alternating sign matrix ideal (which is called a Schubert determinantal ideal 
-	     in the case of a permutation).  (The convention throughout this package is that the permuation matrix 
-	     of a pemutation w has 1's in positions (i,w(i)).)
-	Example
-	 schubertDetIdeal({1,3,2})
-	 schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+        Text
+            Given a permutation in 1-line notation or, more generally, a (partial) alternating sign matrix, outputs the associated alternating sign matrix ideal (which is called a Schubert determinantal ideal in the case of a permutation).  (The convention throughout this package is that the permuation matrix of a pemutation w has 1's in positions (i,w(i)).)
+        Example
+            schubertDetIdeal({1,3,2})
+            schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 
 ///
+
 doc ///
     Key
         (schubertDecomposition, Ideal)
@@ -254,11 +243,8 @@ doc ///
         I:Ideal
     Description
         Text
-            Given an ASM ideal, it can be decomposed into Schubert determinantal ideals
-            as I = I_{w_1} \cap ... \cap I_{w_k}, where the w_i are permutations.
-            As output, each element in the list is the permutation associated 
-            to a prime component in the Schubert decomposition of the antidiagonal 
-            initial ideal of I.
+            Given an ASM ideal, it can be decomposed into Schubert determinantal ideals as I = I_{w_1} \cap ... \cap I_{w_k}, where the w_i are permutations.
+            As output, each element in the list is the permutation associated to a prime component in the Schubert decomposition of the antidiagonal initial ideal of I.
 ///
 
 doc ///
@@ -289,8 +275,7 @@ doc ///
         I:Ideal
     Description
         Text
-            An ideal is ASM if it is radical and can be written as the intersection
-			of Schubert determinantal ideals.
+            An ideal is ASM if it is radical and can be written as the intersection of Schubert determinantal ideals.
 ///
 
 doc ///
@@ -306,136 +291,126 @@ doc ///
     Description
         Text
             Gets the alternating sign matrix (ASM) of an ideal $I$, if it exists.
-			If the ASM has not been computed yet, then an attempt will be made 
-			to compute the ASM. Once the ASM is computed, it is stored in the 
-			cache of $I$.
-///
-
-doc ///
-	Key
-		(isMinRankTable, Matrix)
-		isMinRankTable
-	Headline
-		whether {\tt A} is a valid rank table
-	Usage
-		isMinRankTable(A)
-	Inputs
-		A:Matrix
-	Outputs
-		:Boolean
-	Description
-		Text
-			Checks whether {\tt A} is a valid rank table.
-		Example
-			T = matrix {{0,1,1},{1,1,2},{1,2,3}}
-			isMinRankTable T
-
-			T = matrix {{1,1,1,1,1},{1,2,2,2,2},{1,2,2,2,3},{1,2,2,3,3},{1,2,3,3,3}}
-			isMinRankTable T
+            If the ASM has not been computed yet, then an attempt will be made to compute the ASM. Once the ASM is computed, it is stored in the cache of $I$.
 ///
 
 doc ///
     Key
-    	rankMatrix
-	(rankMatrix, Matrix)
-	(rankMatrix, List)
+        (isMinRankTable, Matrix)
+        isMinRankTable
     Headline
-    	Computes a matrix of rank conditions that determines a Schubert determinantal ideal or, more generally, an alternating sign matrix ideal.
+        whether a matrix is a valid rank table
     Usage
-    	rankMatrix(M)
-	rankMatrix(w)
+        isMinRankTable(A)
     Inputs
-    	M:Matrix
-	w:List
+        A:Matrix
+    Outputs
+        :Boolean
     Description
-    	Text
-	 Given an alternating sign matrix or a permutation in 1-line notation, 
-	 outputs the matrix of rank condition associated to that alternating sign matrix or permutation.
-	Example
-	 rankMatrix({1,3,2})
-	 rankMatrix(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+        Text
+            Checks whether {\tt A} is a valid rank table.
+        Example
+            T = matrix {{0,1,1},{1,1,2},{1,2,3}}
+            isMinRankTable T
 
+            T = matrix {{1,1,1,1,1},{1,2,2,2,2},{1,2,2,2,3},{1,2,2,3,3},{1,2,3,3,3}}
+            isMinRankTable T
 ///
 
 doc ///
     Key
-    	essentialBoxes
-	(essentialBoxes, Matrix)
-	(essentialBoxes, List)
+        (rankMatrix, List)
+        (rankMatrix, Matrix)
+        rankMatrix
     Headline
-    	Computes a list of the essential boxes in the Rothe Diagram for an alternating sign matrix M or a permutation in 1-line notation.
+        Computes a matrix of rank conditions that determines a Schubert determinantal ideal or, more generally, an alternating sign matrix ideal.
     Usage
-    	essentialBoxes(M)
-	essentialBoxes(w)
+        rankMatrix(w)
+        rankMatrix(M)
     Inputs
-    	M:Matrix
-	w:List
+        w:List
+            or {\tt M} is a @TO Matrix@
     Description
-    	Text
-	 Given an alternating sign matrix or a permutation in 1-line notation, 
-	 outputs a list of the essential boxes in the Rothe diagram for that matrix. 
-	Example
-	 essentialBoxes({1,3,2})
-	 essentialBoxes(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+        Text
+            Given an alternating sign matrix or a permutation in 1-line notation, outputs the matrix of rank condition associated to that alternating sign matrix or permutation.
+        Example
+            rankMatrix({1,3,2})
+            rankMatrix(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+///
 
+doc ///
+    Key
+        (essentialBoxes, List)
+        (essentialBoxes, Matrix)
+        essentialBoxes
+    Headline
+        computes a list of the essential boxes in the Rothe Diagram for an alternating sign matrix M or a permutation in 1-line notation.
+    Usage
+        essentialBoxes(w)
+        essentialBoxes(M)
+    Inputs
+        w:List
+            or {\tt M} is a @TO Matrix@
+    Description
+        Text
+            Given an alternating sign matrix or a permutation in 1-line notation, outputs a list of the essential boxes in the Rothe diagram for that matrix. 
+        Example
+            essentialBoxes({1,3,2})
+            essentialBoxes(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 ///
 
 
 doc ///
     Key
-        subwordComplex
         (subwordComplex, List)
+        subwordComplex
     Headline
-    	to find the subword complex associated to w (i.e. SR-ideal of antiDiagInit)
+        to find the subword complex associated to w (i.e. SR-ideal of antiDiagInit)
     Usage
-    	subwordComplex(w)
+        subwordComplex(w)
     Inputs
-    	w:List
+        w:List
     Description
-    	Text
-	    Given a permutation in 1-line notation, compute the subword complex associated to w (i.e. SR-ideal of antiDiagInit).
-	Example
-	    subwordComplex({2,5,4,1,3})
-
-	    
+        Text
+            Given a permutation in 1-line notation, compute the subword complex associated to w (i.e. SR-ideal of antiDiagInit).
+        Example
+            subwordComplex({2,5,4,1,3})
 ///           
 
 doc ///
     Key
-        rankTableToASM
         (rankTableToASM, Matrix)
+        rankTableToASM
     Headline
-    	to find the ASM associated to a given rank table
+        to find the ASM associated to a given rank table
     Usage
-    	rankTableToASM M
+        rankTableToASM M
     Inputs
-    	M:Matrix
+        M:Matrix    
     Description
-    	Text
-	    	Given a square matrix which is a valid minimal rank table, returns the unique ASM associated to it.
-	Example
-	    A = matrix {{0,0,1,1},{0,1,1,2},{1,2,2,3},{1,2,3,4}}
-	    rankTableToASM(A)
-	    B = matrix {{0,0,1,1,1},{1,1,1,2,2},{1,2,2,3,3},{1,2,3,4,4},{1,2,3,4,5}}
-	    rankTableToASM(B)
-   
+        Text
+            Given a square matrix which is a valid minimal rank table, returns the unique ASM associated to it.
+        Example
+            A = matrix {{0,0,1,1},{0,1,1,2},{1,2,2,3},{1,2,3,4}}
+            rankTableToASM(A)
+            B = matrix {{0,0,1,1,1},{1,1,1,2,2},{1,2,2,3,3},{1,2,3,4,4},{1,2,3,4,5}}
+            rankTableToASM(B)
 ///           
 
 doc ///
     Key
-        rankTableFromMatrix
         (rankTableFromMatrix, Matrix)
+        rankTableFromMatrix
     Headline
-    	to find the minimal rank table which is associated to a unique ASM, given a square integer matrix
+        to find the minimal rank table which is associated to a unique ASM, given a square integer matrix
     Usage
-    	rankTableFromMatrix M
+        rankTableFromMatrix M
     Inputs
-    	M:Matrix
+        M:Matrix
     Description
-    	Text
-	    	Given a square integer matrix, return the associated valid minimal rank table which is associated to a unique ASM.
-	Example
-	    A = matrix {{1,0,0},{0,23,24},{23,24,25}}
-	    rankTableFromMatrix A
-   
+        Text
+            Given a square integer matrix, return the associated valid minimal rank table which is associated to a unique ASM.
+        Example
+            A = matrix {{1,0,0},{0,23,24},{23,24,25}}
+            rankTableFromMatrix A
 ///   
