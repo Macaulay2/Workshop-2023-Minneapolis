@@ -1,4 +1,7 @@
-load "./diagonalize.m2"
+path = append(path, "/home/macaulay/A1-Brouwer/");
+path = append(path, "../A1-Brouwer/");
+
+load "diagonalize.m2"
 loadPackage "RationalPoints2"
 needs "GW-type.m2"
 -- getInvariants method spits out basic invariants of a matrix representing a bilinear form
