@@ -411,6 +411,87 @@ doc ///
         Text
             Given a square integer matrix, return the associated valid minimal rank table which is associated to a unique ASM.
         Example
-            A = matrix {{1,0,0},{0,23,24},{23,24,25}}
+            A = matrix {{1,0,0},{0,23,24},{23,24,25}};
             rankTableFromMatrix A
 ///   
+
+doc ///
+    Key 
+        (fultonGens, List)
+        (fultonGens, Matrix)
+        fultonGens
+    Headline
+        compute the fulton generators for a schubert determinantal ideal 
+    Usage
+        fultonGens(w)
+        fultongens(M)
+    Inputs
+        w:List
+            or {\tt M} is a @TO Matrix@
+    Description
+        Text
+            Given a partial alternating sign matrix or permutation in 1 line notation, return the list of fulton generators for the corresponding schubert determinantal ideal.
+        Example 
+            netList fultonGens {2,5,4,1,3}
+            netList fultonGens matrix{{0,1,0},{1,-1,1},{0,1,0}}
+///
+
+doc ///
+    Key 
+        grothendieckPoly
+    Headline
+        tmp 
+    Description
+        Text
+            This is a stub
+///
+
+doc ///
+    Key 
+        schubertPoly
+    Headline
+        tmp 
+    Description
+        Text
+            This is a stub
+///
+
+doc ///
+    Key 
+        doubleSchubertPoly
+    Headline
+        tmp 
+    Description
+        Text
+            This is a stub
+///
+
+doc ///
+    Key 
+        dividedDifference
+    Headline
+        tmp 
+    Description
+        Text
+            This is a stub
+///
+
+doc ///
+    Key 
+        diagLexInit
+    Headline
+        tmp 
+    Description
+        Text
+            This is a stub
+///
+
+doc ///
+    Key 
+        diagRevLexInit
+    Headline
+        tmp 
+    Description
+        Text
+            This is a stub
+///
