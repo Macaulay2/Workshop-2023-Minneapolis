@@ -48,20 +48,20 @@ doc ///
             matrixSchubertReg(A)
 ///
 
-doc ///
-    Key
-        (matrixSchubertRegADI, List)
-        matrixSchubertRegADI
-    Headline
-        compute the Castelnuovo-Mumford regularity of a Schubert determinantal ideal using antidiagonal initial ideal
-    Usage
-        matrixSchubertRegADI(w)
-    Inputs
-        w: List 
-    Description
-        Text
-            Given a permutation in 1-line notation, computes the regularity of the corresponding Schubert determinantal ideal by computing it for the antidiagonal initial ideal.
-        Example 
-            w = {2,3,5,1,4}
-            matrixSchubertReg(w)
-///
+-- doc ///
+--     Key
+--         (matrixSchubertRegADI, List)
+--         matrixSchubertRegADI
+--     Headline
+--         compute the Castelnuovo-Mumford regularity of a Schubert determinantal ideal using antidiagonal initial ideal
+--     Usage
+--         matrixSchubertRegADI(w)
+--     Inputs
+--         w: List 
+--     Description
+--         Text
+--             Given a permutation in 1-line notation, computes the regularity of the corresponding Schubert determinantal ideal by computing it for the antidiagonal initial ideal.
+--         Example 
+--             w = {2,3,5,1,4}
+--             matrixSchubertReg(w)
+-- ///
