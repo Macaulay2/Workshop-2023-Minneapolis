@@ -26,14 +26,13 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
     if B != transpose(B) then (
         error "Underlying matrix is not symmetric";
 	);
-    -- If the dimensions of the spaces are not the same, the forms are not isomorphic
-    if (numRows(A) != numRows(B)) then (
-        return false;
-        );
     diagA := diagonalize(A);
     diagB := diagonalize(B);
     -- Over CC, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of nonzero entries
     if (k1 === CC or instance(k1,ComplexField)) and (k2 === CC or instance(k2,ComplexField)) then (
+        if (numRows(A) != numRows(B)) then (
+            return false;
+            );
         nonzeroEntriesA := 0;
         nonzeroEntriesB := 0;
         for i from 0 to (numRows(A)-1) do (
@@ -48,6 +47,9 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
         )
     --Over RR, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of positive entries and the same number of negative entries
     else if ((k1 === RR or instance(k1,RealField)) and (k2 === RR or instance(k2,RealField))) then (
+        if (numRows(A) != numRows(B)) then (
+            return false;
+            );
         posEntriesA := 0;
         posEntriesB := 0;
         negEntriesA := 0;
@@ -70,10 +72,16 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
         )
     -- Over QQ, call isIsomorphicFormQ, which checks equivalence over all completions
     else if ((k1 === QQ) and (k2 === QQ)) then (
+        if (numRows(A) != numRows(B)) then (
+            return false;
+            );
         return isIsomorphicFormQ(diagA,diagB);
         )
     -- Over a finite field, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of nonzero entries and the product of these nonzero entries is in the same square class
     else if (instance(k1, GaloisField) and instance(k2, GaloisField) and k1.order == k2.order) then (
+        if (numRows(A) != numRows(B)) then (
+            return false;
+            );
         countNonzeroDiagA := 0;
         countNonzeroDiagB := 0;
         prodNonzeroDiagA := 1;
