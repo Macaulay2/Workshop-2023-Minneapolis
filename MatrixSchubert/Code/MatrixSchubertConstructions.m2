@@ -451,7 +451,7 @@ diagRevLexInit List := o -> w -> (
 --TODO: extend to more general subword complexes from Coxeter groups, not just these?
 -------------------------------------------
 subwordComplex = method()
-subwordComplex List := simplicialComplex => w -> (
+subwordComplex List := SimplicialComplex => w -> (
     if not(isPerm w) then error("The input must be a permutation.");
     simplicialComplex antiDiagInit w
 );
