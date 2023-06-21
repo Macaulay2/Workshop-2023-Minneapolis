@@ -18,7 +18,7 @@ newPackage(
 	    HomePage=> "https://sites.google.com/view/adamlaclair/home"},
         {Name => "Yuyuan Luo",
             Email => "lyuyuan@mit.edu",
-            HomePage=> "https://www.mit.edu/~lyuyuan/"},
+            HomePage=> "https://www.mit.edu/~lyuyuan/"}, 
 	{Name => "Joseph McDonough",
 	    Email => "mcdo1248@umn.edu",
 	    HomePage=> " "}
@@ -234,7 +234,7 @@ for i from 1 to 10 do (
      << endl << endl;
 );
 
-
+getOneReducedWord({3,1,2})
 
 ------------------------------------
 --Development Section
@@ -245,6 +245,6 @@ uninstallPackage "MatrixSchubert"
 restart
 installPackage "MatrixSchubert"
 restart
-needsPackage "MatrixSchubert"
+debug needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
