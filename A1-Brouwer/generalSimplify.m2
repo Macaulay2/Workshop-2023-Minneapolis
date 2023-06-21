@@ -99,6 +99,6 @@ matrixSimplify=method(
 	HeightBound => 4  
 	}
 )
-matrixSimplify (matrix) := (matrix) => opts -> (gamma) -> (
-
-);
+--matrixSimplify (matrix) := (matrix) => opts -> (gamma) -> (
+    --Still writing this part
+--);
