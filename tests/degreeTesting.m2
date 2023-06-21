@@ -6,6 +6,9 @@ load "wittDecomp.m2"
 load "localAlgebraBasis.m2"
 load "localA1Degree.m2"
 load "isIsomorphic2.m2"
+load "diagonalize.m2"
+load "hilbertSymbol.m2"
+load "simplifyForm.m2"
 
 T1 = QQ[z_1..z_2];
 f1 = {(z_1-1)*z_1*z_2, (3/5)*z_1^2 - (17/3)*z_2^2};
