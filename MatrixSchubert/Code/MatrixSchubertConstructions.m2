@@ -140,14 +140,28 @@ antiDiagInit List := o -> w -> (
 --TODO: add tests for this function
 ----------------------------------------
 rankMatrix = method()
+rankMatrix Matrix := Matrix => A -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    n := numrows A;
+    m := numcols A;
+    rankMat := mutableMatrix A;
+    boxes := flatten table(n,m,(i,j)->(i,j));
+    for box in boxes do (
+	rankMat_box = sum flatten entries A_{0..(box_1)}^{0..(box_0)}
+	);
+    matrix rankMat
+    )
+-*
+--old code was being weird for nonsquare matrices
+rankMatrix = method()
 rankMatrix Matrix := Matrix => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     n := numrows A;
     m := numcols A;
     rankA := {};
-    for i from 0 to n-1 do (
+    for i from 0 to m-1 do (
         temp := toList(n:0);
-        for j from 0 to m-1 do (
+        for j from 0 to n-1 do (
             if (j>0) then prev := temp#(j-1);
             if (i == 0 and j == 0) then temp = replace(j, A_(0,0), temp)
             else if (i == 0) then temp = replace(j, prev+A_(i,j), temp)
@@ -158,6 +172,7 @@ rankMatrix Matrix := Matrix => (A) -> (
     );
     matrix rankA
 )
+*-
 rankMatrix List := Matrix => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     A := permToMatrix w;
@@ -290,7 +305,9 @@ fultonGens List := o -> w -> (
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: single Grothendieck polynomials
 --TODO: rename variables?
---This function is incorrect and needs to be rewritten!
+--This function is now correct, but it's slow
+--potentially we could rename it to "Kpolynomial" or something
+    --then we could allow it to take ASMs as input
 ----------------------------
 grothendieckPoly = method(Options=>{Algorithm=>"DividedDifference"})
 grothendieckPoly(List) := opts -> w -> (
@@ -449,7 +466,7 @@ diagRevLexInit List := o -> w -> (
 --TODO: extend to more general subword complexes from Coxeter groups, not just these?
 -------------------------------------------
 subwordComplex = method()
-subwordComplex List := simplicialComplex => w -> (
+subwordComplex List := SimplicialComplex => w -> (
     if not(isPerm w) then error("The input must be a permutation.");
     simplicialComplex antiDiagInit w
 );

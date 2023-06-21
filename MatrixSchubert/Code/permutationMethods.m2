@@ -4,19 +4,35 @@
 -----------------------------------------------
 -----------------------------------------------
 
---INPUT: A list w
+-----------------------------------------------------------
+--tests if a list is a permutation in 1-line notation
+--INPUT: A list of integers w
 --OUTPUT: TRUE if w is a permutation; else FALSE
+-----------------------------------------------------------
 isPerm = method()
 isPerm List := Boolean => (w) -> (
     n := #w;
     (sort w) == toList(1..n)
 )
 
+-----------------------------------------------------------
+--tests of a permutation is the identity permutation
+--INPUT: a list of integers w
+--OUTPUT: TRUE if w is the identity perm; else FALSE
+-----------------------------------------------------------
+
 isIdentity = method()
 isIdentity List := Boolean => (w) -> (
     n := #w;
     w == toList(1..n)
 )
+
+-----------------------------------------------------------
+--finds index of last descent in a permutation
+--INPUT: a permutation in 1-line notation
+--OUPTUT: last index where w_i > w_(i+1)
+-----------------------------------------------------------
+
 
 lastDescent = method()
 lastDescent List := ZZ => (w) -> (
@@ -29,6 +45,13 @@ lastDescent List := ZZ => (w) -> (
     ans
 )
 
+-----------------------------------------------------------
+--find index of first descent in a permutation
+--INPUT: a permutation in 1-line notation
+--OUTPUT: first index where w_i > w_(i+1)
+-----------------------------------------------------------
+
+
 firstDescent = method()
 firstDescent List := ZZ => (w) -> (
     if not (isPerm w) then error ("Expecting a permutation.");
@@ -40,6 +63,10 @@ firstDescent List := ZZ => (w) -> (
     ans
 )
 
+-----------------------------------------------------------
+--compute the length of a permutation
+-----------------------------------------------------------
+
 permLength = method()
 permLength List:= ZZ => (p) -> (
     if not(isPerm p) then error("The input must be a permutation.");
@@ -48,11 +75,19 @@ permLength List:= ZZ => (p) -> (
     l
 )
  
+-----------------------------------------------------------
+--creates simple transposition in a permtuation
+-----------------------------------------------------------
+
 swap = (L,i,j) -> (
     apply(#L, k -> if k != i and k != j then L_k
 	               else if k == i then L_j
 				   else L_i)
 )
+
+-----------------------------------------------------------
+--computes inverse permutation
+-----------------------------------------------------------
 
 inverseOf = method()
 inverseOf List := List => (w) -> (
@@ -62,11 +97,20 @@ inverseOf List := List => (w) -> (
     toList winv
     )
 
+-----------------------------------------------------------
+--creates longest word/longest permutation {n,n-1,...2,1}
+-----------------------------------------------------------
+
 longestPerm = method()
 longestPerm ZZ := List => (n) -> (
     if n < 1 then error ("Expecting a positive integer.");
     toList (reverse (1..n))
     )
+
+-----------------------------------------------------------
+--INPUT: a permutation as a list of integers w
+--OUPT: list of simple transpositions giving a reduced word for w
+-----------------------------------------------------------
 
 getOneReducedWord = method()
 getOneReducedWord List := List => (w) -> (
