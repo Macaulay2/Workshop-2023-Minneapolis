@@ -4,14 +4,14 @@
 needs "./GW-type.m2"
 load "./rankGlobalAlgebra.m2"
 
-globalA1DegreeCC = method()
-globalA1DegreeCC (List) := (GrothendieckWittClass) => (Endo) ->(
-    print("globalA1DegreeCC CALLED");
-    if dim ideal(Endo) > 0  then error "Error: morphism does not have isolated zeroes";
-    S:=ring(Endo#0);
-    rankAlgebra:=rankGlobalAlgebra(Endo);
-    return gwClass(matrix(mutableIdentity(CC,rankAlgebra)));  
-    );
+--globalA1DegreeCC = method()
+--globalA1DegreeCC (List) := (GrothendieckWittClass) => (Endo) ->(
+    --print("globalA1DegreeCC CALLED");
+    --if dim ideal(Endo) > 0  then error "Error: morphism does not have isolated zeroes";
+    --S:=ring(Endo#0);
+    --rankAlgebra:=rankGlobalAlgebra(Endo);
+    --return gwClass(matrix(mutableIdentity(CC,rankAlgebra)));  
+    --);
 
 globalA1Degree = method()
 globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
@@ -27,7 +27,7 @@ globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
     	);
     
     -- Let S = k[x_1..x_n] be the ambient polynomial ring
-    S:=ring(Endo#0);    
+    S:=ring(Endo#0);   
     
     -- First check if the morphism does not have isolated zeroes
     if dim ideal(Endo) > 0  then error "Error: morphism does not have isolated zeroes";
@@ -37,8 +37,8 @@ globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
     
     -- If the field is CC, run the much quicker globalA1DegreeCC method
     if (kk === CC or instance(kk,ComplexField)) then(
-	print("Got here");
-    return globalA1DegreeCC(Endo)
+    rankAlgebra:=rankGlobalAlgebra(Endo);
+    return gwClass(matrix(mutableIdentity(CC,rankAlgebra)));
     );
     
     -- If the field is RR, ask the user to run it over QQ instead, then simplify over RR
@@ -50,7 +50,7 @@ globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
     -- Initialize a polynomial ring in X_i's and Y_i's to compute the Bezoutian in
     R := kk[X_1..Y_n];
     
-    -- Create an (n x n) matrix D which will be populated by \Delta_{ij} in the pape
+    -- Create an (n x n) matrix D which will be populated by \Delta_{ij} in the paper
     D := "";
     try D = mutableMatrix id_((frac R)^n) else D= mutableMatrix id_(R^n);
     
@@ -58,13 +58,15 @@ globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
     for i from 0 to (n-1) do (
 	for j from 0 to (n-1) do(
 	    -- iterate through the entries of the matrix D and populate it with the following information ...
-        -- create the list {x_1 => Y_1, ..., x_j-1 => Y_j-1, x_j => X_j, ..., x_n => X_n}
+        -- create the list {Y_1, ..., Y_(j-1), X_j, ..., X_n}. Note Macaulay2 is 0-indexed hence the difference in notation. 
 	    targetList1 := toList (Y_1..Y_j|X_(j+1)..X_n);
-        -- create the list {x_1 => Y_1, ..., x_j => Y_j, x_j+1 => X_j+1, ..., x_n => X_n}
+        -- create the list {Y_1, ..., Y_j, X_(j+1), ..., X_n }. Note Macaulay2 is 0-indexed hence the difference in notation. 
 	    targetList2 := toList (Y_1..Y_(j+1)| X_(j+2)..X_n); 
-        -- map f_i(x) to f_i(Y_1, ..., Y_j-1, X_j, ..., X_n) resp.
+        -- suppose our endomorphisms are given in the variables x_1, ..., x_n.
+        -- map f_i(x_1, ..., x_n) to f_i(Y_1, ..., Y_(j-1), X_j, ..., X_n) resp.
+        -- then take the difference f_i(Y_1, ..., Y_(j-1), X_j, ..., X_n) - f_i(Y_1, ... Y_j, X_(j+1), ..., X_n)
         numeratorD = ((map(R,S,targetList1))(Endo_i)-(map(R,S,targetList2))(Endo_i)); 
-        -- this is \Delta_{i,j} from the paper 
+        -- divide it by X_j - Y_j, Note Macaulay2 is 0-indexed hence the difference in notation. 
 	    D_(i,j)= numeratorD/(X_(j+1)-Y_(j+1)); 
 	    ); 
         );
@@ -103,12 +105,13 @@ globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
     sBYProm :=sub(standBasisY,Rquot); 
     
     --reduces bezDet mod promotedEndo
-    bezDetRed := bezDetR % promotedEndo; --reduces bezDet mod promotedEndo 
+    bezDetRed := bezDetR % promotedEndo;
 
     
     ------------------------
     -- define a ring map that takes the coefficients to the field kk instead of considering it as an element of the quotient ring
     phi0 := map(kk,Rquot,(toList ((2*n):0))); 
+    -- initialize a m by m identity matrix which will then be populated by the coefficients of the Bezoutian
     m:= numColumns(sBXProm);
     B:= mutableMatrix id_(kk^m);
     for i from 0 to m-1 do (
@@ -116,6 +119,6 @@ globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
             B_(i,j)=phi0(coefficient((sBXProm_(0,i)**sBYProm_(0,j))_(0,0), bezDetRed));
         );
     );
-    return matrix(B);
+    return gwclass(matrix(B));
 
 );
