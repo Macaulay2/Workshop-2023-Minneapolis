@@ -4,10 +4,11 @@
 TEST ///
 R = ZZ/5[x_1..x_6];
 I = minors( 2, matrix {{x_1,x_2,x_3},{x_4,x_5,x_6}} );
-J = minors( 2, matrix {{x_1,x_2,x_3},{x_4,x_5,x_6}} ); 
--- need a "different" ideal, or else the second call of cohomDim will just use cached result
 assert( cohomDim I == 2 )
-assert( cohomDim( J, Strategy => Filter ) == 2 )
+I = minors( 2, matrix {{x_1,x_2,x_3},{x_4,x_5,x_6}} );
+assert( cohomDim( I, Strategy => Filter ) == 2 )
+I = minors( 2, matrix {{x_1,x_2,x_3},{x_4,x_5,x_6}} );
+assert( cohomDim( I, Strategy => Filter, Test => AssociatedPrimes ) == 2 )
 ///
   
 -------------------
@@ -59,7 +60,7 @@ assert( lyubeznikTable( I, R ) == matrix { {0,0,1,0}, {0,0,0,0}, {0,0,0,1}, {0,0
 
 TEST ///
 R = ZZ/2[x_1..x_6];
-J = intersect(ideal(x_1,x_2), ideal(x_3,x_4), ideal(x_5,x_6)); -- Exampl 6.7(iv)
+J = intersect(ideal(x_1,x_2), ideal(x_3,x_4), ideal(x_5,x_6)); -- Example 6.7(iv)
 assert( lyubeznikTable( J, R ) == matrix { {0,0,1,0,0}, {0,0,0,0,0}, {0,0,0,3,0}, {0,0,0,0,0}, {0,0,0,0,3} } )
 ///
 

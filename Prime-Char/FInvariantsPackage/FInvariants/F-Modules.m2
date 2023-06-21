@@ -100,20 +100,20 @@ localCohomologyExt = ( i, I ) ->
 )
 
 --- Compute a generating morphism for H_I^i(R)
-localCohomologyFilter = ( i, I ) -> 
+localCohomologyFilter = { Test => Support } >> o -> ( i, I ) -> 
 (
     R := ring I;
-    filterSeq := filterRegularSequence( i, I, R, Homogeneous => isHomogeneous I );
+    time filterSeq := filterRegularSequence( i, I, R, Homogeneous => isHomogeneous I, Test => o.Test );
     J := sub( ideal filterSeq, R );
     -- sub is for the case of an empty list. 
     -- Maybe the case i = 0 should simply be handled separately. 
     p := char R;
     u := ( product filterSeq )^(p-1);
     f := e -> if e == 0 then J else (frobenius f(e-1)) : u;
-    K := firstEquality f;
+    time K := firstEquality f;
     M := R^1/K;
     g := map( FF M, M, u );
-    M0 := saturate( 0_M, I );
+    time M0 := saturate( 0_M, I );
     rtMorphism := generatingMorphism inducedMap( FF M0, M0, g );
     H := makeFModule rtMorphism;
     H#cache#(symbol rootMorphism) = rtMorphism;
@@ -121,7 +121,7 @@ localCohomologyFilter = ( i, I ) ->
     H
 )
 
-localCohomology = method( Options => { Strategy => Ext } )
+localCohomology = method( Options => { Strategy => Ext, Test => Support } )
 
 localCohomology ( ZZ, Ideal ) := FModule => o -> ( i, I ) -> 
 (   
@@ -129,7 +129,7 @@ localCohomology ( ZZ, Ideal ) := FModule => o -> ( i, I ) ->
     if not isGoodRing R then error "localCohomology is only implemented for regular rings of positive characteristic";
     if (I#cache)#?(localCohomology, i) then return I#cache#(localCohomology, i);
     lc := if o.Strategy === Ext then localCohomologyExt( i, I )
-    else localCohomologyFilter( i, I );
+    else localCohomologyFilter( i, I, Test => o.Test );
     I#cache#(localCohomology, i) = lc;
     lc
 )
@@ -180,7 +180,7 @@ FModule == ZZ := ( M, n ) ->
     ( root M )  == 0
 )
 
-cohomDim = method( Options => { Strategy => Ext } )
+cohomDim = method( Options => { Strategy => Ext, Test => Support } )
 
 cohomDim Ideal := ZZ => o -> ( cacheValue symbol cohomDim )( I ->
 (
@@ -221,12 +221,25 @@ randomGeneratingMorphism Module := GeneratingMorphism => o -> M ->
 ----------------------------------------------------------------------------------------------
 
 --- I-filter regular sequences ---
-isFilterRegularElement = method()
 
-isFilterRegularElement ( RingElement, Ideal, Module, Module ) := Boolean => ( x, I, M, N ) ->
+isFilterRegularElementAss := ( x, I, M, N ) -> 
+(
+    ap := ass( M/N );
+    all( ap, P -> x % P != 0 or isSubset( I, P ) )
+)
+
+isFilterRegularElementSupp := ( x, I, M, N ) -> 
 (
     J := ann ker( x*id_( M/N ) );
-    isSubset( I, J ) or all( I_*, g -> radicalContainment( g, J, Strategy => "Kollar" ) )
+    all( I_*, g -> g % J == 0 or radicalContainment( g, J, Strategy => "Kollar" ) )
+)
+
+isFilterRegularElement = method( Options => { Test => Support } )
+
+isFilterRegularElement ( RingElement, Ideal, Module, Module ) := Boolean => o -> ( x, I, M, N ) -> 
+(
+    if o.Test === Support then isFilterRegularElementSupp( x, I, M, N )
+    else isFilterRegularElementAss( x, I, M, N ) 
 )
 
 isFilterRegularSequence = method()
@@ -256,13 +269,17 @@ isFilterRegularSequence ( BasicList, Ideal, Ideal ) := Boolean => ( L, I, J ) ->
 
 ----------------------------------------------------------------------------------------------
 
--- generates a random element of degree deg of the ideal I
-randomElementInIdeal = method( Options => { Homogeneous => false } )
+-- generates a random nonzero element of degree deg of the ideal I
+randomElementInIdeal = method( Options => { Homogeneous => false, Avoid => {} } )
 
 randomElementInIdeal ( ZZ, RR, Ideal ) := RingElement => o -> ( deg, density, I ) ->
 (   
-    if o.Homogeneous or deg == 1 then random( deg, I, Density => density )
-    else sum random( toList( 1..deg ), I, Density => density )
+    candidate := 0_(ring I);
+    badChoices := prepend( candidate, o.Avoid );
+    while isMember( candidate, badChoices ) do
+        candidate = if o.Homogeneous or deg == 1 then random( deg, I, Density => density )
+                    else sum(1..deg, i -> random( i, I, Density => density ) );
+    candidate
 )
 
 filterRegularSequence = method( 
@@ -270,26 +287,32 @@ filterRegularSequence = method(
     { 
         Tries => infinity, 
         Homogeneous => false, 
-        MaxDegree => infinity 
+        MaxDegree => infinity,
+        Test => Support 
     }
 )
 
 filterRegularSequence ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) -> 
 (
     L := {};
+    losers := {};
     J := ideal( 0_(ring I) ); 
     G := sort(flatten entries mingens I, f -> (sum degree f, #terms f));
     i := 0;
     -- first, try the generators of the ideal
     while i < #G and #L < n do
     (
-        if isFilterRegularElement( G_i, I, M, J*M ) then
+        if isFilterRegularElement( G_i, I, M, J*M, Test => o.Test ) then
         (
-            --print ("found");
+            print ("found");
             L = append( L, G_i );
             J = J + ideal( G_i )
+        )
+        else 
+        (
+            print ("failed");
+            losers = append( losers, G_i )
         );
---        else print ("failed");
         i = i + 1
     );
     local candidate; local deg; local density;
@@ -299,17 +322,22 @@ filterRegularSequence ( ZZ, Ideal, Module ) := List => o -> ( n, I, M ) ->
     -- now try random elements, with incresing density and degree 
     while i < o.Tries and deg < o.MaxDegree and #L < n do
     (
-        deg = minDeg + ( i // 100 );
-        density = minDensity + 0.009*( i % 100); 
-        candidate = randomElementInIdeal( deg, density, I, Homogeneous => o.Homogeneous);
-        if isFilterRegularElement( candidate, I, M, J*M ) then 
+        deg = minDeg + ( i // 20 );
+        density = minDensity + 0.047*( i % 20); 
+        candidate = randomElementInIdeal( deg, density, I, Homogeneous => o.Homogeneous, Avoid => join( L, losers ) );
+        print( toString candidate );
+        if isFilterRegularElement( candidate, I, M, J*M, Test => o.Test ) then 
         (
-            --print ("found", deg, density );
+            print ("found", deg, density );
             L = append( L, candidate );
             J = J + ideal( candidate )
+        )
+        else 
+        (
+            print ("failed", deg, density );
+            losers = append( losers, candidate )
         );
---        else print ("failed", deg, density );
-        i = i + 1;
+        i = i + 1
     );
     if #L < n then error "filterRegSeg: could not find a sequence of the desired length; try increasing Tries or MaxDegree";
     L
@@ -328,16 +356,20 @@ firstEquality = method( Options => { Tries => infinity } )
 -- value f(i) that is equal to its successor, f(i+1).
 firstEquality Function := Ideal => o -> f ->
 (
-    i := 0;
-    isEqual := false;
-    while not isEqual and i < o.Tries do 
+    i := 1;
+    current := f(1);
+    successor := f(2);    
+-- remove above line; modify code so that values of f are not recomputed.
+    while current != successor and i < o.Tries do 
     (
 	i = i+1;
-	isEqual = f(i) == f(i+1)
+        print i;
+        current = successor;
+        successor = f(i+1)
     );
-    if not isEqual then error "firstEquality: Reached maximum limit of tries.";
---    print i;
-    f(i)
+    if not current == successor then error "firstEquality: Reached maximum number of tries";
+    print( "stabilized at ", i );
+    current
 )
 
 limitClosure = method()

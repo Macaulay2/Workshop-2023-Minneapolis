@@ -44,7 +44,9 @@ export {
     "lowerLimit",
     "lyubeznikNumber",
     "lyubeznikTable",
-    "MaxDegree"
+    "MaxDegree",
+    "Avoid",
+    "Support"
 }
 
 load "./FInvariants/F-Modules.m2"
