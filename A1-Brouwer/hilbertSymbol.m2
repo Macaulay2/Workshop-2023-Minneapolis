@@ -21,6 +21,9 @@
 -- Input: Integers a, b, and prime p 
 -- Output: The Hilbert symbol, (a,b)_p
 
+path = append(path, "/home/macaulay/A1-Brouwer/");
+path = append(path, "../A1-Brouwer/");
+
 load "simplifyForm.m2"
 load "squarefreepart.m2"
 load "diagonalize.m2"
