@@ -10,7 +10,7 @@ debugging = false;
 
 
 localA1Degree = method()
-localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
+localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
     -- Endo is the list {f_1, f_2, ..., f_n} of polynomials kk^n -> kk^n
     
     -- n is the number of polynomials
