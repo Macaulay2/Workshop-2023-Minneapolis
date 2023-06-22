@@ -52,7 +52,7 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     );
     
     -- If the field is RR, ask the user to run it over QQ instead, then simplify over RR
-    if (kk === RR or instance(kk,RealField)) then error "Error: globalA1Degree method does not work over the reals. Instead, define the polynomials over QQ to output a GrothendieckWittClass. Then extract the matrix, base change it to RR, and then run simplifyForm().";
+    if (kk === RR or instance(kk,RealField)) then error "Error: localA1Degree method does not work over the reals. Instead, define the polynomials over QQ to output a GrothendieckWittClass. Then extract the matrix, base change it to RR, and then run simplifyForm().";
     
     
     -- Create internal rings/matrices
@@ -61,50 +61,41 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     R := kk[X_1..Y_n];
     
     
-    -- Create an (n x n) matrix D which will be populated by \Delta_{ij} in the paper    
+    -- Create a matrix D which will be populated by \Delta_{ij} in the paper
     D := "";
     try D = mutableMatrix id_((frac R)^n) else D= mutableMatrix id_(R^n);
-    
     
     if debugging==true then(
     	print("R is " | toString(R));
     	print("D is");
     	print(D);
-	);    
+	);
     
-    
-    -- Iterate through the entries of the matrix D and populate it with the Delta_{ij}'s
     for i from 0 to (n-1) do (
-	for j from 0 to (n-1) do(-- TODO let's rewrite this to just run 1 to n instead (?)
-	    
-	    if debugging == true then(
-	    	print("i=" | toString(i) | ", j="  | toString(j));
-		);
-	    
-	    
-	     -- Creates the list {x_1 => Y_1, ..., x_j-1 => Y_j-1, x_j => X_j, ..., x_n => X_n}
+	for j from 0 to (n-1) do(
+	    -- iterate through the entries of the matrix D and populate it with the following information ...
+        -- create the list {Y_1, ..., Y_(j-1), X_j, ..., X_n}. Note Macaulay2 is 0-indexed hence the difference in notation. 
 	    targetList1 := toList (Y_1..Y_j|X_(j+1)..X_n);
-	    
-	     -- Creates the list {x_1 => Y_1, ..., x_j => Y_j, x_j+1 => X_j+1, ..., x_n => X_n}
-	    targetList2 := toList (Y_1..Y_(j+1)| X_(j+2)..X_n);
-            
-	    -- Build the quantity f_i(Y_1,..X_{j+1},..X_n) - f_i(Y_1..Y_{j+1},..,X_n)
-	    numeratorD = ((map(R,S,targetList1))(Endo_i)-(map(R,S,targetList2))(Endo_i));
-	    
-	    -- Divide by X_{j+1}-Y_{j+1}	    
-	    D_(i,j)= numeratorD/(X_(j+1)-Y_(j+1)); -- this is \Delta_{i,j} from the paper
+        -- create the list {Y_1, ..., Y_j, X_(j+1), ..., X_n }. Note Macaulay2 is 0-indexed hence the difference in notation. 
+	    targetList2 := toList (Y_1..Y_(j+1)| X_(j+2)..X_n); 
+        -- suppose our endomorphisms are given in the variables x_1, ..., x_n.
+        -- map f_i(x_1, ..., x_n) to f_i(Y_1, ..., Y_(j-1), X_j, ..., X_n) resp.
+        -- then take the difference f_i(Y_1, ..., Y_(j-1), X_j, ..., X_n) - f_i(Y_1, ... Y_j, X_(j+1), ..., X_n)
+        numeratorD = ((map(R,S,targetList1))(Endo_i)-(map(R,S,targetList2))(Endo_i)); 
+        -- divide it by X_j - Y_j, Note Macaulay2 is 0-indexed hence the difference in notation. 
+	    D_(i,j)= numeratorD/(X_(j+1)-Y_(j+1)); 
 	); 
     );
 
     -- TESTING
      if debugging==true then(
-    	 print("\nfracFieldBezDet is " | toString(det(D)));
-    	 print("\nRing of fracFieldBezDet is " | toString(ring det(D)));
-    	 print("\nnumerator is " | toString(numerator(det(D))));
-    	 print("\ndenominator is " | toString(denominator(det(D))));
-	 print("\nR is " | toString(R));
-    	 print("\nlift is " | toString(numerator(det(D)), R));
-    	 print("lift denom to coeff ring is " | toString(lift(denominator(det(D)),coefficientRing R)));
+    	print("\nfracFieldBezDet is " | toString(det(D)));
+    	print("\nRing of fracFieldBezDet is " | toString(ring det(D)));
+    	print("\nnumerator is " | toString(numerator(det(D))));
+    	print("\ndenominator is " | toString(denominator(det(D))));
+	    print("\nR is " | toString(R));
+    	print("\nlift is " | toString(numerator(det(D)), R));
+    	print("lift denom to coeff ring is " | toString(lift(denominator(det(D)),coefficientRing R)));
 	 );
     
     -- Set up the local variables bezDet and bezDetR
@@ -139,13 +130,13 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     list2 := (apply(toList(0..n-1), i-> mapxtoY(Endo_i))); -- list (f_1(Y), ..., f_n(Y))
     
     -- Apply localAlgebraBasis to compute standard basis for localization
-    standBasisX :=localAlgebraBasis(list1,mapxtoX p);
+    standBasisX := localAlgebraBasis(list1,mapxtoX p);
     standBasisY := localAlgebraBasis(list2,mapxtoY p); 
     
 
     
     -- Take the ideal sum of J in the X_i's with J in the Y_i's
-    localIdeal :=sub(mapxtoX(J),R)+sub( mapxtoY(J),R);
+    localIdeal :=sub(mapxtoX(J),R)+sub(mapxtoY(J),R);
     
     
     
@@ -170,7 +161,8 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     	print("\nbezdetred is " | toString(bezDetRed));
 	);
     
-    phi0 := map(kk,Rquot,(toList ((2*n):0))); -- ring map that takes the coefficients to the field kk instead of considering it as an element of the quotient ring 
+    -- ring map that takes the coefficients to the field kk instead of considering it as an element of the quotient ring 
+    phi0 := map(kk,Rquot,(toList ((2*n):0))); 
     
     -- m is the dimension of the basis for the local ring
     m:= #sBXProm;
@@ -185,5 +177,5 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
             B_(i,j)=phi0(coefficient((sBXProm_i**sBYProm_j)_(0,0), bezDetRed));
         );
     );
-    return matrix(B);
+    return gwClass(matrix(B));
 );
