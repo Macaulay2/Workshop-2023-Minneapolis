@@ -33,7 +33,6 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     -- Let S = k[x_1..x_n] be the ambient polynomial ring
     S:=ring(Endo#0);
     
-    
     -- Create the ideal J.  It has prop that  k[x_1 .. x_n]_p/I_p is isom to k[x_1 .. x_n]/J    
     J:=(ideal Endo):saturate(ideal Endo,p);
     
@@ -154,11 +153,11 @@ localA1Degree (List, Ideal) := (Matrix) => (Endo,p) -> (
     sBXProm :=apply(toList(0..#standBasisX-1),i-> sub(standBasisX_i,Rquot));
     sBYProm :=apply(toList(0..#standBasisY-1),i-> sub(standBasisY_i,Rquot));
    
-    -- Now reduce the bezDet determinant subject ot the local ideal in both the X's, Y's.
+    -- Now reduce the bezDetR determinant subject to the local ideal in both the X's, Y's.
     bezDetRed := bezDetR % localIdeal;
     
     if debugging==true then(
-    	print("\nbezdetred is " | toString(bezDetRed));
+    	print("\nbezDetRed is " | toString(bezDetRed));
 	);
     
     -- ring map that takes the coefficients to the field kk instead of considering it as an element of the quotient ring 
