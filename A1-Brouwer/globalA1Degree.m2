@@ -8,14 +8,6 @@ path = append(path, "../A1-Brouwer/");
 needs "GW-type.m2"
 load "rankGlobalAlgebra.m2"
 
---globalA1DegreeCC = method()
---globalA1DegreeCC (List) := (GrothendieckWittClass) => (Endo) ->(
-    --print("globalA1DegreeCC CALLED");
-    --if dim ideal(Endo) > 0  then error "Error: morphism does not have isolated zeroes";
-    --S:=ring(Endo#0);
-    --rankAlgebra:=rankGlobalAlgebra(Endo);
-    --return gwClass(matrix(mutableIdentity(CC,rankAlgebra)));  
-    --);
 
 debugging = false;
 
