@@ -2,7 +2,7 @@ path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
 
 load "diagonalize.m2"
-needsPackage "RationalPoints2"
+loadPackage "RationalPoints2"
 needs "GW-type.m2"
 -- getInvariants method spits out basic invariants of a matrix representing a bilinear form
 -- isIdenticalDiscriminant tells us whether two matrices representing bilinear forms have the same discriminant
@@ -94,6 +94,9 @@ getHasseWittinvariant (GrothendieckWittClass, ZZ) := ZZ => (alpha,p) -> (
 
     return hwi;
 );
+
+
+B = matrix{{1,0,2},{2,2,0},{1,0,0}}
 
 
 

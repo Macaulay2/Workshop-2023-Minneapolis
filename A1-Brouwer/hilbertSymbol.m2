@@ -24,11 +24,9 @@
 path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
 
-needs "simplifyForm.m2"
-needs "squarefreepart.m2"
-needs "diagonalize.m2"
-needs "discForm.m2"
-
+load "simplifyForm.m2"
+load "squarefreepart.m2"
+load "diagonalize.m2"
 
 exponentPrimeFact = method()
 
@@ -272,7 +270,21 @@ signatureRealQForm (List):=(ZZ, ZZ, ZZ) => (f) -> (
 	     
     );
 
+discForm = method ()
 
+discForm (List):=(ZZ) => (f) -> (
+    -- Input: f = list of diagonal elements of quadratic form
+    -- Output: Product of the entries
+    disc:=1;
+    --for loop counts the number of negative diagonal entries
+    n:= #f ;
+    for i from 0 to (n-1) do(
+	 disc = disc* f_i;
+	 );
+    return disc;
+    
+   	     
+    );
 
 
 
