@@ -10,6 +10,9 @@ newPackage(
 	{Name=> "Sean Grate",
 	    Email => "sean.grate@auburn.edu",
 	    HomePage => "https://seangrate.com/"},
+	{Name => "Daoji Huang",
+	    Email => "",
+	    HomePage => "daojihuang.me"},
         {Name => "Patricia Klein", 
             Email => "pjklein@tamu.edu", 
             HomePage => "https://patriciajklein.github.io/"},
@@ -34,58 +37,72 @@ newPackage(
     DebuggingMode => true
 )
 
---TODO: organize the exports
 export{
-    "isPartialASM",
-    "partialASMToASM",
-    "fultonGens",
-    "schubertDetIdeal",
-    "diagLexInit",
-    "diagRevLexInit",
-    "antiDiagInit",
-    "rankMatrix",
-    "essentialBoxes",
-    "subwordComplex",
-    "grothendieckPoly",
-    "rotheDiagram",
-    "permToMatrix",
-    "toOneLineNotation",
-    "composePerms",
-    "isPerm",
-    "longestPerm",
-    "dividedDifference",
-    "schubertPoly",
-    "doubleSchubertPoly",
-    "permLength",
-    "augmentedRotheDiagram",
-    "isPatternAvoiding",
-    "isVexillary",
-    "isCDG",
-    "inverseOf",
-    "isCartwrightSturmfels",
-    "schubertDecomposition",
-    "isIntersectionSchubIdeals",
-    "rajCode",
-    "rajIndex",
-    "isMinRankTable",
-    "Double",
-    "Operator",
-    "PolyType",
-    "rankTableToASM",
-    "rankTableFromMatrix",
-    "schubertCodim",
-    "matrixSchubertReg",
-    "isASMIdeal",
-    "ASM",
-    "getASM",
-    "isSchubertCM",
-    "ASMFullList",
-    "cohenMacaulayASMsList",
-    "nonCohenMacaulayASMsList",
-    "idealsList",
-    "ASMRandomList",
-    "lastDescent",
-    "firstDescent"
+    
+    --MatrixSchubertConstructions.m2
+    "isPartialASM",    	       	    --documented ++
+    "partialASMToASM",	      	    --documented ++
+    "antiDiagInit",    	       	    -- CHECK DOC
+    "rankMatrix",    	     	    --documented ++  
+    "rotheDiagram",    	       	    --documented ++  
+    "augmentedRotheDiagram",	    --documented ++
+    "essentialBoxes",	     	    --documented ++
+    "schubertDetIdeal",	       	    --documented ++
+    "fultonGens",    	     	    --documented ++
+    "diagLexInit",    	      	    -- CHECK DOC
+    "diagRevLexInit",	     	    -- CHECK DOC
+    "subwordComplex",	     	    --documented ++
+    "entrywiseMinRankTable",	    -- ??
+    "entrywiseMaxRankTable",	    -- ??
+    "schubertDecomposition",	    -- ADD EX TO DOC
+    "isIntersectionSchubIdeals",    -- ADD EX TO DOC
+    "isASMIdeal",    	     	    -- ADD EX TO DOC	 
+    "getASM",	     	     	    -- ADD EX TO DOC
+    "isMinRankTable",	     	    --documented ++
+    "rankTableToASM",	     	    --documented ++
+    "rankTableFromMatrix",    	    --documented ++
+    "schubIntersect",	     	    -- ??
+    "schubAdd",	       	       	    -- ??
+ 
+ --permutationMethods.m2   
+    "isPerm",	     	     	    --documented ++
+    "permToMatrix",    	       	    --documented ++
+    "lastDescent",    	      	    --documented ++
+    "firstDescent",    	       	    --documented ++
+    "permLength",    	     	    --documented ++
+    "swap",    	       	       	    -- ??
+    "inverseOf",             	    -- ??
+    "longestPerm",    	      	    -- ??
+    "getOneReducedWord",    	    -- ??
+    "toOneLineNotation",    	    --documented ++
+    "composePerms",    	       	    --documented ++
+    "isPatternAvoiding",    	    --documented ++
+    "isVexillary",    	      	    --documented ++
+    "avoidAllPatterns",	       	    -- CHECK DOC
+    "isCartwrightSturmfels",	    -- CHECK DOC
+    "isCDG",	    	    	    -- CHECK DOC
+    "rajCode",	      	      	    --documented ++
+    "rajIndex",        	       	    --documented ++
+    "grothendieckPoly",	       	    -- CHECK DOC
+    "schubertPoly",    	       	    -- CHECK DOC
+    "doubleSchubertPoly",           -- CHECK DOC
+    "dividedDifference",    	    -- CHECK DOC
+    "Double",	     	     	    -- ??
+    "Operator",	       	       	    -- ??
+    "PolyType",	       	       	    -- ??
+    "ASM",    	      	      	    -- ??
+
+--MatrixSchubertInvariants.m2    
+    "matrixSchubertReg",    	    --documented ++
+    "matrixSchubertCodim",    	    --documented ++
+    "KPolynomialASM",	     	    -- ??
+
+--Lists.m2
+    "ASMFullList",    	      	    --ADD EX TO DOC
+    "ASMRandomList",	    	    --ADD EX TO DOC
+    "cohenMacaulayASMsList",	    --ADD EX TO DOC
+    "nonCohenMacaulayASMsList",	    --ADD EX TO DOC
+    "initialIdealsList"    	    --ADD EX TO DOC
 }
     
 ------------------------------------------------------------------------------
@@ -246,7 +263,7 @@ uninstallPackage "MatrixSchubert"
 restart
 installPackage "MatrixSchubert"
 restart
-debug needsPackage "MatrixSchubert"
+needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
 

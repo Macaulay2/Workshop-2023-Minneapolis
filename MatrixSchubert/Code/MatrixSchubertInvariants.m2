@@ -30,12 +30,12 @@ matrixSchubertReg Matrix := ZZ => A -> (
     return regularity(I) -1;
 );
 
-schubertCodim = method() 
-schubertCodim Matrix := ZZ => A -> (
+matrixSchubertCodim = method() 
+matrixSchubertCodim Matrix := ZZ => A -> (
     if not (isPartialASM A) then error("The input must be a partial alternating sign matrix");
     codim antiDiagInit A
 )
-schubertCodim List := ZZ => w -> (
+matrixSchubertCodim List := ZZ => w -> (
     if not (isPerm w) then error("The input must be a permutation in one line notation");
     permLength w
 )

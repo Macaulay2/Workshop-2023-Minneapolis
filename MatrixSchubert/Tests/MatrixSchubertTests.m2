@@ -163,14 +163,14 @@ assert(essentialBoxes matrix {{0,1,0,0,0,0},{1,0,0,0,0,0},{0,0,0,0,0,1},{0,0,1,0
 
 
 TEST ///
--- schubertCodim
+-- matrixSchubertCodim
 L = {
     {1},
     {2,1},
     matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}},
     matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
 }
-assert all (L, i -> schubertCodim i == codim schubertDetIdeal i)
+assert all (L, i -> matrixSchubertCodim i == codim schubertDetIdeal i)
 ///
 
 TEST ///

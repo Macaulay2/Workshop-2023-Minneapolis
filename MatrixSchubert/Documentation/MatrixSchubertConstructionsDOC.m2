@@ -39,61 +39,9 @@ doc ///
         Text
             The following people have generously contributed code, improved existing code, or enhanced the documentation:
             @HREF("https://sites.google.com/illinois.edu/shiliang-gao", "Shiliang Gao")@,
-            @HREF("daojihuang.me", "Daoji Huang")@,
             @HREF("https://www.math.tamu.edu/directory/graduate.html", "Pooja Joshi")@, and
             @HREF("https://www.clemson.edu/science/academics/departments/mathstat/about/profiles/arakoto", "Antsa Tantely Fandresena Rakotondrafara")@.
 ///
-
-
-
-doc ///
-    Key
-        (rotheDiagram, List)
-        (rotheDiagram, Matrix)
-        rotheDiagram
-    Headline
-        to find the Rothe diagram of a partial alternating sign matrix
-    Usage
-        rotheDiagram(w)
-        rotheDiagram(M)
-    Inputs
-        w:List
-            or {\tt M} is a @TO Matrix@
-    Description
-        Text
-            Given a permutation in 1-line notation or a partial alternating sign matrix returns the Rothe diagram.
-        Example
-            w = {2,5,4,1,3}
-            rotheDiagram(w)
-            M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
-            rotheDiagram(M)
-
-	    
-///
-
-doc ///
-    Key
-        (augmentedRotheDiagram, List)
-        (augmentedRotheDiagram, Matrix)
-        augmentedRotheDiagram
-    Headline
-        to find the Rothe diagram of a partial alternating sign matrix together with the rank conditions determining the alternating sign matrix variety
-    Usage
-        augmentedRotheDiagram(w)
-        augmentedRotheDiagram(M)
-    Inputs
-        w:List
-            or {\tt M} is a @TO Matrix@
-    Description
-        Text
-            Given a permutation in 1-line notation or a partial alternating sign matrix returns list of entries of Rothe diagram with the ranks of each entry.
-        Example
-            w = {2,5,4,1,3}
-            augmentedRotheDiagram(w)
-            M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
-            augmentedRotheDiagram(M)
-///
-
 
 doc ///
     Key
@@ -120,7 +68,6 @@ doc ///
             N = matrix{{0,-1,0,1,1},{1,-1,1,-1,1},{0,1,1,0,-1},{1,1,-1,1,-1},{-1,1,0,0,1}}
             isPartialASM N
 ///
-
 
 doc ///
     Key
@@ -174,6 +121,99 @@ doc ///
             schubertDetIdeal({1,3,2})
             schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 ///
+
+doc ///
+    Key
+        (rankMatrix, List)
+        (rankMatrix, Matrix)
+        rankMatrix
+    Headline
+        Computes a matrix of rank conditions that determines a Schubert determinantal ideal or, more generally, an alternating sign matrix ideal.
+    Usage
+        rankMatrix(w)
+        rankMatrix(M)
+    Inputs
+        w:List
+            or {\tt M} is a @TO Matrix@
+    Description
+        Text
+            Given an alternating sign matrix or a permutation in 1-line notation, outputs the matrix of rank condition associated to that alternating sign matrix or permutation.
+        Example
+            rankMatrix({1,3,2})
+            rankMatrix(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+///
+
+doc ///
+    Key
+        (rotheDiagram, List)
+        (rotheDiagram, Matrix)
+        rotheDiagram
+    Headline
+        to find the Rothe diagram of a partial alternating sign matrix
+    Usage
+        rotheDiagram(w)
+        rotheDiagram(M)
+    Inputs
+        w:List
+            or {\tt M} is a @TO Matrix@
+    Description
+        Text
+            Given a permutation in 1-line notation or a partial alternating sign matrix returns the Rothe diagram.
+        Example
+            w = {2,5,4,1,3}
+            rotheDiagram(w)
+            M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+            rotheDiagram(M)
+
+	    
+///
+
+doc ///
+    Key
+        (augmentedRotheDiagram, List)
+        (augmentedRotheDiagram, Matrix)
+        augmentedRotheDiagram
+    Headline
+        to find the Rothe diagram of a partial alternating sign matrix together with the rank conditions determining the alternating sign matrix variety
+    Usage
+        augmentedRotheDiagram(w)
+        augmentedRotheDiagram(M)
+    Inputs
+        w:List
+            or {\tt M} is a @TO Matrix@
+    Description
+        Text
+            Given a permutation in 1-line notation or a partial alternating sign matrix returns list of entries of Rothe diagram with the ranks of each entry.
+        Example
+            w = {2,5,4,1,3}
+            augmentedRotheDiagram(w)
+            M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+            augmentedRotheDiagram(M)
+///
+
+
+doc ///
+    Key
+        (essentialBoxes, List)
+        (essentialBoxes, Matrix)
+        essentialBoxes
+    Headline
+        computes a list of the essential boxes in the Rothe Diagram for an alternating sign matrix M or a permutation in 1-line notation.
+    Usage
+        essentialBoxes(w)
+        essentialBoxes(M)
+    Inputs
+        w:List
+            or {\tt M} is a @TO Matrix@
+    Description
+        Text
+            Given an alternating sign matrix or a permutation in 1-line notation, outputs a list of the essential boxes in the Rothe diagram for that matrix. 
+        Example
+            essentialBoxes({1,3,2})
+            essentialBoxes(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+///
+
+
 
 -*
 --TODO: figure out error in isSchubertCM doc node
@@ -230,6 +270,67 @@ doc ///
             schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 
 ///
+
+
+doc ///
+    Key 
+        (fultonGens, List)
+        (fultonGens, Matrix)
+        fultonGens
+    Headline
+        compute the fulton generators for a schubert determinantal ideal 
+    Usage
+        fultonGens(w)
+        fultongens(M)
+    Inputs
+        w:List
+            or {\tt M} is a @TO Matrix@
+    Description
+        Text
+            Given a partial alternating sign matrix or permutation in 1 line notation, return the list of fulton generators for the corresponding schubert determinantal ideal.
+        Example 
+            netList fultonGens {2,5,4,1,3}
+            netList fultonGens matrix{{0,1,0},{1,-1,1},{0,1,0}}
+///
+
+
+doc ///
+    Key 
+        diagLexInit
+    Headline
+        tmp 
+    Description
+        Text
+            This is a stub
+///
+
+doc ///
+    Key 
+        diagRevLexInit
+    Headline
+        tmp 
+    Description
+        Text
+            This is a stub
+///
+
+doc ///
+    Key
+        (subwordComplex, List)
+        subwordComplex
+    Headline
+        to find the subword complex associated to w (i.e. SR-ideal of antiDiagInit)
+    Usage
+        subwordComplex(w)
+    Inputs
+        w:List
+    Description
+        Text
+            Given a permutation in 1-line notation, compute the subword complex associated to w (i.e. SR-ideal of antiDiagInit).
+        Example
+            subwordComplex({2,5,4,1,3})
+///           
+
 
 doc ///
     Key
@@ -319,66 +420,6 @@ doc ///
 
 doc ///
     Key
-        (rankMatrix, List)
-        (rankMatrix, Matrix)
-        rankMatrix
-    Headline
-        Computes a matrix of rank conditions that determines a Schubert determinantal ideal or, more generally, an alternating sign matrix ideal.
-    Usage
-        rankMatrix(w)
-        rankMatrix(M)
-    Inputs
-        w:List
-            or {\tt M} is a @TO Matrix@
-    Description
-        Text
-            Given an alternating sign matrix or a permutation in 1-line notation, outputs the matrix of rank condition associated to that alternating sign matrix or permutation.
-        Example
-            rankMatrix({1,3,2})
-            rankMatrix(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
-///
-
-doc ///
-    Key
-        (essentialBoxes, List)
-        (essentialBoxes, Matrix)
-        essentialBoxes
-    Headline
-        computes a list of the essential boxes in the Rothe Diagram for an alternating sign matrix M or a permutation in 1-line notation.
-    Usage
-        essentialBoxes(w)
-        essentialBoxes(M)
-    Inputs
-        w:List
-            or {\tt M} is a @TO Matrix@
-    Description
-        Text
-            Given an alternating sign matrix or a permutation in 1-line notation, outputs a list of the essential boxes in the Rothe diagram for that matrix. 
-        Example
-            essentialBoxes({1,3,2})
-            essentialBoxes(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
-///
-
-
-doc ///
-    Key
-        (subwordComplex, List)
-        subwordComplex
-    Headline
-        to find the subword complex associated to w (i.e. SR-ideal of antiDiagInit)
-    Usage
-        subwordComplex(w)
-    Inputs
-        w:List
-    Description
-        Text
-            Given a permutation in 1-line notation, compute the subword complex associated to w (i.e. SR-ideal of antiDiagInit).
-        Example
-            subwordComplex({2,5,4,1,3})
-///           
-
-doc ///
-    Key
         (rankTableToASM, Matrix)
         rankTableToASM
     Headline
@@ -414,84 +455,3 @@ doc ///
             A = matrix {{1,0,0},{0,23,24},{23,24,25}};
             rankTableFromMatrix A
 ///   
-
-doc ///
-    Key 
-        (fultonGens, List)
-        (fultonGens, Matrix)
-        fultonGens
-    Headline
-        compute the fulton generators for a schubert determinantal ideal 
-    Usage
-        fultonGens(w)
-        fultongens(M)
-    Inputs
-        w:List
-            or {\tt M} is a @TO Matrix@
-    Description
-        Text
-            Given a partial alternating sign matrix or permutation in 1 line notation, return the list of fulton generators for the corresponding schubert determinantal ideal.
-        Example 
-            netList fultonGens {2,5,4,1,3}
-            netList fultonGens matrix{{0,1,0},{1,-1,1},{0,1,0}}
-///
-
-doc ///
-    Key 
-        grothendieckPoly
-    Headline
-        tmp 
-    Description
-        Text
-            This is a stub
-///
-
-doc ///
-    Key 
-        schubertPoly
-    Headline
-        tmp 
-    Description
-        Text
-            This is a stub
-///
-
-doc ///
-    Key 
-        doubleSchubertPoly
-    Headline
-        tmp 
-    Description
-        Text
-            This is a stub
-///
-
-doc ///
-    Key 
-        dividedDifference
-    Headline
-        tmp 
-    Description
-        Text
-            This is a stub
-///
-
-doc ///
-    Key 
-        diagLexInit
-    Headline
-        tmp 
-    Description
-        Text
-            This is a stub
-///
-
-doc ///
-    Key 
-        diagRevLexInit
-    Headline
-        tmp 
-    Description
-        Text
-            This is a stub
-///
