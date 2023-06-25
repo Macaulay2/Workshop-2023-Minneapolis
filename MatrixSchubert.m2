@@ -54,7 +54,7 @@ export{
     "subwordComplex",	     	    --documented ++
     "entrywiseMinRankTable",	    -- ??
     "entrywiseMaxRankTable",	    -- ??
-    "schubertDecomposition",	    -- ADD EX TO DOC
+    "schubDecomposition",	    -- ADD EX TO DOC
     "isIntersectionSchubIdeals",    -- ADD EX TO DOC
     "isASMIdeal",    	     	    -- ADD EX TO DOC	 
     "getASM",	     	     	    -- ADD EX TO DOC
@@ -93,8 +93,8 @@ export{
     "ASM",    	      	      	    -- ??
 
 --MatrixSchubertInvariants.m2    
-    "matrixSchubertReg",    	    --documented ++
-    "matrixSchubertCodim",    	    --documented ++
+    "schubReg",    	    --documented ++
+    "schubCodim",    	    --documented ++
     "KPolynomialASM",	     	    -- ??
 
 --Lists.m2

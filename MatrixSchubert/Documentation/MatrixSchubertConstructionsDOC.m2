@@ -334,12 +334,12 @@ doc ///
 
 doc ///
     Key
-        (schubertDecomposition, Ideal)
-        schubertDecomposition
+        (schubDecomposition, Ideal)
+        schubDecomposition
     Headline
         finds the decomposition of an ASM ideal into Schubert determinantal ideals
     Usage
-        schubertDecomposition(I)
+        schubDecomposition(I)
     Inputs
         I:Ideal
     Description

@@ -428,8 +428,8 @@ entrywiseMaxRankTable List := Matrix => L -> (
 --TODO: docs and tests
 --TODO: input validation/type checking
 -------------------------------------------
-schubertDecomposition = method()
-schubertDecomposition Ideal := List => I -> (
+schubDecomposition = method()
+schubDecomposition Ideal := List => I -> (
     primeDecomp := decompose ideal leadTerm I;
     maxIdx := max((flatten entries vars ring I) / indexOfVariable // max);
     -- varWeights := (monoid ring I).Options.MonomialOrder#1#1;
@@ -452,7 +452,7 @@ isIntersectionSchubIdeals = method()
 isIntersectionSchubIdeals Ideal := List => I -> (
     isIntersection := true;
     if (I == radical(I)) then {
-        schubDecomp := schubertDecomposition I;
+        schubDecomp := schubDecomposition I;
         isIntersection = I == intersect apply(apply(schubDecomp, i-> schubertDetIdeal(i, CoefficientRing => coefficientRing(ring I))), J -> sub(J, vars ring I));
     }
     else {
@@ -471,7 +471,7 @@ isASMIdeal = method()
 isASMIdeal Ideal := List => (I) -> (
     isASM := true;
     if (I == radical(I)) then {
-        schubDecomp := schubertDecomposition I;
+        schubDecomp := schubDecomposition I;
         if (isASM = I == intersect apply(schubDecomp/schubertDetIdeal, J -> sub(J, vars ring I))) then {
             permMatrices := (schubDecomp / permToMatrix);
             rankTable := rankTableFromMatrix matrix entrywiseMaxRankTable permMatrices;

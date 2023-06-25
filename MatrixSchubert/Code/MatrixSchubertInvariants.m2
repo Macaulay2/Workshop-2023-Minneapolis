@@ -16,12 +16,12 @@
 --     return regularity(I) -1;   
 -- )
 
-matrixSchubertReg = method()
-matrixSchubertReg List := ZZ => w -> (
-     if not (isPerm w) then error ("Expecting a permutation.");
+schubReg = method()
+schubReg List := ZZ => w -> (
+     if not (isPerm w) then error ("The input must be a partial alternating sign matrix or a permutation.");
      return rajIndex(w) - permLength(w);
 )
-matrixSchubertReg Matrix := ZZ => A -> (
+schubReg Matrix := ZZ => A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     -- TODO: Check if Matrix is permutation matrix
         -- if it is, use rajindex formula
@@ -30,13 +30,13 @@ matrixSchubertReg Matrix := ZZ => A -> (
     return regularity(I) -1;
 );
 
-matrixSchubertCodim = method() 
-matrixSchubertCodim Matrix := ZZ => A -> (
-    if not (isPartialASM A) then error("The input must be a partial alternating sign matrix");
+schubCodim = method() 
+schubCodim Matrix := ZZ => A -> (
+    if not (isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     codim antiDiagInit A
 )
-matrixSchubertCodim List := ZZ => w -> (
-    if not (isPerm w) then error("The input must be a permutation in one line notation");
+schubCodim List := ZZ => w -> (
+    if not (isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     permLength w
 )
 
