@@ -106,7 +106,7 @@ antiDiagInit Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     zMatrix := genMat(numrows A, numcols A, CoefficientRing => o.CoefficientRing, Variable=> o.Variable); --generic matrix
     rankMat := rankMatrix A; --rank matrix for A
-    essBoxes := essentialBoxes A;
+    essBoxes := essentialSet A;
     if essBoxes == {} then (
     	R := ring zMatrix;
     	return ideal(0_R)
@@ -235,20 +235,40 @@ augmentedRotheDiagram Matrix := List => w -> (
 --INPUT: a list w corresponding to a permutation in 1-line notation
     	--OR an alternating sign matrix A
 --OUTPUT: a list of essential boxes in the Rothe diagram for A
---TODO:
+--TODO: Debug - not currently computing essential set correctly
 -----------------------
-essentialBoxes = method()
-essentialBoxes Matrix := List => (A) -> (
+essentialSet = method()
+essentialSet Matrix := List => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     boxes := rotheDiagram(A);
     badBoxes := apply(boxes, i -> (positions(boxes, j -> (j == (i_0, i_1+1)))|positions(boxes, j -> (j == (i_0, i_1+1)))));
     essBoxes := positions(badBoxes, i -> i == {});
     boxes_essBoxes
 )
-essentialBoxes List := List => (w) -> (
+essentialSet List := List => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    essentialBoxes permToMatrix w
+    essentialSet permToMatrix w
 )
+
+-----------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation 
+    	--OR an alternating sign matrix A
+--OUTPUT: A list of boxes in the essential set for A, with their corresponding rank values 
+--TODO: add documentation + examples
+--Could be sped up by only computing ranks of boxes in rothe diagram
+-----------------------
+augmentedEssentialSet = method()
+augmentedEssentialSet List := List => w -> (
+    L := essentialSet(w);
+    R := rankMatrix(w);
+    apply(L, (i, j) -> ((i, j), R_(i-1, j-1)))
+)
+augmentedEssentialSet Matrix := List => A -> (
+    L := essentialSet(A);
+    R := rankMatrix(A);
+    apply(L, (i, j) -> ((i, j), R_(i-1, j-1)))
+)
+
 --------------------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: Schubert determinantal ideal for w
@@ -263,7 +283,7 @@ schubDetIdeal Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     zMatrix := genMat(numrows A, numcols A, CoefficientRing=> o.CoefficientRing, Variable => o.Variable); --generic matrix
     rankMat := rankMatrix A; --rank matrix for A
-    essBoxes := essentialBoxes A;
+    essBoxes := essentialSet A;
     if essBoxes == {} then (
     	R := ring zMatrix;
 	    return ideal(0_R)

@@ -27,7 +27,7 @@ doc ///
             }@
         Example
             w = {1,5,3,4,2};
-            essentialBoxes w   
+            essentialSet w   
             netList fultonGens w
         Text
             This package also contains functions for studying homological properties of ASM varieties.
@@ -76,15 +76,15 @@ doc ///
     Headline
         to extend a partial alternating sign matrix to an alternating sign matrix
     Usage
-        partialASMToASM(M)
+        partialASMToASM(A)
     Inputs
-        M:Matrix
+        A:Matrix
     Description
         Text
             Given a partial alternating sign matrix returns the unique smallest alternating sign matrix by adding necessary number of rows and columns.
         Example
-            M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
-            partialASMToASM(M)
+            A = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+            partialASMToASM(A)
 
 	    
 ///
@@ -131,10 +131,10 @@ doc ///
         Computes a matrix of rank conditions that determines a Schubert determinantal ideal or, more generally, an alternating sign matrix ideal.
     Usage
         rankMatrix(w)
-        rankMatrix(M)
+        rankMatrix(A)
     Inputs
         w:List
-            or {\tt M} is a @TO Matrix@
+            or {\tt A} is a @TO Matrix@
     Description
         Text
             Given an alternating sign matrix or a permutation in 1-line notation, outputs the matrix of rank condition associated to that alternating sign matrix or permutation.
@@ -152,18 +152,18 @@ doc ///
         to find the Rothe diagram of a partial alternating sign matrix
     Usage
         rotheDiagram(w)
-        rotheDiagram(M)
+        rotheDiagram(A)
     Inputs
         w:List
-            or {\tt M} is a @TO Matrix@
+            or {\tt A} is a @TO Matrix@
     Description
         Text
             Given a permutation in 1-line notation or a partial alternating sign matrix returns the Rothe diagram.
         Example
             w = {2,5,4,1,3}
             rotheDiagram(w)
-            M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
-            rotheDiagram(M)
+            A = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+            rotheDiagram(A)
 
 	    
 ///
@@ -177,40 +177,63 @@ doc ///
         to find the Rothe diagram of a partial alternating sign matrix together with the rank conditions determining the alternating sign matrix variety
     Usage
         augmentedRotheDiagram(w)
-        augmentedRotheDiagram(M)
+        augmentedRotheDiagram(A)
     Inputs
         w:List
-            or {\tt M} is a @TO Matrix@
+            or {\tt A} is a @TO Matrix@
     Description
         Text
             Given a permutation in 1-line notation or a partial alternating sign matrix returns list of entries of Rothe diagram with the ranks of each entry.
         Example
             w = {2,5,4,1,3}
             augmentedRotheDiagram(w)
-            M = matrix{{0,1,0},{1,-1,0},{0,0,0}}
-            augmentedRotheDiagram(M)
+            A = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+            augmentedRotheDiagram(A)
 ///
 
 
 doc ///
     Key
-        (essentialBoxes, List)
-        (essentialBoxes, Matrix)
-        essentialBoxes
+        (essentialSet, List)
+        (essentialSet, Matrix)
+        essentialSet
     Headline
-        computes a list of the essential boxes in the Rothe Diagram for an alternating sign matrix M or a permutation in 1-line notation.
+        computes a list of the essential set in the Rothe Diagram for an alternating sign matrix M or a permutation in 1-line notation.
     Usage
-        essentialBoxes(w)
-        essentialBoxes(M)
+        essentialSet(w)
+        essentialSet(A)
     Inputs
         w:List
-            or {\tt M} is a @TO Matrix@
+            or {\tt A} is a @TO Matrix@
     Description
         Text
-            Given an alternating sign matrix or a permutation in 1-line notation, outputs a list of the essential boxes in the Rothe diagram for that matrix. 
+            Given an alternating sign matrix or a permutation in 1-line notation, outputs Fulton's essential set, i.e., the maximally southeast elements of the Rothe diagram of that alternating sign matrix or permutation. 
         Example
-            essentialBoxes({1,3,2})
-            essentialBoxes(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+            essentialSet({1,3,2})
+            essentialSet(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+///
+
+doc ///
+    Key
+        (augmentedEssentialSet, List)
+        (augmentedEssentialSet, Matrix)
+        augmentedEssentialSet
+    Headline
+        to find the essential set of a partial alternating sign matrix together with the rank conditions determining the alternating sign matrix variety
+    Usage
+        augmentedEssentialSet w
+        augmentedEssentialSet A
+    Inputs
+        w:List
+            or {\tt A} is a @TO Matrix@
+    Description
+        Text
+            Given a permutation in 1-line notation or a partial alternating sign matrix, returns the essential set together with the rank restriction at each entry.
+        Example
+            w = {2,5,4,1,3}
+            augmentedEssentialSet w
+            A = matrix{{0,1,0},{1,-1,0},{0,0,0}}
+           augmentedEssentialSet A
 ///
 
 

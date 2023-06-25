@@ -46,7 +46,8 @@ export{
     "rankMatrix",    	     	    --documented ++  
     "rotheDiagram",    	       	    --documented ++  
     "augmentedRotheDiagram",	    --documented ++
-    "essentialBoxes",	     	    --documented ++
+    "essentialSet",	     	    --documented ++
+    "augmentedEssentialSet",    --documented ++
     "schubDetIdeal",	       	    --documented ++
     "fultonGens",    	     	    --documented ++
     "diagLexInit",    	      	    -- CHECK DOC
@@ -266,4 +267,5 @@ restart
 needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
+
 
