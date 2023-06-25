@@ -40,7 +40,7 @@ doc ///
         (schubCodim, Matrix)
         schubCodim
     Headline
-        compute the codimension (i.e., height) of a schubert determinantal ideal or ASM ideal
+        compute the codimension (i.e., height) of a Schubert determinantal ideal or ASM ideal
     Usage
         schubCodim(w)
         schubCodim(M)

@@ -47,7 +47,7 @@ export{
     "rotheDiagram",    	       	    --documented ++  
     "augmentedRotheDiagram",	    --documented ++
     "essentialBoxes",	     	    --documented ++
-    "schubertDetIdeal",	       	    --documented ++
+    "schubDetIdeal",	       	    --documented ++
     "fultonGens",    	     	    --documented ++
     "diagLexInit",    	      	    -- CHECK DOC
     "diagRevLexInit",	     	    -- CHECK DOC

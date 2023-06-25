@@ -118,8 +118,8 @@ doc ///
             
             @UL {{"[Wei]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},}@
         Example
-            schubertDetIdeal({1,3,2})
-            schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+            antiDiagInit({1,3,2})
+            antiDiagInit(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 ///
 
 doc ///
@@ -251,14 +251,14 @@ doc ///
 
 doc ///
     Key
-        (schubertDetIdeal, List)
-        (schubertDetIdeal, Matrix)
-        schubertDetIdeal
+        (schubDetIdeal, List)
+        (schubDetIdeal, Matrix)
+        schubDetIdeal
     Headline
         Computes an alternating sign matrix ideal
     Usage
-        schubertDetIdeal(w)
-        schubertDetIdeal(M)
+        schubDetIdeal(w)
+        schubDetIdeal(M)
     Inputs
         w:List
             or {\tt M} is a @TO Matrix@
@@ -266,8 +266,8 @@ doc ///
         Text
             Given a permutation in 1-line notation or, more generally, a (partial) alternating sign matrix, outputs the associated alternating sign matrix ideal (which is called a Schubert determinantal ideal in the case of a permutation).  (The convention throughout this package is that the permuation matrix of a pemutation w has 1's in positions (i,w(i)).)
         Example
-            schubertDetIdeal({1,3,2})
-            schubertDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+            schubDetIdeal({1,3,2})
+            schubDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 
 ///
 
@@ -278,7 +278,7 @@ doc ///
         (fultonGens, Matrix)
         fultonGens
     Headline
-        compute the fulton generators for a schubert determinantal ideal 
+        compute the Fulton generators for a Schubert determinantal ideal 
     Usage
         fultonGens(w)
         fultongens(M)
@@ -287,7 +287,7 @@ doc ///
             or {\tt M} is a @TO Matrix@
     Description
         Text
-            Given a partial alternating sign matrix or permutation in 1 line notation, return the list of fulton generators for the corresponding schubert determinantal ideal.
+            Given a partial alternating sign matrix or permutation in 1 line notation, return the list of fulton generators for the corresponding Schubert determinantal ideal.
         Example 
             netList fultonGens {2,5,4,1,3}
             netList fultonGens matrix{{0,1,0},{1,-1,1},{0,1,0}}

@@ -50,7 +50,7 @@ schubCodim List := ZZ => w -> (
 --------------------------------------------------
 KPolynomialASM = method()
 KPolynomialASM Matrix := ZZ => A -> (
-    I := schubertDetIdeal(A,CoefficientRing=>ZZ/2);
+    I := schubDetIdeal(A,CoefficientRing=>ZZ/2);
     R := ring I;
     kk := coefficientRing R;
     possibleDegs := apply(numrows A, i-> toList insert(i,1,(numrows(A)-1):0));

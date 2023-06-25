@@ -323,7 +323,7 @@ grothendieckPoly = method(Options=>{Algorithm=>"DividedDifference"})
 grothendieckPoly(List) := opts -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     if opts.Algorithm == "Degree" then (
-        I := schubertDetIdeal w;
+        I := schubDetIdeal w;
         R := ring I;
         kk := coefficientRing R;
         possibleDegs := apply(#w, i-> toList insert(i,1,(#w-1):0));
