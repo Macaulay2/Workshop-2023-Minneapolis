@@ -463,6 +463,20 @@ schubDecomposition Ideal := List => I -> (
 )
 
 -------------------------------------------
+--INPUT: a partial ASM A
+--OUTPUT: the smallest permutations bigger than A in Bruhat order
+--TODO: docs and tests
+--TODO: input validation/type checking
+--NOTE: This assumes that schubDecomposition is allowed to take in something other than an ASM ideal.  Adjust if schubDecompsition is changed.
+-------------------------------------------
+permOverASM = method()
+permOverASM Matrix := List => A -> (
+    if not(isPartialASM(A)) then error("The input must be a partial alternating sign matrix.");
+    I := antiDiagInit A;
+    schubDecomposition I
+    )
+
+-------------------------------------------
 --INPUT: an ideal
 --OUTPUT: whether the ideal is an intersection of Schubert determinantal ideals
 --TODO: docs and tests

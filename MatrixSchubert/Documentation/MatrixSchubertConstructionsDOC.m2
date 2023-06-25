@@ -362,13 +362,31 @@ doc ///
     Headline
         finds the decomposition of an ASM ideal into Schubert determinantal ideals
     Usage
-        schubDecomposition(I)
+        schubDecomposition I
     Inputs
         I:Ideal
     Description
         Text
-            Given an ASM ideal, it can be decomposed into Schubert determinantal ideals as I = I_{w_1} \cap ... \cap I_{w_k}, where the w_i are permutations.
-            As output, each element in the list is the permutation associated to a prime component in the Schubert decomposition of the antidiagonal initial ideal of I.
+            Given an ASM ideal, it can be decomposed into Schubert determinantal ideals as $I = I_{w_1} \cap ... \cap I_{w_k}$, where the $w_i$ are permutations.
+            As output, each element in the list is the permutation associated to a prime component in the Schubert decomposition of the antidiagonal initial ideal of $I$.
+///
+
+doc ///
+    Key
+        (permOverASM, Matrix)
+        permOverASM
+    Headline
+        finds the permutation set of an alternating sign matrix
+    Usage
+        permOverASM A
+    Inputs
+        A:Matrix
+    Description
+        Text
+            Given an alternating sign matrix $A$, this routine computes Perm$(A) = \{w \in S_n \mid A \leq w$, and $v \in S_n$ with $A \leq v \leq w$ implies $ v=w\}$ (where $\leq$ is in (strong) Bruhat order).  This computation is performed by taking the antidiagonal initial ideal determined by $A$ and extracting the permutations indexing its components via schubDecomposition.
+	Example 
+	    A = matrix{{0,1,0,0},{0,0,1,0},{1,-1,0,1},{0,1,0,0}}
+	    permOverASM A
 ///
 
 doc ///
@@ -378,12 +396,12 @@ doc ///
     Headline
         whether an ideal is the intersection of Schubert determinantal ideals
     Usage
-        isIntersectionSchubIdeals(I)
+        isIntersectionSchubIdeals I
     Inputs
         I:Ideal
     Description
         Text
-            Checks if the input ideal I can be written as $I = I_{w_1} \cap ... \cap I_{w_k}$,
+            Checks if the input ideal $I$ can be written as $I = I_{w_1} \cap ... \cap I_{w_k}$,
             where each $I_{w_i}$ is a Schubert determinantal ideal.
 ///
 

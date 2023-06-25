@@ -56,6 +56,7 @@ export{
     "entrywiseMinRankTable",	    -- ??
     "entrywiseMaxRankTable",	    -- ??
     "schubDecomposition",	    -- ADD EX TO DOC
+    "permOverASM",                  -- MAKE DOC
     "isIntersectionSchubIdeals",    -- ADD EX TO DOC
     "isASMIdeal",    	     	    -- ADD EX TO DOC	 
     "getASM",	     	     	    -- ADD EX TO DOC
@@ -267,5 +268,4 @@ restart
 needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
-
 
