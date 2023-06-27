@@ -676,3 +676,31 @@ schubAdd List := Ideal => (L) -> (
     rankM := entrywiseMinRankTable(listPermM);
     schubDetIdeal rankTableToASM(rankM)
 );
+
+--------------------------------------------
+-- INPUT: a partial alternating sign matrix
+-- OUTPUT: the permutation realizing the ASM if the ASM is a permutation matrix,
+   --otherwise returns the empty permutation
+-- TODO: tests and documentation
+--------------------------------------------
+getPermFromASM = method()
+getPermFromASM Matrix := List => (A) -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    if not(numrows(A) == numcols(A)) then return {};
+    w := {};
+    n := numrows(A);
+    m := numcols(A);
+    --Make sure that A is a permutation matrix
+    for i from 0 to n-1 do (
+        for j from 0 to m-1 do (
+            if (A_(i,j) == 1) then (
+                w = w | {j+1};
+            ) else if (A_(i,j) != 0) then (
+                return {};
+            );
+        );
+    );
+    if not(length(w) == numrows(A)) then return {};
+    if (isPerm(w) == true) then return w
+    else return {};
+);

@@ -65,6 +65,7 @@ export{
     "rankTableFromMatrix",    	    --documented ++
     "schubIntersect",	     	    -- ??
     "schubAdd",	       	       	    -- ??
+    "getPermFromASM",	       	    --documented ++
  
  --permutationMethods.m2   
     "isPerm",	     	     	    --documented ++
@@ -202,8 +203,9 @@ TesterPermTime = (w) -> (
 
 Tester = (n) -> (
 
-    apply( ran(toList(1..n)),w->assert(matrixSchubertRegADI(w) == matrixSchubertReg(w)));
-        
+    --apply( random(toList(1..n)),w->assert(schubReg(w) == schubReg(permToMatrix(w))));
+    w =  random(toList(1..n));
+    assert(schubReg(w) == schubReg(permToMatrix(w)));
 );
 
 randomTester = (lenPerm) -> (
@@ -222,6 +224,8 @@ randomTester = (lenPerm) -> (
 );
 
 apply(1..10,i->Tester(i));
+
+
 
 ------------------------------------
 --Adam RajCode Testing--
@@ -255,6 +259,11 @@ for i from 1 to 10 do (
      print elapsedTime matrixSchubertRegADI(i);
      << endl << endl;
 );
+
+for l in permutations(toList(1..4)) do (
+    --print permToMatrix l;
+      if (schubReg permToMatrix l != 0) then print l;
+      );
 
 ------------------------------------
 --Development Section

@@ -496,3 +496,29 @@ doc ///
             A = matrix {{1,0,0},{0,23,24},{23,24,25}};
             rankTableFromMatrix A
 ///   
+
+doc ///
+    Key
+        (getPermFromASM, Matrix)
+        getPermFromASM
+    Headline
+        returns permutation associated to perumation matrix 
+    Usage
+        getPermFromASM(A)
+    Inputs
+        A:Matrix
+    Outputs
+        :List
+    Description
+        Text
+	    When {\tt A} is a permutation matrix, returns the corresponding permutation. Otherwise, returns the empty permutation.
+        Example
+            T = matrix {{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}
+            getPermFromASM T
+	    
+	    T = matrix{{1,0},{0,0}}
+    	    getPermFromASM T
+	    
+            T = matrix {{0,1,0,0},{1,0,0,0},{0,0,1,0},{0,0,0,1}}
+            getPermFromASM T
+///
