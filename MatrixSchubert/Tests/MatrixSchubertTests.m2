@@ -173,6 +173,7 @@ assert all (L, i -> schubCodim i == codim schubDetIdeal i)
 ///
 
 TEST ///
+--schubReg
 L = {
     {2,9,3,4,1,7,5,6,8}, -- example 1.2 in PSW
     {2,1},
