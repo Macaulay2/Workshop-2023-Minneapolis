@@ -4,79 +4,17 @@
 -----------------------------------------------
 -----------------------------------------------
 
---INPUT: A list w
+-----------------------------------------------------------
+--tests if a list is a permutation in 1-line notation
+--INPUT: A list of integers w
 --OUTPUT: TRUE if w is a permutation; else FALSE
+-----------------------------------------------------------
 isPerm = method()
 isPerm List := Boolean => (w) -> (
     n := #w;
     (sort w) == toList(1..n)
 )
 
-isIdentity = method()
-isIdentity List := Boolean => (w) -> (
-    n := #w;
-    w == toList(1..n)
-)
-
-lastDescent = method()
-lastDescent List := ZZ => (w) -> (
-    if not (isPerm w) then error ("Expecting a permutation.");
-    if isIdentity(w) then error ("Expecting a non-identity permutation.");
-    n := #w;
-   
-    ans := -1;
-    scan (reverse (0..n-2), i -> if w_i > w_(i+1) then (ans = i+1; break));
-    ans
-)
-
-firstDescent = method()
-firstDescent List := ZZ => (w) -> (
-    if not (isPerm w) then error ("Expecting a permutation.");
-    if isIdentity(w) then error ("Expecting a non-identity permutation.");
-    n := #w;
-   
-    ans := -1;
-    scan ((0..n-2), i-> if w_i > w_(i+1) then (ans = i+1; break));
-    ans
-)
-
-permLength = method()
-permLength List:= ZZ => (p) -> (
-    if not(isPerm p) then error("The input must be a permutation.");
-    l := 0;
-    scan(#p, i -> scan(i..#p-1, j -> (if p#i > p#j then l = l+1)));
-    l
-)
- 
-swap = (L,i,j) -> (
-    apply(#L, k -> if k != i and k != j then L_k
-	               else if k == i then L_j
-				   else L_i)
-)
-
-inverseOf = method()
-inverseOf List := List => (w) -> (
-    if not (isPerm w) then error ("Expecting a permutation.");
-    winv := new MutableList;
-    scan(#w, i-> winv#(w_i-1)=i+1);
-    toList winv
-    )
-
-longestPerm = method()
-longestPerm ZZ := List => (n) -> (
-    if n < 1 then error ("Expecting a positive integer.");
-    toList (reverse (1..n))
-    )
-
-getOneReducedWord = method()
-getOneReducedWord List := List => (w) -> (
-    if not (isPerm w) then error ("Expecting a permutation.");
-    if isIdentity(w) then  {}
-    else (
-        i := firstDescent(w);
-        newPerm := swap(w, i-1, i);
-        getOneReducedWord(newPerm)) | {i}
-    )
 --------------------------------
 --auxiliary function for making a permutation matrix out of a perm in 1-line notation
 --INPUT: a list w, which is a permutation in 1-line notation
@@ -90,6 +28,115 @@ permToMatrix List := Matrix => (w) -> (
     n := #w;
     transpose (id_(ZZ^n))_(apply(w, i-> i-1))
 )
+
+
+-----------------------------------------------------------
+--tests of a permutation is the identity permutation
+--INPUT: a list of integers w
+--OUTPUT: TRUE if w is the identity perm; else FALSE
+-----------------------------------------------------------
+
+isIdentity = method()
+isIdentity List := Boolean => (w) -> (
+    n := #w;
+    w == toList(1..n)
+)
+
+-----------------------------------------------------------
+--finds index of last descent in a permutation
+--INPUT: a permutation in 1-line notation
+--OUPTUT: last index where w_i > w_(i+1)
+-----------------------------------------------------------
+
+
+lastDescent = method()
+lastDescent List := ZZ => (w) -> (
+    if not (isPerm w) then error ("Expecting a permutation.");
+    if isIdentity(w) then error ("Expecting a non-identity permutation.");
+    n := #w;
+   
+    ans := -1;
+    scan (reverse (0..n-2), i -> if w_i > w_(i+1) then (ans = i+1; break));
+    ans
+)
+
+-----------------------------------------------------------
+--find index of first descent in a permutation
+--INPUT: a permutation in 1-line notation
+--OUTPUT: first index where w_i > w_(i+1)
+-----------------------------------------------------------
+
+
+firstDescent = method()
+firstDescent List := ZZ => (w) -> (
+    if not (isPerm w) then error ("Expecting a permutation.");
+    if isIdentity(w) then error ("Expecting a non-identity permutation.");
+    n := #w;
+   
+    ans := -1;
+    scan ((0..n-2), i-> if w_i > w_(i+1) then (ans = i+1; break));
+    ans
+)
+
+-----------------------------------------------------------
+--compute the length of a permutation
+-----------------------------------------------------------
+
+permLength = method()
+permLength List:= ZZ => (p) -> (
+    if not(isPerm p) then error("The input must be a permutation.");
+    l := 0;
+    scan(#p, i -> scan(i..#p-1, j -> (if p#i > p#j then l = l+1)));
+    l
+)
+ 
+-----------------------------------------------------------
+--creates simple transposition in a permtuation
+-----------------------------------------------------------
+
+swap = (L,i,j) -> (
+    apply(#L, k -> if k != i and k != j then L_k
+	               else if k == i then L_j
+				   else L_i)
+)
+
+-----------------------------------------------------------
+--computes inverse permutation
+-----------------------------------------------------------
+
+inverseOf = method()
+inverseOf List := List => (w) -> (
+    if not (isPerm w) then error ("Expecting a permutation.");
+    winv := new MutableList;
+    scan(#w, i-> winv#(w_i-1)=i+1);
+    toList winv
+    )
+
+-----------------------------------------------------------
+--creates longest word/longest permutation {n,n-1,...2,1}
+-----------------------------------------------------------
+
+longestPerm = method()
+longestPerm ZZ := List => (n) -> (
+    if n < 1 then error ("Expecting a positive integer.");
+    toList (reverse (1..n))
+    )
+
+-----------------------------------------------------------
+--INPUT: a permutation as a list of integers w
+--OUPT: list of simple transpositions giving a reduced word for w
+-----------------------------------------------------------
+
+getOneReducedWord = method()
+getOneReducedWord List := List => (w) -> (
+    if not (isPerm w) then error ("Expecting a permutation.");
+    if isIdentity(w) then  {}
+    else (
+        i := firstDescent(w);
+        newPerm := swap(w, i-1, i);
+        getOneReducedWord(newPerm)) | {i}
+    )
+
 
 ------------------------------------
 --INPUT: A transposition in cycle notation, and the n for which to regard perm 
@@ -263,3 +310,108 @@ rajIndex List := ZZ => (w) -> (
     if not (isPerm w) then error ("Expecting a permutation.");
     return sum rajCode w;
 )
+
+----------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation
+--OUTPUT: single Grothendieck polynomials
+--TODO: rename variables?
+--This function is now correct, but it's slow
+--potentially we could rename it to "Kpolynomial" or something
+    --then we could allow it to take ASMs as input
+----------------------------
+grothendieckPoly = method(Options=>{Algorithm=>"DividedDifference"})
+grothendieckPoly(List) := opts -> w -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
+    if opts.Algorithm == "Degree" then (
+        I := schubDetIdeal w;
+        R := ring I;
+        kk := coefficientRing R;
+        possibleDegs := apply(#w, i-> toList insert(i,1,(#w-1):0));
+        degs := splice apply(possibleDegs, i->#w:i);
+        Q := kk[R_*, Degrees => degs];
+        numerator hilbertSeries sub(I,Q)
+    )
+    else if opts.Algorithm == "DividedDifference" then (
+        n := #w;
+        x := local x;
+        Q = QQ[x_1..x_n];
+        polyByDividedDifference(w, Q, PolyType => "Grothendieck")        	
+    )
+    else error("Invalid option for Algorithm.")
+)
+
+
+schubertPolyHelper = method(Options=>{Double=>false})
+schubertPolyHelper(List, PolynomialRing) := opts -> (w, Q) -> (
+    isDouble := opts.Double;
+    n := #w;
+    if not (isPerm w) then error ("The input must be a permutation matrix.");
+    if (isIdentity w) then return 1;
+    r := lastDescent(w) - 1;
+    s := -1;
+    scan(reverse(r+1..n-1), i -> if w_i < w_r then (s = i; break));
+    v := swap(w,r,s);
+    previnds := select(0..r-1, q -> permLength(swap(v,q,r)) == permLength(v)+1);
+    us := apply(previnds, i -> swap(v, i, r));
+    if not isDouble then
+        sum(toList(apply(us, u -> schubertPolyHelper(u, Q, Double=>isDouble)))) + Q_r * schubertPolyHelper(v, Q, Double=>isDouble)
+    else 
+        sum(toList(apply(us, u -> schubertPolyHelper(u, Q, Double=>isDouble)))) + (Q_r - Q_(n-1+v_r)) * schubertPolyHelper(v, Q, Double=>isDouble)
+)
+
+schubertPoly = method(Options=>{Algorithm=>"DividedDifference"})
+schubertPoly(List) := opts-> (w) -> (
+    
+    n := #w;
+    x := local x;
+    Q := QQ[x_1..x_n];
+    if opts.Algorithm == "Transition" then 
+        schubertPolyHelper(w, Q, Double=>false)
+    else if opts.Algorithm == "DividedDifference" then
+        polyByDividedDifference(w,Q)
+    else error("Invalid option for Algorithm.")
+    
+)
+
+doubleSchubertPoly = method()
+doubleSchubertPoly(List) := (w) -> (
+    n := #w;
+    x := local x;
+    y := local y;
+    Q := QQ[x_1..x_n,y_1..y_n];
+    schubertPolyHelper(w, Q, Double=>true)
+)
+
+
+
+dividedDifference = method(Options=>{Operator=>null})
+dividedDifference (RingElement, ZZ) := opts-> (f,i) -> (
+    Q:= ring f;
+    sf := sub(f, {Q_(i-1)=>Q_i, Q_i=>Q_(i-1)});
+    if opts.Operator === null then 
+        (f-sf) // (Q_(i-1)-Q_i)
+    else if opts.Operator == "Grothendieck" then
+        dividedDifference((1-Q_i)*f,i)
+    else error("Invalid option for Operator.")
+    )
+
+
+polyByDividedDifference = method(Options=>{PolyType=>"Schubert"})
+polyByDividedDifference (List, PolynomialRing) := opts -> (w, Q) -> (
+    n := #w;
+    w0 := longestPerm(n);
+    schubw0 := product(n, i->(Q_i)^(n-1-i));
+    curpoly := schubw0;
+    if (w0 == w) then schubw0
+    else (
+        v := composePerms(inverseOf(w), w0);
+        redword := getOneReducedWord(v);
+	if opts.PolyType == "Schubert" then
+            polys := apply(reverse redword, i-> (curpoly=dividedDifference(curpoly,i); curpoly))
+	else if opts.PolyType == "Grothendieck" then
+	    polys = apply(reverse redword, i-> (curpoly=dividedDifference(curpoly,i, Operator=>"Grothendieck"); curpoly))
+	else error ("Invalid option for PolyType.");
+	polys#(#polys-1)
+    )
+    )
+

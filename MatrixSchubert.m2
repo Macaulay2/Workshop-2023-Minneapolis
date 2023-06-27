@@ -10,6 +10,9 @@ newPackage(
 	{Name=> "Sean Grate",
 	    Email => "sean.grate@auburn.edu",
 	    HomePage => "https://seangrate.com/"},
+	{Name => "Daoji Huang",
+	    Email => "",
+	    HomePage => "daojihuang.me"},
         {Name => "Patricia Klein", 
             Email => "pjklein@tamu.edu", 
             HomePage => "https://patriciajklein.github.io/"},
@@ -18,7 +21,7 @@ newPackage(
 	    HomePage=> "https://sites.google.com/view/adamlaclair/home"},
         {Name => "Yuyuan Luo",
             Email => "lyuyuan@mit.edu",
-            HomePage=> "https://www.mit.edu/~lyuyuan/"},
+            HomePage=> "https://www.mit.edu/~lyuyuan/"}, 
 	{Name => "Joseph McDonough",
 	    Email => "mcdo1248@umn.edu",
 	    HomePage=> " "}
@@ -34,57 +37,74 @@ newPackage(
     DebuggingMode => true
 )
 
---TODO: organize the exports
 export{
-    "isPartialASM",
-    "partialASMToASM",
-    "fultonGens",
-    "schubertDetIdeal",
-    "diagLexInit",
-    "antiDiagInit",
-    "rankMatrix",
-    "essentialBoxes",
-    "subwordComplex",
-    "grothendieckPoly",
-    "rotheDiagram",
-    "permToMatrix",
-    "toOneLineNotation",
-    "composePerms",
-    "isPerm",
-    "longestPerm",
-    "dividedDifference",
-    "schubertPoly",
-    "doubleSchubertPoly",
-    "permLength",
-    "augmentedRotheDiagram",
-    "isPatternAvoiding",
-    "isVexillary",
-    "isCDG",
-    "inverseOf",
-    "isCartwrightSturmfels",
-    "schubertDecomposition",
-    "isIntersectionSchubIdeals",
-    "rajCode",
-    "rajIndex",
-    "isMinRankTable",
-    "Double",
-    "Operator",
-    "PolyType",
-    "rankTableToASM",
-    "rankTableFromMatrix",
-    "schubertCodim",
-    "matrixSchubertRegADI",
-    "matrixSchubertReg",
-    "isASMIdeal",
-    "ASM",
-    "getASM",
-    "isSchubertCM",
-    "ASMFullList",
-    "cohenMacaulayASMsList",
-    "nonCohenMacaulayASMsList",
-    "idealsList",
-    "lastDescent",
-    "firstDescent"
+    
+    --MatrixSchubertConstructions.m2
+    "isPartialASM",    	       	    --documented ++
+    "partialASMToASM",	      	    --documented ++
+    "antiDiagInit",    	       	    -- CHECK DOC
+    "rankMatrix",    	     	    --documented ++  
+    "rotheDiagram",    	       	    --documented ++  
+    "augmentedRotheDiagram",	    --documented ++
+    "essentialSet",	     	    --documented ++
+    "augmentedEssentialSet",    --documented ++
+    "schubDetIdeal",	       	    --documented ++
+    "fultonGens",    	     	    --documented ++
+    "diagLexInit",    	      	    -- CHECK DOC
+    "diagRevLexInit",	     	    -- CHECK DOC
+    "subwordComplex",	     	    --documented ++
+    "entrywiseMinRankTable",	    -- ??
+    "entrywiseMaxRankTable",	    -- ??
+    "schubDecomposition",	    -- ADD EX TO DOC
+    "permOverASM",                  -- MAKE DOC
+    "isIntersectionSchubIdeals",    -- ADD EX TO DOC
+    "isASMIdeal",    	     	    -- ADD EX TO DOC	 
+    "getASM",	     	     	    -- ADD EX TO DOC
+    "isMinRankTable",	     	    --documented ++
+    "rankTableToASM",	     	    --documented ++
+    "rankTableFromMatrix",    	    --documented ++
+    "schubIntersect",	     	    -- ??
+    "schubAdd",	       	       	    -- ??
+ 
+ --permutationMethods.m2   
+    "isPerm",	     	     	    --documented ++
+    "permToMatrix",    	       	    --documented ++
+    "lastDescent",    	      	    --documented ++
+    "firstDescent",    	       	    --documented ++
+    "permLength",    	     	    --documented ++
+    "swap",    	       	       	    -- ??
+    "inverseOf",             	    -- ??
+    "longestPerm",    	      	    -- ??
+    "getOneReducedWord",    	    -- ??
+    "toOneLineNotation",    	    --documented ++
+    "composePerms",    	       	    --documented ++
+    "isPatternAvoiding",    	    --documented ++
+    "isVexillary",    	      	    --documented ++
+    "avoidAllPatterns",	       	    -- CHECK DOC
+    "isCartwrightSturmfels",	    -- CHECK DOC
+    "isCDG",	    	    	    -- CHECK DOC
+    "rajCode",	      	      	    --documented ++
+    "rajIndex",        	       	    --documented ++
+    "grothendieckPoly",	       	    -- CHECK DOC
+    "schubertPoly",    	       	    -- CHECK DOC
+    "doubleSchubertPoly",           -- CHECK DOC
+    "dividedDifference",    	    -- CHECK DOC
+    "Double",	     	     	    -- ??
+    "Operator",	       	       	    -- ??
+    "PolyType",	       	       	    -- ??
+    "ASM",    	      	      	    -- ??
+
+--MatrixSchubertInvariants.m2    
+    "schubReg",    	    --documented ++
+    "schubCodim",    	    --documented ++
+    "KPolynomialASM",	     	    -- ??
+
+--Lists.m2
+    "ASMFullList",    	      	    --ADD EX TO DOC
+    "ASMRandomList",	    	    --ADD EX TO DOC
+    "cohenMacaulayASMsList",	    --ADD EX TO DOC
+    "nonCohenMacaulayASMsList",	    --ADD EX TO DOC
+    "initialIdealsList"    	    --ADD EX TO DOC
 }
     
 ------------------------------------------------------------------------------
@@ -145,6 +165,8 @@ F G
 factor oo
 schubertPoly {2,1,4,3}
 
+M = matrix{{0,0,1},{1,0,-1}}
+KPolynomialASM M
 -----------------------------------------
 --Adam's Testing for matrixSchubertReg --
 -----------------------------------------
@@ -234,8 +256,6 @@ for i from 1 to 10 do (
      << endl << endl;
 );
 
-
-
 ------------------------------------
 --Development Section
 ------------------------------------
@@ -248,3 +268,4 @@ restart
 needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
+

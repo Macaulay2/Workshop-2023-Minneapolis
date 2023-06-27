@@ -1,5 +1,110 @@
 doc ///
     Key
+        (isPerm, List)
+        isPerm
+    Headline
+        whether a list is a permutation in 1-line notation
+    Usage
+        isPerm w
+    Inputs
+        w:List
+    Description
+        Text
+            Given a list of length n, checks if the entries of the permutation are the integers from 1 to n.
+        Example
+            w = {5,3,4,6,1,2}
+            isPerm(w)
+
+            v = {4,3,2}
+            isPerm v
+///
+
+doc ///
+    Key
+        (permToMatrix, List)
+        permToMatrix
+    Headline
+       converts a permutation in 1-line notation into a permutation matrix
+    Usage
+        permToMatrix w
+    Inputs
+        w:List
+    Description
+        Text
+            Given a permutation in 1-line notation, produces the permutation matrix with 1's in location (i,w_i).
+        Example
+            w = {7,2,5,8,1,3,6,4}
+            permToMatrix w
+
+            v = {1,6,9,2,4,7,3,5,8}
+            permToMatrix v
+///
+
+doc ///
+    Key
+        (lastDescent, List)
+        lastDescent
+    Headline
+       finds the location of the last descent of a permutation
+    Usage
+        lastDescent w
+    Inputs
+        w:List
+    Description
+        Text
+            Given a non-identity permutation in 1-line notation, finds the location of its last descent, i.e., the greatest i so that w_(i+1)<w_i
+        Example
+            w = {7,2,5,8,1,3,6,4}
+            lastDescent w
+
+            v = {1,6,9,2,4,7,3,5,8}
+            lastDescent v
+///
+
+doc ///
+    Key
+        (firstDescent, List)
+        firstDescent
+    Headline
+       finds the location of the first descent of a permutation
+    Usage
+        firstDescent w
+    Inputs
+        w:List
+    Description
+        Text
+            Given a non-identity permutation in 1-line notation, finds the location of its first descent, i.e., the least i so that w_(i+1)<w_i
+        Example
+            w = {7,2,5,8,1,3,6,4}
+            lastDescent(w)
+
+            v = {1,6,9,2,4,7,3,5,8}
+            lastDescent(v)
+///
+
+doc ///
+    Key
+	(permLength, List)
+        permLength
+    Headline
+    	to find the length of a permutation in 1-line notation.
+    Usage
+        permLength w
+    Inputs
+    	w:List
+    Description
+    	Text
+	 Given a permutation in 1-line notation returns the Coxeter length of the permutation.
+	Example
+    	    w = {2,5,4,1,3}
+	    permLength w
+
+	    
+///
+
+
+doc ///
+    Key
 	    (toOneLineNotation, List, ZZ)
         toOneLineNotation
     Headline
@@ -22,22 +127,31 @@ doc ///
 
 doc ///
     Key
-	(permLength, List)
-        permLength
+        (composePerms, List, List)
+        composePerms
     Headline
-    	to find the length of a permutation in 1-line notation.
+        computes the composition of two permutations
     Usage
-        permLength w
+        composePerms(u,v)
     Inputs
-    	w:List
+        u:List
+        v:List
     Description
-    	Text
-	 Given a permutation in 1-line notation returns the Coxeter length of the permutation.
-	Example
-    	    w = {2,5,4,1,3}
-	    permLength w
+        Text
+            Computes the composition of two permutations, u and v, as u*v.
+            Note that the permutations must be written as a list in 1-line notation and must both be permutations of (the same) n letters.
+        Example
+            u = {2,3,4,1}
+            v = {4,3,2,1}
+            composePerms(u,v)
 
-	    
+            u = {1,2,3,4,5}
+            v = {3,5,2,1,4}
+            composePerms(u,v)
+
+            u = {3,5,2,1,4}
+            v = {1,2,3,4,5}
+            composePerms(u,v)
 ///
 
 
@@ -93,118 +207,49 @@ doc ///
 
 doc ///
     Key
-        (isPerm, List)
-        isPerm
+        (avoidsAllPatterns, List, List)
+        avoidsAllPatterns
     Headline
-        whether a list is a permutation in 1-line notation
+        whether a permutation avoids all of the given patterns
     Usage
-        isPerm w
+        avoidsAllPatterns(perm, patterns)
     Inputs
-        w:List
+        perm:List
+        patterns:List
     Description
         Text
-            Given a list of length n, checks if the entries of the permutation are the integers from 1 to n.
-        Example
-            w = {5,3,4,6,1,2}
-            isPerm(w)
-
-            v = {4,3,2}
-            isPerm v
+            This is filler text.
 ///
 
 doc ///
     Key
-        (lastDescent, List)
-        lastDescent
+        (isCartwrightSturmfels, List)
+        isCartwrightSturmfels
     Headline
-       finds the location of the last descent of a permutation
+        whether a permutation is CartwrightSturmfels
     Usage
-        lastDescent w
+        isCartwrightSturmfels(perm)
     Inputs
-        w:List
+        perm:List
     Description
         Text
-            Given a non-identity permutation in 1-line notation, finds the location of its last descent, i.e., the greatest i so that w_(i+1)<w_i
-        Example
-            w = {7,2,5,8,1,3,6,4}
-            lastDescent w
-
-            v = {1,6,9,2,4,7,3,5,8}
-            lastDescent v
+            This is filler text.
 ///
 
 doc ///
     Key
-        (firstDescent, List)
-        firstDescent
+        (isCDG, List)
+        isCDG
     Headline
-       finds the location of the first descent of a permutation
+        whether a permutation is CDG
     Usage
-        firstDescent w
+        isCDG(perm)
     Inputs
-        w:List
+        perm:List
     Description
         Text
-            Given a non-identity permutation in 1-line notation, finds the location of its first descent, i.e., the least i so that w_(i+1)<w_i
-        Example
-            w = {7,2,5,8,1,3,6,4}
-            lastDescent(w)
-
-            v = {1,6,9,2,4,7,3,5,8}
-            lastDescent(v)
+            This is filler text.
 ///
-
-doc ///
-    Key
-        (permToMatrix, List)
-        permToMatrix
-    Headline
-       converts a permutation in 1-line notation into a permutation matrix
-    Usage
-        permToMatrix w
-    Inputs
-        w:List
-    Description
-        Text
-            Given a permutation in 1-line notation, produces the permutation matrix with 1's in location (i,w_i).
-        Example
-            w = {7,2,5,8,1,3,6,4}
-            permToMatrix w
-
-            v = {1,6,9,2,4,7,3,5,8}
-            permToMatrix v
-///
-
-
-doc ///
-    Key
-        (composePerms, List, List)
-        composePerms
-    Headline
-        computes the composition of two permutations
-    Usage
-        composePerms(u,v)
-    Inputs
-        u:List
-        v:List
-    Description
-        Text
-            Computes the composition of two permutations, u and v, as u*v.
-            Note that the permutations must be written as a list in 1-line notation and must both be permutations of (the same) n letters.
-        Example
-            u = {2,3,4,1}
-            v = {4,3,2,1}
-            composePerms(u,v)
-
-            u = {1,2,3,4,5}
-            v = {3,5,2,1,4}
-            composePerms(u,v)
-
-            u = {3,5,2,1,4}
-            v = {1,2,3,4,5}
-            composePerms(u,v)
-///
-
 
 doc ///
     Key
@@ -254,51 +299,46 @@ doc ///
            rajIndex v
 ///
 
+
+
+
+
 doc ///
-    Key
-        (avoidsAllPatterns, List, List)
-        avoidsAllPatterns
+    Key 
+        grothendieckPoly
     Headline
-        whether a permutation avoids all of the given patterns
-    Usage
-        avoidsAllPatterns(perm, patterns)
-    Inputs
-        perm:List
-        patterns:List
+        tmp 
     Description
         Text
-            This is filler text.
+            This is a stub
 ///
 
 doc ///
-    Key
-        (isCartwrightSturmfels, List)
-        isCartwrightSturmfels
+    Key 
+        schubertPoly
     Headline
-        whether a permutation is CartwrightSturmfels
-    Usage
-        isCartwrightSturmfels(perm)
-    Inputs
-        perm:List
+        tmp 
     Description
         Text
-            This is filler text.
+            This is a stub
 ///
 
 doc ///
-    Key
-        (isCDG, List)
-        isCDG
+    Key 
+        doubleSchubertPoly
     Headline
-        whether a permutation is CDG
-    Usage
-        isCDG(perm)
-    Inputs
-        perm:List
+        tmp 
     Description
         Text
-            This is filler text.
+            This is a stub
 ///
 
-
-
+doc ///
+    Key 
+        dividedDifference
+    Headline
+        tmp 
+    Description
+        Text
+            This is a stub
+///
