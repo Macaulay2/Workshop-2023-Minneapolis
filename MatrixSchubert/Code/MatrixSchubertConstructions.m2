@@ -519,6 +519,18 @@ entrywiseMaxRankTable List := Matrix => L -> (
 --TODO: docs and tests
 --TODO: input validation/type checking
 -------------------------------------------
+monomialRank = method()
+monomialRank (RingElement, ZZ) := ZZ => (mon, maxIdx) -> (
+    monIdx := indexOfVariable mon;
+    return (mon_0 + 1)*maxIdx - mon_1
+)
+
+-------------------------------------------
+--INPUT: an ASM ideal
+--OUTPUT: the primary decomposition of the ASM ideal
+--TODO: docs and tests
+--TODO: input validation/type checking
+-------------------------------------------
 schubertDecomposition = method()
 schubertDecomposition Ideal := List => I -> (
     primeDecomp := decompose ideal leadTerm I;
@@ -526,7 +538,7 @@ schubertDecomposition Ideal := List => I -> (
     -- varWeights := (monoid ring I).Options.MonomialOrder#1#1;
     cycleDecomp := {};
     for primeComp in primeDecomp do {
-        mons := sort(primeComp_*, mon -> ((indexOfVariable mon)_0+1)*maxIdx - (indexOfVariable mon)_1); --bad because variableIndex called twice; need decorated sort paradigm
+        mons := sort(primeComp_*, mon -> monomialIndex(mon, maxIdx));
         perms := apply(mons / indexOfVariable, perm -> toAntiDiagTrans(perm, maxIdx));
         cycleDecomp = append(cycleDecomp, fold(composePerms, perms));
     };
