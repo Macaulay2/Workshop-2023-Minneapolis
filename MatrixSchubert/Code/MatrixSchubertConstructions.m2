@@ -467,7 +467,7 @@ schubDecomposition Ideal := List => I -> (
     -- varWeights := (monoid ring I).Options.MonomialOrder#1#1;
     cycleDecomp := {};
     for primeComp in primeDecomp do {
-        mons := sort(primeComp_*, mon -> monomialIndex(mon, maxIdx));
+        mons := sort(primeComp_*, mon -> monomialRank(mon, maxIdx));
         perms := apply(mons / indexOfVariable, perm -> toAntiDiagTrans(perm, maxIdx));
         cycleDecomp = append(cycleDecomp, fold(composePerms, perms));
     };
