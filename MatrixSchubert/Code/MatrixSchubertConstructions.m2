@@ -451,7 +451,7 @@ entrywiseMaxRankTable List := Matrix => L -> (
 monomialRank = method()
 monomialRank (RingElement, ZZ) := ZZ => (mon, maxIdx) -> (
     monIdx := indexOfVariable mon;
-    return (mon_0 + 1)*maxIdx - mon_1
+    return (monIdx_0 + 1)*maxIdx - monIdx_1
 )
 
 -------------------------------------------
