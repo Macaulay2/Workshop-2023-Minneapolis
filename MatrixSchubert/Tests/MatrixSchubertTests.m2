@@ -54,7 +54,6 @@ assert(sort essentialSet(A) == {(1,3),(2,1),(3,2)})
 ///
 
 --test for schubDetIdeal
---TODO: Figure out how to make this test stop failing
 --TODO: make more complicated tests
 TEST ///
 --Example 15.4 from Miller-Sturmfels
@@ -62,16 +61,16 @@ I = schubDetIdeal({1,2,3});
 assert(I == ideal(0_(ring I)));
 
 I = schubDetIdeal({2,1,3});
-assert(I == ideal((z_(1,1))_(ring I)));
+assert(I == ideal((ring I)_0));
 
 I = schubDetIdeal({2,3,1});
-assert(I == ideal((z_(1,1))_(ring I), (z_(2,1))_(ring I)));
+assert(I == ideal((ring I)_0, (ring I)_3));
 
 I = schubDetIdeal({3,2,1});
-assert(I == ideal((z_(1,1))_(ring I), (z_(1,2))_(ring I), (z_(2,1))_(ring I)));
+assert(I == ideal((ring I)_0, (ring I)_1, (ring I)_3));
 
 I = schubDetIdeal({1,3,2});
-assert(I == ideal((z_(1,1))_(ring I) * (z_(2,2))_(ring I) - (z_(1,2))_(ring I) * (z_(2,1))_(ring I)));
+assert(I == ideal((ring I)_0 * (ring I)_4 - (ring I)_1 * (ring I)_3));
 ///
 
 -*
