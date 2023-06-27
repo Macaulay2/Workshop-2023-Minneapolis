@@ -50,27 +50,27 @@ TEST ///
 --Example 2.1 in Weigandt "Prism Tableaux for ASMs"
 A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}};
 assert(isPartialASM A)
-assert(sort essentialBoxes(A) == {(1,3),(2,1),(3,2)})
+assert(sort essentialSet(A) == {(1,3),(2,1),(3,2)})
 ///
 
---test for schubertDetIdeal
+--test for schubDetIdeal
 --TODO: Figure out how to make this test stop failing
 --TODO: make more complicated tests
 TEST ///
 --Example 15.4 from Miller-Sturmfels
-I = schubertDetIdeal({1,2,3});
+I = schubDetIdeal({1,2,3});
 assert(I == ideal(0_(ring I)));
 
-I = schubertDetIdeal({2,1,3});
+I = schubDetIdeal({2,1,3});
 assert(I == ideal((z_(1,1))_(ring I)));
 
-I = schubertDetIdeal({2,3,1});
+I = schubDetIdeal({2,3,1});
 assert(I == ideal((z_(1,1))_(ring I), (z_(2,1))_(ring I)));
 
-I = schubertDetIdeal({3,2,1});
+I = schubDetIdeal({3,2,1});
 assert(I == ideal((z_(1,1))_(ring I), (z_(1,2))_(ring I), (z_(2,1))_(ring I)));
 
-I = schubertDetIdeal({1,3,2});
+I = schubDetIdeal({1,3,2});
 assert(I == ideal((z_(1,1))_(ring I) * (z_(2,2))_(ring I) - (z_(1,2))_(ring I) * (z_(2,1))_(ring I)));
 ///
 
@@ -157,20 +157,20 @@ assert (sort augmentedRotheDiagram matrix {{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},
 TEST ///
 -- essentialBoxes 
 
-assert(essentialBoxes({2,1,6,3,5,4 })== {(1, 1), (3, 5), (5, 4)})
-assert(essentialBoxes matrix {{0,1,0,0,0,0},{1,0,0,0,0,0},{0,0,0,0,0,1},{0,0,1,0,0,0},{0,0,0,0,1,0},{0,0,0,1,0,0}} == {(1, 1), (3, 5), (5, 4)})
+assert(essentialSet({2,1,6,3,5,4 })== {(1, 1), (3, 5), (5, 4)})
+assert(essentialSet matrix {{0,1,0,0,0,0},{1,0,0,0,0,0},{0,0,0,0,0,1},{0,0,1,0,0,0},{0,0,0,0,1,0},{0,0,0,1,0,0}} == {(1, 1), (3, 5), (5, 4)})
 ///
 
 
 TEST ///
--- matrixSchubertCodim
+-- schubCodim
 L = {
     {1},
     {2,1},
     matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}},
     matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
 }
-assert all (L, i -> matrixSchubertCodim i == codim schubertDetIdeal i)
+assert all (L, i -> schubCodim i == codim schubDetIdeal i)
 ///
 
 TEST ///
@@ -182,7 +182,7 @@ L = {
 }
 expected = {5, 0, 1,4}
 
-assert all (#L, i -> matrixSchubertReg L#i == expected#i)
+assert all (#L, i -> schubReg L#i == expected#i)
 ///
 
 TEST ///
