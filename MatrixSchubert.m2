@@ -53,8 +53,8 @@ export{
     "diagLexInit",    	      	    -- CHECK DOC
     "diagRevLexInit",	     	    -- CHECK DOC
     "subwordComplex",	     	    --documented ++
-    "entrywiseMinRankTable",	    -- ??
-    "entrywiseMaxRankTable",	    -- ??
+    "entrywiseMinRankTable",	    --documented (check)
+    "entrywiseMaxRankTable",	    --documented (check)
     "schubDecomposition",	    -- ADD EX TO DOC
     "permOverASM",                  -- MAKE DOC
     "isIntersectionSchubIdeals",    -- ADD EX TO DOC
@@ -63,8 +63,8 @@ export{
     "isMinRankTable",	     	    --documented ++
     "rankTableToASM",	     	    --documented ++
     "rankTableFromMatrix",    	    --documented ++
-    "schubIntersect",	     	    -- ??
-    "schubAdd",	       	       	    -- ??
+    "schubIntersect",	     	    -- documented (check)
+    "schubAdd",	       	       	    -- documented (check)
     "getPermFromASM",	       	    --documented ++
  
  --permutationMethods.m2   

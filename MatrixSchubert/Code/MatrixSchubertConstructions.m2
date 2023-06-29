@@ -672,7 +672,7 @@ schubIntersect List := Ideal => (L) -> (
 schubAdd = method()
 schubAdd List := Ideal => (L) -> (
     if (#L == 0) then error("Please enter a nonempty list.");
-    listPermM := L / permToMatrix;
+    listPermM := L / (i -> if instance(i, Matrix) then i else if instance(i_0, List) then matrix i else permToMatrix i);
     rankM := entrywiseMinRankTable(listPermM);
     schubDetIdeal rankTableToASM(rankM)
 );

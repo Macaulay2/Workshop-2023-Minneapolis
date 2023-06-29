@@ -522,3 +522,87 @@ doc ///
             T = matrix {{0,1,0,0},{1,0,0,0},{0,0,1,0},{0,0,0,1}}
             getPermFromASM T
 ///
+
+doc ///
+    Key
+        (entrywiseMaxRankTable, List)
+        entrywiseMaxRankTable
+    Headline
+        compute the entrywise max rank table of a list of ASMs
+    Usage
+        entrywiseMaxRankTable(L)
+    Inputs
+        L:List
+            of ASMs of equal size
+    Outputs
+        :Matrix
+    Description
+        Text
+            Computes the rank tables of a list of ASMs, then returns the entrywise maximum.
+        Example
+            L = {{4,3,1,2},{2,4,3,1}} / permToMatrix;
+            entrywiseMaxRankTable L
+///
+
+doc ///
+    Key
+        (entrywiseMinRankTable, List)
+        entrywiseMinRankTable
+    Headline
+        compute the entrywise min rank table of a list of ASMs
+    Usage
+        entrywiseMinRankTable(L)
+    Inputs
+        L:List
+            of ASMs of equal size
+    Outputs
+        :Matrix
+    Description
+        Text
+            Computes the rank tables of a list of ASMs, then returns the entrywise minimum.
+        Example
+            L = {{4,3,1,2},{2,4,3,1}} / permToMatrix;
+            entrywiseMinRankTable L
+///
+
+doc ///
+    Key
+        (schubAdd, List)
+        schubAdd
+    Headline
+        compute the sum of ASM ideals
+    Usage 
+        schubAdd L
+    Inputs 
+        L:List 
+            of ASMs or permutations in 1-line notation
+    Outputs
+        :Ideal 
+    Description
+        Text
+            Given a list of ASMs or permutations in 1-line notation, compute the sum of the corresponding schubert determinantal ideals.
+        Example
+            schubAdd {{3,2,1,4}, {2,1,4,3}}
+            schubAdd {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}}
+///
+
+doc /// 
+    Key
+        (schubIntersect, List)
+        schubIntersect
+    Headline
+        compute the intersection of ASM ideals
+    Usage 
+        schubIntersect L
+    Inputs 
+        L:List 
+            of ASMs or permutations in 1-line notation
+    Outputs
+        :Ideal 
+    Description
+        Text
+            Given a list of ASMs or permutations in 1-line notation, compute the intersection of the corresponding schubert determinantal ideals.
+        Example
+            schubIntersect {{3,2,1,4}, {2,1,4,3}}
+            schubIntersect {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}}
+///
