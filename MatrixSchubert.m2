@@ -47,7 +47,7 @@ export{
     "rotheDiagram",    	       	    --documented ++  
     "augmentedRotheDiagram",	    --documented ++
     "essentialSet",	     	    --documented ++
-    "augmentedEssentialSet",    --documented ++
+    "augmentedEssentialSet",        --documented ++
     "schubDetIdeal",	       	    --documented ++
     "fultonGens",    	     	    --documented ++
     "diagLexInit",    	      	    -- CHECK DOC
@@ -96,8 +96,8 @@ export{
     "ASM",    	      	      	    -- ??
 
 --MatrixSchubertInvariants.m2    
-    "schubReg",    	    --documented ++
-    "schubCodim",    	    --documented ++
+    "schubReg",    	            --documented ++
+    "schubCodim",           	    --documented ++
     "KPolynomialASM",	     	    -- ??
 
 --Lists.m2

@@ -296,7 +296,7 @@ doc ///
 	    rajIndex w
 	    
             v = {1,6,9,2,4,7,3,5,8}
-           rajIndex v
+            rajIndex v
 ///
 
 
@@ -342,3 +342,4 @@ doc ///
         Text
             This is a stub
 ///
+

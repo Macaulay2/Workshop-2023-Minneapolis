@@ -268,7 +268,6 @@ isCDG List := Boolean => (perm) -> (
 --INPUT: longestIncrSeq, takes a previous value, a previous size, and a permutation in one line notation
 --OUTPUT: returns the length of the longest consecutive permutation plus the previous size
 --        that starts at the beginning of the permutation and has the elements of the sequence larger than the previous value
---TODO: Document
 ------------------------------------------
 longestIncrSeq = method()
 longestIncrSeq (ZZ,ZZ,List) := List => memoize ((preVal,prevSZ,w) -> (
