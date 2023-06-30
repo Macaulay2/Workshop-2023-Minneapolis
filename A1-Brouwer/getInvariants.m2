@@ -40,7 +40,7 @@ getInvariants (GrothendieckWittClass) := List => (alpha) ->(
         signature := {posEntries,zeroEntries,negEntries};
 
     	-- Signature is the 2nd entry of output list
-        return {n,signature,discrRep});
+        return {n,discrRep,signature});
 
     -- Do not output signature if not working over ordered fields
     {n,discrRep}

@@ -30,7 +30,7 @@ isAnisotropicQ (GrothendieckWittClass) := Boolean => (alpha) -> (
     if (not (kk===QQ)) then (error "GrothendieckWittClass is not over QQ");
 
     --check if form is degenerate
-    signature := (getInvariants(alpha))_1;
+    signature := (getInvariants(alpha))_2;
     if (signature_1 > 0) then (return false);
     
      -- if rank =1, then a non-degenerate form is anisotropic
