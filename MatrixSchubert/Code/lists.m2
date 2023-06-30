@@ -30,7 +30,7 @@ ASMRandomList (ZZ,ZZ) := List => (n,m) -> (
 cohenMacaulayASMsList = method()
 cohenMacaulayASMsList ZZ := List => (n) -> (
     if (n < 1 or n > 6) then error("There is no available list for this n.");
-    filename := concatenate("./MatrixSchubert/ASMData/CM/good", toString n, ".m2");
+    filename := concatenate("./MatrixSchubert/ASMData/CM/good", toString n, ".txt");
     listOfMatrices := apply(lines get filename, i -> matrix value i);
     listOfMatrices
 );
@@ -42,7 +42,7 @@ cohenMacaulayASMsList ZZ := List => (n) -> (
 nonCohenMacaulayASMsList = method()
 nonCohenMacaulayASMsList ZZ := List => (n) -> (
     if (n < 1 or n > 6) then error("There is no available list for this n.");
-    filename := concatenate("./MatrixSchubert/ASMData/notCM/bad", toString n, ".m2");
+    filename := concatenate("./MatrixSchubert/ASMData/notCM/bad", toString n, ".txt");
     listOfMatrices := apply(lines get filename, i -> matrix value i);
     listOfMatrices
 );
