@@ -525,9 +525,6 @@ isASMIdeal Ideal := Boolean => (I) -> (
             isASM = I == sub(ASMIdeal, vars ring I);
             if isASM then I.cache.ASM = ASM;
         }
-        else {
-            isASM = false;
-        }
     else {
         isASM = false;
     };
