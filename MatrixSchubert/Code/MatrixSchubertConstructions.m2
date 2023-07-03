@@ -514,9 +514,8 @@ isIntersectionSchubIdeals Ideal := List => I -> (
 --TODO: input validation/type checking
 -------------------------------------------
 isASMIdeal = method()
-isASMIdeal Ideal := List => (I) -> (
+isASMIdeal Ideal := Boolean => (I) -> (
     isASM := true;
-    if (I == radical(I)) then {
         schubDecomp := schubDecomposition I;
         if (isASM = I == intersect apply(schubDecomp/schubDetIdeal, J -> sub(J, vars ring I))) then {
             permMatrices := (schubDecomp / permToMatrix);
@@ -529,7 +528,6 @@ isASMIdeal Ideal := List => (I) -> (
         else {
             isASM = false;
         }
-    }
     else {
         isASM = false;
     };
