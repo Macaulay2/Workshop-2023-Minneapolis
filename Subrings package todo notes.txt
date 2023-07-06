@@ -1,0 +1,63 @@
+-- Subrings: (Todo list mostly for Ollie)
+
+1. Check the functionality of the Subrings package
+-- list some things that should be tested
+-- design choice for the indexing of the variables of the presentation ring
+
+
+2. Write out the next things to be added:
+-- mingens for subrings
+
+-- User submitted: variables; coefficients; ring; term order, for the presentation ring
+
+-- Define subring from sequence or just input many polynomials
+
+-- sums / tensor products of subrings
+
+-- Normal form wrt a subring (%)
+
+-- res / hilbertSeries / betti 
+>> overload as functions on the quotient ring
+>> Check that it is what the user would want?
+>> Are there other notions, e.g. resolution wrt quotient ring
+>> Just need to tensor a resolution over the presentation ring with 
+   the quotient ring (we can do that as standard?)
+
+-- subductionQuotient (i.e. factor into subring generators)
+>> input f in Subring, i.e. assert that f is a member of Subring,
+>> output h in presentation ring such that h(gens Subring) = presMap h = f
+(Caution: h is not unique)
+
+-- implement % and // for normal form and subductionQuotient respectively
+
+-- if we compute membership (and get for free the quotient h) where can we 
+   cache the result?
+>> If we do it for a matrix then we can cache in the matrix 
+>> For just elements? We could maybe cache in the Subring?
+   Make a matrix for the element and cache?
+   Memoize?? 
+>> Potenitally it's not worth caching anything once we have the GB of the special ideal in the tensor ring
+
+
+-- Maps between subrings
+>> implicitly defined inclusions of tensor rings
+>> m = map(Subring A, Subring B, matrix {{ ... }})
+   m(subring element of B) --> subring A
+   --> internally we are restricting a map between the ambient rings
+>> Are there design choices here? What are they? 
+   How much can the user really do?
+
+-- Modules over subrings
+>> take a module over a ring and then restrict it to a module over a subring
+>> find generators?
+>> restrict(Module over R, Subring of R) = module over subring
+>> maps / ker / im, of such modules
+
+
+3. What's happening in the MonomialAlgebras package?
+-- they have maps to subrings, they also use 4ti2
+>> should we just let them know about SubalgebraBases?
+
+
+Aside for Francesca: 
+R = QQ[for s in subsets(1 .. 4,2) list p_(toSequence s)]
