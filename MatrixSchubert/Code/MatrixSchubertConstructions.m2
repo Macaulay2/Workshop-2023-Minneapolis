@@ -235,13 +235,12 @@ augmentedRotheDiagram Matrix := List => w -> (
 --INPUT: a list w corresponding to a permutation in 1-line notation
     	--OR an alternating sign matrix A
 --OUTPUT: a list of essential boxes in the Rothe diagram for A
---TODO: Debug - not currently computing essential set correctly
 -----------------------
 essentialSet = method()
 essentialSet Matrix := List => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     boxes := rotheDiagram(A);
-    badBoxes := apply(boxes, i -> (positions(boxes, j -> (j == (i_0, i_1+1)))|positions(boxes, j -> (j == (i_0, i_1+1)))));
+    badBoxes := apply(boxes, i -> (positions(boxes, j -> (j == (i_0, i_1+1)))|positions(boxes, j -> (j == (i_0+1, i_1)))));
     essBoxes := positions(badBoxes, i -> i == {});
     boxes_essBoxes
 )
