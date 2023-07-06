@@ -515,15 +515,15 @@ isIntersectionSchubIdeals Ideal := List => I -> (
 isASMIdeal = method()
 isASMIdeal Ideal := Boolean => (I) -> (
     isASM := true;
-        schubDecomp := schubDecomposition I;
-        if (isASM = I == intersect apply(schubDecomp/schubDetIdeal, J -> sub(J, vars ring I))) then {
-            permMatrices := (schubDecomp / permToMatrix);
-            rankTable := rankTableFromMatrix matrix entrywiseMaxRankTable permMatrices;
-            ASM := rankTableToASM matrix rankTable;
-            ASMIdeal := schubDetIdeal matrix ASM;
-            isASM = I == sub(ASMIdeal, vars ring I);
-            if isASM then I.cache.ASM = ASM;
-        }
+    schubDecomp := schubDecomposition I;
+    if (isASM = I == intersect apply(schubDecomp/schubDetIdeal, J -> sub(J, vars ring I))) then {
+        permMatrices := (schubDecomp / permToMatrix);
+        rankTable := rankTableFromMatrix matrix entrywiseMaxRankTable permMatrices;
+        ASM := rankTableToASM matrix rankTable;
+        ASMIdeal := schubDetIdeal matrix ASM;
+        isASM = I == sub(ASMIdeal, vars ring I);
+        if isASM then I.cache.ASM = ASM;
+    }
     else {
         isASM = false;
     };
@@ -533,13 +533,12 @@ isASMIdeal Ideal := Boolean => (I) -> (
 -------------------------------------------
 --INPUT: an ideal
 --OUTPUT: the ASM of an ideal
---WANRING: assumes the ideal is an ASM ideal
 --TODO: docs and tests
 --TODO: input validation/type checking
 -------------------------------------------
 getASM = method()
 getASM Ideal := Matrix => (I) -> (
-    I.cache.ASM
+    if I.cache.?ASM then I.cache.ASM else if isASMIdeal I then I.cache.ASM else error("given ideal is not an ASM ideal.")
 )
 
 ------------------------------------------
