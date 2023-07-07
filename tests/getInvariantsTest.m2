@@ -14,5 +14,5 @@ beta = gwClass(matrix(QQ,{{2,4,4},{4,4,0},{4,0,0}}))
 getInvariants(alpha)
 getInvariants(beta)
 
-assert(getInvariants(alpha) == {3, {2, 0, 1}, -8})
+assert(getInvariants(alpha) == {3, -8, {2, 0, 1}})
 assert(isIdenticalDiscriminant(alpha,beta) == false)
