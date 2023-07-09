@@ -12,7 +12,7 @@ isAnisotropic = method()
 isAnisotropic (GrothendieckWittClass) := (Boolean) => (alpha) -> (
     k=baseField(alpha);
     -- Ensure base field is supported
-    if not (k === CC or instance(k,ComplexField) or k === RR or instance(k,RealField) or k === QQ or (instance(k, GaloisField) and (k.order)%2 != 0)) then (
+    if not (k === CC or instance(k,ComplexField) or k === RR or instance(k,RealField) or k === QQ or (instance(k, GaloisField) and k.char != 2)) then (
         error "Base field not supported; only implemented over QQ, RR, CC, and finite fields of characteristic not 2";
         );
     A=alpha.matrix;
@@ -50,7 +50,7 @@ isAnisotropic (GrothendieckWittClass) := (Boolean) => (alpha) -> (
         return isAnisotropicQ(alpha);
         )
     -- Over a finite field, a diagonal form is anisotropic if and only if it is nondegenerate, of dimension at most 2, and not the hyperbolic form 
-    else if (instance(k, GaloisField) and (k.order)%2 != 0) then (
+    else if (instance(k, GaloisField) and k.char != 2) then (
         countNonzeroDiagA := 0;
         prodNonzeroDiagA := 1;
         for i from 0 to (numRows(A)-1) do (
