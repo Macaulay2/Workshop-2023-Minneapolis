@@ -81,7 +81,7 @@ export{
     "composePerms",    	       	    --documented ++
     "isPatternAvoiding",    	    --documented ++
     "isVexillary",    	      	    --documented ++
-    "avoidAllPatterns",	       	    -- CHECK DOC
+    "avoidsAllPatterns",	       	    -- CHECK DOC
     "isCartwrightSturmfels",	    -- CHECK DOC
     "isCDG",	    	    	    -- CHECK DOC
     "rajCode",	      	      	    --documented ++

@@ -102,6 +102,40 @@ doc ///
 	    
 ///
 
+doc ///
+    Key
+	(inverseOf, List)
+        inverseOf
+    Headline
+    	to return the inverse of a permutation in 1-line notation.
+    Usage
+        inverseOf w
+    Inputs
+    	w:List
+    Description
+    	Text
+	 Given a permutation in 1-line notation returns the inverse of the permutation in 1-line notation.
+	Example
+    	    w = {2,5,4,1,3}
+	    inverseOf(w)   
+///
+
+doc ///
+    Key
+	(longestPerm, ZZ)
+        longestPerm
+    Headline
+    	to return the longest permutation of length n
+    Usage
+        longestPerm n
+    Inputs
+    	n:ZZ
+    Description
+    	Text
+	    Given an integer n, returns the permutation {n,n-1,...2,1}.
+	Example
+    	    longestPerm(7)
+///
 
 doc ///
     Key
@@ -218,7 +252,11 @@ doc ///
         patterns:List
     Description
         Text
-            This is filler text.
+            Given a permutation in one-line notation, and a list of patterns checks if the permutation avoids every pattern.
+	Example 
+	    w = {7,2,5,8,1,3,6,4}
+	    patterns = {{2,1,4,3},{1,4,3,2}}
+	    avoidsAllPatterns(w,patterns)
 ///
 
 doc ///

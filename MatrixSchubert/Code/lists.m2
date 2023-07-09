@@ -42,6 +42,7 @@ cohenMacaulayASMsList ZZ := List => (n) -> (
 nonCohenMacaulayASMsList = method()
 nonCohenMacaulayASMsList ZZ := List => (n) -> (
     if (n < 1 or n > 6) then error("There is no available list for this n.");
+    if (n <= 3) then return {};
     filename := concatenate("./MatrixSchubert/ASMData/notCM/bad", toString n, ".txt");
     listOfMatrices := apply(lines get filename, i -> matrix value i);
     listOfMatrices

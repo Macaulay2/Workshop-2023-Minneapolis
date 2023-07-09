@@ -124,7 +124,7 @@ longestPerm ZZ := List => (n) -> (
 
 -----------------------------------------------------------
 --INPUT: a permutation as a list of integers w
---OUPT: list of simple transpositions giving a reduced word for w
+--OUTPUT: list of simple transpositions giving a reduced word for w
 -----------------------------------------------------------
 
 getOneReducedWord = method()
@@ -302,7 +302,6 @@ rajCode List := ZZ => (w) -> (
 ------------------------------------------
 --INPUT: rajIndex, takes a permutation in one line notation
 --OUTPUT: returns the rajIndex of the permutation
---TO DO: document
 ------------------------------------------
 rajIndex = method()
 rajIndex List := ZZ => (w) -> ( 
