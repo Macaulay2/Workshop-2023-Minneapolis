@@ -491,6 +491,9 @@ monomialRank (RingElement, ZZ) := ZZ => (mon, maxIdx) -> (
 -------------------------------------------
 schubDecomposition = method()
 schubDecomposition Ideal := List => I -> (
+    if I == 0 then (
+        return {toList (1..floor sqrt numgens ring I)};
+    );
     primeDecomp := decompose ideal leadTerm I;
     maxIdx := max((flatten entries vars ring I) / indexOfVariable // max);
     -- varWeights := (monoid ring I).Options.MonomialOrder#1#1;
@@ -558,6 +561,21 @@ isASMIdeal Ideal := Boolean => (I) -> (
         isASM = false;
     };
     isASM
+)
+
+-------------------------------------------
+--INPUT: a list of permutations in 1 line notation
+--OUTPUT: whether the union of their matrix schubert varieties is an ASM variety
+--TODO: docs and tests
+--TODO: input validation/type checking
+-------------------------------------------
+isASMUnion = method()
+isASMUnion List := Boolean => (L) -> (
+    if not all(L, isPerm) then error("The input be a list of permutations in 1 line notation");
+    rkTable := entrywiseMaxRankTable (L / permToMatrix);
+    if not isMinRankTable rkTable then return false; -- might be redundant, is the entrywise max rank table of a list of *permutations* always a min rank table?
+    A := rankTableToASM rkTable;
+    set L === set permOverASM A
 )
 
 -------------------------------------------

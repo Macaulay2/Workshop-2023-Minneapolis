@@ -60,6 +60,7 @@ export{
     "permOverASM",                  -- MAKE DOC
     "isIntersectionSchubIdeals",    -- ADD EX TO DOC
     "isASMIdeal",    	     	    -- ADD EX TO DOC	 
+    "isASMUnion",
     "getASM",	     	     	    -- ADD EX TO DOC
     "isMinRankTable",	     	    --documented ++
     "rankTableToASM",	     	    --documented ++
