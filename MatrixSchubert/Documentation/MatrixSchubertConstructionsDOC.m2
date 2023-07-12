@@ -472,6 +472,24 @@ doc ///
 
 doc ///
     Key
+        (isASMUnion, List)
+        isASMUnion
+    Headline
+        whether the union of matrix schubert varieties is an ASM variety 
+    Usage
+        isASMUnion(L)
+    Inputs
+        L:List
+    Description
+        Text
+            Give a list of permutations in 1-line notation, check whether the union of their matrix schubert varieties is an ASM variety.
+        Example 
+            isASMUnion {{2,1,3,4},{4,2,3,1}} -- false 
+            isASMUnion {{4,1,3,2},{3,4,1,2},{2,4,3,1}} -- true
+///
+
+doc ///
+    Key
         (getASM, Ideal)
         getASM
     Headline

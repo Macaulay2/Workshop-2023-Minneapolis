@@ -233,3 +233,13 @@ L = {
 Lc = {{},{},{},{},{2,1,3,4}}
 assert all (#L, i -> getPermFromASM L_i == Lc_i)
 ///
+
+
+TEST ///
+-- isASMUnion
+assert isASMUnion {{1}}
+assert isASMUnion {{4,3,2,1}}
+assert not isASMUnion {{2,1,3,4},{4,2,3,1}}
+assert isASMUnion {{3,1,2},{2,3,1}}
+assert isASMUnion {{4,1,3,2},{3,4,1,2},{2,4,3,1}}
+///
