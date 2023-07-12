@@ -578,7 +578,7 @@ rankTableToASM Matrix := Matrix => (A) -> (
     for i from 0 to n-1 do (
         for j from 0 to n-1 do (
             if (i == 0 and j == 0) then (
-                if (AList#0#0 == 1) then (A_(0,0) = 1;);
+                if (AList#0#0 == 1) then (ASMret_(0,0) = 1;);
             )
             else if (i == 0) then (
                 if (AList#i#j == 1 and AList#i#(j-1)==0) then (ASMret_(i,j) = 1;);
