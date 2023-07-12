@@ -320,27 +320,57 @@ fultonGens List := o -> w -> (
     (schubDetIdeal(w,CoefficientRing=> o.CoefficientRing, Variable => o.Variable))_*
 )
 
+
 ----------------------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: diagonal initial ideal, lex wrt lex, of Schubert determinantal ideal for w
 ----------------------------------------
-diagLexInit = method(
+diagLexInitNW = method(
     Options => {
 	CoefficientRing => QQ,
 	Variable => getSymbol "z"
 	}
     )
-diagLexInit Matrix := o -> A -> (
+diagLexInitNW Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     I := schubDetIdeal(A,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
     R := newRing(ring I, MonomialOrder=>Lex); --making new ring with lex diagonal term order 
     monomialIdeal leadTerm sub(I, R)
 )
-diagLexInit List := o -> w -> (
+diagLexInitNW List := o -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     I := schubDetIdeal(w,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
     R := newRing(ring I, MonomialOrder=>Lex); --making new ring with lex diagonal term order 
     monomialIdeal leadTerm sub(I, R)
+)
+
+----------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation
+--OUTPUT: diagonal initial ideal, lex wrt lex, of Schubert determinantal ideal for w
+----------------------------------------
+diagLexInitSE = method(
+    Options => {
+	CoefficientRing => QQ,
+	Variable => getSymbol "z"
+	}
+    )
+diagLexInitSE Matrix := o -> A -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    I := schubDetIdeal(A,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
+    R := ring I;
+    kk := o.CoefficientRing;
+    R' := kk[reverse R_*, MonomialOrder => Lex];
+    f := map(R',R, apply(R_*, i-> i=>sub(i,R')));
+    monomialIdeal leadTerm(f I)
+)
+diagLexInitSE List := o -> w -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
+    I := schubDetIdeal(w,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
+    R := ring I;
+    kk := o.CoefficientRing;
+    R' := kk[reverse R_*, MonomialOrder => Lex];
+    f := map(R',R, apply(R_*, i-> i=>sub(i,R')));
+    monomialIdeal leadTerm(f I)
 )
 
 ----------------------------------------

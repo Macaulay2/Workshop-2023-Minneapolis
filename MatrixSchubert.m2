@@ -50,8 +50,9 @@ export{
     "augmentedEssentialSet",        --documented ++
     "schubDetIdeal",	       	    --documented ++
     "fultonGens",    	     	    --documented ++
-    "diagLexInit",    	      	    -- CHECK DOC
-    "diagRevLexInit",	     	    -- CHECK DOC
+    "diagLexInitSE",   	      	    --documented ++
+    "diagLexInitNW",	    	    --documented ++
+    "diagRevLexInit",	     	    --documented ++
     "subwordComplex",	     	    --documented ++
     "entrywiseMinRankTable",	    --documented (check)
     "entrywiseMaxRankTable",	    --documented (check)

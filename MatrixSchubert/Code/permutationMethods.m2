@@ -312,10 +312,6 @@ rajIndex List := ZZ => (w) -> (
 ----------------------------
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: single Grothendieck polynomials
---TODO: rename variables?
---This function is now correct, but it's slow
---potentially we could rename it to "Kpolynomial" or something
-    --then we could allow it to take ASMs as input
 ----------------------------
 grothendieckPoly = method(Options=>{Algorithm=>"DividedDifference"})
 grothendieckPoly(List) := opts -> w -> (

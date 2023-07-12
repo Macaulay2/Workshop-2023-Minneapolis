@@ -310,7 +310,7 @@ doc ///
             or {\tt M} is a @TO Matrix@
     Description
         Text
-            Given a partial alternating sign matrix or permutation in 1 line notation, return the list of fulton generators for the corresponding Schubert determinantal ideal.
+            Given a partial alternating sign matrix or permutation in 1 line notation, return the list of Fulton generators for the corresponding Schubert determinantal ideal.
         Example 
             netList fultonGens {2,5,4,1,3}
             netList fultonGens matrix{{0,1,0},{1,-1,1},{0,1,0}}
@@ -319,22 +319,68 @@ doc ///
 
 doc ///
     Key 
-        diagLexInit
+        (diagLexInitNW, List)
+	(diagLexInitNW, Matrix)
+	diagLexInitNW
     Headline
-        tmp 
+        Diagonal initial ideal of an ASM ideal with respect to lex, starting from NW corner
+    Usage
+    	diagLexInitNW(w)
+	diagLexInitNW(M)
+    Inputs
+        w:List
+            or {\tt M} is a @TO Matrix@    
     Description
         Text
-            This is a stub
+            Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal with respect to lexicographic order, 
+	    where the variables are ordered reading from left-to-right and top-to-bottom (starting in the northwest corner).
+	Example
+	    diagLexInitNW({1,3,2})
+            diagLexInitNW(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 ///
 
 doc ///
     Key 
-        diagRevLexInit
+    	(diagLexInitSE, List)
+	(diagLexInitSE, Matrix)
+        diagLexInitSE
     Headline
-        tmp 
+        Diagonal initial ideal of an ASM ideal with respect to lex, starting from SE corner
+    Usage
+    	diagLexInitSE(w)
+	diagLexInitSE(M)
+    Inputs
+        w:List
+            or {\tt M} is a @TO Matrix@    
     Description
         Text
-            This is a stub
+            Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal with respect to lexicographic order, 
+	    where the variables are ordered reading from right to left and bottom-to-top (starting in the southeast corner).
+	Example
+	    diagLexInitSE({1,3,2})
+            diagLexInitSE(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+///
+
+doc ///
+    Key 
+    	(diagRevLexInit, List)
+	(diagRevLexInit, Matrix)
+        diagRevLexInit
+    Headline
+        Diagonal initial ideal of an ASM ideal with respect to revlex, ordering variables from NW corner 
+    Usage
+    	diagRevLexInit(w)
+	diagRevLexInit(M)
+    Inputs
+        w:List
+            or {\tt M} is a @TO Matrix@    
+    Description
+        Text
+            Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal with respect to reverse lexicographic order, 
+	    where the variables are ordered reading from left-to-right and top-to-bottom (starting in the northwest corner).
+	Example
+	    diagRevLexInit({1,3,2})
+            diagRevLexInit(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 ///
 
 doc ///
@@ -349,7 +395,7 @@ doc ///
         w:List
     Description
         Text
-            Given a permutation in 1-line notation, compute the subword complex associated to w (i.e. SR-ideal of antiDiagInit).
+            Given a permutation in 1-line notation, compute the subword complex associated to w (that is, the Stanley-Reisner complex of antiDiagInit).
         Example
             subwordComplex({2,5,4,1,3})
 ///           
