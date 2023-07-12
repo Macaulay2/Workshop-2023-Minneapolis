@@ -377,7 +377,12 @@ diagLexInitSE List := o -> w -> (
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: diagonal initial ideal, lex wrt revlex, of Schubert determinantal ideal for w
 ----------------------------------------
-diagRevLexInit = method()
+diagRevLexInit = method(
+    Options => {
+	CoefficientRing => QQ,
+	Variable => getSymbol "z"
+	}
+    )
 diagRevLexInit Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     I := schubDetIdeal(A, CoefficientRing => o.CoefficientRing, Variable => o.Variable);

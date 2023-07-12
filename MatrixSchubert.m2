@@ -42,7 +42,7 @@ export{
     --MatrixSchubertConstructions.m2
     "isPartialASM",    	       	    --documented ++
     "partialASMToASM",	      	    --documented ++
-    "antiDiagInit",    	       	    -- CHECK DOC
+    "antiDiagInit",    	       	    --documented ++
     "rankMatrix",    	     	    --documented ++  
     "rotheDiagram",    	       	    --documented ++  
     "augmentedRotheDiagram",	    --documented ++
@@ -56,8 +56,8 @@ export{
     "subwordComplex",	     	    --documented ++
     "entrywiseMinRankTable",	    --documented (check)
     "entrywiseMaxRankTable",	    --documented (check)
-    "schubDecomposition",	    -- ADD EX TO DOC
-    "permOverASM",                  -- MAKE DOC
+    "schubDecomposition",	    --documented ++
+    "permOverASM",                  --documented ++
     "isIntersectionSchubIdeals",    -- ADD EX TO DOC
     "isASMIdeal",    	     	    -- ADD EX TO DOC	 
     "getASM",	     	     	    -- ADD EX TO DOC
@@ -67,14 +67,14 @@ export{
     "schubIntersect",	     	    -- documented (check)
     "schubAdd",	       	       	    -- documented (check)
     "getPermFromASM",	       	    --documented (check)
- 
+    "ASM",    	      	      	    -- ??
+    
  --permutationMethods.m2   
     "isPerm",	     	     	    --documented ++
     "permToMatrix",    	       	    --documented ++
     "lastDescent",    	      	    --documented ++
     "firstDescent",    	       	    --documented ++
     "permLength",    	     	    --documented ++
-    "swap",    	       	       	    -- ??
     "inverseOf",             	    -- ??
     "longestPerm",    	      	    -- ??
     "getOneReducedWord",    	    -- ??
@@ -91,10 +91,9 @@ export{
     "schubertPoly",    	       	    -- CHECK DOC
     "doubleSchubertPoly",           -- CHECK DOC
     "dividedDifference",    	    -- CHECK DOC
-    "Double",	     	     	    -- ??
-    "Operator",	       	       	    -- ??
     "PolyType",	       	       	    -- ??
-    "ASM",    	      	      	    -- ??
+    "Operator",	       	       	    -- ??
+    "Double",	     	     	    -- ??
 
 --MatrixSchubertInvariants.m2    
     "schubReg",    	            --documented ++

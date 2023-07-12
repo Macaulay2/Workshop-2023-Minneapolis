@@ -415,6 +415,10 @@ doc ///
         Text
             Given an ASM ideal, it can be decomposed into Schubert determinantal ideals as $I = I_{w_1} \cap ... \cap I_{w_k}$, where the $w_i$ are permutations.
             As output, each element in the list is the permutation associated to a prime component in the Schubert decomposition of the antidiagonal initial ideal of $I$.
+	Example
+	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
+	    J = schubDetIdeal A;
+	    netList schubDecomposition J	    
 ///
 
 doc ///
