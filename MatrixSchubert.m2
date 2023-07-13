@@ -60,7 +60,7 @@ export{
     "permOverASM",                  --documented ++
     "isIntersectionSchubIdeals",    -- ADD EX TO DOC
     "isASMIdeal",    	     	    -- ADD EX TO DOC	 
-    "isASMUnion",
+    "isASMUnion",    	     	    -- ??
     "getASM",	     	     	    -- ADD EX TO DOC
     "isMinRankTable",	     	    --documented ++
     "rankTableToASM",	     	    --documented ++
@@ -83,7 +83,7 @@ export{
     "composePerms",    	       	    --documented ++
     "isPatternAvoiding",    	    --documented ++
     "isVexillary",    	      	    --documented ++
-    "avoidsAllPatterns",	       	    -- CHECK DOC
+    "avoidsAllPatterns",	    -- CHECK DOC
     "isCartwrightSturmfels",	    -- CHECK DOC
     "isCDG",	    	    	    -- CHECK DOC
     "rajCode",	      	      	    --documented ++
@@ -100,6 +100,7 @@ export{
     "schubReg",    	            --documented ++
     "schubCodim",           	    --documented ++
     "KPolynomialASM",	     	    -- ??
+    "isSchubertCM",    	       	    --documented ++
 
 --Lists.m2
     "ASMFullList",    	      	    --ADD EX TO DOC

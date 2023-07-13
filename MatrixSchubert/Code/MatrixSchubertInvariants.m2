@@ -56,3 +56,20 @@ KPolynomialASM Matrix := ZZ => A -> (
     Q := kk[R_*, Degrees => degs];
     numerator hilbertSeries sub(I,Q)
 );
+
+----------------------------------------
+--INPUT: a list w corresponding to a permutation in 1-line notation or an ASM ideal
+--OUTPUT: whether or not R/I_A is CM
+---------------------------------------
+isSchubertCM = method()
+isSchubertCM Matrix := Boolean => A -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    R:=ring(antiDiagInit A);
+    codim(antiDiagInit A)==pdim(comodule (antiDiagInit A))
+    );
+
+isSchubertCM List := Boolean => w -> (
+    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
+    print "We know from a theorem of Fulton that the quotient by any Schubert determinantal ideal is actually Cohen--Macaulay!";
+    true
+    );

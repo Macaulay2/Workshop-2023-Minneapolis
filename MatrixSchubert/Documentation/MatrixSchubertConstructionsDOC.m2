@@ -237,41 +237,6 @@ doc ///
 ///
 
 
-
--*
---TODO: figure out error in isSchubertCM doc node
-doc ///
-    Key
-    	(isSchubertCM, Matrix)
-    	(isSchubertCM, List)
-    	isSchubertCM
-    Headline
-    	whether $R/I_A$ is Cohen-Macaulay
-    Usage
-    	isSchubertCM(A)
-    	isSchubertCM(w)
-    Inputs
-		A:Matrix
-			or {\tt w} is a @TO List@
-	Outputs
-		:Boolean
-    Description
-    	Text
-			Given an alternating sign matrix $A$ (resp. permutation $w$),
-			checks whether $R/I_A$ (resp. $R/I_w$) is Cohen-Macaulay.
-
-			If the input is a permutation $w$, the output is always true
-			since $I_w$ is a Schubert determinantal ideal, and a theorem
-			of Fulton says $R/I_w$ is always Cohen-Macaulay.
-        Example
-            A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}
-			isSchubertCM(A)
-
-			w = {1,3,2}
-            isSchubertCM(w)
-///
-*-
-
 doc ///
     Key
         (schubDetIdeal, List)
