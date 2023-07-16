@@ -273,6 +273,8 @@ doc ///
     Inputs
         w:List
             or {\tt M} is a @TO Matrix@
+    Outputs
+    	:List
     Description
         Text
             Given a partial alternating sign matrix or permutation in 1 line notation, return the list of Fulton generators for the corresponding Schubert determinantal ideal.

@@ -76,8 +76,8 @@ export{
     "lastDescent",    	      	    --documented ++
     "firstDescent",    	       	    --documented ++
     "permLength",    	     	    --documented ++
-    "inverseOf",             	    -- ??
-    "longestPerm",    	      	    -- ??
+    "inverseOf",             	    --documented (check)
+    "longestPerm",    	      	    --documented (check)
     "getOneReducedWord",    	    -- ??
     "toOneLineNotation",    	    --documented ++
     "composePerms",    	       	    --documented ++
@@ -136,6 +136,8 @@ load "./MatrixSchubert/Documentation/listsDOC.m2"
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 load "./MatrixSchubert/Tests/MatrixSchubertTests.m2"
+load "./MatrixSchubert/Tests/MatrixSchubertTestsIdentity.m2"
+load "./MatrixSchubert/Tests/MatrixSchubertTestsInterestingExamples.m2"
 
 end---------------------------------------------------------------------------     
 
@@ -170,102 +172,6 @@ schubertPoly {2,1,4,3}
 
 M = matrix{{0,0,1},{1,0,-1}}
 KPolynomialASM M
------------------------------------------
---Adam's Testing for matrixSchubertReg --
------------------------------------------
-
-
-Tester (n) -> (
-
-    S = apply(permutations(n),S->apply(S,i->i+1));
-    assert(apply(S,i->matrixSchubertRegADI(i))==apply(S,i->matrixSchubertRegWPS(i)))
-);
-
-TesterPerm = (w) -> (
-    assert(matrixSchubertRegADI(w)==matrixSchubertReg(w));
-);
-
-NTests = 50;
-NMax = 5;
-for i from 1 to NTests do (
-    w = random toList (1..(random(1,NMax)));
-    TesterPerm(w);
-    << "Finished test #" << i << << ", perm size: " << length(w) << endl;
-);
-
-randomPerm = (Len) -> (
-    return random toList (1..random(1,Len));
-);
-
-TesterPermTime = (w) -> (
-    elapsedTime matrixSchubertRegWPS w;
---    elapsedTime matrixSchubertRegADI w;
-    << endl;
-);
-
-Tester = (n) -> (
-
-    --apply( random(toList(1..n)),w->assert(schubReg(w) == schubReg(permToMatrix(w))));
-    w =  random(toList(1..n));
-    assert(schubReg(w) == schubReg(permToMatrix(w)));
-);
-
-randomTester = (lenPerm) -> (
-
-    w = random (toList(1..lenPerm));
-    
-    << w << endl;
-
-    elapsedTime (rADI = matrixSchubertRegADI(w));
-    elapsedTime (rRaj = matrixSchubertReg(w));
-
-    if (rADI != rRaj) then (
-	<< "BAD: " << w << endl;
-	exit(1);
-    );
-);
-
-apply(1..10,i->Tester(i));
-
-
-
-------------------------------------
---Adam RajCode Testing--
-------------------------------------
-
-rajTest = (w) -> (
-    if(rajCode(w) != rajCodeRec(w)) then (
-    	print(w);
-	exit ;	
-    );
-);
-
-randomTest = (n) -> (
-  
-    w= random toList(1..n);
-    rajTest(w)
---    print elapsedTime rajCode(w);
-    print elapsedTime rajCodeRec(w);
-    << endl;
-);
-
-for i from 1 to 4 do (
-    for w in permutations(toList (1..i)) do rajTest(w);
-);
-
-setRandomSeed 50;
-
-for i from 1 to 10 do (
-     i = random toList (1..7);
-     << i << endl;
-     print elapsedTime matrixSchubertRegADI(i);
-     << endl << endl;
-);
-
-for l in permutations(toList(1..4)) do (
-    --print permToMatrix l;
-      if (schubReg permToMatrix l != 0) then print l;
-      );
 
 ------------------------------------
 --Development Section
