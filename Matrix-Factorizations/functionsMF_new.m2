@@ -193,3 +193,25 @@ trivialFactorization(RingElement) := f -> (if not(#(terms f)==1) then error "Exp
     theDiffs = (flatten((toList factor(f))/(i->toList(i#1:i#0))))/(j->matrix{{j}});
     ZZdfactorization theDiffs
     )
+
+--inputs 2-fold factorization and an integer, outputs 2-periodic complex of length equal to integer
+toComplex = method()
+toComplex(ZZdFactorization, ZZ) := (X, j) -> (if not(X.period ==2) then error "Period of factorization is not 2";
+     if not((dd^X)_1*(dd^X)_2 == 0 and (dd^X)_2*(dd^X)_3 == 0 ) then error "differential does not square to 0";
+       if not(j > 0) then error "length of complex must be positive";
+L := for i to j list (dd^X)_i; 		
+    chainComplex(L)
+    )
+
+toComplex = method()
+toComplex(ZZdFactorization) := X -> (if not(X.period ==2) then error "Period of factorization is not 2";  
+     if not((dd^X)_1*(dd^X)_2 == 0 and (dd^X)_2*(dd^X)_3 == 0 ) then error "differential does not square to 0";
+L := for i to 10 list (dd^X)_i; 		
+    chainComplex(L)
+    )
+
+HHMF = method()
+HHMF(ZZdFactorization) := X -> (HH(toComplex(X,3)))
+
+ecMF = method()
+ecMF(ZZdFactorization) := X -> (rank HH^2(toComplex(X,3))- rank HH^1(toComplex(X,3)))
