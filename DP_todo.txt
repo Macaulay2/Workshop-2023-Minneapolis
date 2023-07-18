@@ -1,0 +1,6 @@
+# Derived Functors
+
+
+# Construction Optimization
+## Caching A matrix
+## Rewriting so only column needed is pulled by facemap builders
