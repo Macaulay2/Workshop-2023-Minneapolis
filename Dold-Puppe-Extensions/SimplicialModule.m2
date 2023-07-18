@@ -43,6 +43,9 @@ moduleMaker = (C,d) -> (
     	);
     for i in (sort keys moduleList) list (i,moduleList#i)
     )
+
+combineSFactors = method();
+combineSFactors(SimplicialModule,ZZ) := (S,d) -> (directSum for i to min(d,S.complexLength) list (S.module)#(d,i))
     
 --H1 is the face maps, H2 is the degeneracy maps
 simplicialModule = method(Options => {Base=>0})
@@ -63,9 +66,25 @@ simplicialModule(Complex,HashTable,HashTable,ZZ) := SimplicialModule => opts -> 
 	symbol topDegree => d,
 	symbol module => new HashTable from moduleList,
 	symbol cache => new CacheTable,
-    	symbol complexLength => length C
+    	symbol complexLength => length C,
+	symbol complex => C
 	};
     S.dd = map(S,S,H1,Degree=>-1);
+    S.ss = map(S,S,H2,Degree=>1);
+    S
+    )
+
+simplicialModule(HashTable,HashTable,HashTable,ZZ) := SimplicialModule => opts -> (L,H1,H2,d) -> (print("we got started");
+    R := ring (L#((keys L)#0));
+    S := new SimplicialModule from {
+	symbol ring => R,
+	symbol topDegree => d,
+	symbol module => L,
+	symbol cache => new CacheTable,
+	};
+    print("made it to face");
+    S.dd = map(S,S,H1,Degree=>-1);
+    print("we are almost done");
     S.ss = map(S,S,H2,Degree=>1);
     S
     )
@@ -96,7 +115,7 @@ SimplicialModule _ Sequence := Module => (S,p) -> (
     	error ("Expected a pair of integer indices");
     if S.module#?(p#0,p#1) then S.module#(p#0,p#1) else (ring S)^0
     )
-SimplicialModule _ ZZ := Module => (S,n) -> directSum(for k from 0 to n list S_(n,k))
+SimplicialModule _ ZZ := Module => (S,n) -> directSum for i in keys (S.module) list (if first(splice(toSequence{i}))==n then S.module#(i) else continue)
 
 net SimplicialModule := S -> (
      (lo,hi) := (0,topDegree S);
@@ -105,10 +124,14 @@ net SimplicialModule := S -> (
          --"0"
      else if lo == hi and C_lo === 0 then 
          "0"
-     else
+     else if any(keys S,i->i==symbol complex) then
+         (horizontalJoin between(" <-- ", 
+             for i from lo to hi list
+                 stack (net directSum(for k from 0 to min(i,S.complexLength) list (S.module)#(i,k)), " ", net i)))
+     else 
          horizontalJoin between(" <-- ", 
              for i from lo to hi list
-                 stack (net directSum(for k from 0 to min(i,S.complexLength) list (S.module)#(i,k)), " ", net i))
+                 stack (net ((S.module)#i)), " ", net i)  
      )
  
  
@@ -144,12 +167,15 @@ map(SimplicialModule, SimplicialModule, HashTable) := SimplicialModuleMap => opt
         f := maps#k;
         -- note: we use != instead of =!= in the next 2 tests,
         -- since we want to ignore any term order differences
-        if source f != src_(k#0) then (
+	print(k);
+	print(source f);
+	print(src_(first k));
+        if rank source f != rank src_(first k) then (
             error ("map with index "|toString(k)|" has inconsistent source");
 	);
-        if target f != tar_(k#0+deg) then
+        if rank target f !=  rank tar_(first(k)+deg) then
             error ("map with index "|toString(k)|" has inconsistent target");
-        if k#0 < lo or k#0 > hi then continue else (k,f)
+        if first k < lo or first k > hi then continue else (k,f)
         );
     new SimplicialModuleMap from {
         symbol source => src,
@@ -217,14 +243,14 @@ expression SimplicialModuleMap := Expression => f -> (
     if #s === 0 then 
         new ZeroExpression from {0}
     else new VerticalList from for i in s list
-        RowExpression {i+d, ":", MapExpression { target f_i, source f_i, f_i }, ":", i}
+        RowExpression {(i#0+d,i#1), ":", MapExpression { target f_i, source f_i, f_i }, ":", i}
     )
 
 net SimplicialModuleMap := Net => f -> (
      v := between("",
             for i in sort keys f.map list (
                 horizontalJoin(
-		            net (i+f.degree), " : ", net target f_i, " <--",
+		            net ((i#0+f.degree,i#1)), " : ", net target f_i, " <--",
 		            lineOnTop net f_i,
 		            "-- ", net source f_i, " : ", net i
                     )
