@@ -1,5 +1,16 @@
-# Derived Functors
+# Recent changes to SimplicialModule type:
+## I made an option to specify whether you want the simplicialModule command to compute the degeneracy maps. The reason for this is as follows: the normalization actually does not use the information of the degeneracy maps, so computing these is unnecessary for many purposes of computing derived functors. Currently the option is set to NOT compute degeneracy maps by default, but you can add the option Degeneracy => true to compute the degeneracy maps. 
 
+# Derived Functors and General Compatibility
+## Need to write a symmetric/divided power functor that works for arbitrary matrices
+## Need to add functionality that converts a morphism of chain complexes into a morphism of the Dold-Kan images, and vice versa: any morphism of simplicial modules induces a morphism of complexes.
+## In the same vein as the previous line: we can apply functors to any morphism of complexes by the same Dold-Kan type extension method.
+## We should be thinking about other types of nonlinear functors to implement (so far I have: Sym, Div, Exterior power, Tensor powers, Schur functors (this is harder))
+
+
+# Normalization
+## I aded a command that actually has the proper normalization.
+## I need to update the normalization command to also apply to the type "SimplicialModuleMap", and the output will be a morphism of the respective normalizations.
 
 # Construction Optimization
 ## Caching A matrix
