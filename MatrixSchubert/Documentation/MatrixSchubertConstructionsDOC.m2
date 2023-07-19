@@ -470,7 +470,7 @@ doc ///
             
             @UL {{"[Wei, Proposition 5.4]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},}@
             
-            @UL {{"[BB 93, Theorem 3.7]: Bergeron and Billey, RC-graphs and Schubert polynomials."},}@
+            @UL {{"[BB93, Theorem 3.7]: Bergeron and Billey, RC-graphs and Schubert polynomials."},}@
 	    
 	Example
 	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
@@ -483,20 +483,23 @@ doc ///
         (isASMIdeal, Ideal)
         isASMIdeal
     Headline
-        whether an ideal is ASM
+        whether an ideal is an ASM ideal
     Usage
-        isASMIdeal(I)
+        isASMIdeal I
     Inputs
         I:Ideal
     Outputs
     	:Boolean
     Description
         Text
-            An ideal is ASM if it is radical and can be written as the intersection of Schubert determinantal ideals.
+            Every ASM ideal can be written as an intersection of Schubert determinantal ideals.  Given an ideal $I$, this function first uses schubDecomposition to find the set of permutations that must index the minimal primes of $I$ if indeed $I$ is an ASM ideal. Then $I$ is an ASM ideal if and only if $I=I_A$ for the ASM $A$ whose rank table is the determined by taking entrywise maxima (using entrywiseMaxRankTable) in the rank tables of the permutations found by schubDecomposition.
+	
+	    When this function returns true, it also stores the ASM $A$ so that $I=I_A$.  The matrix $A$ can then be accessed using getASM.
 	Example
-    	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
-	    J = schubDetIdeal A;
-	    isIntersectionSchubIdeals J
+    	   I1=schubDetIdeal {3,4,1,2};
+	   I2=sub(schubDetIdeal {3,2,4,1},ring I1);
+	   I = intersect(I1,I2);
+	   isASMIdeal I
 ///
 
 doc ///
@@ -504,17 +507,19 @@ doc ///
         (isASMUnion, List)
         isASMUnion
     Headline
-        whether the union of matrix schubert varieties is an ASM variety 
+        whether the union of matrix Schubert varieties is an ASM variety 
     Usage
-        isASMUnion(L)
+        isASMUnion L
     Inputs
         L:List
     Outputs
     	:Boolean    
     Description
         Text
-            Give a list of permutations in 1-line notation, check whether the union of their matrix schubert varieties is an ASM variety.
-        Example 
+            Given a list of permutations in 1-line notation, check whether the union of their matrix schubert varieties is an ASM variety. This function uses entrywiseMaxRankTable to construct the rank table that is the entrywise maximum of the rank tables of the input permutations. It then constructs an ASM $A$ from that rank table and uses permOverASM to check if the permutation set of $A$ is equal to the input list of permutations.
+        
+	    If the union of the matrix Schubert varieties of the input list of permutations is an ASM variety, it must be the ASM variety considered by this algorithm.
+	Example 
             isASMUnion {{2,1,3,4},{4,2,3,1}} -- false 
             isASMUnion {{4,1,3,2},{3,4,1,2},{2,4,3,1}} -- true
 ///
@@ -524,21 +529,21 @@ doc ///
         (getASM, Ideal)
         getASM
     Headline
-        gets the ASM of an ideal (if it exists)
+        get the ASM of an ideal (if it exists)
     Usage
-        getASM(I)
+        getASM I
     Inputs
         I:Ideal
     Outputs
     	:Matrix
     Description
         Text
-            Gets the alternating sign matrix (ASM) of an ideal $I$, if it exists.
-            If the ASM has not been computed yet, then an attempt will be made to compute the ASM. Once the ASM is computed, it is stored in the cache of $I$.
+            Given an ideal $I$, gets the ASM $A$ so that $I=I_A$, if such an ASM $A$ exists.
+            If the ASM $A$ has already been computed and stored in the cache of I using isASMIdeal, then this function produces $A$ immediately. Otherwise, an attempt will be made to compute the ASM. Once the ASM is computed, it is stored in the cache of $I$.
 	Example
 	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
-	    J = schubDetIdeal A;
-	    getASM J
+	    I = schubDetIdeal A;
+	    getASM I
 ///
 
 doc ///
