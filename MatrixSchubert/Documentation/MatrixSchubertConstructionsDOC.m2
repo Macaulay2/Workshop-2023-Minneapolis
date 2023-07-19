@@ -135,7 +135,7 @@ doc ///
         (rankMatrix, Matrix)
         rankMatrix
     Headline
-        Computes a matrix of rank conditions that determines a Schubert determinantal ideal or, more generally, an alternating sign matrix ideal.
+        compute a matrix of rank conditions that determines a Schubert determinantal ideal or, more generally, an alternating sign matrix ideal.
     Usage
         rankMatrix(w)
         rankMatrix(A)
@@ -158,7 +158,7 @@ doc ///
         (rotheDiagram, Matrix)
         rotheDiagram
     Headline
-        to find the Rothe diagram of a partial alternating sign matrix
+        find the Rothe diagram of a partial alternating sign matrix
     Usage
         rotheDiagram(w)
         rotheDiagram(A)
@@ -185,7 +185,7 @@ doc ///
         (augmentedRotheDiagram, Matrix)
         augmentedRotheDiagram
     Headline
-        to find the Rothe diagram of a partial alternating sign matrix together with the rank conditions determining the alternating sign matrix variety
+        find the Rothe diagram of a partial alternating sign matrix together with the rank conditions determining the alternating sign matrix variety
     Usage
         augmentedRotheDiagram(w)
         augmentedRotheDiagram(A)
@@ -196,7 +196,7 @@ doc ///
     	:List
     Description
         Text
-            Given a permutation in 1-line notation or a partial alternating sign matrix returns list of entries of Rothe diagram with the ranks of each entry.
+            Given a permutation in 1-line notation or a partial alternating sign matrix returns the Rothe diagram (as a list) with the rank conditions at each diagram box.
         Example
             w = {2,5,4,1,3}
             augmentedRotheDiagram(w)
@@ -211,7 +211,7 @@ doc ///
         (essentialSet, Matrix)
         essentialSet
     Headline
-        computes a list of the essential set in the Rothe Diagram for an alternating sign matrix M or a permutation in 1-line notation.
+        compute the essential set in the Rothe Diagram for a partial alternating sign matrix or a permutation.
     Usage
         essentialSet(w)
         essentialSet(A)
@@ -234,7 +234,7 @@ doc ///
         (augmentedEssentialSet, Matrix)
         augmentedEssentialSet
     Headline
-        to find the essential set of a partial alternating sign matrix together with the rank conditions determining the alternating sign matrix variety
+        find the essential set of a partial alternating sign matrix or a permutation together with the rank conditions determining the alternating sign matrix variety
     Usage
         augmentedEssentialSet w
         augmentedEssentialSet A
@@ -245,7 +245,7 @@ doc ///
     	:List
     Description
         Text
-            Given a permutation in 1-line notation or a partial alternating sign matrix, returns the essential set together with the rank restriction at each entry.
+            Given a permutation in 1-line notation or a partial alternating sign matrix, returns the essential set together with the rank condition at each element of the set.
         Example
             w = {2,5,4,1,3}
             augmentedEssentialSet w
@@ -260,20 +260,22 @@ doc ///
         (schubDetIdeal, Matrix)
         schubDetIdeal
     Headline
-        Computes an alternating sign matrix ideal
+        compute an alternating sign matrix ideal (for example, a Schubert determinantal ideal)
     Usage
-        schubDetIdeal(w)
-        schubDetIdeal(M)
+        schubDetIdeal w
+        schubDetIdeal A
     Inputs
         w:List
-            or {\tt M} is a @TO Matrix@
+            or {\tt A} is a @TO Matrix@
     Outputs
     	:Ideal
     Description
         Text
-            Given a permutation in 1-line notation or, more generally, a (partial) alternating sign matrix, outputs the associated alternating sign matrix ideal (which is called a Schubert determinantal ideal in the case of a permutation).  (The convention throughout this package is that the permuation matrix of a pemutation w has 1's in positions (i,w(i)).)
+            Given a permutation in 1-line notation or, more generally, a partial alternating sign matrix, outputs the associated alternating sign matrix ideal (which is called a Schubert determinantal ideal in the case of a permutation).  (The convention throughout this package is that the permuation matrix of a pemutation w has 1's in positions (i,w(i)).)
+	    
+	    This function computes over the coefficient field of rational numbers unless an alternative is specified.
         Example
-            schubDetIdeal({1,3,2})
+            schubDetIdeal({1,3,2},CoefficientRing=>ZZ/3001)
             schubDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 
 ///
@@ -285,18 +287,18 @@ doc ///
         (fultonGens, Matrix)
         fultonGens
     Headline
-        compute the Fulton generators for a Schubert determinantal ideal 
+        compute the Fulton generators of an ASM ideal (for example, a Schubert determinantal ideal)
     Usage
-        fultonGens(w)
-        fultongens(M)
+        fultonGens w
+        fultongens A
     Inputs
         w:List
-            or {\tt M} is a @TO Matrix@
+            or {\tt A} is a @TO Matrix@
     Outputs
     	:List
     Description
         Text
-            Given a partial alternating sign matrix or permutation in 1 line notation, return the list of Fulton generators for the corresponding Schubert determinantal ideal.
+            Given a partial alternating sign matrix or permutation in 1-line notation, returns the list of Fulton generators for the corresponding Schubert determinantal ideal or, more generally, ASM ideal.
         Example 
             netList fultonGens {2,5,4,1,3}
             netList fultonGens matrix{{0,1,0},{1,-1,1},{0,1,0}}
@@ -311,19 +313,21 @@ doc ///
     Headline
         Diagonal initial ideal of an ASM ideal with respect to lex, starting from NW corner
     Usage
-    	diagLexInitNW(w)
-	diagLexInitNW(M)
+    	diagLexInitNW w
+	diagLexInitNW A
     Inputs
         w:List
-            or {\tt M} is a @TO Matrix@  
+            or {\tt A} is a @TO Matrix@  
     Outputs
     	:MonomialIdeal  
     Description
         Text
-            Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal with respect to lexicographic order, 
+            Given a partial alternating sign matrix or a permutation in 1-line notation, returns the diagonal initial ideal of the corresponding ASM ideal or Schubert determinantal ideal with respect to lexicographic order, 
 	    where the variables are ordered reading from left-to-right and top-to-bottom (starting in the northwest corner).
+	    
+	    This function computes over the coefficient field of rational numbers unless an alternative is specified.
 	Example
-	    diagLexInitNW({1,3,2})
+	    diagLexInitNW({1,3,2},CoefficientRing=>ZZ/3001)
             diagLexInitNW(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 ///
 
@@ -335,19 +339,21 @@ doc ///
     Headline
         Diagonal initial ideal of an ASM ideal with respect to lex, starting from SE corner
     Usage
-    	diagLexInitSE(w)
-	diagLexInitSE(M)
+    	diagLexInitSE w
+	diagLexInitSE A
     Inputs
         w:List
-            or {\tt M} is a @TO Matrix@
+            or {\tt A} is a @TO Matrix@
     Outputs
     	:MonomialIdeal
     Description
         Text
-            Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal with respect to lexicographic order, 
+            Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal of the corresponding ASM ideal or Schubert determinantal ideal with respect to lexicographic order, 
 	    where the variables are ordered reading from right to left and bottom-to-top (starting in the southeast corner).
+	    
+	    This function computes over the coefficient field of rational numbers unless an alternative is specified.
 	Example
-	    diagLexInitSE({1,3,2})
+	    diagLexInitSE({1,3,2},CoefficientRing=>ZZ/3001)
             diagLexInitSE(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 ///
 
@@ -368,10 +374,12 @@ doc ///
     	:MonomialIdeal 
     Description
         Text
-            Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal with respect to reverse lexicographic order, 
-	    where the variables are ordered reading from left-to-right and top-to-bottom (starting in the northwest corner).
+            Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal of the corresponding ASM ideal or Schubert determinantal ideal with respect to reverse lexicographic order, 
+	    where the variables are ordered reading from left-to-right and top-to-bottom (starting in the northwest corne).
+	    
+	    This function computes over the coefficient field of rational numbers unless an alternative is specified.
 	Example
-	    diagRevLexInit({1,3,2})
+	    diagRevLexInit({1,3,2},CoefficientRing=>ZZ/3001)
             diagRevLexInit(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 ///
 
@@ -409,7 +417,7 @@ doc ///
     	:List
     Description
         Text
-            Given an ASM ideal, it can be decomposed into Schubert determinantal ideals as $I = I_{w_1} \cap ... \cap I_{w_k}$, where the $w_i$ are permutations.
+            Given an ASM ideal $I_A$, it can be decomposed into Schubert determinantal ideals as $I_A = I_{w_1} \cap ... \cap I_{w_k}$, where the $w_i$ are permutations.
             As output, each element in the list is the permutation associated to a prime component in the Schubert decomposition of the antidiagonal initial ideal of $I$.
 	Example
 	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
@@ -452,7 +460,18 @@ doc ///
     Description
         Text
             Checks if the input ideal $I$ can be written as $I = I_{w_1} \cap ... \cap I_{w_k}$,
-            where each $I_{w_i}$ is a Schubert determinantal ideal.
+            where each $I_{w_i}$ is a Schubert determinantal ideal. 
+	    
+	    This function computes the antidiagonal initial ideal of $I$ (using the default term order in Macaulay2, which is antidiagonal), finds the primes in the decomposition of $I$, reads a permutation from each such prime, and checks if $I$ is the intersection of the Schubert determinantal ideals of those permutations.
+	    
+	    The following theorems combine to guarantee that, if $I$ can be written as the intersection of Schubert determinantal ideals, it is exactly the intersection of the Schubert determinantal ideals found by the algorithm described above.
+	    
+	     @UL {{"[KM05, Theorem B]: Knutson and Miller, Gröbner geometry of Schubert polynomials (see ", arXiv "0110058", ")."},}@ 
+            
+            @UL {{"[Wei, Proposition 5.4]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},}@
+            
+            @UL {{"[BB 93, Theorem 3.7]: Bergeron and Billey, RC-graphs and Schubert polynomials."},}@
+	    
 	Example
 	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
 	    J = schubDetIdeal A;
