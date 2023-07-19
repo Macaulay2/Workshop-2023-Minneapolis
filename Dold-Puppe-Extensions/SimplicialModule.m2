@@ -1,4 +1,4 @@
-SimplicialModule = new Type of MutableHashTable --
+ SimplicialModule = new Type of MutableHashTable --
   -- note: we make this mutable in order to construct the
   --   differential as a morphism of ZZdFactorizations (in the style of Complexes)
   -- BUT: after construction, it is should be IMMUTABLE!!
@@ -48,7 +48,7 @@ combineSFactors = method();
 combineSFactors(SimplicialModule,ZZ) := (S,d) -> (directSum for i to min(d,S.complexLength) list (S.module)#(d,i))
     
 --H1 is the face maps, H2 is the degeneracy maps
-simplicialModule = method(Options => {Base=>0})
+simplicialModule = method(Options => {Base=>0,Degeneracy => false})
 simplicialModule(Complex,HashTable,HashTable,ZZ) := SimplicialModule => opts -> (C,H1,H2,d) -> (
     spots := sort keys H1;
     if #spots === 0 then
@@ -74,7 +74,32 @@ simplicialModule(Complex,HashTable,HashTable,ZZ) := SimplicialModule => opts -> 
     S
     )
 
-simplicialModule(HashTable,HashTable,HashTable,ZZ) := SimplicialModule => opts -> (L,H1,H2,d) -> (print("we got started");
+--H1 is the face maps
+simplicialModule(Complex,HashTable,ZZ) := SimplicialModule => opts -> (C,H1,d) -> (--print("made it here!");
+    spots := sort keys H1;
+    if #spots === 0 then
+      error "expected at least one map";
+    R := ring C;
+    moduleList := new MutableHashTable;
+    for b to d do (
+    	maxK = min (b, length C);
+	for k to maxK do (
+	moduleList#(b,k) = directSum toList(binomial(b,k):(C_k));
+	);
+	);
+    S := new SimplicialModule from {
+	symbol ring => R,
+	symbol topDegree => d,
+	symbol module => new HashTable from moduleList,
+	symbol cache => new CacheTable,
+    	symbol complexLength => length C,
+	symbol complex => C
+	};
+    S.dd = map(S,S,H1,Degree=>-1);
+    S
+    )
+
+simplicialModule(HashTable,HashTable,HashTable,ZZ) := SimplicialModule => opts -> (L,H1,H2,d) -> (--print("we got started");
     R := ring (L#((keys L)#0));
     S := new SimplicialModule from {
 	symbol ring => R,
@@ -82,10 +107,24 @@ simplicialModule(HashTable,HashTable,HashTable,ZZ) := SimplicialModule => opts -
 	symbol module => L,
 	symbol cache => new CacheTable,
 	};
-    print("made it to face");
+    --print("made it to face");
     S.dd = map(S,S,H1,Degree=>-1);
-    print("we are almost done");
+    --print("we are almost done");
     S.ss = map(S,S,H2,Degree=>1);
+    S
+    )
+
+simplicialModule(HashTable,HashTable,ZZ) := SimplicialModule => opts -> (L,H1,d) -> (--print("we got started");
+    R := ring (L#((keys L)#0));
+    S := new SimplicialModule from {
+	symbol ring => R,
+	symbol topDegree => d,
+	symbol module => L,
+	symbol cache => new CacheTable,
+	};
+    --print("made it to face");
+    S.dd = map(S,S,H1,Degree=>-1);
+    --print("we are almost done");
     S
     )
 
@@ -95,17 +134,20 @@ simplicialModule(Complex,ZZ) := SimplicialModule => opts -> (C,d) -> (
      if not instance(opts.Base, ZZ) then
       error "expected Base to be an integer";
      if instance(C,Complex) then (
-	 degenmapHash := hashTable flatten for n from 1 to d-1 list (
+	 if opts.Degeneracy == true then (degenmapHash := hashTable flatten for n from 1 to d-1 list (
 	    for i from 0 to n list (
 		(n,i) => degenMapi(n,i,C)
 		)
-	     );
+	     ););
 	 facemapHash := hashTable flatten for n from 1 to d list (
 	     for i from 0 to n list (
 	 	 (n,i) => faceMapi(n,i,C)
 	 	 )
 	     );
-	 return simplicialModule(C,facemapHash,degenmapHash,d)
+	 --print("mde it here first");
+	 if opts.Degeneracy == true then break return simplicialModule(C,facemapHash,degenmapHash,d);
+	 --print("made it here");
+	 return simplicialModule(C,facemapHash,d)
 	 );
      )
  
@@ -131,7 +173,7 @@ net SimplicialModule := S -> (
      else 
          horizontalJoin between(" <-- ", 
              for i from lo to hi list
-                 stack (net ((S.module)#i)), " ", net i)  
+                 stack (net ((S.module)#i), " ", net i))  
      )
  
  
@@ -167,9 +209,9 @@ map(SimplicialModule, SimplicialModule, HashTable) := SimplicialModuleMap => opt
         f := maps#k;
         -- note: we use != instead of =!= in the next 2 tests,
         -- since we want to ignore any term order differences
-	print(k);
-	print(source f);
-	print(src_(first k));
+	--print(k);
+	--print(source f);
+	--print(src_(first k));
         if rank source f != rank src_(first k) then (
             error ("map with index "|toString(k)|" has inconsistent source");
 	);
