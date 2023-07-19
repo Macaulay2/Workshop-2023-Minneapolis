@@ -532,7 +532,7 @@ permOverASM Matrix := List => A -> (
 --TODO: input validation/type checking
 -------------------------------------------
 isIntersectionSchubIdeals = method()
-isIntersectionSchubIdeals Ideal := List => I -> (
+isIntersectionSchubIdeals Ideal := Boolean => I -> (
     isIntersection := true;
     if (I == radical(I)) then {
         schubDecomp := schubDecomposition I;

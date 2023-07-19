@@ -53,6 +53,8 @@ doc ///
         isPartialASM(M)
     Inputs
         M:Matrix
+    Outputs
+    	:Boolean
     Description
         Text
             Given an integer matrix, checks that the matrix is a partial alternating sign matrix. A partial alternating sign matrix is a matrix with entries in $\{-1,0,1\}$ such that:
@@ -79,6 +81,8 @@ doc ///
         partialASMToASM(A)
     Inputs
         A:Matrix
+    Outputs
+	:Matrix
     Description
         Text
             Given a partial alternating sign matrix returns the unique smallest alternating sign matrix by adding necessary number of rows and columns.
@@ -102,6 +106,8 @@ doc ///
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
+    Outputs
+    	:MonomialIdeal
     Description
         Text
             Let $Z = (z_{i,j})$ be a generic matrix and $R=k[Z]$ is a polynomial ring in the entries of Z over the ring k.  We call a term order on R antidiagonal if the lead term of the determinant of each submatrix $Z'$ of Z is the product of terms along the antidiagonal of $Z'$. 
@@ -135,6 +141,8 @@ doc ///
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
+    Outputs
+	:Matrix
     Description
         Text
             Given an alternating sign matrix or a permutation in 1-line notation, outputs the matrix of rank condition associated to that alternating sign matrix or permutation.
@@ -156,6 +164,8 @@ doc ///
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
+    Outputs
+    	:List
     Description
         Text
             Given a permutation in 1-line notation or a partial alternating sign matrix returns the Rothe diagram.
@@ -181,6 +191,8 @@ doc ///
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
+    Outputs
+    	:List
     Description
         Text
             Given a permutation in 1-line notation or a partial alternating sign matrix returns list of entries of Rothe diagram with the ranks of each entry.
@@ -205,6 +217,8 @@ doc ///
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
+    Outputs
+    	:List
     Description
         Text
             Given an alternating sign matrix or a permutation in 1-line notation, outputs Fulton's essential set, i.e., the maximally southeast elements of the Rothe diagram of that alternating sign matrix or permutation. 
@@ -226,6 +240,8 @@ doc ///
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
+    Outputs
+    	:List
     Description
         Text
             Given a permutation in 1-line notation or a partial alternating sign matrix, returns the essential set together with the rank restriction at each entry.
@@ -250,6 +266,8 @@ doc ///
     Inputs
         w:List
             or {\tt M} is a @TO Matrix@
+    Outputs
+    	:Ideal
     Description
         Text
             Given a permutation in 1-line notation or, more generally, a (partial) alternating sign matrix, outputs the associated alternating sign matrix ideal (which is called a Schubert determinantal ideal in the case of a permutation).  (The convention throughout this package is that the permuation matrix of a pemutation w has 1's in positions (i,w(i)).)
@@ -296,7 +314,9 @@ doc ///
 	diagLexInitNW(M)
     Inputs
         w:List
-            or {\tt M} is a @TO Matrix@    
+            or {\tt M} is a @TO Matrix@  
+    Outputs
+    	:MonomialIdeal  
     Description
         Text
             Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal with respect to lexicographic order, 
@@ -318,7 +338,9 @@ doc ///
 	diagLexInitSE(M)
     Inputs
         w:List
-            or {\tt M} is a @TO Matrix@    
+            or {\tt M} is a @TO Matrix@
+    Outputs
+    	:MonomialIdeal
     Description
         Text
             Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal with respect to lexicographic order, 
@@ -341,6 +363,8 @@ doc ///
     Inputs
         w:List
             or {\tt M} is a @TO Matrix@    
+    Outputs
+    	:MonomialIdeal 
     Description
         Text
             Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal with respect to reverse lexicographic order, 
@@ -360,6 +384,8 @@ doc ///
         subwordComplex(w)
     Inputs
         w:List
+    Outputs
+    	:SimplicialComplex
     Description
         Text
             Given a permutation in 1-line notation, compute the subword complex associated to w (that is, the Stanley-Reisner complex of antiDiagInit).
@@ -378,6 +404,8 @@ doc ///
         schubDecomposition I
     Inputs
         I:Ideal
+    Outputs
+    	:List
     Description
         Text
             Given an ASM ideal, it can be decomposed into Schubert determinantal ideals as $I = I_{w_1} \cap ... \cap I_{w_k}$, where the $w_i$ are permutations.
@@ -398,6 +426,8 @@ doc ///
         permOverASM A
     Inputs
         A:Matrix
+    Outputs
+    	:List    	
     Description
         Text
             Given an alternating sign matrix $A$, this routine computes Perm$(A) = \{w \in S_n \mid A \leq w$, and $v \in S_n$ with $A \leq v \leq w$ implies $ v=w\}$ (where $\leq$ is in (strong) Bruhat order).  This computation is performed by taking the antidiagonal initial ideal determined by $A$ and extracting the permutations indexing its components via schubDecomposition.
@@ -416,10 +446,16 @@ doc ///
         isIntersectionSchubIdeals I
     Inputs
         I:Ideal
+    Outputs
+    	:Boolean
     Description
         Text
             Checks if the input ideal $I$ can be written as $I = I_{w_1} \cap ... \cap I_{w_k}$,
             where each $I_{w_i}$ is a Schubert determinantal ideal.
+	Example
+	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
+	    J = schubDetIdeal A;
+	    isIntersectionSchubIdeals J
 ///
 
 doc ///
@@ -432,9 +468,15 @@ doc ///
         isASMIdeal(I)
     Inputs
         I:Ideal
+    Outputs
+    	:Boolean
     Description
         Text
             An ideal is ASM if it is radical and can be written as the intersection of Schubert determinantal ideals.
+	Example
+    	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
+	    J = schubDetIdeal A;
+	    isIntersectionSchubIdeals J
 ///
 
 doc ///
@@ -447,6 +489,8 @@ doc ///
         isASMUnion(L)
     Inputs
         L:List
+    Outputs
+    	:Boolean    
     Description
         Text
             Give a list of permutations in 1-line notation, check whether the union of their matrix schubert varieties is an ASM variety.
@@ -465,10 +509,16 @@ doc ///
         getASM(I)
     Inputs
         I:Ideal
+    Outputs
+    	:Matrix
     Description
         Text
             Gets the alternating sign matrix (ASM) of an ideal $I$, if it exists.
             If the ASM has not been computed yet, then an attempt will be made to compute the ASM. Once the ASM is computed, it is stored in the cache of $I$.
+	Example
+	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
+	    J = schubDetIdeal A;
+	    getASM J
 ///
 
 doc ///
@@ -503,7 +553,9 @@ doc ///
     Usage
         rankTableToASM M
     Inputs
-        M:Matrix    
+        M:Matrix
+    Outputs
+    	:Matrix  
     Description
         Text
             Given a square matrix which is a valid minimal rank table, returns the unique ASM associated to it.
@@ -524,6 +576,8 @@ doc ///
         rankTableFromMatrix M
     Inputs
         M:Matrix
+    Outputs
+    	:Matrix
     Description
         Text
             Given a square integer matrix, return the associated valid minimal rank table which is associated to a unique ASM.
