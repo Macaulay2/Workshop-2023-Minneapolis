@@ -48,7 +48,7 @@ doc ///
         (isPartialASM, Matrix)
         isPartialASM
     Headline
-        whether a matrix is a partial alternating sign matrix.
+        whether a matrix is a partial alternating sign matrix
     Usage
         isPartialASM(M)
     Inputs
@@ -60,8 +60,6 @@ doc ///
             Given an integer matrix, checks that the matrix is a partial alternating sign matrix. A partial alternating sign matrix is a matrix with entries in $\{-1,0,1\}$ such that:
 
             - The nonzero entries in each row and column alternate in sign,
-
-            - Each row and column sums to $0$ or $1$, and
 
             - The first nonzero entry of any row or column (if there is one) is $1$.
         Example
@@ -76,7 +74,7 @@ doc ///
         (partialASMToASM, Matrix)
         partialASMToASM
     Headline
-        to extend a partial alternating sign matrix to an alternating sign matrix
+        extend a partial alternating sign matrix to an alternating sign matrix
     Usage
         partialASMToASM(A)
     Inputs
@@ -85,7 +83,7 @@ doc ///
 	:Matrix
     Description
         Text
-            Given a partial alternating sign matrix returns the unique smallest alternating sign matrix by adding necessary number of rows and columns.
+            Given a partial alternating sign matrix, returns the unique smallest alternating sign matrix with the same essential set and same rank conditions at each element of the essential set.
         Example
             A = matrix{{0,1,0},{1,-1,0},{0,0,0}}
             partialASMToASM(A)
@@ -110,21 +108,24 @@ doc ///
     	:MonomialIdeal
     Description
         Text
-            Let $Z = (z_{i,j})$ be a generic matrix and $R=k[Z]$ is a polynomial ring in the entries of Z over the ring k.  We call a term order on R antidiagonal if the lead term of the determinant of each submatrix $Z'$ of Z is the product of terms along the antidiagonal of $Z'$. 
+            Let $Z = (z_{i,j})$ be a generic matrix and $R=k[Z]$ a polynomial ring in the entries of $Z$ over the field $k$.  We call a term order on $R$ antidiagonal if the lead term of the determinant of each submatrix $Z'$ of $Z$ is the product of terms along the antidiagonal of $Z'$. 
 
-            This method relies on these theorems.  It computes the antidiagonal initial ideal of an alternating sign matrix ideal by directly forming the ideal of the lead terms of the Fulton generators.  
+            This method computes the antidiagonal initial ideal of an ASM ideal by directly forming the ideal of the lead terms of the Fulton generators.  
 
             @UL {{"[KM05]: Knutson and Miller, Gröbner geometry of Schubert polynomials (see ", arXiv "0110058", ")."},}@ 
             
-            tells us that the Fulton generators of each Schubert determinantal ideal form a Gröbner basis, a result extended to alternating sign matrix ideals by  
-            
-            @UL {{"[Knu]: Knutson, Frobenius splitting, point-counting, and degeneration (see ", arXiv "0911.4941", ")."},}@ 
-            
-            and by 
+            tells us that the Fulton generators of each Schubert determinantal ideal form a Gröbner basis.  For an extension to ASM ideals, see  
+	    
+	    @UL {{"[KW]: Klein and Weigant, Bumpless pipe dreams encode Gröbner geometry of Schubert polynomials (see ", arXiv "2108.08370", ")."},}@
             
             @UL {{"[Wei]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},}@
+            
+            @UL {{"[Knu]: Knutson, Frobenius splitting, point-counting, and degeneration (see ", arXiv "0911.4941", ")."},}@
+	    
+	    This function computes over the coefficient field of rational numbers unless an alternative is specified.
+           
         Example
-            antiDiagInit({1,3,2})
+            antiDiagInit({1,3,2},CoefficientRing=>ZZ/3001)
             antiDiagInit(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 ///
 

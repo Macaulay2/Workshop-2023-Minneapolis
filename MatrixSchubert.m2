@@ -186,5 +186,3 @@ needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
 
-
-
