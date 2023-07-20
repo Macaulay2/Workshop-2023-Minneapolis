@@ -13,16 +13,51 @@ naiveNorm(Complex,ZZ) := (C,n) -> (naiveNorm(simplicialModule(C,n),n))
 --we assume that S is Gamma(C) for some complex C here
 --sym = method();
 --sym(ZZ,Matrix) := (d,M) -> (
+symMult = method();
+symMult(List,ZZ,Ring) := (L,d,Q) -> (Qn := Q[z_1..z_d];
+    M1 := tensor(for i in L list basis(i,Qn));
+    M2 := basis(sum L,Qn);
+    sub(M1//M2,Q)
+    )
 
-sym(ZZ,SimplicialModule) := (d,S) -> (tdeg := topDegree S;
-    C := S.complex;
-    L := hashTable for i to tdeg list i => symmetricPower(d,combineSFactors(S,i));
-    print(L);
-    H1 := hashTable for i in keys (S.dd.map) list i => symmetricPower(d,((S.dd)_i));
-    print(H1);
-    H2 := hashTable for i in keys (S.ss) list i => symmetricPower(d,((S.ss)_i));
-    print(H2);
-    simplicialModule(L,H1,H2,tdeg)
+sym = method(Options => {Degeneracy => false,TopDegree => null});
+sym(ZZ,Matrix) := Matrix => opts -> (d,phi) -> (Q := ring phi;
+    n := rank source phi;
+    m := rank target phi;
+    phitens := tensor((d:phi));
+    M1 := symMult(toList(d:1),n,Q);
+    M2 := symMult(toList(d:1),m,Q);
+    matrix entries transpose ((matrix entries transpose(M2*phitens))//transpose(M1))
+    )
+
+
+sym(ZZ,SimplicialModule) := SimplicialModule => opts -> (d,S) -> (tdeg := topDegree S;
+    --C := S.complex;
+    L = hashTable for i to tdeg list i => symmetricPower(d,combineSFactors(S,i));
+    H1 = hashTable for i in keys (S.dd.map) list i => map(symmetricPower(d,target (S.dd)_i),symmetricPower(d,source (S.dd)_i),sym(d,((S.dd)_i)));
+    if opts.Degeneracy==true then H2 = hashTable for i in keys (S.ss.map) list i => sym(d,((S.ss)_i));
+    --print("we made it");
+    if opts.Degeneracy==true then return simplicialModule(L,H1,H2,tdeg);
+    simplicialModule(L,H1,tdeg)
+    )
+
+sym(ZZ,SimplicialModuleMap) := SimplicialModuleMap => opts -> (d,phi) -> (
+    S1 := source phi;
+    S2 := target phi;
+    if instance((keys phi.map)#0,Sequence) then error "Expected SimplicialModuleMap to have singly graded indices";
+    map(sym(d,S2),sym(d,S1),new HashTable from for i to max(topDegree S1,topDegree S2) list i => sym(d,phi_i),Degree => degree phi)
+    )
+
+sym(ZZ,Complex) := Complex => opts -> (d,C) -> (if not(opts.TopDegree === null) then S = simplicialModule(C,opts.TopDegree)
+    else S = simplicialModule(C,d*length(C));
+    Sn := sym(d,S);
+    normalize(Sn)
+    )
+
+sym(ZZ,ComplexMap) := ComplexMap => opts -> (d,phi) -> (if not(opts.TopDegree === null) then phin = simplicialModuleMap(phi,opts.TopDegree)
+    else phin = simplicialModuleMap(phi,d*(max(length(source phi),length target phi)));
+    phik := sym(d,phin);
+    normalize(phik)
     )
 
 ext = method(Options => {Degeneracy=>false,TopDegree => null})
