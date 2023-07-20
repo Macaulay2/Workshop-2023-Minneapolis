@@ -1,3 +1,5 @@
+ needsPackage "Complexes"
+ 
  SimplicialModule = new Type of MutableHashTable --
   -- note: we make this mutable in order to construct the
   --   differential as a morphism of ZZdFactorizations (in the style of Complexes)

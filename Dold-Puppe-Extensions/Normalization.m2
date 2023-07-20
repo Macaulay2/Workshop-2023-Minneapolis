@@ -1,3 +1,6 @@
+ needsPackage "SchurFunctors"
+ needsPackage "Complexes"
+ 
  altSumFace = method();
 altSumFace(SimplicialModule,ZZ) := (S,n) -> (sum(0..n,i->(-1)^i*(S.dd)_(n,i)))
 
@@ -13,14 +16,44 @@ naiveNorm(Complex,ZZ) := (C,n) -> (naiveNorm(simplicialModule(C,n),n))
 --we assume that S is Gamma(C) for some complex C here
 --sym = method();
 --sym(ZZ,Matrix) := (d,M) -> (
-symMult = method();
+-*symMult = method();
 symMult(List,ZZ,Ring) := (L,d,Q) -> (Qn := Q[z_1..z_d];
     M1 := tensor(for i in L list basis(i,Qn));
     M2 := basis(sum L,Qn);
     sub(M1//M2,Q)
+    )*-
+
+schurMap = method(Options => {Degeneracy => false,TopDegree => null});
+schurMap(List,SimplicialModule) := SimplicialModule => opts -> (lambda,S) -> (tdeg := topDegree S;
+    --C := S.complex;
+    L := hashTable for i to tdeg list i => schurModule(lambda,combineSFactors(S,i));
+    H1 = hashTable for i in keys (S.dd.map) list i => schur(lambda,((S.dd)_i));
+    if opts.Degeneracy==true then H2 = hashTable for i in keys (S.ss.map) list i => schur(lambda,((S.ss)_i));
+    --print("we made it");
+    if opts.Degeneracy==true then return simplicialModule(L,H1,H2,tdeg);
+    simplicialModule(L,H1,tdeg)
     )
 
-sym = method(Options => {Degeneracy => false,TopDegree => null});
+schurMap(List,SimplicialModuleMap) := SimplicialModuleMap => opts -> (lambda,phi) -> (
+    S1 := source phi;
+    S2 := target phi;
+    if instance((keys phi.map)#0,Sequence) then error "Expected SimplicialModuleMap to have singly graded indices";
+    map(schurMap(lambda,S2),schurMap(lambda,S1),new HashTable from for i to max(topDegree S1,topDegree S2) list i => schur(lambda,phi_i),Degree => degree phi)
+    )
+
+schurMap(List,Complex) := Complex => opts -> (lambda,C) -> (if not(opts.TopDegree === null) then S = simplicialModule(C,opts.TopDegree)
+    else S = simplicialModule(C,(sum lambda)*length(C));
+    Sn := schurMap(lambda,S);
+    normalize(Sn)
+    )
+
+schurMap(List,ComplexMap) := ComplexMap => opts -> (lambda,phi) -> (if not(opts.TopDegree === null) then phin = simplicialModuleMap(phi,opts.TopDegree)
+    else phin = simplicialModuleMap(phi,(sum lambda)*(max(length(source phi),length target phi)));
+    phik := schurMap(lambda,phin);
+    normalize(phik)
+    )
+
+-*sym = method(Options => {Degeneracy => false,TopDegree => null});
 sym(ZZ,Matrix) := Matrix => opts -> (d,phi) -> (Q := ring phi;
     n := rank source phi;
     m := rank target phi;
@@ -58,13 +91,13 @@ sym(ZZ,ComplexMap) := ComplexMap => opts -> (d,phi) -> (if not(opts.TopDegree ==
     else phin = simplicialModuleMap(phi,d*(max(length(source phi),length target phi)));
     phik := sym(d,phin);
     normalize(phik)
-    )
+    )*-
 
 ext = method(Options => {Degeneracy=>false,TopDegree => null})
 ext(ZZ,SimplicialModule) := SimplicialModule => opts -> (d,S) -> (tdeg := topDegree S;
     --C := S.complex;
     L = hashTable for i to tdeg list i => exteriorPower(d,combineSFactors(S,i));
-    H1 = hashTable for i in keys (S.dd.map) list i => map(exteriorPower(d,target (S.dd)_i),exteriorPower(d,source (S.dd)_i),exteriorPower(d,((S.dd)_i)));
+    H1 = hashTable for i in keys (S.dd.map) list i =>exteriorPower(d,((S.dd)_i));
     if opts.Degeneracy==true then H2 = hashTable for i in keys (S.ss.map) list i => exteriorPower(d,((S.ss)_i));
     --print("we made it");
     if opts.Degeneracy==true then return simplicialModule(L,H1,H2,tdeg);
@@ -89,7 +122,26 @@ ext(ZZ,ComplexMap) := ComplexMap => opts -> (d,phi) -> (if not(opts.TopDegree ==
     phik := ext(d,phin);
     normalize(phik)
     )
+
+simplicialTensor =  method(Options => {Degeneracy=>false,TopDegree => null})
+simplicialTensor(List) := SimplicialModule => opts -> T -> (if instance(T_0,SimplicialModule) then (
+	tdeg := max apply(T,i->topDegree i);
+	L := hashTable for i to tdeg list i => tensor(apply(T,s->combineSFactors(s,i)));
+	H1 = hashTable for i in keys ((T_0).dd.map) list i => tensor(apply(T,s->s.dd_i));
+	if opts.Degeneracy==true then H2 = hashTable for i in keys ((T_0).dd.map) list i => tensor(apply(T,s->s.ss_i));
+	if opts.Degeneracy==true then return simplicialModule(L,H1,H2,tdeg);
+        return simplicialModule(L,H1,tdeg);
+	);
+    tLength := max apply(T,j->length j);
+    if instance(T_0,Complex) then return normalize simplicialTensor(apply(T,j->simplicialModule(j,length(T)*tLength)));
+    )
+
+simplicialTensor(ZZ,SimplicialModule) := SimplicialModule => opts -> (d,S) -> (simplicialTensor(toList(d:S)))
+
+simplicialTensor(ZZ,Complex) := Complex => opts -> (d,C) -> (simplicialTensor(toList(d:C)))
     
+hhh = method();
+hhh(Complex) := C -> (sum toList apply(0..length C,i->length HH_i(C)))
 
 degenMorphisms = method()
 degenMorphisms(SimplicialModule,ZZ,ZZ) := (S,n,k) -> (Cn := naiveNorm(S,n);
@@ -119,7 +171,7 @@ makeNormMap(SimplicialModuleMap,ZZ) := (phi,d) -> (
     if d==0 then return phi_0;
     K1 := intersect( for i from 1 to d list ker S1.dd_(d,i));
     K2 := intersect( for i from 1 to d list ker S2.dd_(d,i));
-    prune inducedMap(K2,K1,phi_d)
+    prune cover inducedMap(K2,K1,phi_d)
     ) 
 
 normalize = method();

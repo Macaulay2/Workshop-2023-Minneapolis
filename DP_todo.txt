@@ -3,14 +3,14 @@
 
 # Derived Functors and General Compatibility
 ## Need to write a symmetric/divided power functor that works for arbitrary matrices
-## Need to add functionality that converts a morphism of chain complexes into a morphism of the Dold-Kan images, and vice versa: any morphism of simplicial modules induces a morphism of complexes.
-## In the same vein as the previous line: we can apply functors to any morphism of complexes by the same Dold-Kan type extension method.
-## We should be thinking about other types of nonlinear functors to implement (so far I have: Sym, Div, Exterior power, Tensor powers, Schur functors (this is harder))
+## The command simplicialModuleMap converts a morphism of complexes into a SimplicialModuleMap.
+## I updated the simplicialModule command to assume that the topDegree of the outputted simplicial module is equal to the length of the input complex (but probably we should add a warning that the user can specify the top degree)
+## I now have 3 types of nonlinear functors implemented: Exterior powers, Schur functors (this includes symmetric powers), and tensor products. Note: I am aware that exterior powers are an example of a Schur functor, but the exterior power code runs significantly faster than the Schur functor code.
 
 
 # Normalization
 ## I aded a command that actually has the proper normalization.
-## I need to update the normalization command to also apply to the type "SimplicialModuleMap", and the output will be a morphism of the respective normalizations.
+## Normalization now applies to morphisms of simplicial modules and outputs a morphism of the respective normalizations.
 
 # Construction Optimization
 ## Caching A matrix
