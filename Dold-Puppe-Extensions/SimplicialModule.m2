@@ -161,7 +161,9 @@ simplicialModule(Complex,ZZ) := SimplicialModule => opts -> (C,d) -> (
 	 );
      )
  
- simplicialModule(Complex) := SimplicialModule => opts -> C -> (simplicialModule(C,length C))
+ simplicialModule(Complex) := SimplicialModule => opts -> C -> (simplicialModule(C,length C,Degeneracy => opts.Degeneracy))
+ 
+ simplicialModule(Module,ZZ) := SimplicialModule => opts -> (M,d) -> (simplicialModule(complex M,d,Degeneracy => opts.Degeneracy))
  
  
 SimplicialModule _ Sequence := Module => (S,p) -> (
