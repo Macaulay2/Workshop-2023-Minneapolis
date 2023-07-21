@@ -551,22 +551,25 @@ doc ///
         (isMinRankTable, Matrix)
         isMinRankTable
     Headline
-        whether a matrix is a valid rank table
+        whether a matrix is the canonical rank table of some partial ASM
     Usage
-        isMinRankTable(A)
+        isMinRankTable(T)
     Inputs
-        A:Matrix
+        T:Matrix
     Outputs
         :Boolean
     Description
         Text
-            Checks whether {\tt A} is a valid rank table.
-        Example
+            Checks whether {\tt T} is a the canonical rank table of some partial ASM.  These are the rank tables that are constructed in Section 1 of [Wei] and from which the partial ASM can be determined using equation (21) of the same.
+        
+	    @UL {{"[Wei]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},}@
+	    
+	Example
             T = matrix {{0,1,1},{1,1,2},{1,2,3}}
             isMinRankTable T
 
-            T = matrix {{1,1,1,1,1},{1,2,2,2,2},{1,2,2,2,3},{1,2,2,3,3},{1,2,3,3,3}}
-            isMinRankTable T
+            U = matrix {{1,1,1,1,1},{1,2,2,2,2},{1,2,2,2,3},{1,2,2,3,3}}
+            isMinRankTable U
 ///
 
 doc ///
@@ -576,19 +579,22 @@ doc ///
     Headline
         to find the ASM associated to a given rank table
     Usage
-        rankTableToASM M
+        rankTableToASM T
     Inputs
-        M:Matrix
+        T:Matrix
     Outputs
     	:Matrix  
     Description
         Text
-            Given a square matrix which is a valid minimal rank table, returns the unique ASM associated to it.
+            Given a square matrix that is a valid minimal rank table, returns the unique ASM associated to it. This algorithm follows
+	    
+	    @UL {{"[Wei, Equation (21)]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},}@
+	    
         Example
-            A = matrix {{0,0,1,1},{0,1,1,2},{1,2,2,3},{1,2,3,4}}
-            rankTableToASM(A)
-            B = matrix {{0,0,1,1,1},{1,1,1,2,2},{1,2,2,3,3},{1,2,3,4,4},{1,2,3,4,5}}
-            rankTableToASM(B)
+            T = matrix {{0,0,1,1},{0,1,1,2},{1,2,2,3},{1,2,3,4}}
+            rankTableToASM(T)
+            U = matrix {{0,0,1,1,1},{1,1,1,2,2},{1,2,2,3,3},{1,2,3,4,4},{1,2,3,4,5}}
+            rankTableToASM(U)
 ///           
 
 doc ///
@@ -596,7 +602,7 @@ doc ///
         (rankTableFromMatrix, Matrix)
         rankTableFromMatrix
     Headline
-        to find the minimal rank table which is associated to a unique ASM, given a square integer matrix
+        to find the minimal rank table from an arbitrary square integer matrix
     Usage
         rankTableFromMatrix M
     Inputs
@@ -605,10 +611,13 @@ doc ///
     	:Matrix
     Description
         Text
-            Given a square integer matrix, return the associated valid minimal rank table which is associated to a unique ASM.
+            Given a square integer matrix (viewed as rank conditions to be imposed on a generic matrix), returns the unique integer matrix that both defines the same ideal of minors and also is the minimal rank table of some ASM.  See Section 1 and Equation (21) of 
+	    
+	    @UL {{"[Wei]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},}@
+	    
         Example
-            A = matrix {{1,0,0},{0,23,24},{23,24,25}};
-            rankTableFromMatrix A
+            M = matrix {{1,0,0},{0,23,24},{23,24,25}};
+            rankTableFromMatrix M
 ///   
 
 doc ///
@@ -642,7 +651,7 @@ doc ///
         (entrywiseMaxRankTable, List)
         entrywiseMaxRankTable
     Headline
-        compute the entrywise max rank table of a list of ASMs
+        compute the entrywise maximum rank table of a list of ASMs
     Usage
         entrywiseMaxRankTable(L)
     Inputs
@@ -663,7 +672,7 @@ doc ///
         (entrywiseMinRankTable, List)
         entrywiseMinRankTable
     Headline
-        compute the entrywise min rank table of a list of ASMs
+        compute the entrywise minimum rank table of a list of ASMs
     Usage
         entrywiseMinRankTable(L)
     Inputs

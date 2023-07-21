@@ -54,14 +54,14 @@ export{
     "diagLexInitNW",	    	    --documented ++
     "diagRevLexInit",	     	    --documented ++
     "subwordComplex",	     	    --documented ++
-    "entrywiseMinRankTable",	    --documented (check)
-    "entrywiseMaxRankTable",	    --documented (check)
+    "entrywiseMinRankTable",	    --documented ++
+    "entrywiseMaxRankTable",	    --documented ++
     "schubDecomposition",	    --documented ++
     "permOverASM",                  --documented ++
-    "isIntersectionSchubIdeals",    -- ADD EX TO DOC
-    "isASMIdeal",    	     	    -- ADD EX TO DOC	 
-    "isASMUnion",    	     	    -- ??
-    "getASM",	     	     	    -- ADD EX TO DOC
+    "isIntersectionSchubIdeals",    --documented ++
+    "isASMIdeal",    	     	    --documented ++	 
+    "isASMUnion",    	     	    --documented ++
+    "getASM",	     	     	    --documented ++
     "isMinRankTable",	     	    --documented ++
     "rankTableToASM",	     	    --documented ++
     "rankTableFromMatrix",    	    --documented ++
