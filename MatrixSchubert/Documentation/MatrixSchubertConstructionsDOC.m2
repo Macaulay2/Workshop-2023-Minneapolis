@@ -627,7 +627,7 @@ doc ///
     Headline
         returns permutation associated to perumation matrix 
     Usage
-        getPermFromASM(A)
+        getPermFromASM A
     Inputs
         A:Matrix
     Outputs
@@ -636,14 +636,14 @@ doc ///
         Text
 	    When {\tt A} is a permutation matrix, returns the corresponding permutation. Otherwise, returns the empty permutation.
         Example
-            T = matrix {{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}
-            getPermFromASM T
+            A = matrix {{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}
+            getPermFromASM A
 	    
-	    T = matrix{{1,0},{0,0}}
-    	    getPermFromASM T
+	    A = matrix{{1,0},{0,0}}
+    	    getPermFromASM A
 	    
-            T = matrix {{0,1,0,0},{1,0,0,0},{0,0,1,0},{0,0,0,1}}
-            getPermFromASM T
+            A = matrix {{0,1,0,0},{1,0,0,0},{0,0,1,0},{0,0,0,1}}
+            getPermFromASM A
 ///
 
 doc ///
@@ -653,7 +653,7 @@ doc ///
     Headline
         compute the entrywise maximum rank table of a list of ASMs
     Usage
-        entrywiseMaxRankTable(L)
+        entrywiseMaxRankTable L
     Inputs
         L:List
             of ASMs of equal size
@@ -703,7 +703,16 @@ doc ///
         :Ideal 
     Description
         Text
-            Given a list of ASMs or permutations in 1-line notation, compute the sum of the corresponding schubert determinantal ideals.
+            Given a list of ASMs or permutations in 1-line notation, compute the sum of the corresponding Schubert determinantal (or ASM) ideals
+	    
+	    An arbitrary (finite) sum of partial ASM ideals is again a partial ASM ideal.  See 
+	    
+	     @UL {{"[Wei, Section 3.5]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},}@
+	    
+	     @UL {{"[KW, Lemma 2.6]: Klein and Weigant, Bumpless pipe dreams encode Gröbner geometry of Schubert polynomials (see ", arXiv "2108.08370", ")."},}@
+	    
+	    The canonical rank table of the sum will be entrywise minimum of the rank tables of the summands.  This function computes the sum of ASM ideals by computing the individual rank tables, using entrywiseMinRankTable to find the entrywise minimum, and then constructing the partial ASM from that rank table.
+	    
         Example
             schubAdd {{3,2,1,4}, {2,1,4,3}}
             schubAdd {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}}
@@ -724,7 +733,7 @@ doc ///
         :Ideal 
     Description
         Text
-            Given a list of ASMs or permutations in 1-line notation, compute the intersection of the corresponding schubert determinantal ideals.
+            Given a list of ASMs or permutations in 1-line notation, compute the intersection of the corresponding Schubert determinantal ideals.
         Example
             schubIntersect {{3,2,1,4}, {2,1,4,3}}
             schubIntersect {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}}
