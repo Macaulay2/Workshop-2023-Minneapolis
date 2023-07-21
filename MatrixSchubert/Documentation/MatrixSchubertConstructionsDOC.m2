@@ -304,6 +304,32 @@ doc ///
             netList fultonGens matrix{{0,1,0},{1,-1,1},{0,1,0}}
 ///
 
+doc ///
+    Key 
+    	(diagLexInitSE, List)
+	(diagLexInitSE, Matrix)
+        diagLexInitSE
+    Headline
+        Diagonal initial ideal of an ASM ideal with respect to lex, starting from SE corner
+    Usage
+    	diagLexInitSE w
+	diagLexInitSE A
+    Inputs
+        w:List
+            or {\tt A} is a @TO Matrix@
+    Outputs
+    	:MonomialIdeal
+    Description
+        Text
+            Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal of the corresponding ASM ideal or Schubert determinantal ideal with respect to lexicographic order, 
+	    where the variables are ordered reading from right to left and bottom-to-top (starting in the southeast corner).
+	    
+	    This function computes over the coefficient field of rational numbers unless an alternative is specified.
+	Example
+	    diagLexInitSE({1,3,2},CoefficientRing=>ZZ/3001)
+            diagLexInitSE(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+///
+
 
 doc ///
     Key 
@@ -331,31 +357,6 @@ doc ///
             diagLexInitNW(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 ///
 
-doc ///
-    Key 
-    	(diagLexInitSE, List)
-	(diagLexInitSE, Matrix)
-        diagLexInitSE
-    Headline
-        Diagonal initial ideal of an ASM ideal with respect to lex, starting from SE corner
-    Usage
-    	diagLexInitSE w
-	diagLexInitSE A
-    Inputs
-        w:List
-            or {\tt A} is a @TO Matrix@
-    Outputs
-    	:MonomialIdeal
-    Description
-        Text
-            Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal of the corresponding ASM ideal or Schubert determinantal ideal with respect to lexicographic order, 
-	    where the variables are ordered reading from right to left and bottom-to-top (starting in the southeast corner).
-	    
-	    This function computes over the coefficient field of rational numbers unless an alternative is specified.
-	Example
-	    diagLexInitSE({1,3,2},CoefficientRing=>ZZ/3001)
-            diagLexInitSE(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
-///
 
 doc ///
     Key 
@@ -400,7 +401,49 @@ doc ///
             Given a permutation in 1-line notation, compute the subword complex associated to w (that is, the Stanley-Reisner complex of antiDiagInit).
         Example
             subwordComplex({2,5,4,1,3})
-///           
+/// 
+
+doc ///
+    Key
+        (entrywiseMinRankTable, List)
+        entrywiseMinRankTable
+    Headline
+        compute the entrywise minimum rank table of a list of ASMs
+    Usage
+        entrywiseMinRankTable(L)
+    Inputs
+        L:List
+            of ASMs of equal size
+    Outputs
+        :Matrix
+    Description
+        Text
+            Computes the rank tables of a list of ASMs, then returns the entrywise minimum.
+        Example
+            L = {{4,3,1,2},{2,4,3,1}} / permToMatrix;
+            entrywiseMinRankTable L
+/// 
+
+doc ///
+    Key
+        (entrywiseMaxRankTable, List)
+        entrywiseMaxRankTable
+    Headline
+        compute the entrywise maximum rank table of a list of ASMs
+    Usage
+        entrywiseMaxRankTable L
+    Inputs
+        L:List
+            of ASMs of equal size
+    Outputs
+        :Matrix
+    Description
+        Text
+            Computes the rank tables of a list of ASMs, then returns the entrywise maximum.
+        Example
+            L = {{4,3,1,2},{2,4,3,1}} / permToMatrix;
+            entrywiseMaxRankTable L
+///         
 
 
 doc ///
@@ -620,72 +663,25 @@ doc ///
             rankTableFromMatrix M
 ///   
 
-doc ///
+doc /// 
     Key
-        (getPermFromASM, Matrix)
-        getPermFromASM
+        (schubIntersect, List)
+        schubIntersect
     Headline
-        returns permutation associated to perumation matrix 
-    Usage
-        getPermFromASM A
-    Inputs
-        A:Matrix
+        compute the intersection of ASM ideals
+    Usage 
+        schubIntersect L
+    Inputs 
+        L:List 
+            of ASMs or permutations in 1-line notation
     Outputs
-        :List
+        :Ideal 
     Description
         Text
-	    When {\tt A} is a permutation matrix, returns the corresponding permutation. Otherwise, returns the empty permutation.
+            Given a list of ASMs or permutations in 1-line notation, compute the intersection of the corresponding Schubert determinantal ideals.
         Example
-            A = matrix {{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}
-            getPermFromASM A
-	    
-	    A = matrix{{1,0},{0,0}}
-    	    getPermFromASM A
-	    
-            A = matrix {{0,1,0,0},{1,0,0,0},{0,0,1,0},{0,0,0,1}}
-            getPermFromASM A
-///
-
-doc ///
-    Key
-        (entrywiseMaxRankTable, List)
-        entrywiseMaxRankTable
-    Headline
-        compute the entrywise maximum rank table of a list of ASMs
-    Usage
-        entrywiseMaxRankTable L
-    Inputs
-        L:List
-            of ASMs of equal size
-    Outputs
-        :Matrix
-    Description
-        Text
-            Computes the rank tables of a list of ASMs, then returns the entrywise maximum.
-        Example
-            L = {{4,3,1,2},{2,4,3,1}} / permToMatrix;
-            entrywiseMaxRankTable L
-///
-
-doc ///
-    Key
-        (entrywiseMinRankTable, List)
-        entrywiseMinRankTable
-    Headline
-        compute the entrywise minimum rank table of a list of ASMs
-    Usage
-        entrywiseMinRankTable(L)
-    Inputs
-        L:List
-            of ASMs of equal size
-    Outputs
-        :Matrix
-    Description
-        Text
-            Computes the rank tables of a list of ASMs, then returns the entrywise minimum.
-        Example
-            L = {{4,3,1,2},{2,4,3,1}} / permToMatrix;
-            entrywiseMinRankTable L
+            schubIntersect {{3,2,1,4}, {2,1,4,3}}
+            schubIntersect {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}}
 ///
 
 doc ///
@@ -718,23 +714,30 @@ doc ///
             schubAdd {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}}
 ///
 
-doc /// 
+doc ///
     Key
-        (schubIntersect, List)
-        schubIntersect
+        (getPermFromASM, Matrix)
+        getPermFromASM
     Headline
-        compute the intersection of ASM ideals
-    Usage 
-        schubIntersect L
-    Inputs 
-        L:List 
-            of ASMs or permutations in 1-line notation
+        returns permutation associated to perumation matrix 
+    Usage
+        getPermFromASM A
+    Inputs
+        A:Matrix
     Outputs
-        :Ideal 
+        :List
     Description
         Text
-            Given a list of ASMs or permutations in 1-line notation, compute the intersection of the corresponding Schubert determinantal ideals.
+	    When {\tt A} is a permutation matrix, returns the corresponding permutation. Otherwise, returns the empty permutation.
         Example
-            schubIntersect {{3,2,1,4}, {2,1,4,3}}
-            schubIntersect {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}}
+            A = matrix {{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}
+            getPermFromASM A
+	    
+	    A = matrix{{1,0},{0,0}}
+    	    getPermFromASM A
+	    
+            A = matrix {{0,1,0,0},{1,0,0,0},{0,0,1,0},{0,0,0,1}}
+            getPermFromASM A
 ///
+
+

@@ -65,9 +65,9 @@ export{
     "isMinRankTable",	     	    --documented ++
     "rankTableToASM",	     	    --documented ++
     "rankTableFromMatrix",    	    --documented ++
-    "schubIntersect",	     	    -- documented (check)
-    "schubAdd",	       	       	    -- documented (check)
-    "getPermFromASM",	       	    --documented (check)
+    "schubIntersect",	     	    --documented ++
+    "schubAdd",	       	       	    --documented ++
+    "getPermFromASM",	       	    --documented ++
     "ASM",    	      	      	    -- ??
     
  --permutationMethods.m2   
