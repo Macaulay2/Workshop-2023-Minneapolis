@@ -62,7 +62,7 @@ cone(ZZdFactorizationMap) := ZZdFactorization => f -> (
 
 --dual
 --note: dual is a method with options
-dual(ZZdFactorization) := ZZdFactorization => {} >> o -> X -> (
+-*dual(ZZdFactorization) := ZZdFactorization => {} >> o -> X -> (
     if not(X.period == 2) then error "since period of X is not 2, please input a root of unity";
     ZZdfactorization{-dual((dd^X)_2), dual((dd^X)_1)}
     )
@@ -80,7 +80,7 @@ Hom(ZZdFactorization, ZZdFactorization) := ZZdFactorization => (X,Y) -> (
 --dHom
 Hom(ZZdFactorization, ZZdFactorization, RingElement) := ZZdFactorization => (X,Y,omega) -> (
     dTensor(dual(X,omega),Y,omega)
-    )
+    )*-
 
 -*OLD
 --dual
@@ -101,18 +101,39 @@ Hom(ZZdFactorization, ZZdFactorization) := ZZdFactorization => (X,Y) -> (
 tensorMF = method()
 tensorMF(ZZdFactorization,ZZdFactorization) := (X,Y) -> (
     if not(X.period==2 and Y.period==2) then error "Both inputs should have period 2. Use dTensor method instead.";
+    yng := youngest(X,Y);
+    if yng.cache#?(tensor,X,Y) then return yng.cache#(tensor,X,Y);
+    modules := hashTable for i to 1 list i => (
+	directSum for j to 1 list (
+	    {j,(i-j)%2} => X_i ** Y_(i-j)
+	    )
+	);
     A1 := id_(X_0) ** (dd^Y)_1;
     B1 := (dd^X)_1 ** id_(Y_0);	   
     C1 := (dd^X)_2 ** id_(Y_1);
     D1 := -id_(X_1)** (dd^Y)_2;
-    diff1 := matrix{{A1, B1},{C1,D1}};
+    diff1 := map(modules#0,modules#1,matrix{{A1, B1},{C1,D1}});
     A2  := id_(X_0) ** (dd^Y)_2;
     B2 := (dd^X)_1 ** id_(Y_1);
     C2 := (dd^X)_2 ** id_(Y_0);
     D2 := -id_(X_1)** (dd^Y)_1;
-    diff2 := matrix{{A2, B2},{C2,D2}};
-    ZZdfactorization{diff1, diff2}
+    diff2 := map(modules#1,modules#0,matrix{{A2, B2},{C2,D2}});
+    result := ZZdfactorization{diff1, diff2};
+    result.cache.tensor = (X,Y);
+    yng.cache#(tensor,X,Y) = result;
+    result
 )
+
+tensorMF(ZZdFactorizationMap,ZZdFactorizationMap) := (f,g) -> (
+    H := new HashTable from {0=>directSum {f_0**g_0,f_1**g_1},1=>directSum {f_0**g_1,f_1**g_0},2 =>directSum {f_0**g_0,f_1**g_1}};
+    degf := degree f;
+    degg := degree g;
+    srcf := source f;
+    srcg := source g;
+    trgf := target f;
+    trgg := target g;
+    map(trgf**trgg,srcf**srcg,H,Degree => degf + degg)
+    )
 
 -----KoszulMF
 --koszul matrix factorization
@@ -167,17 +188,57 @@ for j to N-1 list(
     {j, (N + i - j)%N} => (F_j)**(G_((N+i-j)%N))
     )))
 
-adjoinRoot = (d,Q) -> (S1 := Q[t];
-    factored := factor(t^(d)-1);
+adjoinRoot = method();
+adjoinRoot(ZZ,Ring,Symbol) := (d,Q,t) -> (S1 := Q[t];
+    var := (S1_*)_0;
+    factored := factor(var^(d)-1);
     cyclo := (factored#(#factored-1))#0;
-    S := S1/(cyclo)
+    S := S1/(cyclo);
+    S.rootOfUnity = (S_*)_0;
+    S
     )
 
+adjoinRoot(ZZ,Ring,RingElement) := (d,Q,t) -> (adjoinRoot(d,Q,getSymbol "t"))
+
+adjoinRoot(ZZdFactorization,RingElement) := (F,t) -> (
+    adjoinRoot(F,getSymbol "t")
+    )
+
+adjoinRoot(ZZdFactorization,Symbol) := (F,t) -> (
+        d := period F;
+	S := adjoinRoot(d,ring F,t);
+	P := F**S;
+	P.cache.rootOfUnity = (S_*)_0;
+	P
+	)
+    
+    adjoinRoot(ZZdFactorizationMap,RingElement) := (F,t) -> (
+    adjoinRoot(F,getSymbol "t")
+    )
+
+adjoinRoot(ZZdFactorizationMap,Symbol) := (F,t) -> (
+        d := period F;
+	S := adjoinRoot(d,ring F,t);
+	P := F**S;
+	P.cache.rootOfUnity = (S_*)_0;
+	P
+	)
+     
+
 --dTensor = method(Options => {RootOfUnity=>false})
-dTensor = method()
-dTensor(ZZdFactorization, ZZdFactorization,RingElement) := (F,G,t) -> (
+-*dTensor = method(Options => {RootOfUnity => true})
+dTensor(ZZdFactorization, ZZdFactorization,RingElement) := ZZdFactorization => opts -> (F,G,t) -> (
     --put in check for F.period = G.period
+    if (period F)==2 then return tensorMF(F,G);
+    if not(opts.RootOfUnity) then return dTensor(F,G,getSymbol "t",RootOfUnity => false);
+    Y := youngest(F,G);
+    if Y.cache#?(tensor,F,G) then return Y.cache#(tensor,C,D);
     N := F.period;
+    modules := hashTable for i to N-1 list i => (
+	directSum for j to N-1 list (
+	    {j,(j+i)%N} => F_i ** G_(j+i)
+	    )
+	);
     dF := dd^F;
     dG := dd^G;
     M := for k to N-1 list(
@@ -187,20 +248,272 @@ dTensor(ZZdFactorization, ZZdFactorization,RingElement) := (F,G,t) -> (
 		else if (j == (i+1)%N) then (dF_(i+1))**(id_(G_((k-i)%N)))
 		else 0
 	    )));
-    ZZdfactorization(for i to #M-1 list matrix M_i)
+    result = ZZdfactorization(for i to #M-1 list matrix M_i);
+    result.cache.tensor = (F,G);
+    Y.cache#(tensor,F,G) = result;
+    result
+)*-
+
+
+
+--dTensor = method(Options => {RootOfUnity=>false})
+dTensor = method(Options => {RootOfUnity => true})
+dTensor(ZZdFactorization, ZZdFactorization,RingElement) := ZZdFactorization => opts -> (F,G,t) -> (
+    --put in check for F.period = G.period
+    if (period F)==2 then return tensorMF(F,G);
+    if not(opts.RootOfUnity) then return dTensor(F,G,getSymbol "t",RootOfUnity => false);
+    Y := youngest(F,G);
+    if Y.cache#?(tensor,F,G) then return Y.cache#(tensor,F,G);
+    N := F.period;
+    modules := hashTable for i to N-1 list i => (
+	directSum for j to N-1 list (
+	    {j,(i-j)%N} => F_i ** G_(i-j)
+	    )
+	);
+    dF := dd^F;
+    dG := dd^G;
+    M := for i from 1 to N list(
+	map(modules#((i-1)%N),
+            modules#(i%N),
+            matrix table(
+                indices modules#((i-1)%N),
+                indices modules#(i%N),
+                (j,k) -> (
+                    tar := component(modules#((i-1)%N), j);
+                    src := component(modules#(i%N), k);
+                    map(tar, src, 
+                        if ({(k#0-j#0)%N,(k#1-j#1)%N} == {0,1}) then (t^(k#0)*id_(F_(k#0)))**(dG_(k#1))
+                        else if ({(k#0-j#0)%N,(k#1-j#1)%N} == {1,0})  then (dF_(k#0))**(id_(G_(k#1)))
+                        else 0)
+                    ))));
+    result := ZZdfactorization(M);
+    result.cache.tensor = (F,G);
+    Y.cache#(tensor,F,G) = result;
+    result
 )
--*dTensor(ZZdFactorization,ZZdFactorization,Symbol) := (F,G,t) -> (S1 := ring(F)[t];
-    factored := factor(t^(F.period)-1);
-    cyclo := (factored#(#factored-1))#0;
-    S := S1/(cyclo);
-    dTensor(F**S,G**S,t)
-    )*-
+
+
+
+dTensor(ZZdFactorization,ZZdFactorization,Symbol) := ZZdFactorization => opts -> (F,G,t) -> (S := adjoinRoot(period F,ring F,t);
+    dTensor(F**S,G**S,(S_*)_0)
+    )
+
+dTensor(List,RingElement) := ZZdFactorization => opts -> (L,t) -> (
+    if #L==2 then return dTensor(L_0,L_1,t,opts);
+    if not(opts.RootOfUnity) then return dTensor(L,getSymbol "t");
+    dTensor(dTensor(L_{0..#L-2},t),L_(#L-1),t)
+    )
+
+dTensor(List,Symbol) := ZZdFactorization => opts -> (L,t) -> (
+    if #L==2 then return dTensor(L_0,L_1,t,opts);
+    S := adjoinRoot(period L_0,ring L_0,t);
+    Ln := apply(L,i->i**S);
+    dTensor(dTensor(Ln_{0..#Ln-2},(S_*)_0),Ln_(#Ln-1),(S_*)_0)
+    )
+
+dTensor(ZZdFactorizationMap,ZZdFactorizationMap,RingElement) := ZZdFactorizationMap => opts -> (f,g,t) -> (
+    if not(opts.RootOfUnity) then return dTensor(f,g,getSymbol "t");
+    degf := degree f;
+    degg := degree g;
+    srcf := source f;
+    srcg := source g;
+    trgf := target f;
+    trgg := target g;
+    d := period srcf;
+    L = for i to d list (
+	     for j to d-1 list (j,(j+i)%d)
+	     );
+    Ln = new HashTable from toList apply(0..d,i->i=>directSum apply(L_i,j->(f_(j_0)**g_(j_1))));
+    map(trgf**trgg,srcf**srcg,Ln,Degree => degf + degg)
+    )
+
+dTensor(ZZdFactorizationMap,ZZdFactorizationMap,Symbol) := ZZdFactorizationMap => opts -> (f,g,t) -> (
+    S := adjoinRoot(period source f,ring f,t);
+    dTensor(f**S,g**S,(S_*)_0)
+    )
+	    
+    
+tensor(ZZdFactorization,ZZdFactorization) := ZZdFactorization => {} >> opts -> (F,G) -> (
+    if not(F.period == G.period) then error "Expected factorizations with the same period";
+    if F.period==2 then return tensorMF(F,G);
+    if (ring F).?rootOfUnity then return dTensor(F,G,(ring F).rootOfUnity)
+    else error "Must adjoin dth root of unity when input has period d > 2";
+    )
+
+tensor(ZZdFactorization,ZZdFactorization,RingElement) := ZZdFactorization => {Dispatch => {ZZdFactorization,ZZdFactorization,RingElement}} >> opts -> (F,G,t) -> (print("here we");
+    if not(F.period==G.period) then error "Expected factorizations with the same period";
+    if F.period==2 then error "No need to specify root of unity for ZZ/2-graded factorization";
+    dTensor(F,G,t,RootOfUnity=>false)
+    )
+
+tensor(ZZdFactorization,ZZdFactorization,Symbol) := ZZdFactorization => {} >> opts -> (F,G,t) -> (
+    if not(F.period==G.period) then error "Expected factorizations with the same period";
+    if F.period==2 then error "No need to specify root of unity for ZZ/2-graded factorization";
+    dTensor(F,G,t)
+    )
+
+tensor(ZZdFactorizationMap,ZZdFactorizationMap) := ZZdFactorizationMap => {} >> opts -> (f,g) -> (
+    F := source f;
+    G := source g;
+    if not(F.period == G.period) then error "Expected factorizations with the same period";
+    if F.period==2 then return tensorMF(f,g);
+    if (ring F).?rootOfUnity then return dTensor(f,g,(ring F).rootOfUnity)
+    else error "Must adjoin dth root of unity when input has period d > 2";
+    )
+
+tensor(ZZdFactorizationMap,ZZdFactorizationMap,RingElement) := ZZdFactorizationMap => {} >> opts -> (f,g,t) -> (
+    F := source f;
+    G := source g;
+    if not(F.period==G.period) then error "Expected factorizations with the same period";
+    if F.period==2 then error "No need to specify root of unity for ZZ/2-graded factorization";
+    dTensor(f,g,t,RootOfUnity=>false)
+    )
+
+tensor(ZZdFactorizationMap,ZZdFactorizationMap,Symbol) := ZZdFactorizationMap => {} >> opts -> (f,g,t) -> (
+    F := source f;
+    G := source g;
+    if not(F.period==G.period) then error "Expected factorizations with the same period";
+    if F.period==2 then error "No need to specify root of unity for ZZ/2-graded factorization";
+    dTensor(f,g,t)
+    )
+
+
+ZZdFactorization ** ZZdFactorization := ZZdFactorization => (F,G) -> (tensor(F,G))
+Complex ** ZZdFactorization := ZZdFactorization => (C,F) -> (tensor(Fold(C**(ring F),period F),F))
+ZZdFactorization ** Complex := ZZdFactorization => (F,C) -> (tensor(F,Fold(C**(ring F),period F)))
+ZZdFactorization ** ZZdFactorizationMap := ZZdFactorizationMap => (F,f) -> (tensor(id_F,f))
+ZZdFactorizationMap ** ZZdFactorization := ZZdFactorizationMap => (f,F) -> (tensor(f,id_F))
+ComplexMap ** ZZdFactorizationMap := ZZdFactorizationMap => (f,g) -> (tensor(Fold(f**(ring g),period source g),g))
+ZZdFactorizationMap ** ComplexMap := ZZdFactorizationMap => (f,g) -> (tensor(f,Fold(g**(ring f),period source f)))
+ZZdFactorizationMap ** ZZdFactorizationMap := ZZdFactorizationMap => (f,g) -> (tensor(f,g))
+ 
+
+
+
+
+
+dual(ZZdFactorization) := ZZdFactorization => {} >> opts -> F -> (
+    if F.period == 2 then return ZZdfactorization {-dual F.dd_2,dual F.dd_1};
+    if (ring F).?rootOfUnity then return dDual(F,(ring F).rootOfUnity)
+    else error "Must adjoin dth root of unity when input has period d > 2";
+    )
+
+dual(ZZdFactorization,RingElement) := ZZdFactorization => {} >> opts -> (F,t) -> (
+    if F.period ==2 then error "No need to specify root of unity for ZZ/2-graded factorization";
+    dDual(F,t,RootOfUnity=>false)
+    )
+
+dual(ZZdFactorization,Symbol) := ZZdFactorization => {} >> opts -> (F,t) -> (
+    if F.period ==2 then error "No need to specify root of unity for ZZ/2-graded factorization";
+    dDual(F,t)
+    )
+
+dual(ZZdFactorizationMap) := ZZdFactorizationMap => {} >> opts -> f -> (
+    deg := degree f;
+    F = source f;
+    G = target f;
+    if F.period==2 then return map(dual F,dual G,new HashTable from {1=>(dual f_0),2=>(dual f_1)},Degree => -degree f);
+    if (ring F).?rootOfUnity then return dDual(f,(ring F).rootOfUnity)
+    else error "Must adjoin dth root of unity when input has period d > 2";
+    )
+
+dual(ZZdFactorizationMap,RingElement) := ZZdFactorizationMap => {} >> opts -> (f,t) -> (
+    if F.period ==2 then error "No need to specify root of unity for ZZ/2-graded factorization";
+    dDual(f,t,RootOfUnity=>false)
+    )
+
+dual(ZZdFactorizationMap,Symbol) := ZZdFactorizationMap => {} >> opts -> (f,t) -> (
+    if F.period ==2 then error "No need to specify root of unity for ZZ/2-graded factorization";
+    dDual(f,t)
+    )
+
+dDual = method(Options => {RootOfUnity => true});
+dDual(ZZdFactorization,RingElement) := ZZdFactorization => opts -> (F,t) -> (
+    if not(opts.RootOfUnity) then return dDual(F,getSymbol "t");
+    diffs := reverse values (F.dd.map);
+    ZZdfactorization toList apply(0..#diffs-1,i->-t^i*dual(diffs#i))
+    )
+
+dDual(ZZdFactorization,Symbol) := ZZdFactorization => opts -> (F,t) -> (
+    S := adjoinRoot(period F,ring F,t);
+    dDual(F**S,(S_*)_0)
+    )
+
+dDual(ZZdFactorizationMap,RingElement) := ZZdFactorization => opts -> (f,t) -> (
+    if not(opts.RootOfUnity) then return dDual(t,getSymbol "t");
+    dualMaps := reverse values (f.map);
+    d := #dualMaps;
+    srcf := source f;
+    trgf := target f;
+    degf := degree f;
+    map(dual srcf, dual trgf, new HashTable from toList apply(1..d,i->i=>dual(dualMaps#(i%d))),Degree => -degf)
+    )
+
+dShift =  method(Options => {RootOfUnity => true});
+dShift(ZZ,ZZdFactorization,RingElement) := ZZdFactorization => opts -> (s,F,t) -> (
+    if not(opts.RootOfUnity) then return dShift(s,F,getSymbol "t");
+    d := period F;
+    diffs := values (F.dd.map);
+    ZZdfactorization toList apply(0..#diffs-1,i->t^s*diffs#((i+s)%d))
+    )
+
+dShift(ZZdFactorization,Symbol) := ZZdFactorization => opts -> (s,F,t) -> (
+    S := adjoinRoot(period F,ring F,t);
+    dDual(s,F**S,(S_*)_0)
+    )
+
+ZZdFactorization Array := (C, L) -> (
+    if #L != 1 or not instance(L#0,ZZ) then error "expected an integer shift";
+    if period C == 2 then return ZZdfactorization {(-1)^(L#0)*C.dd_(L#0+1),(-1)^(L#0)*C.dd_(L#0)};
+    if (ring C).?rootOfUnity then return dShift(L#0,C,(ring C).rootOfUnity)
+    else error "Must adjoin dth root of unity when input has period d > 2";
+    )
+
+
+    
 
 --this gives a trivial d-fold factorization of a monomial
 trivialFactorization = method()
 trivialFactorization(RingElement) := f -> (if not(#(terms f)==1) then error "Expected ring element to be monomial";
-    theDiffs = (flatten((toList factor(f))/(i->toList(i#1:i#0))))/(j->matrix{{j}});
+    Lk := toList factor(f);
+    theDiffs = (flatten(Lk/(i->toList(i#1:i#0))))/(j->matrix{{j}});
+    if first degree f < #theDiffs then theDiffs = {(last theDiffs)*first(theDiffs)}|(theDiffs_{1..#theDiffs-2});
     ZZdfactorization theDiffs
+    )
+
+linearFactorization = method(Options => {RootOfUnity => true});
+linearFactorization(RingElement) := ZZdFactorization => opts -> (f) -> (
+    if not isHomogeneous f then error "Expected homogeneous element";
+    if not((ring f).?rootOfUnity) and not first degree(f)==2 then error "Must adjoint dth root of unity if degree > 2";
+    L := (terms f)/trivialFactorization;
+    if first degree f == 2 then return tensor(L);
+    if not(opts.RootOfUnity) then return dTensor(L,getSymbol "t",opts);
+    dTensor(L,t)
+    )
+
+linearFactorization(RingElement,RingElement) := ZZdFactorization => opts -> (f,t) -> (
+    linearFactorization(f,getSymbol "t")
+    )
+
+linearFactorization(RingElement,Symbol) := ZZdFactorization => opts -> (f,t) -> (
+    S := adjoinRoot(first degree f,ring f,t);
+    linearFactorization(sub(f,S))
+    )
+
+randomFactorization = method();
+randomFactorization(ZZ,Ring) := (d,Q) -> (
+    f := random(d,Q);
+    linearFactorization(f)
+    )
+
+randomFactorization(ZZ,Ring,RingElement) := (d,Q,t) -> (
+    f := random(d,Q);
+    linearFactorization(f,t)
+    )
+
+randomFactorization(ZZ,Ring,Symbol) := (d,Q,t) -> (
+    f := random(d,Q);
+    linearFactorization(f,t)
     )
 
 end--

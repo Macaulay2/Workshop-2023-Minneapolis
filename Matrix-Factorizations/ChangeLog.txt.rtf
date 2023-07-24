@@ -1,0 +1,34 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2708
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Change Log July 23rd:\
+WARNING: I didn\'92t keep track of everything I changed, this is just a list based on what I remember\
+-some basic changes with the Type ZZdFactorization: homological degrees are now displayed modulo the period of the factorization, and likewise for the type ZZdFactorizationMap\
+-implemented \'93isWellDefined\'94 for ZZdFactorization and ZZdFactorizationMap; this is a relatively low level check and doesn\'92t check if the maps compose to scalar multiplication, just more internal checks\
+-implemented \'93isCommutative\'94 command which checks whether a ZZdFactorizationMap actually commutes with the differentials\
+-tensor implemented with root of unity options\
+-standard syntax with tensor product may now be used (unless a root of unity needs to be specified)\
+-tensor implemented functorially (can now tensor morphisms of factorizations)\
+-tensor implemented with backward compatibility with complexes \
+-tensor implemented to cache more data for efficiency purposes\
+-Fold command implemented (converts complex into ZZ/d-graded factorization)\
+-dual implemented with standard syntax and root of unity options\
+-dual implemented functorially (can dualize morphisms)\
+-Hom functor implemented with root of unity options\
+-Hom functor implemented functorially (all standard syntax may be used)\
+-Hom implemented with backward compatibility with complexes\
+-the Type ZZdFactorizationMap now has essentially all the same functionality that ComplexMaps has, we can add, subtract, multiply, compose, whatever else you might want to do with them. We can now take kernels/cokernels/images/coimages of factorization maps. We can also prune factorizations and maps of factorizations.\
+-implemented the \'93homomorphism\'94 function, which converts an element of the Hom factorization into type ZZdFactorizationMap\
+-implemented randomFactorizationMap: this is a method with options that grabs a random map of matrix factorizations\
+-implemented tensorCommutativity command: outputs the isomorphism A**B \\cong B**A as a morphism of factorizations\
+-implemented tensorAssociativity command: outputs the isomorphism (A**B)**C \\cong A**(B**C) as a morphism of factorizations\
+-implemented \'93extend\'94 command for factorizations: this just naively tries to lift a specified map in degree 0 to a morphism of matrix factorizations\
+-implemented \'93inducedMap\'94 for matrix factorizations: naively tries to extend the identity map in homological degree 0\
+-implemented \'93isNullHomopy\'94 and similar commands to check if a chosen morphism is nullhomotopic\
+-implemented \'93randomFactorization\'94: input is an integer and a ring, output is a random linear factorization a polynomial in the chosen ring\
+-implemented chernCharacter: input a ZZ/2-graded matrix factorization, outputs the Chern character of that factorization\
+-began implementing \'93boundaryBulk\'94: takes as input a factorization and an endomorphism of that factorization, outputs the associated boundary bulk map.}
