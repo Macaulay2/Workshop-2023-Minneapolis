@@ -11,8 +11,8 @@ load "simplifyForm.m2"
 isIsomorphic2 = method()
 
 isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alpha,beta) -> (
-    k1=baseField(alpha);
-    k2=baseField(beta);
+    k1:=baseField(alpha);
+    k2:=baseField(beta);
     -- Ensure both base fields are supported
     if not (k1 === CC or instance(k1,ComplexField) or k1 === RR or instance(k1,RealField) or k1 === QQ or instance(k1, GaloisField)) then (
         error "Base field not supported; only implemented over QQ, RR, CC, and finite fields";
@@ -20,8 +20,8 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
     if not (k2 === CC or instance(k2,ComplexField) or k2 === RR or instance(k2,RealField) or k2 === QQ or instance(k2, GaloisField)) then (
         error "Base field not supported; only implemented over QQ, RR, CC, and finite fields";
         );
-    A=alpha.matrix;
-    B=beta.matrix;
+    A:=alpha.matrix;
+    B:=beta.matrix;
     -- Ensure both underlying matrices are symmetric
     if A != transpose(A) then (
         error "Underlying matrix is not symmetric";

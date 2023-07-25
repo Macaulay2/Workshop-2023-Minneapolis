@@ -1,0 +1,27 @@
+
+newPackage(
+    "examplePackage",
+    DebuggingMode=>true
+    )
+
+export{
+    "myFunction"
+    }
+
+
+myFunction = method()
+myFunction(List) := ZZ => ( L )->(
+    n := #L;
+    kk := coefficientRing(ring(L#0));
+    X:= symbol X;
+    R := kk[X_1..X_n];
+    return #gens(R)
+
+);
+S1 = QQ[x,y];
+L1 = {x^2,x*y};
+myFunction(L1)
+
+S2 = QQ[X_1,X_2]
+L2 = {X_1^2, X_1*X_2};
+myFunction(L2)
