@@ -280,6 +280,7 @@ schubDetIdeal = method(
 )
 schubDetIdeal Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    A = partialASMToASM(A);
     zMatrix := genMat(numrows A, numcols A, CoefficientRing=> o.CoefficientRing, Variable => o.Variable); --generic matrix
     rankMat := rankMatrix A; --rank matrix for A
     essBoxes := essentialSet A;
