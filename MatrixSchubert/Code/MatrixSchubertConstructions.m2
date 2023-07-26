@@ -109,7 +109,7 @@ antiDiagInit Matrix := o -> A -> (
     essBoxes := essentialSet A;
     if essBoxes == {} then (
     	R := ring zMatrix;
-    	return ideal(0_R)
+    	return monomialIdeal(0_R)
     );
     zBoxes := apply(essBoxes, i -> flatten table(i_0, i_1, (j, k) -> (j+1, k+1))); --smaller matrix indices for each essential box
     ranks := apply(essBoxes, i -> rankMat_(i_0-1, i_1-1)); --ranks for each essential box
