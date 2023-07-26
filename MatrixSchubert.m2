@@ -11,7 +11,7 @@ newPackage(
 	    Email => "sean.grate@auburn.edu",
 	    HomePage => "https://seangrate.com/"},
 	{Name => "Daoji Huang",
-	    Email => "",
+	    Email => "huan0664@umn.edu",
 	    HomePage => "daojihuang.me"},
         {Name => "Patricia Klein", 
             Email => "pjklein@tamu.edu", 

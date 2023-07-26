@@ -379,24 +379,20 @@ assert(toExternalString L_5 == "z_(1,3)*z_(2,4)*z_(3,1)*z_(4,2)" );
 assert(toExternalString L_6 == "z_(1,4)*z_(2,2)^2*z_(3,3)*z_(4,1)" );
 
 L = diagRevLexInit PI; 
-assert(numgens L == 17);
+assert(numgens L == 13);
 assert(toExternalString L_0 == "z_(1,2)" );
 assert(toExternalString L_1 == "z_(1,1)" );
 assert(toExternalString L_2 == "z_(1,3)*z_(2,2)" );
 assert(toExternalString L_3 == "z_(2,1)" );
 assert(toExternalString L_4 == "z_(2,2)*z_(3,1)" );
-assert(toExternalString L_5 == "z_(1,4)*z_(2,2)*z_(3,3)*z_(4,5)" );
-assert(toExternalString L_6 == "z_(1,3)^2*z_(2,4)*z_(3,2)*z_(4,5)" );
-assert(toExternalString L_7 == "z_(1,3)*z_(2,4)*z_(3,1)*z_(4,5)" );
-assert(toExternalString L_8 == "z_(1,4)*z_(2,5)*z_(3,1)*z_(4,2)" );
-assert(toExternalString L_9 == "z_(1,3)*z_(2,5)*z_(3,1)*z_(4,2)" );
-assert(toExternalString L_10 == "z_(1,3)*z_(2,4)*z_(3,1)*z_(4,2)" );
-assert(toExternalString L_11 == "z_(1,4)*z_(2,3)*z_(2,2)*z_(3,5)*z_(4,1)" );
-assert(toExternalString L_12 == "z_(1,4)*z_(2,2)^2*z_(3,5)*z_(4,1)" );
-assert(toExternalString L_13 == "z_(1,5)*z_(2,2)^2*z_(3,3)*z_(4,1)" );
-assert(toExternalString L_14 == "z_(1,4)*z_(2,2)^2*z_(3,3)*z_(4,1)" );
-assert(toExternalString L_15 == "z_(1,5)*z_(2,3)*z_(2,2)*z_(3,4)*z_(3,3)*z_(4,5)*z_(4,1)" );
-assert(toExternalString L_16 == "z_(1,4)*z_(1,3)*z_(2,4)*z_(2,3)*z_(3,5)*z_(3,2)*z_(4,5)*z_(4,1)" );
+assert(toExternalString L_5 == "z_(1,5)*z_(2,4)*z_(3,3)*z_(4,2)");
+assert(toExternalString L_6 == "z_(1,5)*z_(2,4)*z_(3,1)*z_(4,2)");
+assert(toExternalString L_7 == "z_(1,3)*z_(2,4)*z_(3,1)*z_(4,2)");
+assert(toExternalString L_8 == "z_(1,5)*z_(2,3)*z_(3,1)*z_(4,2)");
+assert(toExternalString L_9 == "z_(1,5)*z_(2,4)*z_(3,3)*z_(4,1)");
+assert(toExternalString L_10 == "z_(1,5)*z_(2,2)^2*z_(3,3)*z_(4,1)");
+assert(toExternalString L_11 == "z_(1,4)*z_(2,2)^2*z_(3,3)*z_(4,1)");
+assert(toExternalString L_12 == "z_(1,5)*z_(2,4)*z_(2,2)*z_(3,2)*z_(4,1)");
 ///
 
 --subwordComplex--
