@@ -79,7 +79,7 @@ firstDescent List := ZZ => (w) -> (
 )
 
 -----------------------------------------------------------
---compute the length of a permutation
+--computes the length of a permutation
 -----------------------------------------------------------
 
 permLength = method()
@@ -91,13 +91,25 @@ permLength List:= ZZ => (p) -> (
 )
  
 -----------------------------------------------------------
---creates simple transposition in a permtuation
+--swaps the (zero-indexed) entries in positions i and j
 -----------------------------------------------------------
 
 swap = (L,i,j) -> (
     apply(#L, k -> if k != i and k != j then L_k
 	               else if k == i then L_j
 				   else L_i)
+)
+
+
+-----------------------------------------------------------
+--switches entries with values a and b
+-----------------------------------------------------------
+
+swapValues = (w,a,b) -> (
+    winv := inverseOf(w);
+    apos := winv#(a-1) - 1;
+    bpos := winv#(b-1) - 1;
+    swap(w, apos, bpos)
 )
 
 -----------------------------------------------------------
@@ -408,4 +420,47 @@ polyByDividedDifference (List, PolynomialRing) := opts -> (w, Q) -> (
 	polys#(#polys-1)
     )
     )
+
+
+------------------------------------------------
+------------------------------------------------
+--Pipe Dreams
+--(Implementation based on code of Allen Knutson)
+--Sample Usage:  netPD \ pipeDreams({1,4,3,2})
+------------------------------------------------
+------------------------------------------------
+
+permAfterTopRow = (w, ro) -> (
+    neww := w;
+    scan(reverse toList (0..#w-1),
+	 i -> (if (ro#i == "+") then neww = swapValues(neww, i+1, i+2)));
+    neww
+    )
+
+possibleTopRows = w->(n := #w; lw := permLength(w);
+    rows := {apply(w#0-1, i->"+")}; -- a list of lists of "/", "+"
+    rows = apply(rows, ro -> ro|{"/"});
+    scan(n-w#0-1, i->(rows = flatten apply(rows, 
+		ro->{ro|{"+"}, ro|{"/"} })));
+
+    if (n-w#0-1 >= 0) then rows = apply(rows, ro->ro|{"/"});
+
+    select(rows, ro->(
+	    permLength(permAfterTopRow(w,ro)) == lw - #select(ro,r->(r=="+"))))
+    )
+
+pipeDreams = method()
+pipeDreams (List) := List => (w)->(n := w; 
+    if (w=={1}) then {{"/"}} else flatten apply(possibleTopRows(w), ro->(
+	    wp := permAfterTopRow(w,ro);
+	    wp = apply(#wp-1, i->(wp_(i+1)-1));
+	    apply(pipeDreams(wp), D->
+		flatten {{ro}, apply(D, Dro->flatten {Dro,{"/"}})})
+	    )))
+
+netPD = method()
+netPD (List) := List => (D)->(ans := concatenate(D_0);
+    scan(#D-1, i->(ans = ans || concatenate(D_(i+1))));
+    ans)
+
 

@@ -95,6 +95,8 @@ export{
     "PolyType",	       	       	    -- ??
     "Operator",	       	       	    -- ??
     "Double",	     	     	    -- ??
+    "pipeDreams",
+    "netPD",
 
 --MatrixSchubertInvariants.m2    
     "schubReg",    	            --documented ++
