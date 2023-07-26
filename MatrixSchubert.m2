@@ -96,6 +96,7 @@ export{
     "Operator",	       	       	    -- ??
     "Double",	     	     	    -- ??
     "pipeDreams",
+    "pipeDreamsNonReduced",
     "netPD",
 
 --MatrixSchubertInvariants.m2    

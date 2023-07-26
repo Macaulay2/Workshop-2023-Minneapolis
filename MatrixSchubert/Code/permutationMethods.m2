@@ -343,6 +343,14 @@ grothendieckPoly(List) := opts -> w -> (
         Q = QQ[x_1..x_n];
         polyByDividedDifference(w, Q, PolyType => "Grothendieck")        	
     )
+    else if opts.Algorithm == "PipeDream" then (
+        n = #w;
+	x = local x;
+	Q = QQ[x_1..x_n];
+	pds := pipeDreamsNonReduced(w);
+	wlen := permLength(w);
+	sum apply(pds, D-> (wt:=weight(D,Q); (-1)^((degree(wt))_0-wlen)*wt  ))
+    )
     else error("Invalid option for Algorithm.")
 )
 
@@ -450,13 +458,16 @@ possibleTopRows = w->(n := #w; lw := permLength(w);
     )
 
 pipeDreams = method()
-pipeDreams (List) := List => (w)->(n := w; 
-    if (w=={1}) then {{"/"}} else flatten apply(possibleTopRows(w), ro->(
+pipeDreams (List) := List => (w)->( 
+    if (w=={1}) 
+        then {{"/"}} 
+	else flatten apply(possibleTopRows(w), ro->(
 	    wp := permAfterTopRow(w,ro);
 	    wp = apply(#wp-1, i->(wp_(i+1)-1));
 	    apply(pipeDreams(wp), D->
 		flatten {{ro}, apply(D, Dro->flatten {Dro,{"/"}})})
-	    )))
+	    ))
+        )
 
 netPD = method()
 netPD (List) := List => (D)->(ans := concatenate(D_0);
@@ -464,3 +475,61 @@ netPD (List) := List => (D)->(ans := concatenate(D_0);
     ans)
 
 
+permsAfterTopRowNonReduced = (w, ro) -> (
+    newws := {w};
+    n := #w;
+    scan(reverse toList (w#0..n-1),
+	 i -> (if (ro#i == "+") then 
+	           newws = flatten apply(newws, nw-> (
+		       nwinv := inverseOf(nw);
+		       if (nwinv#i > nwinv#(i+1)) then {swapValues(nw, i+1, i+2),nw}
+		       else {nw})))
+	);
+    scan(reverse toList (0.. w#0-2),
+	 i -> newws = apply(newws, nw-> swapValues(nw,i+1,i+2) ));
+    newws
+    )
+
+pipeDreamsNonReduced = method()
+pipeDreamsNonReduced (List) := List => (w) -> (
+    if (w=={1})
+        then {{"/"}}
+	else flatten apply(possibleTopRows(w), ro->(
+		wps := permsAfterTopRowNonReduced(w, ro);
+		flatten apply(wps, wp ->(
+			wpinv := inverseOf(wp);
+			newp := wp;
+			wp = apply(#wp-1, i->(wp_(i+1)-1));
+			scan(#ro-1, j-> 
+			    if (ro#j == "+" and wpinv#(j)<wpinv#(j+1)) 
+			    then (newp=swapValues(newp, j+1,j+2); wpinv=swap(wpinv, j,j+1) ));
+			
+			if (newp == w) then			
+			      apply(pipeDreamsNonReduced(wp), D-> (
+			            flatten {{ro}, apply(D, Dro->flatten {Dro,{"/"}})} ))
+			       else {}
+			) ))) 
+       )
+
+weight = (D, R) -> (
+    product apply(#D, i->(
+	R_i^ (sum(apply(D#i, t-> if t=="+" then 1 else 0)))
+	))
+    
+    ) 
+
+end;
+
+---
+--Temporarily putting a test here
+---
+perms = apply(permutations(6), p-> apply(p, i->i+1));
+scan(perms, p-> (
+ gp1 = grothendieckPoly(p);
+ gp2 = grothendieckPoly(p, Algorithm=>"PipeDream");
+ R1 = ring gp1;
+ R2 = ring gp2;
+ phi = map(R2,R1,R2_*);
+ if (gp2 != phi(gp1)) then print(p)
+ )
+)
