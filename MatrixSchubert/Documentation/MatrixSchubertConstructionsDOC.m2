@@ -98,12 +98,12 @@ doc ///
 	    rankMatrix p
 	    netList fultonGens p	    
 	Text
-	    The default presentation will be the fulton generators of the ideal.
+	    The default presentation given by @TO schubDetIdeal@ is given by the Fulton generators of the ideal.
 	    In order to access the minimal generating set, use @TO trim@.
 	Example
 	    I = schubDetIdeal p;
-	    betti res I
-	    betti res trim I
+	    # (I_*)
+	    # ((trim I)_*)
 	Text
 	    This package also contains methods for investigating antidiagonal initial ideals
 	    of Schubert determinantal ideals and their associated Stanley-Reisner rings,
