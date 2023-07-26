@@ -41,6 +41,63 @@ doc ///
             @HREF("https://sites.google.com/illinois.edu/shiliang-gao", "Shiliang Gao")@,
             @HREF("https://www.math.tamu.edu/directory/graduate.html", "Pooja Joshi")@, and
             @HREF("https://www.clemson.edu/science/academics/departments/mathstat/about/profiles/arakoto", "Antsa Tantely Fandresena Rakotondrafara")@.
+    SeeAlso 
+        "Constructing matrix Schubert varieties"
+        "Constructing ASM varieties"
+        "Initial ideals of ASM ideals"
+        "Regularity of matrix Schubert Varieties and ASM ideals"
+        "Functions for investigating permutations"
+///
+------------------------
+-- See Also Doc Nodes --
+------------------------
+
+doc ///
+    Key 
+        "Constructing matrix Schubert varieties"
+    Headline
+        todo
+    Description
+        Text 
+            This is a stub
+///
+doc ///
+    Key 
+        "Constructing ASM varieties"
+    Headline
+        todo
+    Description
+        Text 
+            This is a stub
+///
+
+doc ///
+    Key 
+        "Initial ideals of ASM ideals"
+    Headline
+        todo
+    Description
+        Text 
+            This is a stub
+///
+
+doc ///
+    Key 
+        "Regularity of matrix Schubert Varieties and ASM ideals"
+    Headline
+        todo
+    Description
+        Text 
+            This is a stub
+///
+doc ///
+    Key 
+        "Functions for investigating permutations"
+    Headline
+        todo
+    Description
+        Text 
+            This is a stub
 ///
 
 doc ///
