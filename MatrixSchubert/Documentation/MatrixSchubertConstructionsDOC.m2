@@ -15,13 +15,20 @@ doc ///
             This package provides functions for constructing and investigating matrix Schubert varieties. Many of the functions in this package can take as input either a permutation matrix in 1-line notation, or an alternating sign matrix.
         Text
             @UL {
-            {"Allen Knutson and Ezra Miller, ",
+	    {"[Ful92] William Fulton, ",
+	    HREF("https://sites.math.washington.edu/~billey/classes/schubert.library/fulton.essential.set.pdf",
+		EM "Flags, Schubert polynomials, degeneracy loci, and determinantal formulas"),
+	    " , Duke Math J. 65 (1992): 381-420."},
+            {"[KM05] Allen Knutson and Ezra Miller, ",
             HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
             " , Annals of Mathematics (2005): 1245-1318."},
-            {"Oliver Pechenik, David Speyer, and Anna Weigandt, ",
+	    {"[KM04] Allen Knutson and Ezra Miller, ",
+	    HREF("https://arxiv.org/abs/math/0309259", EM "Subword complexes in Coxeter groups"),
+	    " , Advances in Mathematics 184.1 (2004): 161-176."},
+            {"[PSW21] Oliver Pechenik, David Speyer, and Anna Weigandt, ",
             HREF("https://arxiv.org/abs/2111.10681", EM "Castelnuovo-Mumford regularity of matrix Schubert varieties"),
             " , arxiv preprint 2111.10681."},
-            {"Anna Weigandt, ",
+            {"[Wei17] Anna Weigandt, ",
             HREF("https://arxiv.org/abs/1708.07236", EM "Prism tableaux for alternating sign matrix varieties"),
             " , arXiv preprint 1708.07236."}
             }@
@@ -42,7 +49,7 @@ doc ///
             @HREF("https://www.math.tamu.edu/directory/graduate.html", "Pooja Joshi")@, and
             @HREF("https://www.clemson.edu/science/academics/departments/mathstat/about/profiles/arakoto", "Antsa Tantely Fandresena Rakotondrafara")@.
     SeeAlso 
-        "Constructing matrix Schubert varieties"
+        "Investigating matrix Schubert varieties"
         "Constructing ASM varieties"
         "Initial ideals of ASM ideals"
         "Regularity of matrix Schubert Varieties and ASM ideals"
@@ -54,12 +61,84 @@ doc ///
 
 doc ///
     Key 
-        "Constructing matrix Schubert varieties"
+        "Investigating matrix Schubert varieties"
     Headline
-        todo
+        information about basic constructors
     Description
-        Text 
-            This is a stub
+    	Text
+	    Matrix Schubert varieties were introduced by Fulton [Ful92] in the study of Schubert
+	    varieties in the complete flag variety.
+        Text
+            @UL {
+	    {"[Ful92] William Fulton, ",
+	    HREF("https://sites.math.washington.edu/~billey/classes/schubert.library/fulton.essential.set.pdf",
+		EM "Flags, Schubert polynomials, degeneracy loci, and determinantal formulas"),
+	    " , Duke Math J. 65 (1992): 381-420."},
+            {"[KM05] Allen Knutson and Ezra Miller, ",
+            HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
+            " , Annals of Mathematics (2005): 1245-1318."},
+	    {"[KM04] Allen Knutson and Ezra Miller",
+	    HREF("https://arxiv.org/abs/math/0309259", EM "Subword complexes in Coxeter groups"),
+	    " , Advances in Mathematics 184.1 (2004): 161-176."},
+            {"[PSW21] Oliver Pechenik, David Speyer, and Anna Weigandt, ",
+            HREF("https://arxiv.org/abs/2111.10681", EM "Castelnuovo-Mumford regularity of matrix Schubert varieties"),
+            " , arxiv preprint 2111.10681."}
+            }@
+	Text
+	    The general method for creating a
+	    Schubert determinantal Ideal is @TO schubDetIdeal@.
+	    The input is a permutation in the form of a list.
+	    This package contains functions for investigating the rank matrix,
+	    the empty boxes of the Rothe diagram, and the essential boxes of the Rothe diagram
+	    as defined by Fulton in [Ful92].
+	Example
+	    p = {2,1,6,3,5,4};
+	    rotheDiagram p
+	    essentialSet p
+	    rankMatrix p
+	    netList fultonGens p	    
+	Text
+	    The default presentation will be the fulton generators of the ideal.
+	    In order to access the minimal generating set, use @TO trim@.
+	Example
+	    I = schubDetIdeal p;
+	    betti res I
+	    betti res trim I
+	Text
+	    This package also contains methods for investigating antidiagonal initial ideals
+	    of Schubert determinantal ideals and their associated Stanley-Reisner rings,
+	    which are a kind of subword complex.
+	    Antidiagonal initial ideals and subword complexes were investigated in [KM04] and [KM05].
+	Example
+	    antiDiagInit p
+	    subwordComplex p
+	Text
+	    Given a list of permutations, this package also contains functions for intersecting and adding
+	    the Schubert determinantal ideals associated to the list of permutations.
+	Text
+	    Finally, this package contains functions for investigating homological invariants of matrix Schubert
+	    varieties efficiently through combinatorial algorithms produced in recent work by [PSW21].
+	Example
+	    time schubReg p
+	    time regularity comodule I 
+	Text
+	    @SUBSECTION "Functions for investigating matrix Schubert varieties"@
+	Text
+	    @UL {
+		TO (antiDiagInit, List),
+		TO (rankMatrix, List),
+		TO (rotheDiagram, List),
+		TO (augmentedRotheDiagram, List),
+		TO (essentialSet, List),
+		TO (augmentedEssentialSet, List),
+		TO (schubDetIdeal, List),
+		TO (fultonGens, List),
+		TO (subwordComplex, List),
+		TO (schubIntersect, List),
+		TO (schubAdd, List),
+		TO (schubReg, List),
+		TO (schubCodim, List)
+		}@
 ///
 doc ///
     Key 
