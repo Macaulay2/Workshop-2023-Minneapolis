@@ -52,7 +52,6 @@ doc ///
         "Investigating matrix Schubert varieties"
         "Constructing ASM varieties"
         "Initial ideals of ASM ideals"
-        "Regularity of matrix Schubert Varieties and ASM ideals"
         "Functions for investigating permutations"
 ///
 ------------------------
@@ -67,7 +66,8 @@ doc ///
     Description
     	Text
 	    Matrix Schubert varieties were introduced by Fulton [Ful92] in the study of Schubert
-	    varieties in the complete flag variety.
+	    varieties in the complete flag variety. Their defining ideals are called Schubert
+	    determinantal ideals.
         Text
             @UL {
 	    {"[Ful92] William Fulton, ",
@@ -160,15 +160,6 @@ doc ///
             This is a stub
 ///
 
-doc ///
-    Key 
-        "Regularity of matrix Schubert Varieties and ASM ideals"
-    Headline
-        todo
-    Description
-        Text 
-            This is a stub
-///
 doc ///
     Key 
         "Functions for investigating permutations"
