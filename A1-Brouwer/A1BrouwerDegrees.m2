@@ -58,6 +58,7 @@ export{
     "diagonalForm",
     "simplifyForm",
     "globalA1Degree",
+    "localA1Degree",
     "localAlgebraBasis"
     }
 
@@ -1153,7 +1154,7 @@ localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
     X := local X;
     Y := local Y;
    -- R := kk[X_1..Y_n];
-    R :=kk(monoid[X_1..X_n|Y_1..Y_n]);
+    R := kk(monoid[X_1..X_n|Y_1..Y_n]);
     
     -- Create a matrix D which will be populated by \Delta_{ij} in the paper
     D := "";
