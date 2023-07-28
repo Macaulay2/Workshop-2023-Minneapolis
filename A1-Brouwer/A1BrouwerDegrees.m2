@@ -269,26 +269,31 @@ diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
             for row from col+1 to n-1 do ( 
 		--Scan for nonzero entries below the diagonal entry
                 if A_(row,col) != 0 then (
-		    --Row reduction to make A_(col,col) nonzero
-                    rowAdd(A,col,1,row);
-		    --Column reduction to keep reduced matrix congruent to original matrix
-                    columnAdd(A,col,1,row);
+                    if A_(row,row) == 0 then (
+		        --Row reduction to make A_(col,col) nonzero
+                        rowAdd(A,col,1,row);
+		        --Column reduction to keep reduced matrix congruent to original matrix
+                        columnAdd(A,col,1,row);
+                        )
+                    else (
+		        --Row and column swaps to make A_(col,col) nonzero
+                        rowSwap(A,col,row);
+                        columnSwap(A,col,row);
+                        );
+                    );
                     break;
                 );
             );
-        );
         --If nonzero entry at or below A_(col,col) is found, we use it to clear the column below
-        if (A_(col,col)!=0) then (
-            for row from (col+1) to (n-1) do (
-                temp:=A_(row,col);
-		--More row reduction make every entry below A_(col,col) is zero
-                rowAdd(A,row,-temp/A_(col,col),col);
-		--Column reduction to keep reduced matrix congruent
-                columnAdd(A,row,-temp/A_(col,col),col);
+        --Now A_(col,col) != 0 and we use it to clear the column below
+        for row from (col+1) to (n-1) do (
+            temp:=A_(row,col);
+            --More row reduction make every entry below A_(col,col) is zero
+            rowAdd(A,row,-temp/A_(col,col),col);
+	    --Column reduction to keep reduced matrix congruent
+            columnAdd(A,row,-temp/A_(col,col),col);
             );
         );
-
-    );
     return matrix A 
     )
 
@@ -303,29 +308,36 @@ diagonalizeOverInt (Matrix) := (Matrix) => (AnonMut) -> (
 	);
     n:=numRows(A);
     for col from 0 to (n-1) do (
-        if A_(col,col) == 0 then ( --if diagonal entry in column "col" is zero
+        if A_(col,col) == 0 then (
             for row from col+1 to n-1 do ( 
-                if A_(row,col) != 0 then ( --scan for nonzero entries below the diagonal entry
-                    rowAdd(A,col,1,row); --row reduction to make A_(col,col) non-zero
-                    columnAdd(A,col,1,row); --column reduction to keep reduced matrix congruent to original matrix
+		--Scan for nonzero entries below the diagonal entry
+                if A_(row,col) != 0 then (
+                    if A_(row,row) == 0 then (
+		        --Row reduction to make A_(col,col) nonzero
+                        rowAdd(A,col,1,row);
+		        --Column reduction to keep reduced matrix congruent to original matrix
+                        columnAdd(A,col,1,row);
+                        )
+                    else (
+		        --Row and column swaps to make A_(col,col) nonzero
+                        rowSwap(A,col,row);
+                        columnSwap(A,col,row);
+                        );
+                    );
                     break;
                 );
             );
-        );
-        --if non-zero entry at or below A_(col,col) was found we use it to clear the column below
-        if (A_(col,col)!=0) then (
-            for row from (col+1) to (n-1) do (
-                temp:=A_(row,col);
-                rowMult(A,row,A_(col,col)); --multiply row row by A_(col,col)
-                columnMult(A,row,A_(col,col)); --column multiplication to keep reduced matrix congruent
-                rowAdd(A,row,-temp,col); --more row reduction make every entry below A_(col,col) is zero
-                columnAdd(A,row,-temp,col); --column reduction to keep reduced matrix congruent
+        --Now A_(col,col) != 0 and we use it to clear the column below
+        for row from (col+1) to (n-1) do (
+            temp:=A_(row,col);
+            rowMult(A,row,A_(col,col)); --multiply row row by A_(col,col)
+            columnMult(A,row,A_(col,col)); --column multiplication to keep reduced matrix congruent
+            rowAdd(A,row,-temp,col); --more row reduction make every entry below A_(col,col) is zero
+            columnAdd(A,row,-temp,col); --column reduction to keep reduced matrix congruent
             );
         );
-
-    );
     return matrix A 
-)
+    )
 
 -- This function aims to find the radical of a quadratic space.
 -- This is reliant on the diagonalize() method being applicable for singular matrices
