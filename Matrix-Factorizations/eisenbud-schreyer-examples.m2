@@ -3,159 +3,105 @@ needs "ZZdFactorizations.m2"
 
 quadraticMF = method()
 
---input: integer n, and polynomial ring in 2*(n+1) variables, e.g. x_0..y_n
---output: MF for q = \sum_{i=0}^n x_i*y_i
---note: this function really assumes the ring is presented as k[x_0..y_n]
+--Input: A pair of lists {x_0..x_n}, {y_0..y_n} of elementrs from the same ring
+--Output: A matrix factorization for q = \sum x_i*y_i, defined recursively as in Eisenbud--Schreyer
 
-quadraticMF(ZZ, PolynomialRing) := ZZdFactorization => (n, S) -> (
-    if dim S != 2*(n+1) then error "expected polynomial ring in 2*(n+1) variables";
-    phi0 := matrix{{S_0}};
-    psi0 := matrix{{S_(n+1)}};
-    phi := phi0;
-    psi := psi0;
+quadraticMF(List, List) := ZZdFactorization => (L, L') -> (
+    --First, do some checks
+    if not(#L == #L') then error "expected lists of same length";
+    S := ring L#0;
+    n := #L - 1;
+    for i to n do if not instance(L#i, S) or not instance(L'#i, S) then error "expected all list entries to be in the same ring";
+    --initialize the recursion
+    phi0 := matrix{{L#0}};
+    psi0 := matrix{{L'#0}};
+    --recursion
     for i from 1 to n do(
 	phi = matrix{
-	    {S_i * id_(S^(2^(i-1))), phi0},
-	    {psi0, (-S_(n+1+i))*id_(S^(2^(i-1)))}};
+	    {L#i * id_(S^(2^(i-1))), phi0},
+	    {psi0, (-L'#i)*id_(S^(2^(i-1)))}};
 	psi = matrix{
-	    {S_(n+1+i) * id_(S^(2^(i-1))), phi0},
-	    {psi0, (-S_i)*id_(S^(2^(i-1)))}};
+	    {L'#i * id_(S^(2^(i-1))), phi0},
+	    {psi0, (-L#i)*id_(S^(2^(i-1)))}};
 	phi0 = phi;
 	psi0 = psi;
 	);
-    ZZdfactorization{phi0, psi0}	
+    ZZdfactorization{phi0, psi0}
     )
 
---input: list {f_0..g_n} of 2(n+1) elements of the same ring (generalizing x_0..y_n)
---output: MF for \sum_{i=0}^n f_i*g_i
-quadraticMF(List) := ZZdFactorization => L -> (
-    S := ring L#0;
-    for i to #L-1 do if not instance(L#i, S) then error "expected list of elements from same ring";
-    if #L%2 !=0 then error "expected an even length list";
-    n := (#L-2)//2;
-    A' := matrix{{L#0}};
-    B' := matrix{{L#(n+1)}};
-    A := A';
-    B := B';
-    for i from 1 to n do(
-	A = matrix{
-	    {L#i * id_(S^(2^(i-1))), A'},
-	    {B', (-L#(n+1+i))*id_(S^(2^(i-1)))}};
-	B = matrix{
-	    {L#(n+1+i) * id_(S^(2^(i-1))), A'},
-	    {B', (-L#i)*id_(S^(2^(i-1)))}};
-	A' = A;
-	B' = B;
-	);
-    ZZdfactorization{A, B}	
+quadraticMF(Sequence, Sequence) := ZZdFactorization => (X, X') -> (
+    quadraticMF(toList X, toList X')
     )
 
---In: skew symmetric 2(n+1) x 2(n+1) matrix with scalar entries
---In: polynomial ring in 2(n+1) x 2(n+1) variables
---Out: matrix factorization of combination of variables determined by input matrix
-quadraticMF(Matrix, PolynomialRing) := ZZdFactorization => (M,S) -> (
-    if (rank source M)%2 != 0 then error "expected skew symmetric matrix of even dimension";
-    if transpose M + M != 0 then error "expected skew symmetric matrix";
-    n := (rank source M - 2)//2;
-    if (dim S)!= rank source M then error "expected polynomial ring to have same number of variables as matrix dimension";
-    R := ring M;
-    G := matrix{{0, id_(R^(n+1))},{id_(R^(n+1)),0}};
-    d := (vars S)*(G*M);
-    quadraticMF(flatten entries d)
-    )
-
---In: List of distinct scalars d_0..d_n + coefficient ring; the function will make a polynomial ring
---Out: MF associated to the skew symmetric matrix 0 D \\ -D 0
---where D is the diagonal matrix made from the list
-quadraticMF(List, Ring) := ZZdFactorization => (L,R) -> (
-    if L != unique L then print "Warning: input with repeated entries may not give Ulrich module";
-    D := diagonalMatrix L;
-    M := matrix{{0, D}, {-D, 0}};
+--Helper function
+--In: Two lists of ring elements, plus a skew symmetric matrix
+--Out: Matrix factorization for quadratic form q as in Eisenbud--Schreyer
+quadraticMF(Matrix, List, List) := ZZdFactorization => (Lambda, L, L') -> (
+    --Some checks
+    if not(#L == #L') then error "expected lists of ring elements of same length";
     n := #L-1;
-    quadraticMF(M, R[x_0..y_n])
+    if not(rank source Lambda == 2*(n+1)) then error "expected input matrix to have dimension 2N x 2N, where N is length of each input list";
+    if not(Lambda + transpose Lambda == 0) then error "expected skew symmetric matrix";
+    k := ring Lambda; --should be scalars
+    G := matrix{ {0, id_(k^(n+1))}, {id_(k^(n+1)),0}}*Lambda;
+    v := flatten entries(matrix{ L|L'}*G);
+    quadraticMF(for i to n list v#i, for i to n list v#(n+1+i))
     )
 
----------------
+quadraticMF(Matrix, Sequence, Sequence) := ZZdFactorization => (Lambda, X, X') -> (
+    quadraticMF(Lambda, toList X, toList X')
+    )
+
+
+--for constructing the Ulrich modules
+ulrichFromMF = method()
+
+ulrichFromMF(Matrix, List, List) := Module => (Lambda, L, L') -> (
+    F := quadraticMF(L, L');
+    F' := quadraticMF(Lambda, L, L');
+    S := ring F;
+    pres := F.dd_0|F'.dd_0;
+    q1 := polynomial F;
+    q2 := polynomial F';
+    (coker pres)**(S/ideal(q1, q2))
+    )
+
+ulrichFromMF(Matrix, Sequence, Sequence) := Module => (Lambda, X, X') -> (
+    ulrichFromMF(Lambda, toList X, toList X')
+    )
+
+---
+--This function should be in the main type file, but it wasn't working for some reason
+polynomial = method()
+polynomial(ZZdFactorization) := ZZdFactorization => F -> (
+    p := F.period;
+    comp := product(for i to p-1 list F.dd_i);
+    comp_(0,0)
+    )
+
 
 end--
+--------------
+--Examples
+--Note: Error in ZZdFactorizations.m2 means you should just run the functions above before using, rather than loading the file
 
-restart
 needs "eisenbud-schreyer-examples.m2"
 
 S = QQ[x_0..y_2]
 
---this will give factorization of \sum x_i*y_i
-Q1 = quadraticMF(2, S)
-(Q1.dd_0)*(Q1.dd_1)
+Q = quadraticMF(x_0..x_2, y_0..y_2)
+polynomial Q
 
---this will give factorization of \sum L_i*L_(n+1+i)
---if the list is length 2(n+1)
-Q2 = quadraticMF({x_0, 2*x_1-3*x_2, -x_2, 3*y_0, 2*y_1, 3*y_2})
-(Q2.dd_0)*(Q2.dd_1)
+Lambda = matrix{{0,1,2,3,4,5}, {-1,0,1,2,3,4},{-2,-1,0,1,2,3},{-3,-2,-1,0,1,2},{-4,-3,-2,-1,0,1},{-5,-4,-3,-2,-1,0}}
+Q' = quadraticMF(Lambda, {x_0, x_1, x_2}, {y_0, y_1, y_2})
+polynomial Q'
 
---this is closer to the full construction in Eisenbud--Schreyer
-S' = QQ[x_0..y_1]
-Lambda = matrix{{0,1,2,3}, {-1,0,-1,-2}, {-2,1,0,-3}, {-3,2,3,0}}
-Q1 = quadraticMF(1, S')
-q1 = ((Q1.dd_0)*(Q1.dd_1))_(0,0)
-Q2 = quadraticMF(Lambda, S')
-q2 = (Q2.dd_0)*(Q2.dd_1)
+M = ulrichFromMF(Lambda, x_0..x_2, y_0..y_2)
+R = ring M
+prune M
 
-A = Q1.dd_1 | Q2.dd_1
-R = S'/ideal(q1, q2)
-A' = R**A
-M = coker A' --this should be an Ulrich module
-
---diagonal entries
-F = quadraticMF({2,-1,4,3}, QQ)
-S = ring F
-Q1 = quadraticMF(3, S)
-q2 = ((F.dd_0)*(F.dd_1))_(0,0)
-q1 = ((Q1.dd_0)*(Q1.dd_1))_(0,0)
-R = S/ideal(q1, q2)
-M = coker(sub(Q1.dd_1 | F.dd_1, R))
-
-
-quadraticMF(ZZ, PolynomialRing) := ZZdFactorization => (n, S) -> (
-    if dim S != 2*(n+1) then error "expected polynomial ring in 2*(n+1) variables";
-    phi0 := matrix{{S_0}};
-    psi0 := matrix{{S_(n+1)}};
-    phi := phi0;
-    psi := psi0;
-    for i from 1 to n do(
-	phi = matrix{
-	    {S_i * id_(S^(2^(i-1))), phi0},
-	    {psi0, (-S_(n+1+i))*id_(S^(2^(i-1)))}};
-	psi = matrix{
-	    {S_(n+1+i) * id_(S^(2^(i-1))), phi0},
-	    {psi0, (-S_i)*id_(S^(2^(i-1)))}};
-	phi0 = phi;
-	psi0 = psi;
-	);
-    ZZdfactorization{phi0, psi0}	
-    )
-
-S = QQ[x_0..y_2]
-phi0 = matrix{{S_0}}
-psi0 = matrix{{S_(2+1)}}
-n=2
-
---this will make everything homogeneous
-for i from 1 to n do(
-    phi = matrix{
-    	{S_i * matrix( map(S^(2^(i-1)), S^{2^(i-1):-1}, id_(S^(2^(i-1))))), phi0},
-    	{psi0, -S_(n+i+1) * matrix( map(S^(2^(i-1)), S^{2^(i-1):-1}, id_(S^(2^(i-1)))))}
-    	};
-    psi = matrix{
-    	{S_(n+i+1) * matrix( map(S^(2^(i-1)), S^{2^(i-1):-1}, id_(S^(2^(i-1))))), phi0},
-    	{psi0, -S_i * matrix( map(S^(2^(i-1)), S^{2^(i-1):-1}, id_(S^(2^(i-1)))))}
-    	};
-    phi0 = phi;
-    psi0 = psi;
-    );
-
-phi0
-psi0
-degrees source psi0
-isHomogeneous psi0
-isHomogeneous phi0
+--Using a skew symmetric matrix coming from diagonal with distinct entries should give ulrich module
+use S
+D = {4,1,2}
+mat = matrix{{0, diagonalMatrix(D)}, {-diagonalMatrix(D), 0}}
+N = ulrichFromMF(mat, x_0..x_2, y_0..y_2)
