@@ -1,3 +1,22 @@
+
+
+-- discForm computes the product of the entries of a list;
+-- used to compute the discriminant of a diagonal form, where form is given by list of diagonal entries
+
+discForm = method ()
+
+discForm (List):=(ZZ) => (f) -> (
+    -- Input: f = list of diagonal elements of quadratic form
+    -- Output: Product of the entries
+    disc:=1;
+    --for loop counts the number of negative diagonal entries
+    for i from 0 to (#f -1) do(
+	 disc = disc* f_i;
+	 );
+    return disc;
+      	     
+    );
+
 -- Calculate the Hilbert symbol in Q_p
 
 --  Very preliminary version of Invariant Calculations (hilbert symbol, etc.) for quadratic functions over Q
@@ -20,15 +39,6 @@
 
 -- Input: Integers a, b, and prime p 
 -- Output: The Hilbert symbol, (a,b)_p
-
-path = append(path, "/home/macaulay/A1-Brouwer/");
-path = append(path, "../A1-Brouwer/");
-
-needs "simplifyForm.m2"
-needs "squarefreepart.m2"
-needs "diagonalize.m2"
-needs "discForm.m2"
-
 
 exponentPrimeFact = method()
 

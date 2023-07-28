@@ -53,7 +53,7 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
         if (numRows(A) != numRows(B)) then (
             return false;
             );
-        return ((getInvariants(alpha))_2 == (getInvariants(beta))_2);
+        return (signature(alpha)==signature(beta));
         )
     -- Over QQ, call isIsomorphicFormQ, which checks equivalence over all completions
     else if ((k1 === QQ) and (k2 === QQ)) then (
