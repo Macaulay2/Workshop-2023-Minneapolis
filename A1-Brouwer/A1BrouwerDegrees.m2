@@ -1444,11 +1444,6 @@ document {
         }
 
 
--- document {
---     Key => {(simplifyForm, GrothendieckWittClass), simplifyForm},
---     	Headline => {"Simplifies a Grothendieck Witt class."},
---         }
-
 
 
 
@@ -1484,6 +1479,7 @@ document {
     globalA1Degree(f)
     ///,
     PARA{"The rank of this form is three, as cubics over the complex numbers have three roots counted with multiplicity. This form has signature one, which indicates that when the cubic intersects the ", TEX///$x$///, "-axis, when the three points of intersection are counted with a sign corresponding to a right hand rule, the sum equals one."},
+    
     PARA{EM "Citations:"},
     UL{
 	
@@ -1496,6 +1492,36 @@ document {
 	{"[BMP23] T. Brazelton, S. McKean, S. Pauli, ", EM "Bezoutians and the A1-Degree,", " Algebra & Number Theory, 2023."},
 	{"[SS76] S. Scheja, S. Storch, ", EM "Uber Spurfunktionen bei vollstandigen Durchschnitten,", " J. Reine Angew. Math., 1975."},
 	},
+    
+    }
+
+
+document {
+    Key => {(localA1Degree, List, Ideal), localA1Degree},
+    Headline => "Computes a local A1-Brouwer degree of a list of n polynomials in n variables over a field k at a prime ideal in the zero locus",
+    Usage => "locallA1Degree(L,p)",
+    Inputs => {
+	List => "L" => {"list of polynomials ", TEX///$f = (f_1, \ldots, f_n)$///, " in the polynomial ring ", TEX///$k[x_1,\ldots,x_n]$///, " over a field ", TEX///$k$///, "."},
+	Ideal => "p" => {"a prime ideal ", TEX///$p \trianglelefteq k[x_1,\ldots,x_n]$///, " in the zero locus ", TEX///$V(f)$///, "."},
+	},
+    Outputs => {
+	GrothendieckWittClass => {"The class ", TEX///$\text{deg}_p^{\mathbb{A}^1}(f)$///, " in the Grothendieck-Witt ring ", TEX///$\text{GW}(k)$///, "."}
+	},
+    PARA{"Given an endomorphism of affine space ", TEX///$f=(f_1,\dots ,f_n) \colon \mathbb{A}^n_k \to \mathbb{A}^n_k$///, " and an isolated zero ", TEX///$p\in V(f)$/// ,", we may compute its local ", TEX///$\mathbb{A}^1$///, EM "-Brouwer degree", " valued in the Grothendieck-Witt ring ", TEX///$\text{GW}(k)$///, "."
+	},
+    PARA{"For historical and mathematical background, see ", TO2(globalA1Degree, "global A1-degrees"), "."},
+    EXAMPLE lines ///
+    T1 = QQ[z_1..z_2];
+    f1 = {(z_1-1)*z_1*z_2, (3/5)*z_1^2 - (17/3)*z_2^2};
+    f1GD = globalA1Degree(f1);
+    q=ideal {z_1,z_2};
+    r=ideal {z_1-1,z_2^2-(9/85)};
+    f1LDq= localA1Degree(f1,q)
+    f1LDr= localA1Degree(f1,r)
+    f1LDsum = gwAdd(f1LDq, f1LDr)
+    ///,
+    PARA{"The sum of the local A1-degrees is equal to the global A1-degree:"},
+    PARA{"TODO --- add example after importing IsIsomorphic2"},
     
     }
 
