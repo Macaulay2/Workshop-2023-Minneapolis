@@ -280,8 +280,8 @@ diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
                         rowSwap(A,col,row);
                         columnSwap(A,col,row);
                         );
-                    );
                     break;
+                    );
                 );
             );
         --Now A_(col,col) != 0 unless there was a zero row/column and we use it to clear the column below
@@ -324,8 +324,8 @@ diagonalizeOverInt (Matrix) := (Matrix) => (AnonMut) -> (
                         rowSwap(A,col,row);
                         columnSwap(A,col,row);
                         );
-                    );
                     break;
+                    );
                 );
             );
         --Now A_(col,col) != 0 unless there was a zero row/column and we use it to clear the column below
