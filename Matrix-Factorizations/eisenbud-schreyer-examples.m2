@@ -56,14 +56,18 @@ quadraticMF(Matrix, Sequence, Sequence) := ZZdFactorization => (Lambda, X, X') -
 --for constructing the Ulrich modules
 ulrichFromMF = method()
 
+--At the moment, this assumes L and L' are lists of homogeneous linear forms in the same ring
+--Need to update code to not assume linearity
+--We do this to output a homogeneous module
 ulrichFromMF(Matrix, List, List) := Module => (Lambda, L, L') -> (
     F := quadraticMF(L, L');
     F' := quadraticMF(Lambda, L, L');
     S := ring F;
     pres := F.dd_0|F'.dd_0;
+    presHomog := map(S^(rank target pres), S^({(rank source pres):-1}), pres); --this is the part that assumes linearity
     q1 := polynomial F;
     q2 := polynomial F';
-    (coker pres)**(S/ideal(q1, q2))
+    (coker presHomog)**(S/ideal(q1, q2))
     )
 
 ulrichFromMF(Matrix, Sequence, Sequence) := Module => (Lambda, X, X') -> (
@@ -89,13 +93,24 @@ needs "eisenbud-schreyer-examples.m2"
 
 S = QQ[x_0..y_2]
 
-Q = quadraticMF(x_0..x_2, y_0..y_2)
-polynomial Q
+A = quadraticMF(x_0..x_2, y_0..y_2)
+polynomial A
 
+--can use arbitrary sequences of elements
+B = quadraticMF({x_0, x_1 + x_2, y_1}, {y_2, y_2, -y_1})
+polynomial B
+
+--even not quadratic things should work
+C = quadraticMF({x_0, x_1*x_2, -x_2-x_0}, {y_0*y_2*y_1, y_1, y_2})
+polynomial C
+
+--adding a skew symmetric scalar matrix gives you an MF of q((x|y)*G), as described in Eisenbud--Schreyer
 Lambda = matrix{{0,1,2,3,4,5}, {-1,0,1,2,3,4},{-2,-1,0,1,2,3},{-3,-2,-1,0,1,2},{-4,-3,-2,-1,0,1},{-5,-4,-3,-2,-1,0}}
 Q' = quadraticMF(Lambda, {x_0, x_1, x_2}, {y_0, y_1, y_2})
 polynomial Q'
 
+--NOTE: For now, the Ulrich functions assume linearity of forms in input
+--the skew symmetric matrix allows one to construct (potentially) Ulrich modules over quotient rings
 M = ulrichFromMF(Lambda, x_0..x_2, y_0..y_2)
 R = ring M
 prune M
@@ -105,3 +120,4 @@ use S
 D = {4,1,2}
 mat = matrix{{0, diagonalMatrix(D)}, {-diagonalMatrix(D), 0}}
 N = ulrichFromMF(mat, x_0..x_2, y_0..y_2)
+isHomogeneous N
