@@ -62,7 +62,9 @@ export{
     "localAlgebraBasis",
     "signature",
     "isIsomorphic2",
-    "hilbertSymbol"
+    "hilbertSymbol",
+    "isIsotropic",
+    "isAnisotropic"
     }
 
 --------------
@@ -192,6 +194,12 @@ isSquareAndSymmetric = method()
 isSquareAndSymmetric (Matrix) := Boolean => M -> (
     transpose(M) == M
 )
+
+-- Check if a matrix represents a degenerate bilinear form
+isDegenerate = method()
+isDegenerate (Matrix) := Boolean => M ->(
+    det(M) == 0
+    )
 
 -- Check if a square matrix is upper left triangular
 isUpperLeftTriangular = method()
@@ -1259,8 +1267,8 @@ localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
 ---------------------------------------
 
 
-signature = method()
-signature (GrothendieckWittClass) := ZZ => (beta) ->(
+numPosEntries = method()
+numPosEntries (GrothendieckWittClass) := ZZ => beta ->(
     B := beta.matrix;
     n := numRows(B);
     kk := ring B;
@@ -1269,16 +1277,58 @@ signature (GrothendieckWittClass) := ZZ => (beta) ->(
         );
     diagB := diagonalize(B);
     posEntries := 0;
-    negEntries := 0;
     for i from 0 to (numRows(B)-1) do (
         if diagB_(i,i) > 0 then(
             posEntries = posEntries+1;
             );
+	);
+
+    return posEntries
+);
+
+
+numNegEntries = method()
+numNegEntries (GrothendieckWittClass) := ZZ => beta ->(
+    B := beta.matrix;
+    n := numRows(B);
+    kk := ring B;
+    if not (kk === RR or instance(kk,RealField) or kk === QQ) then(
+        error "Field is not QQ or RR";
+        );
+    diagB := diagonalize(B);
+    negEntries := 0;
+    for i from 0 to (numRows(B)-1) do (
         if diagB_(i,i) < 0 then(
             negEntries = negEntries+1;
             );
 	);
-    sig := posEntries - negEntries;
+
+    return negEntries
+);
+
+
+signature = method()
+signature (GrothendieckWittClass) := ZZ => (beta) ->(
+    -- B := beta.matrix;
+    -- n := numRows(B);
+    -- kk := ring B;
+    -- if not (kk === RR or instance(kk,RealField) or kk === QQ) then(
+    --     error "Field is not QQ or RR";
+    --     );
+    -- diagB := diagonalize(B);
+    -- posEntries := 0;
+    -- negEntries := 0;
+    -- for i from 0 to (numRows(B)-1) do (
+    --     if diagB_(i,i) > 0 then(
+    --         posEntries = posEntries+1;
+    --         );
+    --     if diagB_(i,i) < 0 then(
+    --         negEntries = negEntries+1;
+    --         );
+    -- 	);
+    -- sig := posEntries - negEntries;
+    -- return sig
+    sig := numPosEntries(beta) - numNegEntries(beta);
     return sig
     );
 
@@ -1852,60 +1902,226 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
     else error "Base fields are not isomorphic"
     )
 
+--------------------------
+-- Checking isotropy
+--------------------------
+
+-- isAnisotropicDiagFormQp determines if a diagonal quadratic form with integral coefficients is anisotropic
+  
+isAnisotropicDiagQp = method()
+
+isAnisotropicDiagQp (List, ZZ) := (Boolean) => (f, p) -> (
+    -- Input: (f, p): f list of integrers (the diagonal elements of the form), p an integral prime
+    -- Output: true if form does not represent 0 over Qp
+    
+    -- Check if f is list, p is prime 
+    if (not isPrime(p) or (not (ring p === ZZ))) then (print "Error: isAnisotropicDiagFormQp called with p not an integer prime");
+    n:=#f;
+    for i from 0 to n-1 do (
+    	if (not (ring f_i === ZZ)) then (print "Error: isAnisotropicDiagFormQp called with a non-integral list");
+    );
+    d:=discForm(f);
+    
+    -- if discriminant is 0, then form is degenerate and is isotropic
+    if (d==0) then (return false);
+    
+    -- can now assume form is nondegenerate
+    -- a rank 1 non-degenerate form is anisotropic
+    if (n==1) then (return true);
+    -- a rank >=5 form is isotropic
+    if (n>4) then (return false);
+    
+    -- now only need to consider ranks 2, 3, 4
+    
+    e:=hasseWittInvariant(f, p);
+    
+    if (n==2) then (
+    -- need to compare d ==-1 in Qp^*/Qp^2; if so, form is isotropic	
+	if (equalUptoPadicSquare(sub(-1, ZZ), d, p)) then (
+	    return false;
+	    )
+	else (return true);
+	)
+    else (
+	-- now use the criteria for n=3
+	-- need to check if (-1,-d)=hasseWittInvariant for f ; if equal, form is isotropic
+	if (n==3) then (
+	    if (hilbertSymbol(-1, -d, p) == hasseWittInvariant(f, p)) then (
+		return false;
+		)
+	    else (return true);
+	    )
+	else (
+	 -- now use the criteria for n=4
+	-- need to check (d=1 and (-1,-1) != =hasseWittInvariant for f) for form to be anisotropic 
+	    if (n==4) then (
+		if ((equalUptoPadicSquare( d, 1, p)) and  (not (hilbertSymbol(-1,-1,p) == hasseWittInvariant(f, p)))) then (
+		    return true;
+		    )
+		else (return false);
+		)
+	    else (
+		print "Error: rank should have been 2, 3, 4, but isn't";
+		return false;
+		)
+	    )
+	)
+    );
+
+
+--isAnisotropicQ takes n GWClass over QQ and returns a Boolean based on whether or not 
+--the class is anisotropic
+--unlike simplifyForm it can say for certain if the form is anisotropic or not since it
+--does not use rationalPoints
+
+-- Input:  A GrothendieckWittClass for a quadratic form
+-- Output: True if form is Anisotropic;  False, if form is Isotropic
+
+
+isAnisotropicQ = method()
+isAnisotropicQ (GrothendieckWittClass) := Boolean => (alpha) -> (
+    A:= alpha.matrix;
+    n:= numRows(A);
+    kk:= ring A;
+
+    if (not (kk===QQ)) then (error "GrothendieckWittClass is not over QQ");
+
+    --check if form is degenerate
+    if (isDegenerate(A)) then (return false);
+    
+     -- if rank =1, then a non-degenerate form is anisotropic
+    if (n==1) then (return true);
+    
+    --if rank>=5, we can use signature do decide this
+    --the non-degenerate form will be anisotropic iff all diagonal entries have same sign
+    if (n>= 5) then (
+        return ((numPosEntries(alpha) == n) or (numNegEntries(alpha) == n));
+    );
+   
+
+    --if 2<= rank <=4, we need to take p-adic completions
+    -- First, we diagonalize the matrix
+    diagA := diagonalize(A);  
+    -- Then obtain the diagonal entries.  These will be rational numbers;
+    diagEntriesA := apply(n, i-> A_(i,i));
+    -- Make then integers by multiplying by integer squares (so that the forms are equivalent);
+    -- The sub command forces the list to be integers
+    diagIntEntriesA:= apply(n, i-> squarefreePart(sub(numerator(diagEntriesA_i) * denominator(diagEntriesA_i),ZZ)));
+    
+    -- disc = discriminant of form, product of diagonal elements.  
+    disc:= discForm(diagIntEntriesA);
+    
+    
+   
+   
+    -- Using Q_p criteria from Thm 6, Section 2.2 of Serre's Course in Arithmetic
+   
+    -- For n=2, need -disc to be a square for all p to be isotropic, so in particular, need -disc=1 for isotropic
+    if (n==2) then (  
+	 -- Make disc a squarefree integer
+	 d2 := squarefreePart(disc); 
+	 return (not (d2==-1) ) 
+	 );
+     
+  
+    -- if p>2, then hilbert symbol (a,b)=1 if, a, b not divisible by p.  So hasseWittInvariant is also 1.  
+    -- Then for n=3,4, form is automatically isotropic if p doesn't divide disc. 
+    -- So only need to check if f is anisotropic over Q_p for p=2 and primes p dividing disc.
+    
+    -- first check p=2 case
+    if (isAnisotropicDiagQp(diagIntEntriesA, 2)) then (return true);
+    
+    -- create list of primes dividing disc
+    -- first take absolute value of disc
+    d1:= disc;
+    if (d1<0) then (d1=-d1);
+    
+    -- H is HashTable of factors of disc
+    
+    H:= hashTable( factor d1);
+    -- the keys k are the prime factors
+    k:= keys H;
+    i:=0;
+   
+    while (i< #k) do (
+	    	p := k_i;
+		if (isAnisotropicDiagQp(diagIntEntriesA, p)) then (return true);
+		i=i+1;
+		);
+
+-- if the function hasn't returned false yet, then isotropic over all primes p.  hence form is isotropic over Q	    
+  
+    return false;
+);
+	
+	
+isAnisotropic = method()
+
+isAnisotropic (GrothendieckWittClass) := (Boolean) => (alpha) -> (
+    k:=baseField(alpha);
+    -- Ensure base field is supported
+    if not (k === CC or instance(k,ComplexField) or k === RR or instance(k,RealField) or k === QQ or (instance(k, GaloisField) and k.char != 2)) then (
+        error "Base field not supported; only implemented over QQ, RR, CC, and finite fields of characteristic not 2";
+        );
+    A:=alpha.matrix;
+    -- Ensure underlying matrix is symmetric
+    if A != transpose(A) then (
+        error "Underlying matrix is not symmetric";
+	);
+    diagA := diagonalize(A);
+    -- Over CC, a diagonal form is anisotropic if and only if it is nondegenerate and has dimension 0 or 1
+    if (k === CC or instance(k,ComplexField)) then (
+        nonzeroEntriesA := 0;
+        for i from 0 to (numRows(A)-1) do (
+            if diagA_(i,i) != 0 then (
+                nonzeroEntriesA = nonzeroEntriesA + 1;
+                );
+            );
+        return (nonzeroEntriesA == numRows(A) and numRows(A) <= 1);
+        )
+    --Over RR, a diagonal form is anisotropic if and only if all of its diagonal entries are positive or all of its diagonal entries are negative
+    else if (k === RR or instance(k,RealField)) then (
+        posEntriesA := 0;
+        negEntriesA := 0;
+        for i from 0 to (numRows(A)-1) do (
+            if diagA_(i,i) > 0 then (
+                posEntriesA = posEntriesA + 1;
+                );
+            if diagA_(i,i) < 0 then (
+                negEntriesA = negEntriesA + 1;
+                );
+            );
+        return ((posEntriesA == numRows(A)) or (negEntriesA == numRows(A)));
+        )
+    -- Over QQ, call isAnisotropicQ
+    else if (k === QQ) then (
+        return isAnisotropicQ(alpha);
+        )
+    -- Over a finite field, a diagonal form is anisotropic if and only if it is nondegenerate, of dimension at most 2, and not the hyperbolic form 
+    else if (instance(k, GaloisField) and k.char != 2) then (
+        countNonzeroDiagA := 0;
+        prodNonzeroDiagA := 1;
+        for i from 0 to (numRows(A)-1) do (
+	    if diagA_(i,i) != 0 then (
+		countNonzeroDiagA = countNonzeroDiagA + 1;
+                prodNonzeroDiagA = prodNonzeroDiagA * diagA_(i,i);
+		);
+	    );
+        return ((countNonzeroDiagA == numRows(A)) and (numRows(A) <= 1 or (numRows(A) == 2 and  legendreBoolean(prodNonzeroDiagA) != legendreBoolean(sub(-1,k)))));
+        )
+    -- We should never get here
+    else error "Problem with base field"
+    )
+
+
+isIsotropic = method()
+isIsotropic (GrothendieckWittClass) := (Boolean) => (alpha) -> (
+    return (not isAnisotropic(alpha));
+    )
+	    
 
 
 
-
-
-
-
-
-
--- New type of hash table called "GrothendieckWittType"
--- GW-type.m2
-
-
----------------
--- Operations with matrices
----------------
-
--- Diagonalization of symmetric bilinear forms
--- diagonalize.m2
-
-
--- basic booleans about matrices
--- matrixBooleans.m2
-
-
--- Checks if a Gram matrix can easily be seen to be upper left triangular
--- easyUpperTriangular.m2
-
----------------
--- Operations with k-algebras
----------------
-
--- localAlgebraBasis.m2
-
-
----------------
--- Diagonalization over QQ
----------------
-
--- Takes in a rational number or integer and outputs the smallest magnitude integer in its square class
--- squarefreepart.m2
-
--- Given diagonal matrix, split off any <a>+<-a> and return number of times we can do this as well as smaller matrix with none of these
--- splitoffobvioushyperbolics.m2
-
--- Takes in symmetric matrix over QQ and diagonalizes, removes squares from entries, and splits off hyperbolic forms that immediately appear as <a> + <-a>
--- rationalsimplify.m2
-
-
-
-
-
--- Checks if 
--- easyIsomorphicGW
 
 
 
@@ -2248,7 +2464,7 @@ document{
 	{"[S73] J.P. Serre, ", EM "A course in arithmetic,", " Springer-Verlag, 1973."},
 	{"[MH73] Milnor and Husemoller, ", EM "Symmetric bilinear forms,", " Springer-Verlag, 1973."},
     },
-    }
+}
 
 
 
@@ -2257,7 +2473,7 @@ document {
 	Headline => "produces a diagonalized form for any Grothendieck-Witt class",
 	Usage => "diagonalForm(beta)",
 	Inputs => {
-		GrothendieckWittClass => "beta" => {"any class in ", TEX///$\text{GW}(k)$///}
+		GrothendieckWittClass => "beta" => {"any class in ", TEX///$\text{GW}(k)$///," where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field."}
 	},
 	Outputs => { GrothendieckWittClass => {"a form isomorphic to ", TEX///$\beta$///, " with a diagonal Gram matrix"}},
 	PARA {"test"},
@@ -2273,6 +2489,64 @@ document {
 	}
 
 
+
+
+document{
+    Key => {(isIsotropic, GrothendieckWittClass), isIsotropic},
+    Headline => "Determines whether a Grothendieck-Witt class is isotropic",
+    Usage => "isIsotropic(beta)",
+    Inputs => {
+	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(k)$///, " where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field."},
+	},
+    Outputs => {
+        Boolean => {"Whether ", TEX///$\beta$///, " is isotropic"},
+	},
+    PARA{"Recall a symmetric bilinear form ", TEX///$\beta$///, " is said to be ", EM "isotropic", " if there exists a nonzero vector ", TEX///$v$///, " for which ", TEX///$\beta(v,v) = 0$///, ". Witt's decomposition theorem implies that a non-degenerate symmetric bilinear form decomposes uniquely into an isotropic and an anisotropic part. Certifying (an)isotropy is then an important computational problem when working with the Grothendieck-Witt ring."},
+    PARA{"Over ", TEX///$\mathbb{C}$///, ", any form of rank two or higher contains a copy of the hyperbolic form, and hence is isotropic. Thus we can determine isotropy simply by a consideration of rank."},
+    EXAMPLE lines///
+    isIsotropic(gwClass(matrix(CC,{{3}})))
+    isIsotropic(gwClass(matrix(CC,{{2,0},{0,5}})))
+    ///,
+    PARA{"Forms over ", TEX///$\mathbb{R}$///, " are anisotropic if and only if all its diagonal entries are positive or are negative."},
+    EXAMPLE lines///
+    isIsotropic(gwClass(matrix(RR,{{3,0,0},{0,5,0},{0,0,7}})))
+    isIsotropic(gwClass(matrix(RR,{{0,2},{2,0}})))
+    ///,
+    PARA{"Over finite fields, a form is anisotropic so long as it is nondegenerate, of rank ", TEX///$\le 2$///," and not isomorphic to the hyperbolic form."},
+    EXAMPLE lines///
+    isIsotropic(gwClass(matrix(GF(7),{{1,0,0},{0,1,0},{0,0,1}})))
+    isIsotropic(gwClass(matrix(GF(7),{{3,0},{0,3}})))
+    ///,
+    PARA{"Over ", TEX///$\mathbb{Q}$///, " things become a bit more complicated. We can exploit the local-to-global principle for isotropy (the ", EM "Hasse-Minkowski principle", "), which states that a form is isotropic over ", TEX///$\mathbb{Q}$///, " if and only if it is isotropic over all its completions, meaning all the ", TEX///$p$///, "-adic numbers and ", TEX///$\mathbb{R}$///, " [L05, VI.3.1]. We note, however, the classical result that all forms of rank ", TEX///$\ge 5$///, " in ", TEX///$\mathbb{Q}_p$///, " are isotropic [S73, III Theorem 6]. Thus isotropy in this range of ranks is equivalent to checking it over the real numbers."},
+    EXAMPLE lines///
+    beta = gwClass(matrix(QQ,{{1, 0, 2, 0, 3}, {0, 6, 1, 1, -1},{2, 1, 5, 2, 0}, {0, 1, 2, 4, -1}, {3, -1, 0,-1, 1}}));
+    isIsotropic(beta)
+    diagonalForm(beta)
+    ///,
+    PARA{"For forms of rank ", TEX///$\le 4$///, " there are simple criteria for isotropy over ", TEX///$\mathbb{Q}_p$///, " which can be found in [S73, III Theorem 6]. As an example for rank 3 forms, isotropy of a form ", TEX///$\beta \in \text{GW}(\mathbb{Q})$///, " over ", TEX///$\mathbb{Q}_p$///," is equivalent to the statement that ", TEX///$(-1,-\text{disc}(\beta))_p = H(\beta)$///, " where ", TEX///$H(\beta)$///, " denotes the Hasse-Witt invariant attached to ", TEX///$\beta$///, " and ", TEX///$(-,-)_p$///," is the ", TO2(hilbertSymbol, "Hilbert Symbol"), "."},
+    PARA{EM "Citations:"},
+    UL{
+	
+	{"[S73] J.P. Serre, ", EM "A course in arithmetic,", " Springer-Verlag, 1973."},
+	{"[L05] T.Y. Lam, ", EM "Introduction to quadratic forms over fields,", " American Mathematical Society, 2005."},
+    },
+    
+}
+
+
+document{
+    Key => {(isAnisotropic, GrothendieckWittClass), isAnisotropic},
+    Headline => "Determines whether a Grothendieck-Witt class is anisotropic",
+    Usage => "isAnisotropic(beta)",
+    Inputs => {
+	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(k)$///, " where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field."},
+	},
+    Outputs => {
+        Boolean => {"Whether ", TEX///$\beta$///, " is anisotropic"},
+	},
+    PARA{"This is the negation of the boolean-valued ", TO2(isIsotropic,"isIsotropic"), ". See documentation there."},
+    
+}
 
 ------------------
 -- TESTING
