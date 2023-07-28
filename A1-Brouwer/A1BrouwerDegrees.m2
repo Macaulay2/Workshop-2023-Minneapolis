@@ -2009,7 +2009,8 @@ document {
 	EXAMPLE lines ///
 		 M=matrix(GF(17), {{7, 9}, {9, 6}});
 		 diagonalize(M)
-	 	 ///
+	 	 ///,
+	SeeAlso => {"diagonalForm"}
      	}
 
 
@@ -2199,7 +2200,7 @@ document{
     ///,
     PARA{"ok figure out the error above"},
     PARA{"Over the rationals, further invariants must be considered. We first check if the rank, discriminant, and signature (when considered as a real form) all agree. If so, we must further check whether the ", EM "Hasse-Witt invariants", " agree at all primes. This is an instance of the ", EM "Hasse-Minkowski principle", " which states that quadratic forms are isomorphic over a global field if and they are isomorphic over all its completions (see [S73, III Theorem 7] or [L05, VI.3.3])."},
-    PARA{"The ", EM "Hasse-Witt invariant", " of a diagonal form ", TEX///$\langle a_1,\ldots,a_n\rangle$///, " over a field ", TEX///$K$///, " is defined to be the product ", TEX///$\prod_{i<j} \left( \phi(a_i,a_j) \right)$///, " where ", TEX///$\phi \colon K \times K \to \left\{\pm 1\right\}$///, " is any ", EM "symbol", " (see e.g. [MH73, III.5.4] for a definition). It is a classical result of Hilbert that over a local field of characteristic not equal to two, there is one and only symbol, called the ", EM "Hilbert symbol", " ([S73, Chapter III]) computed as follows:"},
+    PARA{"The ", EM "Hasse-Witt invariant", " of a diagonal form ", TEX///$\langle a_1,\ldots,a_n\rangle$///, " over a field ", TEX///$K$///, " is defined to be the product ", TEX///$\prod_{i<j} \left( \phi(a_i,a_j) \right)$///, " where ", TEX///$\phi \colon K \times K \to \left\{\pm 1\right\}$///, " is any ", EM "symbol", " (see e.g. [MH73, III.5.4] for a definition). It is a classical result of Hilbert that over a local field of characteristic not equal to two, there is one and only symbol, ", TEX///$(-,-)_p$///,  " called the ", EM "Hilbert symbol", " ([S73, Chapter III]) computed as follows:"},
     PARA{TEX///$(a,b)_p = \begin{cases} 1 & z^2 = ax^2 + by^2 \text{ has a nonzero solution in } K^3 \\ -1 & \text{otherwise.} \end{cases}$///},
     PARA{"Consider the following example, where we observe that ", TEX///$z^2 = 2x^2 + y^2$///," does admit nonzero solutions mod 7, in particular ", TEX///$(x,y,z) = (1,0,3)$///, ":"},
     EXAMPLE lines///
@@ -2220,6 +2221,56 @@ document{
     },
 }
 
+
+
+
+document{
+    Key => {(hilbertSymbol, ZZ,ZZ,ZZ), hilbertSymbol},
+    Headline => "Computes the Hilbert symbol of two integers at a prime",
+    Usage => "hilbertSymbol(a,b,p)",
+    Inputs => {
+	ZZ => "a" => {"Any integer, considered as an element of ", TEX///$\mathbb{Q}_p$///, "."},
+	ZZ => "b" => {"Any integer, considered as an element of ", TEX///$\mathbb{Q}_p$///, "."},
+	ZZ => "p" => {"Any prime number."},
+	},
+    Outputs => {
+	ZZ => "(a,b)_p" => {"The ", EM "Hilbert symbol ", TEX///$(a,b)_p$///, "."},
+	},
+    PARA{"The ", EM "Hasse-Witt invariant", " of a diagonal form ", TEX///$\langle a_1,\ldots,a_n\rangle$///, " over a field ", TEX///$K$///, " is defined to be the product ", TEX///$\prod_{i<j}  \phi(a_i,a_j)$///, " where ", TEX///$\phi \colon K \times K \to \left\{\pm 1\right\}$///, " is any ", EM "symbol", " (see e.g. [MH73, III.5.4] for a definition). It is a classical result of Hilbert that over a local field of characteristic not equal to two, there is one and only symbol, ", TEX///$(-,-)_p$///,  " called the ", EM "Hilbert symbol", " ([S73, Chapter III]) computed as follows:"},
+    PARA{TEX///$(a,b)_p = \begin{cases} 1 & z^2 = ax^2 + by^2 \text{ has a nonzero solution in } K^3 \\ -1 & \text{otherwise.} \end{cases}$///},
+    PARA{"Consider the following example, where we observe that ", TEX///$z^2 = 2x^2 + y^2$///," does admit nonzero solutions mod 7, in particular ", TEX///$(x,y,z) = (1,0,3)$///, ":"},
+    EXAMPLE lines///
+    hilbertSymbol(2,1,7)
+    ///,
+    PARA{EM "Citations:"},
+    UL{
+	
+	{"[S73] J.P. Serre, ", EM "A course in arithmetic,", " Springer-Verlag, 1973."},
+	{"[MH73] Milnor and Husemoller, ", EM "Symmetric bilinear forms,", " Springer-Verlag, 1973."},
+    },
+    }
+
+
+
+document {
+    Key => {(diagonalForm, GrothendieckWittClass), diagonalForm},
+	Headline => "produces a diagonalized form for any Grothendieck-Witt class",
+	Usage => "diagonalForm(beta)",
+	Inputs => {
+		GrothendieckWittClass => "beta" => {"any class in ", TEX///$\text{GW}(k)$///}
+	},
+	Outputs => { GrothendieckWittClass => {"a form isomorphic to ", TEX///$\beta$///, " with a diagonal Gram matrix"}},
+	PARA {"test"},
+	EXAMPLE lines ///
+	beta = gwClass(matrix(QQ,{{0,0,2},{0,2,0},{2,0,0}}));
+	diagonalForm(beta)
+        ///,
+	PARA{"Note that the  ", TO2(GrothendieckWittClass, "GrothendieckWittClass"), " type caches diagonal versions of a form once they've been computed. We can recover this quickly in the following way."},
+	EXAMPLE lines///
+	beta.cache.diagonalForm
+	///,
+	SeeAlso => {"diagonalize"}
+	}
 
 
 
