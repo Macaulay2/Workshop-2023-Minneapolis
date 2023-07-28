@@ -284,14 +284,15 @@ diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
                     break;
                 );
             );
-        --If nonzero entry at or below A_(col,col) is found, we use it to clear the column below
-        --Now A_(col,col) != 0 and we use it to clear the column below
-        for row from (col+1) to (n-1) do (
-            temp:=A_(row,col);
-            --More row reduction make every entry below A_(col,col) is zero
-            rowAdd(A,row,-temp/A_(col,col),col);
-	    --Column reduction to keep reduced matrix congruent
-            columnAdd(A,row,-temp/A_(col,col),col);
+        --Now A_(col,col) != 0 unless there was a zero row/column and we use it to clear the column below
+        if A_(col,col) != 0 then (
+            for row from (col+1) to (n-1) do (
+                temp:=A_(row,col);
+                --More row reduction make every entry below A_(col,col) is zero
+                rowAdd(A,row,-temp/A_(col,col),col);
+	        --Column reduction to keep reduced matrix congruent
+                columnAdd(A,row,-temp/A_(col,col),col);
+                );
             );
         );
     return matrix A 
@@ -327,13 +328,15 @@ diagonalizeOverInt (Matrix) := (Matrix) => (AnonMut) -> (
                     break;
                 );
             );
-        --Now A_(col,col) != 0 and we use it to clear the column below
-        for row from (col+1) to (n-1) do (
-            temp:=A_(row,col);
-            rowMult(A,row,A_(col,col)); --multiply row row by A_(col,col)
-            columnMult(A,row,A_(col,col)); --column multiplication to keep reduced matrix congruent
-            rowAdd(A,row,-temp,col); --more row reduction make every entry below A_(col,col) is zero
-            columnAdd(A,row,-temp,col); --column reduction to keep reduced matrix congruent
+        --Now A_(col,col) != 0 unless there was a zero row/column and we use it to clear the column below
+        if A_(col,col) != 0 then (
+            for row from (col+1) to (n-1) do (
+                temp:=A_(row,col);
+                rowMult(A,row,A_(col,col)); --multiply row row by A_(col,col)
+                columnMult(A,row,A_(col,col)); --column multiplication to keep reduced matrix congruent
+                rowAdd(A,row,-temp,col); --more row reduction make every entry below A_(col,col) is zero
+                columnAdd(A,row,-temp,col); --column reduction to keep reduced matrix congruent
+                );
             );
         );
     return matrix A 
