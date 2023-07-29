@@ -78,12 +78,12 @@ squarefreePart (QQ) := (ZZ) => (n) -> (
         return 0
         );
     if n > 0 then (
-        H:=hashTable(factor(numerator(n)*denominator(n)));
-        return product(apply(keys(H),p->p^(H#p%2)))
+        tableOfPrimeFactorsQQ:=hashTable(factor(numerator(n)*denominator(n)));
+        return product(apply(keys(tableOfPrimeFactorsQQ),p->p^(tableOfPrimeFactorsQQ#p%2)))
         );
     if n < 0 then (
-        H:=hashTable(factor(numerator(-n)*denominator(-n)));
-        return -product(apply(keys(H),p->p^(H#p%2)))
+        tableOfPrimeFactorsQQNeg:=hashTable(factor(numerator(-n)*denominator(-n)));
+        return -product(apply(keys(tableOfPrimeFactorsQQNeg),p->p^(tableOfPrimeFactorsQQNeg#p%2)))
         );
     )
 
@@ -92,12 +92,12 @@ squarefreePart (ZZ) := (ZZ) => (n) -> (
         return 0
         );
     if n > 0 then (
-        H:=hashTable(factor(n));
-        return product(apply(keys(H),p->p^(H#p%2)))
+        tableOfPrimeFactors:=hashTable(factor(n));
+        return product(apply(keys(tableOfPrimeFactors),p->p^(tableOfPrimeFactors#p%2)))
         );
     if n < 0 then (
-        H:=hashTable(factor(-n));
-        return -product(apply(keys(H),p->p^(H#p%2)))
+        tableOfPrimeFactorsNeg:=hashTable(factor(-n));
+        return -product(apply(keys(tableOfPrimeFactorsNeg),p->p^(tableOfPrimeFactorsNeg#p%2)))
         );
     )
 
@@ -407,8 +407,8 @@ splitOffObviousHyperbolics (Matrix) := (ZZ,Matrix) => (A) -> (
     notFinished:=1;
     while (notFinished == 1) do (
         currentState:= splitOffObviousHyperbolic(A);
-        notFinished:= currentState_0;
-        numberHyperbolics:= numberHyperbolics + notFinished;
+        notFinished = currentState_0;
+        numberHyperbolics = numberHyperbolics + notFinished;
         A = currentState_1;
         );
     return (numberHyperbolics,A);
@@ -1399,10 +1399,11 @@ exponentPrimeFact (ZZ, ZZ) := (ZZ) => (n, p) -> (
     if (n<0) then (n=-n);
     if (n==0) then print"Error: Trying to find prime factorization of 0";
     H:=hashTable (factor n);
+    a:=0;
     if H#?p then (
-    	a:=H#p;)
+    	a=H#p;)
     else (
-	a:=0;
+	a=0;
 	);
     return a;
     );
