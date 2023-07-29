@@ -440,7 +440,7 @@ rationalSimplify (Matrix) := (ZZ,Matrix) => (A) -> (
 -- Input:  A square symmetric matrix A over an exact field (not RR or CC)
 -- Output: (n, Q), n=integer giving number of hyperbolic spaces, Q=anisotropic forms.
 
--- Future Work: Shoudl be able to input a bound.
+-- Future Work: Should be able to input a bound.
 
 wittDecomp = method()
 wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
@@ -759,7 +759,7 @@ simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta 
         if odd n then(
         
             -- The form is floor(n/2)H + <1>
-            numHypFormsCCOdd := floor n/2;
+            numHypFormsCCOdd := floor(n/2);
             simplifiedFormCCOdd := H;
         
             for i in 1..sub((numHypFormsCCOdd-1),ZZ) do(
@@ -2285,7 +2285,20 @@ document {
 	 	 ///,
         }
 
-
+document {
+    Key => {(simplifyForm, GrothendieckWittClass), simplifyForm},
+    Headline => "produces a field-dependent simplification of a Grothendieck Witt class",
+    Usage => "simplifyForm(beta)",
+    Inputs => {
+        GrothendieckWittClass => "beta" => {"the isomorphism class of a symmetric bilinear form"}
+    },
+    Outputs => { Sequence => {"a sequence of a Grothendieck Witt class and a field-dependent string describing the form"}}
+    PARA {"Given a symmetric bilinear form ", TT"beta", " over a field ", TEX///$k$///, ", we can compute a field-dependent decomposition of the form ", TT"beta", "."}
+    PARA {"Over ", TEX///$\mathbb{C}$///, " a form can be decomposed as ", TEX///$\frac{n}{2}\mathbb{H}$///, " or ", TEX///$\lfloor\frac{n}{2}\rfloor\mathbb{H}+\langle 1\rangle$///, " where ", TEX///$n$///, " is the rank of the form."}
+    EXAMPLE lines \\\
+        beta = gwClass(matrix(CC, ))
+    \\\,
+}
 
 
 
