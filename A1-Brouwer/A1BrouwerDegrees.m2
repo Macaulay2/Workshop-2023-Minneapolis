@@ -2292,12 +2292,26 @@ document {
     Inputs => {
         GrothendieckWittClass => "beta" => {"the isomorphism class of a symmetric bilinear form"}
     },
-    Outputs => { Sequence => {"a sequence of a Grothendieck Witt class and a field-dependent string describing the form"}}
+    Outputs => { Sequence => {"a sequence of a simplified Grothendieck Witt class and a field-dependent string describing the form"}}
     PARA {"Given a symmetric bilinear form ", TT"beta", " over a field ", TEX///$k$///, ", we can compute a field-dependent decomposition of the form ", TT"beta", "."}
-    PARA {"Over ", TEX///$\mathbb{C}$///, " a form can be decomposed as ", TEX///$\frac{n}{2}\mathbb{H}$///, " or ", TEX///$\lfloor\frac{n}{2}\rfloor\mathbb{H}+\langle 1\rangle$///, " where ", TEX///$n$///, " is the rank of the form."}
-    EXAMPLE lines \\\
-        beta = gwClass(matrix(CC, ))
-    \\\,
+    PARA {"Over ", TEX///$\mathbb{C}$///, " a form can be decomposed as ", TEX///$\frac{n}{2}\mathbb{H}$///, " or ", TEX///$\lfloor\frac{n}{2}\rfloor\mathbb{H}+\langle 1\rangle$///, " where ", TEX///$n$///, " is the rank of the form."},
+    EXAMPLE lines ///
+        M = matrix(CC, {{0,3,8},{3,8,2},{8,2,1}});
+        beta = gwClass(M);
+        simplifyForm(beta)
+    ///,
+    PARA {"Over ", TEX///$\mathbb{R}$///, " a form can be diagonalized to a matrix with entries ", TEX///$\pm 1$///, " along the diagonal and is determined by its signature."},
+    EXAMPLE lines ///
+    M = matrix(RR,{{2.091,2.728,6.747},{2.728,7.329,6.257},{6.747,6.257,0.294}});
+    beta = gwClass(M);
+    simplifyForm(beta)
+    ///,
+    PARA {"Over ", TEX///$\mathbb{F}_{q}$///, " a form is determined "},
+    EXAMPLE lines ///
+    M = matrix(GF(13),{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
+    beta = gwClass(M);
+    simplifyForm(beta)
+    ///,
 }
 
 
