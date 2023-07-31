@@ -2287,31 +2287,30 @@ document {
 
 document {
     Key => {(simplifyForm, GrothendieckWittClass), simplifyForm},
-    Headline => "produces a field-dependent simplification of a Grothendieck Witt class",
+    Headline => "produces a simplified diagonal representative of a Grothendieck Witt class",
     Usage => "simplifyForm(beta)",
     Inputs => {
-        GrothendieckWittClass => "beta" => {"the isomorphism class of a symmetric bilinear form"}
+        GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over a field ", TEX///$k$///, "."}
     },
-    Outputs => { Sequence => {"a sequence of a simplified Grothendieck Witt class and a field-dependent string describing the form"}}
-    PARA {"Given a symmetric bilinear form ", TT"beta", " over a field ", TEX///$k$///, ", we can compute a field-dependent decomposition of the form ", TT"beta", "."}
-    PARA {"Over ", TEX///$\mathbb{C}$///, " a form can be decomposed as ", TEX///$\frac{n}{2}\mathbb{H}$///, " or ", TEX///$\lfloor\frac{n}{2}\rfloor\mathbb{H}+\langle 1\rangle$///, " where ", TEX///$n$///, " is the rank of the form."},
-    EXAMPLE lines ///
-        M = matrix(CC, {{0,3,8},{3,8,2},{8,2,1}});
-        beta = gwClass(M);
-        simplifyForm(beta)
-    ///,
-    PARA {"Over ", TEX///$\mathbb{R}$///, " a form can be diagonalized to a matrix with entries ", TEX///$\pm 1$///, " along the diagonal and is determined by its signature."},
+    Outputs => { Sequence => {"a diagonal representative of the Grothendieck Witt class of the input form and its decomposition as a sum of hyperbolic and rank one forms."}}
+    PARA {"Given a symmetric bilinear form ", TT"beta", " over a field ", TEX///$k$///, ", we diagonalize the form ", TT"beta", " and write it as a sum of some number of hyperbolic forms and some number of rank one forms."},
     EXAMPLE lines ///
     M = matrix(RR,{{2.091,2.728,6.747},{2.728,7.329,6.257},{6.747,6.257,0.294}});
     beta = gwClass(M);
     simplifyForm(beta)
     ///,
-    PARA {"Over ", TEX///$\mathbb{F}_{q}$///, " a form is determined "},
+    PARA {"Over ", TEX///$\mathbb{R}$///, " there are only two square classes and a form is determined uniquely by its rank and signature [L05, II Proposition 3.2]. A form defined by the ", TEX///$3\times 3$///, " Gram matrix ", TT"M", " above is isomorphic to the form ", TEX///$\langle 1,-1,1\rangle $///, ", which decomposes as a sum ", TEX///$\mathbb{H}+\langle 1\rangle $///, "."},
     EXAMPLE lines ///
     M = matrix(GF(13),{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
     beta = gwClass(M);
     simplifyForm(beta)
     ///,
+    PARA {"Over ", TEX///$\mathbb{F}_{q}$///, " forms can similarly be diagonalized and decomposed, in this case as ", TEX///$\mathbb{H} + \langle 1 \rangle + \langle -6 \rangle$///, "."},
+    PARA{EM "Citations:"},
+    UL{
+	
+	{"[L05] T.Y. Lam, ", EM "Introduction to quadratic forms over fields,", " American Mathematical Society, 2005."},
+	},
 }
 
 
