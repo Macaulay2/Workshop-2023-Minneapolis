@@ -57,6 +57,7 @@ export{
     "diagonalize",
     "diagonalForm",
     "simplifyForm",
+    "simplifyFormString",
     "globalA1Degree",
     "localA1Degree",
     "localAlgebraBasis",
@@ -719,9 +720,8 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
 
 -- simplifyForm method
 
-simplifyForm = method()
-simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta -> (
-    print("got here");
+simplifyFormVerbose = method()
+simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta -> (
     -- Check if the diagonalForm has already been computed, if so recall it from the cache    
     gamma := diagonalForm(beta);
     
@@ -993,6 +993,18 @@ simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta 
     
     
     );
+
+
+simplifyForm = method()
+simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass) => beta -> (
+    return (simplifyFormVerbose(beta))_0
+);
+
+simplifyFormString = method()
+simplifyFormString (GrothendieckWittClass) := (String) => beta -> (
+    return (simplifyFormVerbose(beta))_1
+);
+
 
 ----------------------------
 -- A1-Brouwer degree methods
@@ -1346,6 +1358,8 @@ signature (GrothendieckWittClass) := ZZ => (beta) ->(
     sig := numPosEntries(beta) - numNegEntries(beta);
     return sig
     );
+
+
 
 
 ----
@@ -2290,9 +2304,12 @@ document {
     Headline => "produces a simplified diagonal representative of a Grothendieck Witt class",
     Usage => "simplifyForm(beta)",
     Inputs => {
-        GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over a field ", TEX///$k$///, "."}
+        GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over a field ", TEX///$k$///, "."},
     },
-    Outputs => { Sequence => {"a diagonal representative of the Grothendieck Witt class of the input form and its decomposition as a sum of hyperbolic and rank one forms."}}
+    Outputs => { 
+	GrothendieckWittClass => {"a diagonal representative of the Grothendieck Witt class of the input form"},
+	--String => {"The decomposition as a sum of hyperbolic and rank one forms."},
+	},
     PARA {"Given a symmetric bilinear form ", TT"beta", " over a field ", TEX///$k$///, ", we diagonalize the form ", TT"beta", " and write it as a sum of some number of hyperbolic forms and some number of rank one forms."},
     EXAMPLE lines ///
     M = matrix(RR,{{2.091,2.728,6.747},{2.728,7.329,6.257},{6.747,6.257,0.294}});
@@ -2304,6 +2321,37 @@ document {
     M = matrix(GF(13),{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
     beta = gwClass(M);
     simplifyForm(beta)
+    ///,
+    PARA {"Over ", TEX///$\mathbb{F}_{q}$///, " forms can similarly be diagonalized and decomposed, in this case as ", TEX///$\mathbb{H} + \langle 1 \rangle + \langle -6 \rangle$///, "."},
+    PARA{EM "Citations:"},
+    UL{
+	
+	{"[L05] T.Y. Lam, ", EM "Introduction to quadratic forms over fields,", " American Mathematical Society, 2005."},
+	},
+}
+
+document {
+    Key => {(simplifyFormString, GrothendieckWittClass), simplifyFormString},
+    Headline => "produces a simplified diagonal representative of a Grothendieck Witt class",
+    Usage => "simplifyForm(beta)",
+    Inputs => {
+        GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over a field ", TEX///$k$///, "."},
+    },
+    Outputs => { 
+	--GrothendieckWittClass => {"a diagonal representative of the Grothendieck Witt class of the input form"},
+	String => {"The decomposition as a sum of hyperbolic and rank one forms."},
+	},
+    PARA {"Given a symmetric bilinear form ", TT"beta", " over a field ", TEX///$k$///, ", we diagonalize the form ", TT"beta", " and write it as a sum of some number of hyperbolic forms and some number of rank one forms."},
+    EXAMPLE lines ///
+    M = matrix(RR,{{2.091,2.728,6.747},{2.728,7.329,6.257},{6.747,6.257,0.294}});
+    beta = gwClass(M);
+    simplifyFormString(beta)
+    ///,
+    PARA {"Over ", TEX///$\mathbb{R}$///, " there are only two square classes and a form is determined uniquely by its rank and signature [L05, II Proposition 3.2]. A form defined by the ", TEX///$3\times 3$///, " Gram matrix ", TT"M", " above is isomorphic to the form ", TEX///$\langle 1,-1,1\rangle $///, ", which decomposes as a sum ", TEX///$\mathbb{H}+\langle 1\rangle $///, "."},
+    EXAMPLE lines ///
+    M = matrix(GF(13),{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
+    beta = gwClass(M);
+    simplifyFormString(beta)
     ///,
     PARA {"Over ", TEX///$\mathbb{F}_{q}$///, " forms can similarly be diagonalized and decomposed, in this case as ", TEX///$\mathbb{H} + \langle 1 \rangle + \langle -6 \rangle$///, "."},
     PARA{EM "Citations:"},

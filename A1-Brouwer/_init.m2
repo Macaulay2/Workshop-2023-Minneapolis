@@ -1,6 +1,6 @@
 installPackage("A1BrouwerDegrees")
 
--- viewHelp A1BrouwerDegrees
+viewHelp A1BrouwerDegrees
 -- check A1BrouwerDegrees
 
 T4 = CC[v];
@@ -21,3 +21,10 @@ ff = GF(17);
 T3 = ff[w_1..w_3];
 f3 = {w_1^2, w_2^2, w_3^2};
 globalA1Degree(f3)
+
+
+    M = matrix(GF(13),{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
+    beta = gwClass(M);
+    c=simplifyForm(beta)
+
+class c
