@@ -112,13 +112,11 @@ legendreBoolean (RingElement) := (Boolean) => a -> (
 )
 
 -------------------------------------------
--- Algebra methods
+-- Commutative algebra methods
 -------------------------------------------
 
 -- Input: L is list of functions {f1,...,fn} over same ring R and p is prime ideal of an isolated zero
-
 -- Output: list of basis elements of local k-algebra Q_p(f) where f = (f1,...,fn):A^n --> A^n
-
 localAlgebraBasis = method()
 localAlgebraBasis (List, Ideal) := (List) => (L,p) -> (
     
@@ -158,8 +156,7 @@ rankGlobalAlgebra (List) := (ZZ) => (Endo) -> (
     
     -- First check if the morphism does not have isolated zeroes
     if dim ideal(Endo) > 0  then (
-	print "Error: ideal is not zero-dimensional";
-	return Endo;
+	error "Error: ideal is not zero-dimensional";
 	);
     
     -- Get the rank of S/ideal(Endo) as a kk-vector space
@@ -174,6 +171,7 @@ rankGlobalAlgebra (List) := (ZZ) => (Endo) -> (
 ---------------
 
 -- Block sum "++" of a zero matrix with something else outputs the wrong thing
+-- This internal method allows us to call block sums of possibly empty matrices
 safeBlockSum = method()
 safeBlockSum (Matrix, Matrix) := Matrix => (A,B) -> (
     if numColumns A == 0 then return B;
@@ -181,8 +179,6 @@ safeBlockSum (Matrix, Matrix) := Matrix => (A,B) -> (
     return A ++ B
     
 )
-
--- Basic functions for manipulating matrices we may want to use
 
 -- Check if a matrix is square
 isSquare = method()
@@ -202,14 +198,11 @@ isDegenerate (Matrix) := Boolean => M ->(
     det(M) == 0
     )
 
--- Check if a square matrix is upper left triangular
+-- Check if a square matrix is upper left triangular, meaning that all the entries below the main antidiagonal are zero
 isUpperLeftTriangular = method()
 isUpperLeftTriangular (Matrix) := Boolean => M -> (
-
     if not isSquare(M) then error "Error: matrix isn't square";
-
     n := numRows(M);
-    
     for i from 0 to n-1 do(
 	for j from 0 to n-1 do(
 	    
@@ -263,6 +256,14 @@ diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
     if A != transpose(A) then (
         error "Matrix is not symmetric";
 	);
+    
+    -- If the matrix is already diagonal then return it
+    if isDiagonal(AnonMut)==true then(
+	return AnonMut
+	);
+    
+    -- Otherwise we iterate through columns and rows under the diagonal, and perform row operations followed by the corresponding
+    -- transpose operation on columns in order to reduce to a diagonal matrix congruent to the original
     n := numRows(A);
     for col from 0 to (n-1) do (
 	--If diagonal entry in column "col" is zero
@@ -345,12 +346,11 @@ diagonalizeOverInt (Matrix) := (Matrix) => (AnonMut) -> (
 
 -- This function aims to find the radical of a quadratic space.
 -- This is reliant on the diagonalize() method being applicable for singular matrices
-
 truncateRadical=method()
 truncateRadical(Matrix):=(Matrix)=> (A) -> (
     truncatedMatrix:= mutableMatrix A;
     if not numRows(A)==numColumns(A) then (
-        print ("Input is not a square matrix");
+        error ("Input is not a square matrix");
     )
     else (
         truncatedMatrix=mutableMatrix diagonalize(A);
@@ -360,7 +360,7 @@ truncateRadical(Matrix):=(Matrix)=> (A) -> (
                 foundRadical=true;
                 break
             );
-            print("The quadratic space does not have a radical!");
+            error ("The quadratic space does not have a radical!");
         );
             if foundRadical===true then (
                 n:=numRows(A)-1;
@@ -379,8 +379,7 @@ truncateRadical(Matrix):=(Matrix)=> (A) -> (
 
 
 
---given diagonal matrix, split off any <a>+<-a> and return number of times we can do this as well as smaller matrix with none of these
-
+-- Given diagonal matrix, split off any <a>+<-a> and return number of times we can do this as well as smaller matrix with none of these
 splitOffObviousHyperbolic = method()
 splitOffObviousHyperbolic (Matrix) := (ZZ,Matrix) => (A) -> (
     --matrix must be symmetric
@@ -542,7 +541,7 @@ wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
             );
         );
 
-        if (posEntries + negEntries > n) then (print "A is singular");
+        if (posEntries + negEntries > n) then (error "A is singular");
         wittIndex := min(posEntries,negEntries); -- witt index is given by how many positive-negative diagonal entry pairs exist
         signature := posEntries-negEntries; 
         if signature == 0 then (return (wittIndex,matrix(RR,{{}})))
@@ -660,10 +659,7 @@ gwMultiply(GrothendieckWittClass, GrothendieckWittClass) := GrothendieckWittClas
 
 diagonalForm = method()
 diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
-    
-    -- TODO: quick check if the form is already diagonal, if so return it and cache it
-    
-    
+        
     -- Check if the diagonalForm has already been computed, if so recall it from the cache
     if beta.cache.?diagonalForm then return beta.cache.diagonalForm;
     
@@ -692,7 +688,6 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
 	
 	
 	-- Sum as many hyperbolic forms as the Witt index
-	
 	if wittIndex > 0 then(
 	    for i in 1..wittIndex do(
 		diagOutputMatrix = safeBlockSum(diagOutputMatrix,H);
@@ -776,7 +771,6 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
     
     -- If the field is R, look at the sign of elements along the diagonal
     if (k === RR or instance(k,RealField)) then(
-	print("field is R");
         posEntries := 0; --for loop counts the number of positive diagonal entries of diagA
         negEntries := 0; --for loop counts the number of negative diagonal entries
 	for i from 0 to (n-1) do(
@@ -1412,7 +1406,7 @@ exponentPrimeFact = method()
 
 exponentPrimeFact (ZZ, ZZ) := (ZZ) => (n, p) -> (
     if (n<0) then (n=-n);
-    if (n==0) then print"Error: Trying to find prime factorization of 0";
+    if (n==0) then error "Error: Trying to find prime factorization of 0";
     H:=hashTable (factor n);
     a:=0;
     if H#?p then (
@@ -1525,7 +1519,7 @@ hasseWittInvariant (List, ZZ) := ZZ => (f,p) -> (
        a:=1;
        len:=#f;
        for i from 0 to len-1 do (
-	   if (not ring(f_i) === ZZ) then (print"Error:  Hilbert symbol evaluated at a non-integer");
+	   if (not ring(f_i) === ZZ) then (error "Error:  Hilbert symbol evaluated at a non-integer");
 	   );
        for i from 0 to len-2 do (
        	   for j from i+1 to len-1 do (
@@ -1551,8 +1545,8 @@ invariantFormQp (List, ZZ):= (ZZ, ZZ, ZZ) => (f, p) -> (
 
     len:=#f;
     for i from 0 to (len-1) do (
-	if (f_i==0) then (print"Error: Form is degenerate");
-	if (not ring(f_i)===ZZ ) then (print "Error: Diagonal elements of form should be integers");
+	if (f_i==0) then (error "Error: Form is degenerate");
+	if (not ring(f_i)===ZZ ) then (error "Error: Diagonal elements of form should be integers");
 	);
     a:=len;
     b:=1;
@@ -1680,7 +1674,7 @@ isIsomorphicDiagFormQ (List, List):= (Boolean) => (f, g) -> (
 	    -- signature and discriminants agree. Now need to test Hasse invariant
 	    d:= disc1 * disc2;
 	    if (d<0) then (d = -d);
-	    if (d==0) then print"Error: Form is degenerate";
+	    if (d==0) then error "Error: Form is degenerate";
 	    H:=hashTable (factor d);
 	    k:= keys H;    
 	    i:=0;
@@ -1731,8 +1725,6 @@ isIsomorphicFormQ (Matrix, Matrix):= (Boolean) => (f, g) -> (
     f2:= apply(n, i-> squarefreePart(sub(numerator(f1_i) * denominator(f1_i),ZZ)));
     g2:= apply(n, i-> squarefreePart(sub(numerator(g1_i) * denominator(g1_i),ZZ)));
     
-    print f2;
-    print g2; 
     -- Now compare forms
     return isIsomorphicDiagFormQ(f2, g2);
     
@@ -1831,8 +1823,8 @@ invariantFormQ (List):= (ZZ, ZZ, List, List) => (f) -> (
 
     len:=#f;
     for i from 0 to (len-1) do (
-	if (f_i==0) then (print"Error: Form is degenerate");
-	if (not ring(f_i)===ZZ ) then (print "Error: Diagonal elements of form should be integers");
+	if (f_i==0) then (error "Error: Form is degenerate");
+	if (not ring(f_i)===ZZ ) then (error "Error: Diagonal elements of form should be integers");
 	);
     a:=len;
     b:=discForm(f);
@@ -1946,10 +1938,10 @@ isAnisotropicDiagQp (List, ZZ) := (Boolean) => (f, p) -> (
     -- Output: true if form does not represent 0 over Qp
     
     -- Check if f is list, p is prime 
-    if (not isPrime(p) or (not (ring p === ZZ))) then (print "Error: isAnisotropicDiagFormQp called with p not an integer prime");
+    if (not isPrime(p) or (not (ring p === ZZ))) then (error "Error: isAnisotropicDiagFormQp called with p not an integer prime");
     n:=#f;
     for i from 0 to n-1 do (
-    	if (not (ring f_i === ZZ)) then (print "Error: isAnisotropicDiagFormQp called with a non-integral list");
+    	if (not (ring f_i === ZZ)) then (error "Error: isAnisotropicDiagFormQp called with a non-integral list");
     );
     d:=discForm(f);
     
@@ -1991,8 +1983,10 @@ isAnisotropicDiagQp (List, ZZ) := (Boolean) => (f, p) -> (
 		    )
 		else (return false);
 		)
+	    
+	    -- TODO - we should be able to delete this else case since it won't ever be hit?
 	    else (
-		print "Error: rank should have been 2, 3, 4, but isn't";
+		error "Error: rank should have been 2, 3, 4, but isn't";
 		return false;
 		)
 	    )
@@ -2224,9 +2218,9 @@ document {
 	Inputs => {
 		Matrix => "M" => {"a symmetric matrix defined over an arbitrary field"}
 		},
-	Outputs => { GrothendieckWittClass => { "the isomorphism class of a symmetric bilinear form represented by ", TEX/// $\mathbb{M}$/// }},
-	PARA {"Given a symmetric matrix, ", TT "M", ", this command outputs an object of type ", TT "GrothendieckWittClass", ". ",
-                "This output has the representing matrix, ", TT "M", ", and the base field of the matrix stored in its CacheTable."},
+	Outputs => { GrothendieckWittClass => { "the isomorphism class of a symmetric bilinear form represented by ", TEX/// $M$/// }},
+	PARA {"Given a symmetric matrix, ", TEX///$M$///, ", this command outputs an object of type ", TT "GrothendieckWittClass", ". ",
+                "This output has the representing matrix, ", TEX///$M$///, ", and the base field of the matrix stored in its CacheTable."},
 	EXAMPLE lines ///
 		 M := matrix(QQ,{{0,0,1},{0,1,0},{1,0,0}});
 		 beta = gwClass(M)
@@ -2238,7 +2232,9 @@ document {
         PARA{"The base field which the form ", TT "beta", " is implicitly defined over can be recovered with the ", TT "baseField", " method."},
 	EXAMPLE lines ///
 	    	baseField beta
-		///
+		///,
+		
+	SeeAlso => {"baseField","GrothendieckWittClass"}
         }
 
 
@@ -2250,9 +2246,8 @@ document {
 	Inputs => {
 		Matrix => "M" => {"a symmetric matrix over any field"}
 		},
-	Outputs => { Matrix => { "a diagonal matrix congruent to", TT "M" }},
-	PARA {"Given a symmetric matrix ", TT "M", " over any field, this command gives a diagonal matrix congruent to ", TT "M",".",
-	"Note that the order in which the diagonal terms appear is not specified."},
+	Outputs => { Matrix => { "a diagonal matrix congruent to ", TT "M" }},
+	PARA {"Given a symmetric matrix ", TEX///$M$///, " over any field, this command gives a diagonal matrix congruent to ", TEX///$M$///,". Note that the order in which the diagonal terms appear is not specified."},
 	EXAMPLE lines ///
 		 M=matrix(GF(17), {{7, 9}, {9, 6}});
 		 diagonalize(M)
@@ -2438,7 +2433,9 @@ document {
     f1LDsum = gwAdd(f1LDq, f1LDr)
     ///,
     PARA{"The sum of the local A1-degrees is equal to the global A1-degree:"},
-    PARA{"TODO --- add example after importing IsIsomorphic2"},
+    EXAMPLE lines///
+    isIsomorphic2(f1GD,f1LDsum)
+    ///,
     
     }
 
