@@ -997,6 +997,7 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
 
 simplifyForm = method()
 simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass) => beta -> (
+    beta.cache.diagonalForm = (simplifyFormVerbose(beta))_0;
     return (simplifyFormVerbose(beta))_0
 );
 
