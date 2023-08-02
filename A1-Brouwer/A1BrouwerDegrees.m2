@@ -629,12 +629,12 @@ gwAdd(GrothendieckWittClass, GrothendieckWittClass) := GrothendieckWittClass => 
     if instance(Kb, GaloisField) and instance(Kg, GaloisField) then (
 	-- Returns an error if the underlying fields of the two classes beta and gamma are different
 	if not Kb.order == Kg.order  then error "Error: these classes have different underlying fields";
-	return gwClass(beta.matrix ++ substitute(gamma.matrix,Kb))
+	return gwClass(safeBlockSum(beta.matrix, substitute(gamma.matrix,Kb)))
 	);
     
     -- remaining cases
     if not Kb === Kg then error "Error: these classes have different underlying fields";
-    	return gwClass(beta.matrix ++ gamma.matrix)
+    	return gwClass(safeBlockSum(beta.matrix, gamma.matrix))
     )
 
 -- Method for taking a tensor product of two Grothendieck-Witt classes
@@ -2535,12 +2535,13 @@ document{
     det(alphaF.matrix)    
     det(betaF.matrix)
     det(gammaF.matrix)
+    ///,
+    PARA{"We see that ", TEX///$\text{disc}(\alpha)$///, " is a square, while the discriminants of ", TEX///$\beta$///, " and ", TEX///$\gamma$///, " are not. Therefore we see that ", TEX///$\beta \cong \gamma$///, " but neither of them are isomorphic to ", TEX///$\alpha$///, "."},
+    EXAMPLE lines///
     gwIsomorphic(alphaF,betaF)
     gwIsomorphic(alphaF,gammaF)
     gwIsomorphic(betaF,gammaF)
-    legendreBoolean(det(betaF.matrix)) ==legendreBoolean(det(gammaF.matrix))
     ///,
-    PARA{"ok figure out the error above"},
     PARA{"Over the rationals, further invariants must be considered. We first check if the rank, discriminant, and signature (when considered as a real form) all agree. If so, we must further check whether the ", EM "Hasse-Witt invariants", " agree at all primes. This is an instance of the ", EM "Hasse-Minkowski principle", " which states that quadratic forms are isomorphic over a global field if and they are isomorphic over all its completions (see [S73, III Theorem 7] or [L05, VI.3.3])."},
     PARA{"The ", EM "Hasse-Witt invariant", " of a diagonal form ", TEX///$\langle a_1,\ldots,a_n\rangle$///, " over a field ", TEX///$K$///, " is defined to be the product ", TEX///$\prod_{i<j} \left( \phi(a_i,a_j) \right)$///, " where ", TEX///$\phi \colon K \times K \to \left\{\pm 1\right\}$///, " is any ", EM "symbol", " (see e.g. [MH73, III.5.4] for a definition). It is a classical result of Hilbert that over a local field of characteristic not equal to two, there is one and only symbol, ", TEX///$(-,-)_p$///,  " called the ", EM "Hilbert symbol", " ([S73, Chapter III]) computed as follows:"},
     PARA{TEX///$(a,b)_p = \begin{cases} 1 & z^2 = ax^2 + by^2 \text{ has a nonzero solution in } K^3 \\ -1 & \text{otherwise.} \end{cases}$///},
@@ -2677,18 +2678,18 @@ document{
 document {
     Key => {(gwAdd, GrothendieckWittClass, GrothendieckWittClass), gwAdd},
     Headline => "The direct sum of two Grothendieck-Witt classes",     
-	Usage => "gwAdd(beta, gamma)",
+    Usage => "gwAdd(beta, gamma)",
 	Inputs => {
 	    GrothendieckWittClass => "beta" => {"the isomorphism class of a non-degenerate symmetric bilinear form represented by a matrix ", TT "M"},
 	    GrothendieckWittClass => "gamma" => {"the isomorphism class of a non-degenerate symmetric bilinear form represented by a matrix ", TT "N"},
 	    }, 
 	Outputs => { 
-	    GrothendieckWittClass => {GrothendieckWittClass => "the isomorphism class of the direct sum of the bilinear forms represented by the matrices ", TT "M", " and ", TT "N"},
+	    GrothendieckWittClass => {"the isomorphism class of the direct sum of the bilinear forms represented by the matrices ", TT "M", " and ", TT "N"},
 	    },
 	PARA {"This computes the direct sum of the Grothendieck-Witt classes ",TT "beta"," and ",TT "gamma","."},
 	EXAMPLE lines ///
 		 M = matrix(QQ,{{1,0},{0,1}});
-		 N = matrix(QQ, {{1, 2}, {3, 4}});
+		 N = matrix(QQ, {{1, 2}, {2, 5}});
 		 beta = gwClass(M);
 		 gamma = gwClass(N);
     	    	 gwAdd(beta, gamma)
@@ -2704,12 +2705,12 @@ document {
 	    GrothendieckWittClass => "gamma" => {"the isomorphism class of a non-degenerate symmetric bilinear form represented by a matrix ", TT "N"},
 	    }, 
 	Outputs => { 
-	    GrothendieckWittClass => {GrothendieckWittClass => "the isomorphism class of the tensor product of the bilinear forms represented by the matrices ", TT "M", " and ", TT "N"},
+	    GrothendieckWittClass => {"the isomorphism class of the tensor product of the bilinear forms represented by the matrices ", TT "M", " and ", TT "N"},
 	    },
 	PARA {"This computes the tensor product of the Grothendieck-Witt classes ",TT "beta"," and ",TT "gamma","."},
 	EXAMPLE lines ///
     	    	 M = matrix(QQ,{{1,0},{0,1}});
-		 N = matrix(QQ, {{1, 2}, {3, 4}});
+		 N = matrix(QQ, {{1, 2}, {2, 5}});
 		 beta = gwClass(M);
 		 gamma = gwClass(N);
     	    	 gwMultiply(beta, gamma)
