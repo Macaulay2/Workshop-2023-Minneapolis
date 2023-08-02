@@ -62,7 +62,7 @@ export{
     "localA1Degree",
     "localAlgebraBasis",
     "signature",
-    "isIsomorphic2",
+    "gwIsomorphic",
     "hilbertSymbol",
     "isIsotropic",
     "isAnisotropic"
@@ -1890,9 +1890,9 @@ invariantFormQ (List):= (ZZ, ZZ, List, List) => (f) -> (
     
     );
   
-isIsomorphic2 = method()
+gwIsomorphic = method()
 
-isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alpha,beta) -> (
+gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alpha,beta) -> (
     k1:=baseField(alpha);
     k2:=baseField(beta);
     -- Ensure both base fields are supported
@@ -2471,7 +2471,7 @@ document {
     ///,
     PARA{"The sum of the local A1-degrees is equal to the global A1-degree:"},
     EXAMPLE lines///
-    isIsomorphic2(f1GD,f1LDsum)
+    gwIsomorphic(f1GD,f1LDsum)
     ///,
     
     }
@@ -2487,7 +2487,7 @@ document{
     Outputs => {
 	ZZ => "n" => {"The ", EM "signature", " of the symmetric bilinear form ", TEX///$\beta$///, "."},
 	},
-    PARA{"Given a symmetric bilinear form, after diagonalizing it, we can consider the number of positive entries minus the number of negative entries appearing along the diagonal. This is the ", EM "signature", " of a symmetric bilinear form, and is one of the primary invariants we use to classify forms. For more information see ", TO2(isIsomorphic2,"isIsomorphic2"), "."},
+    PARA{"Given a symmetric bilinear form, after diagonalizing it, we can consider the number of positive entries minus the number of negative entries appearing along the diagonal. This is the ", EM "signature", " of a symmetric bilinear form, and is one of the primary invariants we use to classify forms. For more information see ", TO2(gwIsomorphic,"gwIsomorphic"), "."},
     EXAMPLE lines ///
     M = matrix(RR,{{0,0,1},{0,1,0},{1,0,0}});
     beta = gwClass(M);
@@ -2497,9 +2497,9 @@ document{
 
 
 document{
-    Key => {(isIsomorphic2, GrothendieckWittClass, GrothendieckWittClass), isIsomorphic2},
+    Key => {(gwIsomorphic, GrothendieckWittClass, GrothendieckWittClass), gwIsomorphic},
     Headline => "Determines whether two Grothendieck Witt classes are isomorphic over CC, RR, QQ, or a finite field.",
-    Usage => "isIsomorphic2(alpha,beta)",
+    Usage => "gwIsomorphic(alpha,beta)",
     Inputs => {
 	GrothendieckWittClass => "alpha" => {"todo alpha"},
 	GrothendieckWittClass => "beta" => {"todo beta"},
@@ -2513,7 +2513,7 @@ document{
     EXAMPLE lines ///
     alpha = gwClass(matrix(CC,{{2,3,1},{3,-1,0},{1,0,0}}))
     beta = gwClass(matrix(CC,{{2,4,-1},{4,5,7},{-1,7,9}}))
-    isIsomorphic2(alpha,beta)
+    gwIsomorphic(alpha,beta)
     ///,
     PARA{"The two forms are isomorphic since they can be diagonalized, after which they can be rewritten as the identity matrix after a chance of basis, since every nonzero element is a square class over ", TEX///$\mathbb{C}$///, " (the same is true for any quadratically closed field). Thus we have that the ", EM "rank", " of a form completely determines it over the complex numbers. That is, it provides an isomorphism ", TEX///$\text{GW}(\mathbb{C}) \to \mathbb{Z}$/// ,"."},
     PARA{"Over the reals, the story is a bit different. Since there are two classes over the reals, ", TEX///$ \mathbb{R}^\times / \left(\mathbb{R}^\times\right)^2 \cong \left\{\pm 1\right\}$///," we have a further invariant which classifies symmetric bilinear forms, called the ", TO2(signature, "signature"), ". This is computed as first diagonalizing, then taking the number of positive entries appearing on the diagonal minus the number of negative entries appearing on the diagonal."},
@@ -2524,7 +2524,7 @@ document{
     PARA{"Rank and signature completely classify symmetric bilinear forms over the reals."},
     EXAMPLE lines ///
     delta = gwClass(matrix(RR,{{0,0,1},{0,1,0},{1,0,0}}));
-    isIsomorphic2(gamma,delta)
+    gwIsomorphic(gamma,delta)
     ///,
     PARA{"Over finite fields, rank is still an invariant of a form, however signature no longer makes sense as the field is not totally ordered. Instead we consider the ", EM "discriminant", " of the non-degenerate symmetric bilinear form, which is the determinant of any Gram matrix representing the form. The discriminant is well-defined once we consider its target as landing in square classes of the field. ", TEX///$\text{GW}(\mathbb{F}_q) \to \mathbb{F}_q^\times / \left(\mathbb{F}_q^\times\right)^2$///, ". Over finite fields we look to compare both rank and discriminant of a form."},
     EXAMPLE lines///
@@ -2534,9 +2534,9 @@ document{
     det(alphaF.matrix)    
     det(betaF.matrix)
     det(gammaF.matrix)
-    isIsomorphic2(alphaF,betaF)
-    isIsomorphic2(alphaF,gammaF)
-    isIsomorphic2(betaF,gammaF)
+    gwIsomorphic(alphaF,betaF)
+    gwIsomorphic(alphaF,gammaF)
+    gwIsomorphic(betaF,gammaF)
     legendreBoolean(det(betaF.matrix)) ==legendreBoolean(det(gammaF.matrix))
     ///,
     PARA{"ok figure out the error above"},
@@ -2551,7 +2551,7 @@ document{
     EXAMPLE lines///
     alphaQ = gwClass(matrix(QQ,{{1,4,7},{4,3,2},{7,2,-1}}))
     betaQ = gwClass(matrix(QQ,{{0,0,1},{0,2,7},{1,7,3}}))
-    isIsomorphic2(alphaQ,betaQ)
+    gwIsomorphic(alphaQ,betaQ)
     ///,
     PARA{EM "Citations:"},
     UL{
@@ -2753,7 +2753,7 @@ r=ideal {z_1-1,z_2^2-(9/85)};
 f1LDq= localA1Degree(f1,q);
 f1LDr= localA1Degree(f1,r);
 f1LDsum = gwAdd(f1LDq, f1LDr);
-assert(isIsomorphic2(f1LDsum, f1GD));
+assert(gwIsomorphic(f1LDsum, f1GD));
 
 
 
@@ -2772,7 +2772,7 @@ f2LDs = localA1Degree(f2, s);
 t=ideal{w};
 f2LDt = localA1Degree(f2, t);
 f2LDsum = gwAdd(gwAdd(f2LDp, f2LDs),f2LDt);
-assert(isIsomorphic2(f2LDsum, f2GD));
+assert(gwIsomorphic(f2LDsum, f2GD));
 ///
     
 
