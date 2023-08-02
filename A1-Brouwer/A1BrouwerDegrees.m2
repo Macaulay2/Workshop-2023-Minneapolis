@@ -65,7 +65,8 @@ export{
     "gwIsomorphic",
     "hilbertSymbol",
     "isIsotropic",
-    "isAnisotropic"
+    "isAnisotropic",
+    "wittDecomp"
     }
 
 --------------
@@ -2737,8 +2738,8 @@ T1 = QQ[x]
 f = {x^2}
 beta = globalA1Degree(f)
 
-gamma = gwClass(matrix(QQ,{0,1},{1,0}))
-assert(beta==gamma)
+gamma = gwClass(matrix(QQ,{{0,1},{1,0}}))
+assert(beta===gamma)
 ///
 
 
