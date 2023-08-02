@@ -621,28 +621,38 @@ baseField GrothendieckWittClass := Ring => beta -> (
 gwAdd = method()
 
 gwAdd(GrothendieckWittClass, GrothendieckWittClass) := GrothendieckWittClass => (beta, gamma) -> (
+    Kb := baseField(beta);
+    Kg := baseField(gamma);
     
-    -- Returns an error if the underlying fields of the two inputted symmetric bilinear forms are different
-    if not ring beta.matrix === ring gamma.matrix then error "Error: these classes have different underlying fields";
-
-    b := beta.matrix;
-    g := gamma.matrix;
+    -- Galois field case
+    if instance(Kb, GaloisField) and instance(Kg, GaloisField) then (
+	-- Returns an error if the underlying fields of the two classes beta and gamma are different
+	if not Kb.order == Kg.order  then error "Error: these classes have different underlying fields";
+	return gwClass(beta.matrix ++ substitute(gamma.matrix,Kb))
+	);
     
-    return gwClass(b++g)
+    -- remaining cases
+    if not Kb === Kg then error "Error: these classes have different underlying fields";
+    	return gwClass(beta.matrix ++ gamma.matrix)
     )
 
 -- Method for taking a tensor product of two Grothendieck-Witt classes
 gwMultiply = method()
 
 gwMultiply(GrothendieckWittClass, GrothendieckWittClass) := GrothendieckWittClass => (beta, gamma) -> (
-
-    -- Returns an error if the underlying fields of the two inputted symmetric bilinear forms are different
-    if not ring beta.matrix === ring gamma.matrix then error "Error: these classes have different underlying fields";
-
-    b := beta.matrix;
-    g := gamma.matrix;
+    Kb := baseField(beta);
+    Kg := baseField(gamma);
     
-    return gwClass(b**g)
+    -- Galois field case
+    if instance(Kb, GaloisField) and instance(Kg, GaloisField) then (
+	-- Returns an error if the underlying fields of the two classes beta and gamma are different
+	if not Kb.order == Kg.order  then error "Error: these classes have different underlying fields";
+	return gwClass(beta.matrix ** substitute(gamma.matrix,Kb))
+	);
+    
+    -- remaining cases
+    if not Kb === Kg then error "Error: these classes have different underlying fields";
+    	return gwClass(beta.matrix ** gamma.matrix)
     )
 
 
