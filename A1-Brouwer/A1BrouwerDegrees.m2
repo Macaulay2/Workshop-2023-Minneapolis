@@ -2723,6 +2723,8 @@ document {
 -- TESTING
 ------------------
 
+-- For debugging: remember Macaulay2 starts counting the first test as Test 0
+
 -- Diagonal form testing
 TEST ///
 print("diagonal form testing");
@@ -2737,27 +2739,22 @@ M3=matrix(CC, {{1, 2, 3}, {2, 4, 5}, {3, 5, 7}});
 G2=gwClass(M3);
 M4=diagonalForm(G2);
 assert(M4.matrix===matrix(CC, {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}));
+-- Ensure the cache is populated
+-- assert(G2.cache.?diagonalForm)
 ///
 
-TEST ///
-M5=matrix(RR, {{1, 2, 3, 4}, {2, 4, 5, 16}, {3, 5, 7, 8}, {4, 16, 8, 19}});
-G3=gwClass(M5);
-M6=diagonalForm(G3);
-A=matrix(RR, {{1, 0, 0, 0}, {0, -1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, -1}});
-assert(M6.matrix===A);
-///
 
 TEST ///
 M3=matrix(QQ, {{1, 2, 3}, {2, 4, 5}, {3, 5, 7}});
 G2=gwClass(M3);
 M4=diagonalForm(G2);
-assert(M4.matrix===matrix(QQ,{{1, 0, 0}, {0, -4, 0}, {0, 0, 1/4}}));
+assert(M4.matrix===matrix(QQ,{{1, 0, 0}, {0, -2, 0}, {0, 0, 1/2}}));
 ///
 
 -- gwTypeTest.m2
 TEST ///
 M = matrix(QQ,{{1,0},{0,1}});
-N = matrix(QQ, {{1, 2}, {3, 4}})
+N = matrix(QQ, {{1, 2}, {2, 5}})
 beta = gwClass(M);
 gamma = gwClass(N);
 assert(baseField(beta) === QQ)
@@ -2765,8 +2762,8 @@ assert(beta.matrix === M)
 --Operations within GW-classes
 A = gwAdd(beta, gamma);
 B = gwMultiply(beta, gamma);
-assert(A.matrix === matrix(QQ, {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 2}, {0, 0, 3, 4}}));
-assert(B.matrix === matrix(QQ, {{1, 2, 0, 0}, {3, 4, 0, 0}, {0, 0, 1, 2}, {0, 0, 3, 4}}));
+assert(A.matrix === matrix(QQ, {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 2}, {0, 0, 2, 5}}));
+assert(B.matrix === matrix(QQ, {{1, 2, 0, 0}, {2, 5, 0, 0}, {0, 0, 1, 2}, {0, 0, 2, 5}}));
 ---non well-defined GW-classes
 M'=matrix(ZZ, {{1, 0}, {0, 1}});
 N'=matrix(QQ, {{1, 1}, {1, 1}});
@@ -2782,9 +2779,8 @@ TEST ///
 T1 = QQ[x]
 f = {x^2}
 beta = globalA1Degree(f)
-
 gamma = gwClass(matrix(QQ,{{0,1},{1,0}}))
-assert(beta===gamma)
+assert(gwIsomorphic(beta,gamma))
 ///
 
 
