@@ -785,7 +785,6 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
     
     -- If the field is R, look at the sign of elements along the diagonal
     if (k === RR or instance(k,RealField)) then(
-	print("field is R");
         posEntries := 0; --for loop counts the number of positive diagonal entries of diagA
         negEntries := 0; --for loop counts the number of negative diagonal entries
 	for i from 0 to (n-1) do(
@@ -2357,17 +2356,19 @@ document {
     beta = gwClass(M);
     simplifyForm(beta)
     ///,
+    PARA {"Over ", TEX///$\mathbb{R}$///, " there are only two square classes and a form is determined uniquely by its rank and signature [L05, II Proposition 3.2]. A form defined by the ", TEX///$3\times 3$///, " Gram matrix ", TT"M", " above is isomorphic to the form ", TEX///$\langle 1,-1,1\rangle $///, "."},
     EXAMPLE lines ///
     M = matrix(GF(13),{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
     beta = gwClass(M);
     simplifyForm(beta)
     ///,
+    SeeAlso => {"simplifyFormString"},
 }
 
 document {
     Key => {(simplifyFormString, GrothendieckWittClass), simplifyFormString},
     Headline => "produces a simplified diagonal representative of a Grothendieck Witt class",
-    Usage => "simplifyForm(beta)",
+    Usage => "simplifyFormString(beta)",
     Inputs => {
         GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over a field ", TEX///$k$///, "."},
     },
@@ -2393,6 +2394,7 @@ document {
 	
 	{"[L05] T.Y. Lam, ", EM "Introduction to quadratic forms over fields,", " American Mathematical Society, 2005."},
 	},
+    SeeAlso => {"simplifyForm"},
 }
 
 
@@ -2412,7 +2414,7 @@ document {
     PARA{"The ",
 	TEX///$\mathbb{A}^1$///,
 	EM "-Brouwer degree",
-	"first defined by Morel [M12] is an algebrao-geometric enrichment of the classical topological Brouwer degree. Using the tools of motivic homotopy theory, one may associate to an endomorphism of affine space the isomorphism class of a symmetric bilinear form whose invariants encode geometric data about how the morphism transforms space."
+	" first defined by Morel [M12] is an algebrao-geometric enrichment of the classical topological Brouwer degree. Using the tools of motivic homotopy theory, one may associate to an endomorphism of affine space the isomorphism class of a symmetric bilinear form whose invariants encode geometric data about how the morphism transforms space."
         },
     PARA{"Such an association appears in the work of Eisenbud-Levine [EL77] and Khimshiashvili [K77], wherein the authors develop a symmetric bilinear form whose signature computes the local degree of a smooth map of real manifolds in the case where the Jacobian may vanish on an affine chart. This was proven to agree with Morel's ", TEX///$\mathbb{A}^1$///, "-Brouwer degree in work of Kass and Wickelgren [KW19]. A similar production of a symmetric bilinear form is given by work of Scheja and Storch [SS76], which develops a symmetric bilinear form attached to a complete intersection. This was also shown to align with the ", TEX///$\mathbb{A}^1$///, "-Brouwer degree in [BW23]."},
     PARA{"Following recent work of B. McKean and Pauli [BMP23], the ", TEX///$\mathbb{A}^1$///, "-Brouwer degree can be computed as a multivariate ", EM "Bezoutian bilinear form.", " The algorithms for producing such a form are developed here."},
@@ -2502,8 +2504,8 @@ document{
     Headline => "Determines whether two Grothendieck Witt classes are isomorphic over CC, RR, QQ, or a finite field.",
     Usage => "gwIsomorphic(alpha,beta)",
     Inputs => {
-	GrothendieckWittClass => "alpha" => {"todo alpha"},
-	GrothendieckWittClass => "beta" => {"todo beta"},
+	GrothendieckWittClass => "alpha" => {"Any Grothendieck-Witt class ", TEX///$\alpha$///, "."},
+	GrothendieckWittClass => "beta" => {"Any Grothendieck-Witt class ", TEX///$\beta$///, "."},
 	},
     Outputs => {
 	Boolean => {"returns true or false depending on whether two Grothendieck Witt classes are equal in the Grothendieck-Witt ring"},
