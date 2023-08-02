@@ -2674,6 +2674,48 @@ document{
     
 }
 
+document {
+    Key => {(gwAdd, GrothendieckWittClass, GrothendieckWittClass), gwAdd},
+    Headline => "The direct sum of two Grothendieck-Witt classes",     
+	Usage => "gwAdd(beta, gamma)",
+	Inputs => {
+	    GrothendieckWittClass => "beta" => {"the isomorphism class of a non-degenerate symmetric bilinear form represented by a matrix ", TT "M"},
+	    GrothendieckWittClass => "gamma" => {"the isomorphism class of a non-degenerate symmetric bilinear form represented by a matrix ", TT "N"},
+	    }, 
+	Outputs => { 
+	    GrothendieckWittClass => {GrothendieckWittClass => "the isomorphism class of the direct sum of the bilinear forms represented by the matrices ", TT "M", " and ", TT "N"},
+	    },
+	PARA {"This computes the direct sum of the Grothendieck-Witt classes ",TT "beta"," and ",TT "gamma","."},
+	EXAMPLE lines ///
+		 M = matrix(QQ,{{1,0},{0,1}});
+		 N = matrix(QQ, {{1, 2}, {3, 4}});
+		 beta = gwClass(M);
+		 gamma = gwClass(N);
+    	    	 gwAdd(beta, gamma)
+	 	 ///,
+}
+
+document {
+    Key => {(gwMultiply, GrothendieckWittClass, GrothendieckWittClass), gwMultiply},
+    Headline => "The tensor product of two Grothendieck-Witt classes",     
+	Usage => "gwMultiply(beta, gamma)",
+	Inputs => {
+	    GrothendieckWittClass => "beta" => {"the isomorphism class of a non-degenerate symmetric bilinear form represented by a matrix ", TT "M"},
+	    GrothendieckWittClass => "gamma" => {"the isomorphism class of a non-degenerate symmetric bilinear form represented by a matrix ", TT "N"},
+	    }, 
+	Outputs => { 
+	    GrothendieckWittClass => {GrothendieckWittClass => "the isomorphism class of the tensor product of the bilinear forms represented by the matrices ", TT "M", " and ", TT "N"},
+	    },
+	PARA {"This computes the tensor product of the Grothendieck-Witt classes ",TT "beta"," and ",TT "gamma","."},
+	EXAMPLE lines ///
+    	    	 M = matrix(QQ,{{1,0},{0,1}});
+		 N = matrix(QQ, {{1, 2}, {3, 4}});
+		 beta = gwClass(M);
+		 gamma = gwClass(N);
+    	    	 gwMultiply(beta, gamma)
+	 	 ///,
+}
+
 ------------------
 -- TESTING
 ------------------
