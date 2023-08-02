@@ -747,7 +747,10 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
         
     --In the case of C:
     if (k === CC or instance(k,ComplexField)) then(
-        if even n then(
+        if n == 2 then(
+            return (H, "H");
+        );
+        if even n and n > 2 then(
         
             -- The form is (n/2)H
             numHypFormsCCEven := n/2;
@@ -781,6 +784,7 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
     
     -- If the field is R, look at the sign of elements along the diagonal
     if (k === RR or instance(k,RealField)) then(
+	print("field is R");
         posEntries := 0; --for loop counts the number of positive diagonal entries of diagA
         negEntries := 0; --for loop counts the number of negative diagonal entries
 	for i from 0 to (n-1) do(
@@ -804,7 +808,11 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
 	    simplifiedFormRR = safeBlockSum(simplifiedFormRR,H);
             );
 	
-	if wittIndexRR> 0 then(
+    if wittIndexRR == 1 then(
+        outputStringRR = outputStringRR | "H";
+    );
+
+	if wittIndexRR > 1 then(
 	    outputStringRR = outputStringRR | toString(wittIndexRR) | "H";
 	    );
 	
@@ -819,11 +827,16 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
 	simplifiedFormRR = safeBlockSum(simplifiedFormRR,anisotropicPart);
 	
 	-- Amend the string output with anisotropic info
-	if posEntries > 0 then(
-	    outputStringRR = outputStringRR | " + " | toString(posEntries) | "<1>";
+	if posEntries == 1 then(
+	    outputStringRR = outputStringRR | " + " | "<1>";
 	    );
-	
-	if negEntries > 0 then(
+	if posEntries > 1 then(
+        outputStringRR = outputStringRR | " + " | toString(posEntries) | "<1>";
+    );
+    if negEntries == 1 then(
+        outputStringRR = outputStringRR | " + " | "<-1>";
+    );
+	if negEntries > 1 then(
 	    outputStringRR = outputStringRR | " + " | toString(negEntries) | "<-1>";
 	    );
 	
@@ -880,7 +893,12 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
             wittIndexGFSquare := floor(numSquares/2) + floor(numNonSquares/2);
 	    
 	    -- If there are hyperbolic forms add them to the matrix and string
-	    if wittIndexGFSquare > 0 then(
+        if wittIndexGFSquare == 1 then(
+        outputStringGFSquare = outputStringGFSquare | "H";
+        simplifiedFormGFSquare = H;
+        );
+
+	    if wittIndexGFSquare > 1 then(
 		outputStringGFSquare = outputStringGFSquare | toString(wittIndexGFSquare) | "H";
 		for i in 1..(wittIndexGFSquare) do(
 		    simplifiedFormGFSquare = safeBlockSum(simplifiedFormGFSquare,H);
@@ -921,7 +939,12 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
 	       
 	       
 	       -- Add on hyperbolic part
-	       if wittIndexGFNonSquare > 0 then(
+           if wittIndexGFNonSquare == 1 then(
+           simplifiedFormGFNonSquare = H;
+           outputStringGFNonSquare = outputStringGFNonSquare | "H";
+           );
+
+	       if wittIndexGFNonSquare > 1 then(
 		   for i in 1..(wittIndexGFNonSquare) do(
 		       simplifiedFormGFNonSquare = safeBlockSum(simplifiedFormGFNonSquare, H);
 		       
@@ -931,12 +954,19 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
 		   );
 	       
 	       -- Add any anisotropic part
-	       if numSquares > 0 then(
+           if numSquares == 1 then(
+           simplifiedFormGFNonSquare = safeBlockSum(simplifiedFormGFNonSquare, matrix(mutableIdentity(k,numSquares)));
+		   outputStringGFNonSquare = outputStringGFNonSquare | " + " | "<1>";
+           );
+	       if numSquares > 1 then(
 		   simplifiedFormGFNonSquare = safeBlockSum(simplifiedFormGFNonSquare, matrix(mutableIdentity(k,numSquares)));
 		   outputStringGFNonSquare = outputStringGFNonSquare | " + " | toString(numSquares) | "<1>";
 		   );
-		   
-	      if numNonSquares > 0 then(
+		   if numNonSquares == 1 then(
+		   simplifiedFormGFNonSquare = safeBlockSum(simplifiedFormGFNonSquare, ((-1)*matrix(mutableIdentity(k,numNonSquares))));
+		   outputStringGFNonSquare = outputStringGFNonSquare | " + " |  "<-1>";
+		   );
+	       if numNonSquares > 1 then(
 		   simplifiedFormGFNonSquare = safeBlockSum(simplifiedFormGFNonSquare, ((-1)*matrix(mutableIdentity(k,numNonSquares))));
 		   outputStringGFNonSquare = outputStringGFNonSquare | " + " | toString(numNonSquares) | "<-1>";
 		   );
@@ -973,7 +1003,11 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
 	(numHypForms,B) := wittDecomp(A);
 	
 	-- Add any hyperbolic forms if they exist
-	if numHypForms > 0 then(
+    if numHypForms = 1 then(
+        simplifiedFormQQ = H;
+        outputStringQQ = outputStringQQ | "H + potentially anisotropic part";
+    );
+	if numHypForms > 1 then(
 	    for i in 1..(numHypForms) do(
 		
 		simplifiedFormQQ = safeBlockSum(simplifiedFormQQ, H);
