@@ -117,7 +117,7 @@ legendreBoolean (RingElement) := (Boolean) => a -> (
 -------------------------------------------
 
 -- Input: L is list of functions {f1,...,fn} over same ring R and p is prime ideal of an isolated zero
--- Output: list of basis elements of local k-algebra Q_p(f) where f = (f1,...,fn):A^n --> A^n
+-- Output: list of basis elements of local k-algebra Q_p(f) = R[x]_p/(f) 
 localAlgebraBasis = method()
 localAlgebraBasis (List, Ideal) := (List) => (L,p) -> (
     
@@ -253,10 +253,7 @@ diagonalize = method()
 diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
     k := ring AnonMut;
     if isField k == false then error "Error: expected matrix entries from a field";
-    A := mutableMatrix AnonMut;
-    if A != transpose(A) then (
-        error "Matrix is not symmetric";
-	);
+    if not isSquareAndSymmetric(AnonMut) then error "matrix is not symmetric";
     
     -- If the matrix is already diagonal then return it
     if isDiagonal(AnonMut)==true then(
@@ -265,6 +262,7 @@ diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
     
     -- Otherwise we iterate through columns and rows under the diagonal, and perform row operations followed by the corresponding
     -- transpose operation on columns in order to reduce to a diagonal matrix congruent to the original
+    A := mutableMatrix AnonMut;
     n := numRows(A);
     for col from 0 to (n-1) do (
 	--If diagonal entry in column "col" is zero
@@ -306,10 +304,9 @@ diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
 --capable of diagonalizing over rings (algorithm has no divisions)
 diagonalizeOverInt = method()
 diagonalizeOverInt (Matrix) := (Matrix) => (AnonMut) -> (
+    if not isSquareAndSymmetric(AnonMut) then error "matrix is not symmetric";
+    
     A := mutableMatrix AnonMut;
-    if A != transpose(A) then (
-        error "Matrix is not symmetric";
-	);
     n:=numRows(A);
     for col from 0 to (n-1) do (
         if A_(col,col) == 0 then (
@@ -350,43 +347,35 @@ diagonalizeOverInt (Matrix) := (Matrix) => (AnonMut) -> (
 truncateRadical=method()
 truncateRadical(Matrix):=(Matrix)=> (A) -> (
     truncatedMatrix:= mutableMatrix A;
-    if not numRows(A)==numColumns(A) then (
-        error ("Input is not a square matrix");
-    )
-    else (
-        truncatedMatrix=mutableMatrix diagonalize(A);
-        foundRadical:=false;
-        for i from 0 to (numRows(A)-1) do (
-            if truncatedMatrix_(i, i)==0 then (
-                foundRadical=true;
-                break
+    if not isSquare(A) then error ("Input is not a square matrix");
+   
+    truncatedMatrix=mutableMatrix diagonalize(A);
+    foundRadical:=false;
+    for i from 0 to (numRows(A)-1) do (
+        if truncatedMatrix_(i, i)==0 then (
+            foundRadical=true;
+            break
             );
-            error ("The quadratic space does not have a radical!");
+        error ("The quadratic space does not have a radical!");
         );
-            if foundRadical===true then (
-                n:=numRows(A)-1;
-                for i from 0 to n do (
-                truncatedMatrix=mutableMatrix submatrix'(matrix truncatedMatrix, {i}, {i});
-                    if (n>0) then (n=n-1;)
-                    else (break);
+    if foundRadical===true then (
+        n:=numRows(A)-1;
+        for i from 0 to n do (
+            truncatedMatrix=mutableMatrix submatrix'(matrix truncatedMatrix, {i}, {i});
+            if (n>0) then (n=n-1;)
+            else (break);
             );
-            B:=matrix truncatedMatrix;
-            return B;
+        B:=matrix truncatedMatrix;
+        return B;
         );
     );
-);
-
-
-
-
 
 -- Given diagonal matrix, split off any <a>+<-a> and return number of times we can do this as well as smaller matrix with none of these
 splitOffObviousHyperbolic = method()
 splitOffObviousHyperbolic (Matrix) := (ZZ,Matrix) => (A) -> (
     --matrix must be symmetric
-    if A != transpose(A) then (
-        error "Matrix is not symmetric";
-	);
+    if not isSquareAndSymmetric(A) then error "Matrix is not symmetric";
+
     foundHyperbolic := 0;
     remainingMatrix := A;
     for i from 0 to (numRows(A)-1) do (
@@ -419,9 +408,8 @@ splitOffObviousHyperbolics (Matrix) := (ZZ,Matrix) => (A) -> (
 rationalSimplify = method()
 rationalSimplify (Matrix) := (ZZ,Matrix) => (A) -> (
     --matrix must be symmetric
-    if A != transpose(A) then (
-        error "Matrix is not symmetric";
-	);
+    if not isSquareAndSymmetric(A) then error "Matrix is not symmetric";
+
     --diagonalize the matrix
     B:= mutableMatrix(diagonalize(A));
     --replace entry with smallest magnitude integer in square class
@@ -587,7 +575,7 @@ isWellDefined GrothendieckWittClass := Boolean => beta -> (
     -- Returns false if a matrix isn't symmetric
     --	  Note that this will also return false if a matrix isn't square,
     --	      so we don't need another check for that.
-    if not (transpose(beta.matrix) == beta.matrix) then(
+    if not isSquareAndSymmetric(beta.matrix) then(
 	<< "-- Defining matrix is not symmetric" << endl;
 	return false
 	);
@@ -990,11 +978,7 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
     
     
     -- We're making the number field case a catch-all case now
-    
-    
 --    if member(QQ, k.baseRings) and (isField(k)) then(
-	
-	
 	-- Set up output form and matrix
 	simplifiedFormQQ := matrix(k,{{}});
         outputStringQQ := "";
@@ -1024,12 +1008,7 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
 	 
 	 return (gwClass(simplifiedFormQQ),outputStringQQ)
 		
-       
-	
---	);-- End number field case
-    
-    
-    
+--	);-- End number field case   
     );
 
 
@@ -1255,8 +1234,7 @@ localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
     
     -- Set up the local variables bezDet and bezDetR
     bezDet:="";
-    bezDetR:="";
-    
+    bezDetR:="";   
     
     -- The determinant of D is interpreted as living in Frac(k[x_1..x_n]),
     -- so we can try to lift it to k[x_1..x_n]           
@@ -1288,19 +1266,12 @@ localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
     standBasisX := localAlgebraBasis(list1,mapxtoX p);
     standBasisY := localAlgebraBasis(list2,mapxtoY p); 
     
-
-    
     -- Take the ideal sum of J in the X_i's with J in the Y_i's
     localIdeal :=sub(mapxtoX(J),R)+sub(mapxtoY(J),R);
-    
-    
-    
     
     -- Here we're using that (R/I) \otimes_R (R/J) = R/(I+J) in order to express Q_p(f) \otimes Q_p(f), where X's are the variables in first term, Y's are variables in second par
     Rquot:=R/localIdeal;
 
-    
-    
     -- Move the standard bases to the quotient ring
     sBXProm :=apply(toList(0..#standBasisX-1),i-> sub(standBasisX_i,Rquot));
     sBYProm :=apply(toList(0..#standBasisY-1),i-> sub(standBasisY_i,Rquot));
@@ -1316,8 +1287,7 @@ localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
     
     -- Now create Bezoutian matrix B for the quadratic form by reading off the local coefficients. 
     -- B is a (m x m) matrix.  Coefficent B_(i,j) is the coefficient of the (ith basis vector x jth basis vector) in tensor product.
-    -- phi0 maps the coefficient to kk
-    
+    -- phi0 maps the coefficient to kk    
     B:= mutableMatrix id_(kk^m);
     for i from 0 to m-1 do (
         for j from 0 to m-1 do (
@@ -1332,7 +1302,7 @@ localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
 -- Classifying and comparing GW classes
 ---------------------------------------
 
-
+-- For a class defined over QQ or RR, obtain the number of positive entries in its diagonalization
 numPosEntries = method()
 numPosEntries (GrothendieckWittClass) := ZZ => beta ->(
     B := beta.matrix;
@@ -1352,7 +1322,7 @@ numPosEntries (GrothendieckWittClass) := ZZ => beta ->(
     return posEntries
 );
 
-
+-- For a class defined over QQ or RR, obtain the number of negative entries in its diagonalization
 numNegEntries = method()
 numNegEntries (GrothendieckWittClass) := ZZ => beta ->(
     B := beta.matrix;
@@ -1372,28 +1342,9 @@ numNegEntries (GrothendieckWittClass) := ZZ => beta ->(
     return negEntries
 );
 
-
+-- Returns the signature of a symmetric bilinear form over QQ or RR
 signature = method()
 signature (GrothendieckWittClass) := ZZ => (beta) ->(
-    -- B := beta.matrix;
-    -- n := numRows(B);
-    -- kk := ring B;
-    -- if not (kk === RR or instance(kk,RealField) or kk === QQ) then(
-    --     error "Field is not QQ or RR";
-    --     );
-    -- diagB := diagonalize(B);
-    -- posEntries := 0;
-    -- negEntries := 0;
-    -- for i from 0 to (numRows(B)-1) do (
-    --     if diagB_(i,i) > 0 then(
-    --         posEntries = posEntries+1;
-    --         );
-    --     if diagB_(i,i) < 0 then(
-    --         negEntries = negEntries+1;
-    --         );
-    -- 	);
-    -- sig := posEntries - negEntries;
-    -- return sig
     sig := numPosEntries(beta) - numNegEntries(beta);
     return sig
     );
@@ -1401,16 +1352,13 @@ signature (GrothendieckWittClass) := ZZ => (beta) ->(
 
 
 
-----
--- Comparing over QQ
-----
-
+---------------------------
+-- Comparing forms over QQ
+---------------------------
 
 -- discForm computes the product of the entries of a list;
 -- used to compute the discriminant of a diagonal form, where form is given by list of diagonal entries
-
 discForm = method ()
-
 discForm (List):=(ZZ) => (f) -> (
     -- Input: f = list of diagonal elements of quadratic form
     -- Output: Product of the entries
@@ -1420,7 +1368,6 @@ discForm (List):=(ZZ) => (f) -> (
 	 disc = disc* f_i;
 	 );
     return disc;
-      	     
     );
 
 -- Calculate the Hilbert symbol in Q_p
@@ -1447,7 +1394,6 @@ discForm (List):=(ZZ) => (f) -> (
 -- Output: The Hilbert symbol, (a,b)_p
 
 exponentPrimeFact = method()
-
 exponentPrimeFact (ZZ, ZZ) := (ZZ) => (n, p) -> (
     if (n<0) then (n=-n);
     if (n==0) then error "Error: Trying to find prime factorization of 0";
@@ -1462,12 +1408,12 @@ exponentPrimeFact (ZZ, ZZ) := (ZZ) => (n, p) -> (
     );
 
 
-squareSymbol = method()
+
 
 -- Input: An integer a and a prime p
 -- Output: 1, if a is a unit square,  -1, if a=p^(even power)x  (non-square unit), 0 otherwise
 -- Note:  The terminology "Square Symbol" comes from John Voight's Quaternion Algebra book
-
+squareSymbol = method()
 squareSymbol(ZZ, ZZ) := (ZZ) => (a, p) -> (
     x := getSymbol "x";
     R:=GF(p, Variable => x);
@@ -1488,18 +1434,12 @@ squareSymbol(ZZ, ZZ) := (ZZ) => (a, p) -> (
     return ans;
     );
     
-    
-
+-- Given (a,b,p) integers, with a,b considered as p-adic numbers and p a prime, returns the Hilbert symbol (a,b)_p
 hilbertSymbol = method()
-
 hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
--- Note: The Hilbert symbol (a,b)_p is defined for a, b p-adic numbers
--- We will be assuming that the a, b are integers.
--- We need to distinguish 
-    
+    -- When p is odd, the Hilbert symbol (a,b)_p can be expressed by a formula using Legendre symbols
+    -- or equivalently, be defined, by the following condition.  
     if (odd p) then (
-	-- when p is odd, the Hilbert symbol (a,b)_p can be expressed by a formula using Legendre symbols
-	-- or equivalently, be defined, by the follwoing condition.  
 	if (squareSymbol(a, p)==1 or squareSymbol(b, p)==1 or 
 	    squareSymbol(-1*a*b, p) ==1 or
 	    (squareSymbol(a,p)*squareSymbol(b,p)==1)) then (
@@ -1535,8 +1475,8 @@ hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
     return hilb;	
 );
 
-hilbertSymbolReal = method()
 
+hilbertSymbolReal = method()
 hilbertSymbolReal (ZZ, ZZ):=(ZZ) => (a,b)->(
     if (a<0 and b<0) then (
 	return -1;
@@ -1548,9 +1488,7 @@ hilbertSymbolReal (ZZ, ZZ):=(ZZ) => (a,b)->(
 
     
  -- Two Q forms over Q_p are isomorphic if they have same rank, same discriminant, and same Hasse-Witt invariant   
-    
-    
-    
+
       
 hasseWittInvariant = method()
 
@@ -1603,7 +1541,6 @@ invariantFormQp (List, ZZ):= (ZZ, ZZ, ZZ) => (f, p) -> (
 
 
 equalUptoPadicSquare = method()
-
 equalUptoPadicSquare (ZZ, ZZ, ZZ):= (Boolean) => (a, b, p) -> (
 -- Given a, b integers, determines if a, b differ by a square in Q_p
 -- One has to handle the cases when p is odd, and p=2 differently
@@ -1642,7 +1579,6 @@ else (
   );  
  
 isIsomorphicFormQp = method ()
-
 isIsomorphicFormQp (List, List, ZZ):= (Boolean) => (f, g, p) -> (
     -- Input: (f,g ,p):  f, g are lists of diagonal elements (in integers) of two forms over Qp
     --         p is a prime number
@@ -1663,7 +1599,6 @@ isIsomorphicFormQp (List, List, ZZ):= (Boolean) => (f, g, p) -> (
 
 
 signatureRealQForm = method ()
-
 signatureRealQForm (List):=(ZZ, ZZ, ZZ) => (f) -> (
     -- Input: f = list of diagonal elements of quadratic form
     -- Output: (r, s, t): Signature of form over the reals. 
@@ -1696,7 +1631,6 @@ signatureRealQForm (List):=(ZZ, ZZ, ZZ) => (f) -> (
 
 
 isIsomorphicDiagFormQ = method ()
-
 isIsomorphicDiagFormQ (List, List):= (Boolean) => (f, g) -> (
     -- Input: (f,g):  f, g are lists of diagonal elements (in integers) of two forms over Q
     --         
@@ -1743,11 +1677,9 @@ isIsomorphicDiagFormQ (List, List):= (Boolean) => (f, g) -> (
     );
 
 
+-- Boolean checking if two symmetric bilinear forms over QQ are isomorphic
 isIsomorphicFormQ = method ()
-
 isIsomorphicFormQ (Matrix, Matrix):= (Boolean) => (f, g) -> (
-    -- Input: (f,g):  f, g are two square bilinar forms over Q, represented by matrices
-    -- Output: true if f, g are isomorphic over Q
     
     -- Check same size
     if (numRows f != numRows g) then (return false;);
@@ -1774,13 +1706,9 @@ isIsomorphicFormQ (Matrix, Matrix):= (Boolean) => (f, g) -> (
     
     );
     
-    
-    
+-- Boolean checking if a diagonal form over QQ with integer coefficients is isotropic locally at a prime p
 isIsotropicDiagFormQp = method()
-
 isIsotropicDiagFormQp (List, ZZ):=(Boolean) => (f, p) -> (
-    -- Input: (f, p): Diagonal Form with Integer coeffs, p a prime
-    -- Output: true if form represents 0 over Qp
     
     n:=#f;
     d:=discForm(f);
@@ -1813,10 +1741,8 @@ isIsotropicDiagFormQp (List, ZZ):=(Boolean) => (f, p) -> (
 	)
     );
 
-
+-- Boolean checking if a diagonal form over QQ with integer coefficients is isotropic at every local field including RR
 isIsotropicDiagFormQ = method()
-
-
 isIsotropicDiagFormQ (List):=(Boolean) => (f) ->(
     -- need to check if anisotropic over RR and all Qp
     n:= #f;
@@ -1847,18 +1773,12 @@ isIsotropicDiagFormQ (List):=(Boolean) => (f) ->(
 	    return true;
 	    );
 	);
-    );	
-			
-			
+    );		
 	
-	
-	
-invariantFormQ =method()
-
 -- Input: (Q): Quadratic form Q given by list of diagonal elements.  
 --  	Assume list constists of integers
--- Output:  (Rank, Disc, Signature, Hasse Invariant for all primes p when not 1)
-
+-- Output:  (Rank, Disc, Signature, Hasse Invariant for all primes p when not 1)	
+invariantFormQ =method()
 invariantFormQ (List):= (ZZ, ZZ, List, List) => (f) -> (
     -- currently will export the discriminant as a square free integer
     -- Note:  Still need a way to treat two integers as defining the same discriminant, if they differ by a
@@ -1887,11 +1807,12 @@ invariantFormQ (List):= (ZZ, ZZ, List, List) => (f) -> (
 	);
     l=sort(l);
     return (a, b, c, l);
-    
     );
-  
-gwIsomorphic = method()
 
+
+
+-- Boolean checking if two Grothendieck-Witt classes are the same
+gwIsomorphic = method()
 gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alpha,beta) -> (
     k1:=baseField(alpha);
     k2:=baseField(beta);
@@ -1902,17 +1823,21 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
     if not (k2 === CC or instance(k2,ComplexField) or k2 === RR or instance(k2,RealField) or k2 === QQ or instance(k2, GaloisField)) then (
         error "Base field not supported; only implemented over QQ, RR, CC, and finite fields";
         );
+    
     A:=alpha.matrix;
     B:=beta.matrix;
+    
     -- Ensure both underlying matrices are symmetric
-    if A != transpose(A) then (
-        error "Underlying matrix is not symmetric";
-	);
-    if B != transpose(B) then (
-        error "Underlying matrix is not symmetric";
-	);
+    if not isSquareAndSymmetric(A) then error "Underlying matrix is not symmetric";
+    if not isSquareAndSymmetric(B) then error "Underlying matrix is not symmetric";
+    
     diagA := diagonalize(A);
     diagB := diagonalize(B);
+    
+    -----------------------------------
+    -- Complex numbers
+    -----------------------------------
+    
     -- Over CC, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of nonzero entries
     if (k1 === CC or instance(k1,ComplexField)) and (k2 === CC or instance(k2,ComplexField)) then (
         if (numRows(A) != numRows(B)) then (
@@ -1930,6 +1855,11 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
             );
         return (nonzeroEntriesA == nonzeroEntriesB);
         )
+    
+    -----------------------------------
+    -- Real numbers
+    -----------------------------------
+    
     --Over RR, diagonal forms are equivalent if and only if they have the same number of positive, negative, and zero entries
     else if ((k1 === RR or instance(k1,RealField)) and (k2 === RR or instance(k2,RealField))) then (
         if (numRows(A) != numRows(B)) then (
@@ -1937,6 +1867,11 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
             );
         return (signature(alpha)==signature(beta));
         )
+    
+    -----------------------------------
+    -- Rational numbers
+    -----------------------------------
+    
     -- Over QQ, call isIsomorphicFormQ, which checks equivalence over all completions
     else if ((k1 === QQ) and (k2 === QQ)) then (
         if (numRows(A) != numRows(B)) then (
@@ -1944,6 +1879,11 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
             );
         return isIsomorphicFormQ(diagA,diagB);
         )
+    
+    -----------------------------------
+    -- Finite fields
+    -----------------------------------
+    
     -- Over a finite field, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of nonzero entries and the product of these nonzero entries is in the same square class
     else if (instance(k1, GaloisField) and instance(k2, GaloisField) and k1.order == k2.order) then (
         if (numRows(A) != numRows(B)) then (
@@ -2123,9 +2063,9 @@ isAnisotropicQ (GrothendieckWittClass) := Boolean => (alpha) -> (
     return false;
 );
 	
-	
-isAnisotropic = method()
 
+-- Boolean returning if a symmetric bilinear form is anisotropic	
+isAnisotropic = method()
 isAnisotropic (GrothendieckWittClass) := (Boolean) => (alpha) -> (
     k:=baseField(alpha);
     -- Ensure base field is supported
@@ -2182,62 +2122,39 @@ isAnisotropic (GrothendieckWittClass) := (Boolean) => (alpha) -> (
     else error "Problem with base field"
     )
 
-
+-- Boolean returning if a symmetric bilinear form is isotropic	
 isIsotropic = method()
 isIsotropic (GrothendieckWittClass) := (Boolean) => (alpha) -> (
     return (not isAnisotropic(alpha));
     )
-	    
-
-
-
-
-
-
 
 ----------------------------
 ----------------------------
-----------------------------
-
--- Below here are methods that are NOT USED in local or global a1 degree computations
-
--- As such I think we should pull them from the final version of the package
-
-----------------------------
-----------------------------
-----------------------------
-
-
-
-
-----------------------------
-
 -- DOCUMENTATION
+----------------------------
+----------------------------
 
 beginDocumentation()
-
-
-
 
 document{
     Key => A1BrouwerDegrees,
     Headline => "A package for running A1-Brouwer degree computations in Macaulay2",
     }
 
-
 undocumented {
     }
-
 
 document {
     Key => {(squarefreePart, QQ), (squarefreePart, ZZ), squarefreePart},
 	Headline => "smallest magnitude representative of a square class over the rationals or integers",
 	Usage => "squarefreePart(q)",
 	Inputs => {
-		QQ => "q" => {"a rational number"},
-		-- ZZ => "n" => {"an integer"}
-		},
-	Outputs => { ZZ => { "the smallest magnitude integer in the square class of ", TT "n"}},
+	    QQ => "q" => {"a rational number"},
+	    -- ZZ => "n" => {"an integer"}
+	    },
+	Outputs => {
+	    ZZ => { "the smallest magnitude integer in the square class of ", TT "n"}
+	    },
 	PARA {"Given a rational number (or integer), ", TT "q", ", this command outputs the smallest magnitude integer, ",
                 TEX///$m$///, ", such that ", TEX///$q=lm$///, " for some rational number (or integer) ",
 				TEX///$l$///, "."},
@@ -2260,9 +2177,11 @@ document {
 	Headline => "Grothendieck Witt class of a symmetric matrix",
 	Usage => "gwClass(M)",
 	Inputs => {
-		Matrix => "M" => {"a symmetric matrix defined over an arbitrary field"}
-		},
-	Outputs => { GrothendieckWittClass => { "the isomorphism class of a symmetric bilinear form represented by ", TEX/// $M$/// }},
+	    Matrix => "M" => {"a symmetric matrix defined over an arbitrary field"}
+	    },
+	Outputs => {
+	    GrothendieckWittClass => { "the isomorphism class of a symmetric bilinear form represented by ", TEX/// $M$///, "." }
+	    },
 	PARA {"Given a symmetric matrix, ", TEX///$M$///, ", this command outputs an object of type ", TT "GrothendieckWittClass", ". ",
                 "This output has the representing matrix, ", TEX///$M$///, ", and the base field of the matrix stored in its CacheTable."},
 	EXAMPLE lines ///
@@ -2281,16 +2200,16 @@ document {
 	SeeAlso => {"baseField","GrothendieckWittClass"}
         }
 
-
-
 document {
 	Key => {(diagonalize, Matrix), diagonalize},
 	Headline => "diagonalizing a symmetric matrix via congruence",
 	Usage => "diagonalize(M)",
 	Inputs => {
-		Matrix => "M" => {"a symmetric matrix over any field"}
-		},
-	Outputs => { Matrix => { "a diagonal matrix congruent to ", TT "M" }},
+	    Matrix => "M" => {"a symmetric matrix over any field"}
+	    },
+	Outputs => {
+	    Matrix => { "a diagonal matrix congruent to ", TT "M" }
+	    },
 	PARA {"Given a symmetric matrix ", TEX///$M$///, " over any field, this command gives a diagonal matrix congruent to ", TEX///$M$///,". Note that the order in which the diagonal terms appear is not specified."},
 	EXAMPLE lines ///
 		 M=matrix(GF(17), {{7, 9}, {9, 6}});
@@ -2299,17 +2218,16 @@ document {
 	SeeAlso => {"diagonalForm"}
      	}
 
-
-
-
 document {
     Key => {(baseField, GrothendieckWittClass), baseField},
 	Headline => "base field of a Grothendieck Witt class",
 	Usage => "baseField(beta)",
 	Inputs => {
-		GrothendieckWittClass => "beta" => {"the isomorphism class of a symmetric bilinear form"}
-		},
-	Outputs => { Ring => { "the base field of the Grothendieck-Witt class ", TT "beta" }},
+	    GrothendieckWittClass => "beta" => {"the isomorphism class of a symmetric bilinear form"}
+	    },
+	Outputs => {
+	    Ring => { "the base field of the Grothendieck-Witt class ", TT "beta" }
+	    },
 	PARA {"Given the isomorphism class of a symmetric bilinear form, ", TT "beta", 
                 ", this command outputs the base field of the form."},
 	EXAMPLE lines ///
@@ -2318,17 +2236,17 @@ document {
 	 	 ///,
         }
 
-
-
 document {
     Key => {(localAlgebraBasis, List, Ideal), localAlgebraBasis},
 	Headline => "produces a basis for a local finitely generated algebra over a field k",
 	Usage => "localAlgebraBasis(L,p)",
 	Inputs => {
-		List => "L" => {"list of polynomials ", TEX///$f=(f_1, \dots ,f_n)$///, " over the same ring"},
-		Ideal => "p" => {"prime ideal of an isolated zero"}
-	},
-	Outputs => { List => {"a list of basis elements of the local k-algebra ", TEX///$Q_p(f)$/// }},
+	    List => "L" => {"list of polynomials ", TEX///$f=(f_1, \dots ,f_n)$///, " over the same ring"},
+	    Ideal => "p" => {"prime ideal of an isolated zero"}
+	    },
+	Outputs => {
+	    List => {"a list of basis elements of the local k-algebra ", TEX///$Q_p(f)$/// }
+	    },
 	PARA {"Given an endomorphism of affine space, ", TEX///$f=(f_1,\dots ,f_n)$///,
 			", given as a list of polynomials called ", TT "L", " and the prime ideal of an isolated zero, this command returns a list of basis elements of the local k-algebra ", TEX///$Q_p(f)$///, "."},
 	EXAMPLE lines ///
@@ -2397,8 +2315,6 @@ document {
     SeeAlso => {"simplifyForm"},
 }
 
-
-
 document {
     Key => {(globalA1Degree, List), globalA1Degree},
     Headline => "Computes a global A1-Brouwer degree of a list of n polynomials in n variables over a field k",
@@ -2447,7 +2363,6 @@ document {
     
     }
 
-
 document {
     Key => {(localA1Degree, List, Ideal), localA1Degree},
     Headline => "Computes a local A1-Brouwer degree of a list of n polynomials in n variables over a field k at a prime ideal in the zero locus",
@@ -2479,7 +2394,6 @@ document {
     
     }
 
-
 document{
     Key => {(signature, GrothendieckWittClass), signature},
     Headline => "Outputs the signature of a symmetric bilinear form over the real or rational numbers",
@@ -2497,7 +2411,6 @@ document{
     signature(beta)
     ///
     }
-
 
 document{
     Key => {(gwIsomorphic, GrothendieckWittClass, GrothendieckWittClass), gwIsomorphic},
@@ -2566,9 +2479,6 @@ document{
     },
 }
 
-
-
-
 document{
     Key => {(hilbertSymbol, ZZ,ZZ,ZZ), hilbertSymbol},
     Headline => "Computes the Hilbert symbol of two integers at a prime",
@@ -2595,16 +2505,16 @@ document{
     },
 }
 
-
-
 document {
     Key => {(diagonalForm, GrothendieckWittClass), diagonalForm},
 	Headline => "produces a diagonalized form for any Grothendieck-Witt class",
 	Usage => "diagonalForm(beta)",
 	Inputs => {
-		GrothendieckWittClass => "beta" => {"any class in ", TEX///$\text{GW}(k)$///," where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field."}
-	},
-	Outputs => { GrothendieckWittClass => {"a form isomorphic to ", TEX///$\beta$///, " with a diagonal Gram matrix"}},
+	    GrothendieckWittClass => "beta" => {"any class in ", TEX///$\text{GW}(k)$///," where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field."}
+	    },
+	Outputs => {
+	    GrothendieckWittClass => {"a form isomorphic to ", TEX///$\beta$///, " with a diagonal Gram matrix"}
+	    },
 	PARA {"test"},
 	EXAMPLE lines ///
 	beta = gwClass(matrix(QQ,{{0,0,2},{0,2,0},{2,0,0}}));
@@ -2616,9 +2526,6 @@ document {
 	///,
 	SeeAlso => {"diagonalize"}
 	}
-
-
-
 
 document{
     Key => {(isIsotropic, GrothendieckWittClass), isIsotropic},
@@ -2661,7 +2568,6 @@ document{
     },
     
 }
-
 
 document{
     Key => {(isAnisotropic, GrothendieckWittClass), isAnisotropic},
@@ -2719,9 +2625,11 @@ document {
 	 	 ///,
 }
 
-------------------
--- TESTING
-------------------
+----------------------------
+----------------------------
+-- Testing
+----------------------------
+----------------------------
 
 -- For debugging: remember Macaulay2 starts counting the first test as Test 0
 
