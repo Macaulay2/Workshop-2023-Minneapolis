@@ -1,6 +1,6 @@
 path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
-load "A1BrouwerDegrees.m2"
+needs "A1BrouwerDegrees.m2"
 --load "globalA1Degree.m2"
 --load "wittDecomp.m2"
 --load "localAlgebraBasis.m2"
