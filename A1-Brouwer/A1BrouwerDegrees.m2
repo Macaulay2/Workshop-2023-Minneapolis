@@ -66,7 +66,9 @@ export{
     "hilbertSymbol",
     "isIsotropic",
     "isAnisotropic",
-    "wittDecomp"
+    "diagonalClass",
+    "hyperbolicForm",
+    "PfisterForm"
     }
 
 --------------
@@ -644,8 +646,168 @@ gwMultiply(GrothendieckWittClass, GrothendieckWittClass) := GrothendieckWittClas
     	return gwClass(beta.matrix ** gamma.matrix)
     )
 
+-----------
+-- Producing new forms
+-----------
 
+-- Creates the form <a_1,...,a_n> over an input field kk
+diagonalClass = method()
+diagonalClass(Ring,RingElement) := GrothendieckWittClass => (kk,a) -> (
+    return gwClass(matrix(kk,{{sub(a,kk)}}))
+    )
 
+diagonalClass(Ring,ZZ) := GrothendieckWittClass => (kk,a) -> (
+    return gwClass(matrix(kk,{{sub(a,kk)}}))
+    )
+
+diagonalClass(Ring,QQ) := GrothendieckWittClass => (kk,a) -> (
+    return gwClass(matrix(kk,{{sub(a,kk)}}))
+    )
+
+diagonalClass(Ring, Sequence) := GrothendieckWittClass => (kk,L) -> (
+    -- Get the length of the input sequence
+    n := #L;
+    
+    -- Build an n x n identity matrix
+    A := mutableIdentity(kk, n);
+    
+    for i from 0 to (n-1) do(
+	A_(i,i) = sub(L_i,kk);
+	);
+    
+    -- A is mutable so we take matrix(A) to plug it into gwClass
+    return gwClass(matrix(A))
+    )
+
+diagonalClass(InexactFieldFamily,RingElement) := GrothendieckWittClass => (kk,a) -> (
+    return gwClass(matrix(kk,{{sub(a,kk)}}))
+    )
+
+diagonalClass(InexactFieldFamily,ZZ) := GrothendieckWittClass => (kk,a) -> (
+    return gwClass(matrix(kk,{{sub(a,kk)}}))
+    )
+
+diagonalClass(InexactFieldFamily,QQ) := GrothendieckWittClass => (kk,a) -> (
+    return gwClass(matrix(kk,{{sub(a,kk)}}))
+    )
+
+diagonalClass(InexactFieldFamily, Sequence) := GrothendieckWittClass => (kk,L) -> (
+    -- Get the length of the input sequence
+    n := #L;
+    
+    -- Build an n x n identity matrix
+    A := mutableIdentity(kk, n);
+    
+    for i from 0 to (n-1) do(
+	A_(i,i) = sub(L_i,kk);
+	);
+    
+    -- A is mutable so we take matrix(A) to plug it into gwClass
+    return gwClass(matrix(A))
+    )
+
+-- Returns a hyperbolic form over an arbitrary field
+hyperbolicForm = method()
+
+hyperbolicForm(Ring) := GrothendieckWittClass => (kk) -> (
+    return gwClass(matrix(kk,{{1,0},{0,-1}}))
+    )
+
+-- Can take an optional input specifying an (even) rank of a totally hyperbolic form. Default is 2
+hyperbolicForm(Ring,ZZ) := GrothendieckWittClass => (kk,n) -> (
+	if odd n then error "inputted rank is odd";
+	H := matrix(kk,{{1,0},{0,-1}});
+    	k := sub(n/2,ZZ);
+    	outputMatrix := matrix(kk,{{}});
+    	for i from 0 to k-1 do(
+	    outputMatrix = safeBlockSum(outputMatrix, H);
+	    );
+        return gwClass(outputMatrix)
+    )
+
+hyperbolicForm(InexactFieldFamily) := GrothendieckWittClass => (kk) -> (
+    return gwClass(matrix(kk,{{1,0},{0,-1}}))
+    )
+
+-- Can take an optional input specifying an (even) rank of a totally hyperbolic form. Default is 2
+hyperbolicForm(InexactFieldFamily,ZZ) := GrothendieckWittClass => (kk,n) -> (
+	if odd n then error "inputted rank is odd";
+	H := matrix(kk,{{1,0},{0,-1}});
+    	k := sub(n/2,ZZ);
+    	outputMatrix := matrix(kk,{{}});
+    	for i from 0 to k-1 do(
+	    outputMatrix = safeBlockSum(outputMatrix, H);
+	    );
+        return gwClass(outputMatrix)
+    )
+
+-- Generates the Pfister form <<a_1,...,a_n>> over an input field kk
+PfisterForm = method()
+PfisterForm(Ring,RingElement) := GrothendieckWittClass => (kk,a) -> (
+    return diagonalClass(kk,(1,(-1)*a))
+    );
+
+PfisterForm(Ring,ZZ) := GrothendieckWittClass => (kk,a) -> (
+    return diagonalClass(kk,(1,(-1)*a))
+    );
+
+PfisterForm(Ring,QQ) := GrothendieckWittClass => (kk,a) -> (
+    return diagonalClass(kk,(1,(-1)*a))
+    );
+
+PfisterForm(Ring,Sequence) := GrothendieckWittClass => (kk,L) -> (
+    -- Get the length of the input sequence
+    n := #L;
+    if n==0 then error "list is empty";
+    
+    -- If there is just one entry L_0 return the form <1, -L_0>
+    firstPfisterForm := diagonalClass(kk,(1,(-1)*L_0));
+    if n==1 then(
+	return firstPfisterForm
+	);
+    
+    -- If n>1 iteratively multiply <1,-L_0>*<1,-L_1>*...
+    outputForm := firstPfisterForm;
+    for i from 1 to (n-1) do(
+	ithPfister := diagonalClass(kk,(1,(-1)*L_i));
+	outputForm = gwMultiply(outputForm,ithPfister);
+	);
+    
+    return outputForm
+   )
+
+PfisterForm(InexactFieldFamily,RingElement) := GrothendieckWittClass => (kk,a) -> (
+    return diagonalClass(kk,(1,(-1)*a))
+    );
+
+PfisterForm(InexactFieldFamily,ZZ) := GrothendieckWittClass => (kk,a) -> (
+    return diagonalClass(kk,(1,(-1)*a))
+    );
+
+PfisterForm(InexactFieldFamily,QQ) := GrothendieckWittClass => (kk,a) -> (
+    return diagonalClass(kk,(1,(-1)*a))
+    );
+
+PfisterForm(InexactFieldFamily,Sequence) := GrothendieckWittClass => (kk,L) -> (
+    -- Get the length of the input sequence
+    n := #L;
+    if n==0 then error "list is empty";
+    
+    -- If there is just one entry L_0 return the form <1, -L_0>
+    firstPfisterForm := diagonalClass(kk,(1,(-1)*L_0));
+    if n==1 then(
+	return firstPfisterForm
+	);
+    
+    -- If n>1 iteratively multiply <1,-L_0>*<1,-L_1>*...
+    outputForm := firstPfisterForm;
+    for i from 1 to (n-1) do(
+	ithPfister := diagonalClass(kk,(1,(-1)*L_i));
+	outputForm = gwMultiply(outputForm,ithPfister);
+	);
+    
+    return outputForm
+   )
 
 ------------
 -- Simplifying forms
@@ -2624,6 +2786,82 @@ document {
     	    	 gwMultiply(beta, gamma)
 	 	 ///,
 }
+
+
+document {
+    Key => {diagonalClass, (diagonalClass, Ring, RingElement), (diagonalClass,Ring,ZZ),(diagonalClass,Ring,QQ),(diagonalClass,Ring,Sequence), (diagonalClass,InexactFieldFamily,RingElement), (diagonalClass,InexactFieldFamily,ZZ), (diagonalClass,InexactFieldFamily,QQ),(diagonalClass,InexactFieldFamily,Sequence)},
+    Headline => "the Grothendieck-Witt class of a diagonal form",     
+	Usage => "diagonalClass(k,a)
+	          diagonalClass(k,L)",
+	Inputs => {
+	    Ring => "k" => {"a field"},
+	    RingElement => "a" => {"any element ", TEX///$a\in k$///},
+	    Sequence => "L" => {"a list of elements ", TEX///$L = (a_1,\ldots,a_n)$///, " with ", TEX///$a_i \in k$///},
+	    }, 
+	Outputs => { 
+	    GrothendieckWittClass => {"the diagonal form ", TEX///$\langle a_1,\ldots,a_n\rangle \in \text{GW}(k)$///},
+	    },
+	PARA {"Given a sequence of elements ", TEX///$a_1,\ldots,a_n \in k$///, " we can form the diagonal form ", TEX///$\langle a_1,\ldots,a_n\rangle$///, " defined to be the block sum of each of the rank one forms ", TEX///$\langle a_i \rangle \colon k \times k \to k$///, " ", TEX///$(x,y) \mapsto a_i xy$///, "."},
+	EXAMPLE lines ///
+    	    	 diagonalClass(QQ,(3,5,7))
+	 	 ///,
+	PARA{"Inputting a ring element, an integer, or a rational instead of a sequence will produce a rank one form instead. For instance:"},
+	EXAMPLE lines ///
+	diagonalClass(GF(29),5/13)
+	diagonalClass(RR,2)
+	///
+}
+
+document {
+    Key => {PfisterForm, (PfisterForm, Ring, RingElement), (PfisterForm,Ring,ZZ),(PfisterForm,Ring,QQ),(PfisterForm,Ring,Sequence), (PfisterForm,InexactFieldFamily,RingElement), (PfisterForm,InexactFieldFamily,ZZ), (PfisterForm,InexactFieldFamily,QQ),(PfisterForm,InexactFieldFamily,Sequence)},
+    Headline => "the Grothendieck-Witt class of a Pfister form",     
+	Usage => "PfisterForm(k,a)
+	          PfisterForm(k,L)",
+	Inputs => {
+	    Ring => "k" => {"a field"},
+	    RingElement => "a" => {"any element ", TEX///$a\in k$///},
+	    Sequence => "L" => {"a list of elements ", TEX///$L = (a_1,\ldots,a_n)$///, " with ", TEX///$a_i \in k$///},
+	    }, 
+	Outputs => { 
+	    GrothendieckWittClass => {"the Pfister form ", TEX///$\langle\langle a_1,\ldots,a_n\rangle\rangle \in \text{GW}(k)$///},
+	    },
+	PARA {"Given a sequence of elements ", TEX///$a_1,\ldots,a_n \in k$///, " we can form the Pfister form ", TEX///$\langle\langle a_1,\ldots,a_n\rangle\rangle$///, " defined to be the rank ", TEX///$2^n$///, " form defined as the product ", TEX///$\langle 1, -a_1\rangle \otimes \cdots \otimes \langle 1, -a_n \rangle$///, "."},
+	EXAMPLE lines ///
+    	    	 PfisterForm(QQ,(2,6))
+	 	 ///,
+	PARA{"Inputting a ring element, an integer, or a rational instead of a sequence will produce a one-fold Pfister form instead. For instance:"},
+	EXAMPLE lines ///
+	PfisterForm(GF(13),-2/3)
+	PfisterForm(CC,3)
+	///
+}
+
+
+document {
+    Key => {hyperbolicForm, (hyperbolicForm, Ring), (hyperbolicForm, Ring, ZZ), (hyperbolicForm, InexactFieldFamily), (hyperbolicForm, InexactFieldFamily, ZZ)},
+    Headline => "the Grothendieck-Witt class of a hyperbolic form",     
+	Usage => "hyperbolicForm(k)
+	          hyperbolicForm(k,n)",
+	Inputs => {
+	    Ring => "k" => {"a field"},
+	    ZZ => "n" => {"an even number, giving an optional rank ", TEX///$n$///, " for a totally hyperbolic form"},
+	    }, 
+	Outputs => { 
+	    GrothendieckWittClass => {"the hyperbolic form ", TEX///$\mathbb{H} = \langle 1, -1\rangle \in \text{GW}(k)$///, " or the totally hyperbolic form ", TEX///$\frac{n}{2}\mathbb{H}$///, " if an optional rank is specified"},
+	    },
+	PARA {"By default outputs the rank two hyperbolic form over the input field ", TEX///$k$///, "."},
+	EXAMPLE lines ///
+    	    	 hyperbolicForm(GF(7))
+	 	 ///,
+	PARA{"Specifying a rank yields a copy of sums of the rank two hyperbolic form. Only even rank inputs are accepted."},
+	EXAMPLE lines ///
+        hyperbolicForm(RR,4)
+	///
+}
+
+
+
+
 
 ----------------------------
 ----------------------------
