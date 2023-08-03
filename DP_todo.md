@@ -15,3 +15,6 @@
 # Construction Optimization
 ## Caching A matrix
 ## Rewriting so only column needed is pulled by facemap builders
+
+# Implement basic functions/binary ops
+[ ] - == comparison
