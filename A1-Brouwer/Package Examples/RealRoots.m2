@@ -46,7 +46,7 @@ export{
     "HurwitzMatrix",
     "isHurwitzStable",
     --options
-    "Multiplicity"
+    "Multiplicity",
     }
 
 
