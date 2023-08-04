@@ -70,7 +70,8 @@ export{
     "hyperbolicForm",
     "PfisterForm",
     "diagonalEntries",
-    "integralDiagonalRep"
+    "integralDiagonalRep",
+    "isIsotropicQp"
     }
 
 --------------
@@ -1258,6 +1259,17 @@ discForm (List):=(ZZ) => (f) -> (
     return disc;
     );
 
+discForm (Sequence):=(ZZ) => (f) -> (
+    -- Input: f = list of diagonal elements of quadratic form
+    -- Output: Product of the entries
+    disc:=1;
+    --for loop counts the number of negative diagonal entries
+    for i from 0 to (#f -1) do(
+	 disc = disc* f_i;
+	 );
+    return disc;
+    );
+
 -- Calculate the Hilbert symbol in Q_p
 
 --  Very preliminary version of Invariant Calculations (hilbert symbol, etc.) for quadratic functions over Q
@@ -1363,6 +1375,14 @@ hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
     return hilb;	
 );
 
+hilbertSymbol (QQ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
+    if not liftable(a, ZZ) then error "first argument must be an integer";
+    if not liftable(b, ZZ) then error "second argument must be an integer";
+    a = sub(a,ZZ);
+    b = sub(b,ZZ);
+    return hilbertSymbol(a,b,p)	
+)
+
 
 hilbertSymbolReal = method()
 hilbertSymbolReal (ZZ, ZZ):=(ZZ) => (a,b)->(
@@ -1389,7 +1409,7 @@ hasseWittInvariant (List, ZZ) := ZZ => (f,p) -> (
        a:=1;
        len:=#f;
        for i from 0 to len-1 do (
-	   if (not ring(f_i) === ZZ) then (error "Error:  Hilbert symbol evaluated at a non-integer");
+	   if not liftable(f_i,ZZ) then (error "Error:  Hilbert symbol evaluated at a non-integer");
 	   );
        for i from 0 to len-2 do (
        	   for j from i+1 to len-1 do (
@@ -1416,7 +1436,7 @@ invariantFormQp (List, ZZ):= (ZZ, ZZ, ZZ) => (f, p) -> (
     len:=#f;
     for i from 0 to (len-1) do (
 	if (f_i==0) then (error "Error: Form is degenerate");
-	if (not ring(f_i)===ZZ ) then (error "Error: Diagonal elements of form should be integers");
+	if not liftable(f_i, ZZ ) then (error "Error: Diagonal elements of form should be integers");
 	);
     a:=len;
     b:=1;
@@ -1599,7 +1619,7 @@ isIsotropicDiagFormQp = method()
 isIsotropicDiagFormQp (List, ZZ):=(Boolean) => (f, p) -> (
     
     n:=#f;
-    d:=discForm(f);
+    d:=lift(discForm(f),ZZ);
     e:=hasseWittInvariant(f, p);
     if (n==2) then (
     -- need to compare d ==-1 in Qp^*/Qp^2	
@@ -1628,6 +1648,33 @@ isIsotropicDiagFormQp (List, ZZ):=(Boolean) => (f, p) -> (
 	    )
 	)
     );
+
+
+
+
+-- Boolean determining if a form is isotropic over Qp
+isIsotropicQp = method()
+isIsotropicQp (GrothendieckWittClass, ZZ) := (Boolean) => (beta, p) ->(
+    kk := baseField beta;
+    if not (kk === QQ) then error "method is only implemented over the rationals";
+    if not isPrime(p) then error "second argument must be a prime number";
+    
+    -- Take a diagonal integral representative of beta
+    betaInt := integralDiagonalRep(beta);
+    
+    -- Extract its diagonal entries as a list
+    L := toList(diagonalEntries(betaInt));
+    
+    -- Call the previous function
+    return isIsotropicDiagFormQp(L,p)
+    )
+
+isIsotropicQp (Matrix, ZZ) := (Boolean) => (M, p) ->(
+    beta := gwClass(M);
+    return isIsotropicQp(beta,p)
+    )    
+    
+
 
 -- Boolean checking if a diagonal form over QQ with integer coefficients is isotropic at every local field including RR
 isIsotropicDiagFormQ = method()
@@ -1661,7 +1708,9 @@ isIsotropicDiagFormQ (List):=(Boolean) => (f) ->(
 	    return true;
 	    );
 	);
-    );		
+    );
+
+	
 	
 -- Input: (Q): Quadratic form Q given by list of diagonal elements.  
 --  	Assume list constists of integers
@@ -1676,7 +1725,7 @@ invariantFormQ (List):= (ZZ, ZZ, List, List) => (f) -> (
     len:=#f;
     for i from 0 to (len-1) do (
 	if (f_i==0) then (error "Error: Form is degenerate");
-	if (not ring(f_i)===ZZ ) then (error "Error: Diagonal elements of form should be integers");
+	if not liftable(f_i,ZZ ) then (error "Error: Diagonal elements of form should be integers");
 	);
     a:=len;
     b:=discForm(f);
@@ -1809,10 +1858,10 @@ isAnisotropicDiagQp (List, ZZ) := (Boolean) => (f, p) -> (
     -- Output: true if form does not represent 0 over Qp
     
     -- Check if f is list, p is prime 
-    if (not isPrime(p) or (not (ring p === ZZ))) then (error "Error: isAnisotropicDiagFormQp called with p not an integer prime");
+    if not isPrime(p) then error "Error: isAnisotropicDiagFormQp called with p not an integer prime";
     n:=#f;
     for i from 0 to n-1 do (
-    	if (not (ring f_i === ZZ)) then (error "Error: isAnisotropicDiagFormQp called with a non-integral list");
+    	if (not  liftable(f_i,ZZ)) then (error "Error: isAnisotropicDiagFormQp called with a non-integral list");
     );
     d:=discForm(f);
     
@@ -2834,6 +2883,31 @@ document{
     PARA{"This is the negation of the boolean-valued ", TO2(isIsotropic,"isIsotropic"), ". See documentation there."},
     
 }
+
+
+document{
+    Key => {(isIsotropicQp, GrothendieckWittClass,ZZ), isIsotropicQp},
+    Headline => "determines whether a rational form is isotropic locally at a prime",
+    Usage => "isIsotropicQp(beta,p)",
+    Inputs => {
+	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(\mathbb{Q})$///, "."},
+	ZZ => "p" => {"a prime"},
+	},
+    Outputs => {
+        Boolean => {"Whether ", TEX///$\beta$///, " is isotropic over ", TEX///$\mathbb{Q}_p$///,"."},
+	},
+    PARA{"Every rank one nondegenerate form is anisotropic, while every form of rank ", TEX///$\ge 5$///, " is isotropic."},
+    EXAMPLE lines ///
+    isIsotropicQp(gwClass(matrix(QQ,{{2}})),7)
+    ///,
+    PARA{"For ranks two, three, and four, we can use various criteria for isotropy as in [S73, III Theorem 6]."},
+    PARA{EM "Citations:"},
+    UL{	
+	{"[S73] J.P. Serre, ", EM "A course in arithmetic,", " Springer-Verlag, 1973."},
+    },
+}
+
+
 
 document {
     Key => {(gwAdd, GrothendieckWittClass, GrothendieckWittClass), gwAdd},
