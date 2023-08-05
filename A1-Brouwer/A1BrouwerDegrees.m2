@@ -2492,6 +2492,7 @@ document {
 		 beta = gwClass(matrix(QQ,{{0,2},{2,0}}));
 		 baseField beta
 	 	 ///,
+    SeeAlso => {"GrothendieckWittClass"}
         }
 
 document {
@@ -2506,14 +2507,20 @@ document {
 	    List => {"a list of basis elements of the local k-algebra ", TEX///$Q_p(f)$/// }
 	    },
 	PARA {"Given an endomorphism of affine space, ", TEX///$f=(f_1,\dots ,f_n)$///,
-			", given as a list of polynomials called ", TT "L", " and the prime ideal of an isolated zero, this command returns a list of basis elements of the local k-algebra ", TEX///$Q_p(f)$///, "."},
+			", given as a list of polynomials called ", TT "L", " and the prime ideal of an isolated zero, this command returns a list of basis elements of the local k-algebra ", TEX///$Q_p(f)$///, " by computing a normal basis for " TEX///$(I:(I:p^{\infty}))}$///, " (vis. [S02, Proposition 2.5])."},
 	EXAMPLE lines ///
 		 QQ[x,y];
 		 f = {x^2+1-y,y};
 		 p = ideal(x^2+1,y);
 		 localAlgebraBasis(f,p) 
 	 	 ///,
-        }
+        PARA{EM "Citations:"},
+    UL{
+	
+	{"[S02] B. Sturmfels, ", EM "Solving Systems of Polynomial Equations,", " American Mathematical Society, 2002."},
+	},
+    SeeAlso = {"localA1Degree"}
+}
 
 document {
     Key => {(simplifyForm, GrothendieckWittClass), simplifyForm},
@@ -2538,6 +2545,11 @@ document {
     beta = gwClass(M);
     simplifyForm(beta)
     ///,
+    PARA{EM "Citations:"},
+    UL{
+	
+	{"[L05] T.Y. Lam, ", EM "Introduction to quadratic forms over fields,", " American Mathematical Society, 2005."},
+	},
     SeeAlso => {"simplifyFormString"},
 }
 
@@ -2618,7 +2630,7 @@ document {
 	{"[BMP23] T. Brazelton, S. McKean, S. Pauli, ", EM "Bezoutians and the A1-Degree,", " Algebra & Number Theory, 2023."},
 	{"[SS76] S. Scheja, S. Storch, ", EM "Uber Spurfunktionen bei vollstandigen Durchschnitten,", " J. Reine Angew. Math., 1975."},
 	},
-    
+    SeeAlso => {"localA1Degree", "simplifyForm", "simplifyFormString"}
     }
 
 document {
@@ -2649,7 +2661,7 @@ document {
     EXAMPLE lines///
     gwIsomorphic(f1GD,f1LDsum)
     ///,
-    
+    SeeAlso => {"globalA1Degree", "simplifyForm", "simplifyFormString"}
     }
 
 document{
@@ -2667,7 +2679,8 @@ document{
     M = matrix(RR,{{0,0,1},{0,1,0},{1,0,0}});
     beta = gwClass(M);
     signature(beta)
-    ///
+    ///,
+    SeeAlso => {"gwIsomorphic", "simplifyForm", "simplifyFormString"}
     }
 
 document{
@@ -2735,6 +2748,7 @@ document{
 	{"[L05] T.Y. Lam, ", EM "Introduction to quadratic forms over fields,", " American Mathematical Society, 2005."},
 	{"[MH73] Milnor and Husemoller, ", EM "Symmetric bilinear forms,", " Springer-Verlag, 1973."},
     },
+    SeeAlso => {"signature", "simplifyForm", "simplifyFormString"}
 }
 
 document{
@@ -2805,7 +2819,7 @@ document {
 	gamma = gwClass(matrix(RR,{{0,0,1},{0,1,0},{1,0,0}}))
 	diagonalEntries gamma
 	///,
-	SeeAlso => {"diagonalForm"}
+	SeeAlso => {"diagonalForm", "diagonalize"}
 	}
     
     
@@ -2824,7 +2838,7 @@ document {
 	beta = gwClass(M);
 	integralDiagonalRep(beta)
         ///,
-	SeeAlso => {"diagonalForm"}
+	SeeAlso => {"diagonalForm", "diagonalEntries", "diagonalize"}
 	}
 
 
@@ -2867,7 +2881,7 @@ document{
 	{"[S73] J.P. Serre, ", EM "A course in arithmetic,", " Springer-Verlag, 1973."},
 	{"[L05] T.Y. Lam, ", EM "Introduction to quadratic forms over fields,", " American Mathematical Society, 2005."},
     },
-    
+    SeeAlso => {"isAnisotropic", "hilbertSymbol", "signature"}
 }
 
 document{
@@ -2881,7 +2895,7 @@ document{
         Boolean => {"Whether ", TEX///$\beta$///, " is anisotropic"},
 	},
     PARA{"This is the negation of the boolean-valued ", TO2(isIsotropic,"isIsotropic"), ". See documentation there."},
-    
+    SeeAlso => {"isIsotropic"}   
 }
 
 
@@ -2904,6 +2918,7 @@ document{
     PARA{EM "Citations:"},
     UL{	
 	{"[S73] J.P. Serre, ", EM "A course in arithmetic,", " Springer-Verlag, 1973."},
+    SeeAlso => {"isIsotropic", "isAnisotropic","hilbertSymbol"}
     },
 }
 
@@ -2928,6 +2943,7 @@ document {
 		 gamma = gwClass(N);
     	    	 gwAdd(beta, gamma)
 	 	 ///,
+    SeeAlso => {"GrothendieckWittClass", "gwClass", "gwMultiply"}
 }
 
 document {
@@ -2949,6 +2965,7 @@ document {
 		 gamma = gwClass(N);
     	    	 gwMultiply(beta, gamma)
 	 	 ///,
+    SeeAlso => {"GrothendieckWittClass", "gwClass", "gwAdd"}
 }
 
 
@@ -2973,7 +2990,8 @@ document {
 	EXAMPLE lines ///
 	diagonalClass(GF(29),5/13)
 	diagonalClass(RR,2)
-	///
+	///,
+    SeeAlso => {"diagonalForm", "diagonalize", "diagonalEntries"}
 }
 
 document {
@@ -3020,7 +3038,8 @@ document {
 	PARA{"Specifying a rank yields a copy of sums of the rank two hyperbolic form. Only even rank inputs are accepted."},
 	EXAMPLE lines ///
         hyperbolicForm(RR,4)
-	///
+	///,
+    SeeAlso => {"isAnisotropic", "simplifyForm", "simplifyFormString"}
 }
 
 
