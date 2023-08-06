@@ -5,6 +5,7 @@ load "WittDecomp.m2"
 load "congruenceDiagonalize.m2"
 
 --Nikita
+-- 
 
 --WittDecompGeneral returns dimention of totally anistropic part,
 --witt index and anisotropic part
