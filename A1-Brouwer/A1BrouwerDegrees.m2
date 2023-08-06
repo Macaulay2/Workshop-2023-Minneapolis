@@ -1850,7 +1850,8 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
 -- Checking isotropy
 --------------------------
 
--- isAnisotropicDiagFormQp determines if a diagonal quadratic form with integral coefficients is anisotropic
+-- isAnisotropicDiagFormQp determines if a diagonal quadratic form with integral coefficients is anisotropic over the p-adic field Q_p
+-- Methods cited here can be founded in Serre's "A course in arithmetic," Chapter III, Theorem 6
   
 isAnisotropicDiagQp = method()
 isAnisotropicDiagQp (List, ZZ) := (Boolean) => (f, p) -> (
@@ -2425,9 +2426,29 @@ document {
 document{
     Key => GrothendieckWittClass,
     Headline => "a new type, intended to capture the isomorphism class of an element of the Grothendieck-Witt ring of a base field",
-    PARA {"A GrothendieckWittClass object is a type of HashTable encoding the isomorphism class of a non-degenerate symmetric bilinear form ", TEX///$V \times V \to k$///, " over a field ", TEX///$k$///, "."},
-    PARA{"A GrothendieckWittClass object can be built from a symmetric ", TT "matrix", " over a field using the method ", TT "gwClass()"},
-    SeeAlso => {"gwClass"}
+    PARA {"A ", TT "GrothendieckWittClass" ," object is a type of ", TO2(HashTable, "HashTable"), " encoding the isomorphism class of a non-degenerate symmetric bilinear form ", TEX///$V \times V \to k$///, " over a field ", TEX///$k$///, "."},
+    PARA{"Given any basis ", TEX///$e_1,\ldots,e_n$///, " for ", TEX///$V$///, " as a ", TEX///$k$///, "-vector space, we can encode the symmetric bilinear form ", TEX///$\beta$///, " by how it acts on basis elements. That is, we can produce a matrix ", TEX///$\left(\beta(e_i,e_j)\right)_{i,j}$///, ". This is called a ", EM "Gram matrix", " for the symmetric bilinear form. A change of basis will produce a congruent Gram matrix, thus a matrix represents a symmetric bilinear form uniquely up to matrix congruence."},
+	
+	
+    PARA{"A GrothendieckWittClass object can be built from a symmetric ", TO2(matrix, "matrix"), " over a field using the ", TO2(gwClass,"gwClass"), " method."},
+    EXAMPLE lines///
+    beta = gwClass(matrix(QQ,{{0,1},{1,0}}))
+    class beta
+    ///,
+    PARA{"The underlying matrix representative of a form can be recovered via the ", TT "matrix", " command, and its underlying field can be recovered using ", TO2(baseField,"baseField"), "."},
+    EXAMPLE lines///
+    beta.matrix
+    baseField(beta)
+    ///,
+    PARA{"For computational purposes, it is often desirable to diagonalize a Gram matrix. Any symmetric bilinear form admits a diagonal Gram matrix representative by ", EM "Sylvester's law of inertia", ", and this is implemented via the ", TO2(diagonalForm, "diagonalForm"), " method."},
+    EXAMPLE lines///
+    diagonalForm(beta)
+    ///,
+    PARA{"Once a form has been diagonalized, it is recorded in the cache for ", TT "GrothendieckWittClass", " and can therefore be quickly recovered."},
+    EXAMPLE lines///
+    beta.cache.diagonalForm
+    ///,
+    SeeAlso => {"gwClass","diagonalForm","baseField"},
     }
 
 document {
@@ -2507,7 +2528,7 @@ document {
 	    List => {"a list of basis elements of the local k-algebra ", TEX///$Q_p(f)$/// }
 	    },
 	PARA {"Given an endomorphism of affine space, ", TEX///$f=(f_1,\dots ,f_n)$///,
-			", given as a list of polynomials called ", TT "L", " and the prime ideal of an isolated zero, this command returns a list of basis elements of the local k-algebra ", TEX///$Q_p(f)$///, " by computing a normal basis for " TEX///$(I:(I:p^{\infty}))}$///, " (vis. [S02, Proposition 2.5])."},
+			", given as a list of polynomials called ", TT "L", " and the prime ideal of an isolated zero, this command returns a list of basis elements of the local k-algebra ", TEX///$Q_p(f)$///, " by computing a normal basis for ", TEX///$(I:(I:p^{\infty}))}$///, " (vis. [S02, Proposition 2.5])."},
 	EXAMPLE lines ///
 		 QQ[x,y];
 		 f = {x^2+1-y,y};
@@ -2519,7 +2540,7 @@ document {
 	
 	{"[S02] B. Sturmfels, ", EM "Solving Systems of Polynomial Equations,", " American Mathematical Society, 2002."},
 	},
-    SeeAlso = {"localA1Degree"}
+    SeeAlso => {"localA1Degree"}
 }
 
 document {
@@ -2617,6 +2638,14 @@ document {
     globalA1Degree(f)
     ///,
     PARA{"The rank of this form is three, as cubics over the complex numbers have three roots counted with multiplicity. This form has signature one, which indicates that when the cubic intersects the ", TEX///$x$///, "-axis, when the three points of intersection are counted with a sign corresponding to a right hand rule, the sum equals one."},
+    
+    PARA{"The global ", TEX///$\mathbb{A}^1$///, "-Brouwer degree can be computed as a sum over the ", TO2(localA1Degree,"local degrees"), " at the points in the zero locus of the morphism. In the previous example, we see that ", TEX///$V(f)$///, " consists of three points on the affine line. We can compute local degrees at all of these:"},
+    EXAMPLE lines///
+    QQ[x,y];
+    f = {x^3 - x^2 - y, y};
+    point1 = ideal{x-1, y};
+    localA1Degree(f,point1)
+    ///,
     
     PARA{EM "Citations:"},
     UL{
@@ -2761,7 +2790,7 @@ document{
 	ZZ => "p" => {"Any prime number."},
 	},
     Outputs => {
-	ZZ => "(a,b)_p" => {"The ", EM "Hilbert symbol ", TEX///$(a,b)_p$///, "."},
+	ZZ => {"The ", EM "Hilbert symbol ", TEX///$(a,b)_p$///, "."},
 	},
     PARA{"The ", EM "Hasse-Witt invariant", " of a diagonal form ", TEX///$\langle a_1,\ldots,a_n\rangle$///, " over a field ", TEX///$K$///, " is defined to be the product ", TEX///$\prod_{i<j}  \phi(a_i,a_j)$///, " where ", TEX///$\phi \colon K \times K \to \left\{\pm 1\right\}$///, " is any ", EM "symbol", " (see e.g. [MH73, III.5.4] for a definition). It is a classical result of Hilbert that over a local field of characteristic not equal to two, there is one and only symbol, ", TEX///$(-,-)_p$///,  " called the ", EM "Hilbert symbol", " ([S73, Chapter III]) computed as follows:"},
     PARA{TEX///$(a,b)_p = \begin{cases} 1 & z^2 = ax^2 + by^2 \text{ has a nonzero solution in } K^3 \\ -1 & \text{otherwise.} \end{cases}$///},
@@ -2769,6 +2798,7 @@ document{
     EXAMPLE lines///
     hilbertSymbol(2,1,7)
     ///,
+    PARA{"Computing Hasse-Witt invariants is a key step in classifying symmetric bilinear forms over the rational numbers, and in particular certifying their ", TO2(isIsotropic, "(an)isotropy"), "."},
     PARA{EM "Citations:"},
     UL{
 	
@@ -2787,7 +2817,7 @@ document {
 	Outputs => {
 	    GrothendieckWittClass => {"a form isomorphic to ", TEX///$\beta$///, " with a diagonal Gram matrix"}
 	    },
-	PARA {"test"},
+	PARA {"Given a symmetric bilinear form, this method calls the ", TO2(diagonalize,"diagonalize"), " command in order to produce a diagonal symmetric bilinear form isomorphic to ", TEX///$\beta$///, "."},
 	EXAMPLE lines ///
 	beta = gwClass(matrix(QQ,{{0,0,2},{0,2,0},{2,0,0}}));
 	diagonalForm(beta)
@@ -3042,7 +3072,24 @@ document {
     SeeAlso => {"isAnisotropic", "simplifyForm", "simplifyFormString"}
 }
 
-
+document{
+    Key => {(legendreBoolean, RingElement), legendreBoolean},
+    Headline => "Basic Legendre symbol over a finite field",
+    Usage => "legendreBoolean(a)",
+    Inputs => {
+	RingElement => "a" => {"Any element in a finite field ", TEX///$a\in \mathbb{F}_q$///, "."},
+	},
+    Outputs =>{
+	Boolean => {"Whether ", TEX///$a$///, " is a square in ", TEX///$\mathbb{F}_q$///, "."},
+	},
+    PARA{"Given an element of a finite field, will return a Boolean checking if it is a square."},
+    EXAMPLE lines///
+    a = sub(-1,GF(5));
+    legendreBoolean(a)
+    b = sub(-1,GF(7));
+    legendreBoolean(b)
+    ///,
+    }
 
 
 
@@ -3053,6 +3100,11 @@ document {
 ----------------------------
 
 -- For debugging: remember Macaulay2 starts counting the first test as Test 0
+
+       
+------------------
+-- TESTING
+------------------
 
 -- Diagonal form testing
 TEST ///

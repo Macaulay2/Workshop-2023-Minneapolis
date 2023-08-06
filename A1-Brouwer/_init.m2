@@ -9,10 +9,19 @@ integralDiagonalRep(beta)
 installPackage("A1BrouwerDegrees", RerunExamples=>true)
 check A1BrouwerDegrees
 
+
 T4 = CC[v];
 f5 = {v^4 + v^3 - v^2 - v};
 f5GD = globalA1Degree(f5);
 f5GD
+
+
+
+
+T4Q = QQ[v];
+f5Q = {v^4 + v^3 - v^2 - v};
+f5QGD = globalA1Degree(f5Q);
+f5QGD
 
 
 ff = GF(17);
