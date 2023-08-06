@@ -82,9 +82,9 @@ squareSymbol(ZZ, ZZ) := (ZZ) => (a, p) -> (
     
     
 
-hilbertSymbol = method()
+HilbertSymbol = method()
 
-hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
+HilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
 -- Note: The Hilbert symbol (a,b)_p is defined for a, b p-adic numbers
 -- We will be assuming that the a, b are integers.
 -- We need to distinguish 
@@ -127,9 +127,9 @@ hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
     return hilb;	
 );
 
-hilbertSymbolReal = method()
+HilbertSymbolReal = method()
 
-hilbertSymbolReal (ZZ, ZZ):=(ZZ) => (a,b)->(
+HilbertSymbolReal (ZZ, ZZ):=(ZZ) => (a,b)->(
     if (a<0 and b<0) then (
 	return -1;
 	)
@@ -159,7 +159,7 @@ hasseWittInvariant (List, ZZ) := ZZ => (f,p) -> (
 	   );
        for i from 0 to len-2 do (
        	   for j from i+1 to len-1 do (
-	       a= a * hilbertSymbol(f_i, f_j, p);
+	       a= a * HilbertSymbol(f_i, f_j, p);
 	       );
 	   );
        
@@ -344,8 +344,8 @@ isIsomorphicFormQ (Matrix, Matrix):= (Boolean) => (f, g) -> (
     if (numRows f != numRows g) then (return false;);
     
     -- First, we diagonalize both matrices
-    df:= diagonalize f;
-    dg:= diagonalize g;
+    df:= congruenceDiagonalize f;
+    dg:= congruenceDiagonalize g;
     
    
     -- Then make all entries integers, by multiplying by denominator squared, and clearing squares
@@ -387,14 +387,14 @@ isIsotropicDiagFormQp (List, ZZ):=(Boolean) => (f, p) -> (
 	)
     else (
 	if (n==3) then (
-	    if (hilbertSymbol(-1, -d, p) == hasseWittInvariant(f, p)) then (
+	    if (HilbertSymbol(-1, -d, p) == hasseWittInvariant(f, p)) then (
 		return true;
 		)
 	    else (return false);
 	    )
 	else (
 	    if (n==4) then (
-		if ((not equalUptoPadicSquare( d, 1, p)) or (equalUptoPadicSquare(d, 1, p) and (hilbertSymbol(-1,-1,p) == hasseWittInvariant(f, p)))) then (
+		if ((not equalUptoPadicSquare( d, 1, p)) or (equalUptoPadicSquare(d, 1, p) and (HilbertSymbol(-1,-1,p) == hasseWittInvariant(f, p)))) then (
 		    return true;
 		    )
 		else (return false);

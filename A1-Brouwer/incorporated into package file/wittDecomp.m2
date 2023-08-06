@@ -6,22 +6,22 @@ needs "GW-type.m2"
 load "matrixBooleans.m2"
 load "squarefreepart.m2"
 load "easyupperlefttriangular.m2"
-load "diagonalize.m2"
+load "congruenceDiagonalize.m2"
 
 --Nikita Borisov and Frenly Espino
 
--- Given a matrix A, wittDecomp decomposes A as a sum nH + Q, where n= number of hyperbolic forms, and Q is (presumed to be) anisotropic.  
+-- Given a matrix A, WittDecomp decomposes A as a sum nH + Q, where n= number of hyperbolic forms, and Q is (presumed to be) anisotropic.  
 -- Input:  A square symmetric matrix A over an exact field (not RR or CC)
 -- Output: (n, Q), n=integer giving number of hyperbolic spaces, Q=anisotropic forms.
 
 -- Future Work: Shoudl be able to input a bound.
 
-wittDecomp = method()
-wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
+WittDecomp = method()
+WittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     k:= ring A;   
   
     -- Add error in case the base field is RR or CC
-    if (instance(k,InexactFieldFamily) or instance(k,RealField) or instance(k,ComplexField)) then error "Error: base field is inexact, use wittDecompInexact() instead";
+    if (instance(k,InexactFieldFamily) or instance(k,RealField) or instance(k,ComplexField)) then error "Error: base field is inexact, use WittDecompInexact() instead";
     
     n:=numRows(A); --rank of matrix
     R:=k[x_0..x_(n-1)]; -- local variable ring
@@ -53,7 +53,7 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     if ( not solnFound) then (return (0,A));
     
     --if solution found for rank 2 form, then the form is purely hyperbolic
-    if ((n==2) and  (det(A)==0))then (error "Matrix singular, run wittDecompGeneral instead" );
+    if ((n==2) and  (det(A)==0))then (error "Matrix singular, run WittDecompGeneral instead" );
     if (n==2) then (return (1,matrix(k,{{}})));
 
     -- if found a solution, record it as row matrix z. Then find vector y such that <z,y> <>0.  
@@ -69,8 +69,8 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     --we need to find a basis of vectors orthogonal (wrt bilinear form) to x and y 
     orthoComp :=gens kernel((z||matrix(y))*A);   -- a (n-2) x n matrix.  
     
-    --now recursively apply wittDecomp to orthoComp^T*A*orthoComp a (n-2)-by-(n-2) Gram matrix
-    subComputation := wittDecomp(transpose(orthoComp)*A*orthoComp);
+    --now recursively apply WittDecomp to orthoComp^T*A*orthoComp a (n-2)-by-(n-2) Gram matrix
+    subComputation := WittDecomp(transpose(orthoComp)*A*orthoComp);
     
     -- subComputation_0 gives number of hyperbolic forms in (n-2) x (n-2) subform.  
     -- 1+ subComputation_0 is the number of hyperbolic forms in A
@@ -80,14 +80,14 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
 )
 
 
---wittDecomp method for InexactFieldFamily
+--WittDecomp method for InexactFieldFamily
 
--- wittDecompInexact calculates the Witt decomposition for matrix A over the fields kk=RR, CC
+-- WittDecompInexact calculates the Witt decomposition for matrix A over the fields kk=RR, CC
 -- Function assumes that A has maximal rank. 
 
-wittDecompInexact=method()
+WittDecompInexact=method()
 
-wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
+WittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
     k := ring A;
     
     -- checks that we have RR or CC as our field
@@ -103,7 +103,7 @@ wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
     
     --if k is the real numbers, witt decomposition depends on rank and signature
     if (k===RR or instance(k,RealField)) then (
-        diagA := diagonalize(A);
+        diagA := congruenceDiagonalize(A);
         posEntries := 0; --for loop counts the number of positive diagonal entries of diagA
         negEntries := 0; --for loop counts the number of negative diagonal entries
 	for i from 0 to (n-1) do(

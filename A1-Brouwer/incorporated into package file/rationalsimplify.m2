@@ -1,9 +1,9 @@
---takes in symmetric matrix over QQ and diagonalizes, removes squares from entries, and splits off hyperbolic forms that immediately appear as <a> + <-a>
+--takes in symmetric matrix over QQ and congruenceDiagonalizes, removes squares from entries, and splits off hyperbolic forms that immediately appear as <a> + <-a>
 
 path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
 
-load "diagonalize.m2"
+load "congruenceDiagonalize.m2"
 load "matrixBooleans.m2"
 load "squarefreePart.m2"
 load "splitOffObviousHyperbolics.m2"
@@ -16,7 +16,7 @@ rationalSimplify (Matrix) := (ZZ,Matrix) => (A) -> (
         error "Matrix is not symmetric";
 	);
     --diagonalize the matrix
-    B = mutableMatrix(diagonalize(A));
+    B = mutableMatrix(congruenceDiagonalize(A));
     --replace entry with smallest magnitude integer in square class
     for i from 0 to (numRows(B)-1) do (
         B_(i,i) = squarefreePart(B_(i,i));

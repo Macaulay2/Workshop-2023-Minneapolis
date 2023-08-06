@@ -7,7 +7,7 @@
     (2). Methods:
         (a). baseField (GrothendieckWittClass) -> (Ring)
                 Returns base field of a GrothendieckWittClass
-        (b). diagonalize (Matrix) -> (Matrix)
+        (b). congruenceDiagonalize (Matrix) -> (Matrix)
                 Input a matrix, returns the diagonalized form of the matrix.
         (c). gwAdd (GrothendieckWittClass, GrothendieckWittClass) -> GrothendieckWittClass
                 Returns the direct sum of two GrothendieckWittClasses (isomorphism class of direct sum of two quadratic spaces)
@@ -40,12 +40,12 @@
          squarefreepart (ZZ) -> (ZZ)
             Input rational number, returns maximal positive square-free factor of product of denominator and numerator.
             Input integer, returns maximal positive square-free factor.
-    (7). wittDecomp (Matrix, Ring (field) ) -> (ZZ, Matrix) 
+    (7). WittDecomp (Matrix, Ring (field) ) -> (ZZ, Matrix) 
             -(V, q) quadratic space over a field F, quadratic form represented by matrix M.
             -Witt decomposition: (V_t, q_t)\perp (V_h, q_h)\perp (V_a, q_a)
                 (respectively: totally isotropic, hyperbolic, anisotropic)
             -Returns the Witt Index of q and the matrix representing q_a on V_a.
-    (8). wittDecompInexact (Matrix, InexactFieldFamily) -> (ZZ, Matrix)
+    (8). WittDecompInexact (Matrix, InexactFieldFamily) -> (ZZ, Matrix)
             -InexactFieldFamily must be RR or CC
             -Returns the Witt Index of q and the matrix representing q_a on V_a as \pm I, after changing basis.
 *}

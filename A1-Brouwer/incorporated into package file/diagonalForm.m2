@@ -1,9 +1,9 @@
 path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
 needs "GW-type.m2"
-load "wittDecomp.m2"
+load "WittDecomp.m2"
 load "safeBlockSum.m2"
-load "diagonalize.m2"
+load "congruenceDiagonalize.m2"
 ---------
 -- diagonalForm method
 -- inputs a GWClass and outputs its diagonal form as a GWClass
@@ -30,11 +30,11 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
 	return gwClass(identityMat)
 	);
     
-    -- If the field is the real numbers, we can run wittDecompInexact to determine its Witt index and anisotropic part
+    -- If the field is the real numbers, we can run WittDecompInexact to determine its Witt index and anisotropic part
     if (baseField(beta) === RR or instance(baseField(beta),RealField)) then(
 	
 	-- Get wittIndex and anisotropic part
-	(wittIndex,anisotropicPart) := wittDecompInexact(beta.matrix);
+	(wittIndex,anisotropicPart) := WittDecompInexact(beta.matrix);
 	
 	-- Make empty output matrix to populate
 	diagOutputMatrix := matrix(RR,{{}});
@@ -61,7 +61,7 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
 	);
     
     betaMatrix := beta.matrix;
-    diagonalFormOfBetaMatrix := diagonalize(betaMatrix);
+    diagonalFormOfBetaMatrix := congruenceDiagonalize(betaMatrix);
     beta.cache.diagonalForm = gwClass(diagonalFormOfBetaMatrix);
     return gwClass(diagonalFormOfBetaMatrix) 
     );

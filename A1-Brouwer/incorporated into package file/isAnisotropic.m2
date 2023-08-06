@@ -4,7 +4,7 @@ path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
 
 needs "GW-type.m2"
-needs "diagonalize.m2"
+needs "congruenceDiagonalize.m2"
 needs "isAnisotropicQ.m2"
 
 isAnisotropic = method()
@@ -20,7 +20,7 @@ isAnisotropic (GrothendieckWittClass) := (Boolean) => (alpha) -> (
     if A != transpose(A) then (
         error "Underlying matrix is not symmetric";
 	);
-    diagA := diagonalize(A);
+    diagA := congruenceDiagonalize(A);
     -- Over CC, a diagonal form is anisotropic if and only if it is nondegenerate and has dimension 0 or 1
     if (k === CC or instance(k,ComplexField)) then (
         nonzeroEntriesA := 0;

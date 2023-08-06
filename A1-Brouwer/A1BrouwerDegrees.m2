@@ -54,16 +54,16 @@ export{
     "gwClass",
     "gwAdd",
     "gwMultiply",
-    "diagonalize",
+    "congruenceDiagonalize",
     "diagonalForm",
-    "simplifyForm",
-    "simplifyFormString",
+    "sumDecomposition",
+    "sumDecompositionString",
     "globalA1Degree",
     "localA1Degree",
     "localAlgebraBasis",
     "signature",
     "gwIsomorphic",
-    "hilbertSymbol",
+    "HilbertSymbol",
     "isIsotropic",
     "isAnisotropic",
     "diagonalClass",
@@ -252,10 +252,10 @@ true
 
 
 -- TODO we should rename this if we want to export it.
---Diagonalize method
+--congruenceDiagonalize method
 --Given a symmetric matrix, this function outputs a diagonal matrix congruent to original matrix
-diagonalize = method()
-diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
+congruenceDiagonalize = method()
+congruenceDiagonalize (Matrix) := (Matrix) => (AnonMut) -> (
     k := ring AnonMut;
     if isField k == false then error "Error: expected matrix entries from a field";
     if not isSquareAndSymmetric(AnonMut) then error "matrix is not symmetric";
@@ -304,11 +304,11 @@ diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
     return matrix A 
     )
 
---diagonalizeOverInt method
+--congruenceDiagonalizeOverInt method
 --given a symmetric matrix, this function outputs a diagonal matrix congruent to original matrix
 --capable of diagonalizing over rings (algorithm has no divisions)
-diagonalizeOverInt = method()
-diagonalizeOverInt (Matrix) := (Matrix) => (AnonMut) -> (
+congruenceDiagonalizeOverInt = method()
+congruenceDiagonalizeOverInt (Matrix) := (Matrix) => (AnonMut) -> (
     if not isSquareAndSymmetric(AnonMut) then error "matrix is not symmetric";
     
     A := mutableMatrix AnonMut;
@@ -348,13 +348,13 @@ diagonalizeOverInt (Matrix) := (Matrix) => (AnonMut) -> (
     )
 
 -- This function aims to find the radical of a quadratic space.
--- This is reliant on the diagonalize() method being applicable for singular matrices
+-- This is reliant on the congruenceDiagonalize() method being applicable for singular matrices
 truncateRadical=method()
 truncateRadical(Matrix):=(Matrix)=> (A) -> (
     truncatedMatrix:= mutableMatrix A;
     if not isSquare(A) then error ("Input is not a square matrix");
    
-    truncatedMatrix=mutableMatrix diagonalize(A);
+    truncatedMatrix=mutableMatrix congruenceDiagonalize(A);
     foundRadical:=false;
     for i from 0 to (numRows(A)-1) do (
         if truncatedMatrix_(i, i)==0 then (
@@ -415,8 +415,8 @@ rationalSimplify (Matrix) := (ZZ,Matrix) => (A) -> (
     --matrix must be symmetric
     if not isSquareAndSymmetric(A) then error "Matrix is not symmetric";
 
-    --diagonalize the matrix
-    B:= mutableMatrix(diagonalize(A));
+    --congruenceDiagonalize the matrix
+    B:= mutableMatrix(congruenceDiagonalize(A));
     --replace entry with smallest magnitude integer in square class
     for i from 0 to (numRows(B)-1) do (
         B_(i,i) = squarefreePart(B_(i,i));
@@ -430,18 +430,18 @@ rationalSimplify (Matrix) := (ZZ,Matrix) => (A) -> (
 
 --Nikita Borisov and Frenly Espino
 
--- Given a matrix A, wittDecomp decomposes A as a sum nH + Q, where n= number of hyperbolic forms, and Q is (presumed to be) anisotropic.  
+-- Given a matrix A, WittDecomp decomposes A as a sum nH + Q, where n= number of hyperbolic forms, and Q is (presumed to be) anisotropic.  
 -- Input:  A square symmetric matrix A over an exact field (not RR or CC)
 -- Output: (n, Q), n=integer giving number of hyperbolic spaces, Q=anisotropic forms.
 
 -- Future Work: Should be able to input a bound.
 
-wittDecomp = method()
-wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
+WittDecomp = method()
+WittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     k:= ring A;   
   
     -- Add error in case the base field is RR or CC
-    if (instance(k,InexactFieldFamily) or instance(k,RealField) or instance(k,ComplexField)) then error "Error: base field is inexact, use wittDecompInexact() instead";
+    if (instance(k,InexactFieldFamily) or instance(k,RealField) or instance(k,ComplexField)) then error "Error: base field is inexact, use WittDecompInexact() instead";
     
     n:=numRows(A); --rank of matrix
     x:= symbol x;
@@ -474,7 +474,7 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     if ( not solnFound) then (return (0,A));
     
     --if solution found for rank 2 form, then the form is purely hyperbolic
-    if ((n==2) and  (det(A)==0))then (error "Matrix singular, run wittDecompGeneral instead" );
+    if ((n==2) and  (det(A)==0))then (error "Matrix singular, run WittDecompGeneral instead" );
     if (n==2) then (return (1,matrix(k,{{}})));
 
     -- if found a solution, record it as row matrix z. Then find vector y such that <z,y> <>0.  
@@ -490,8 +490,8 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     --we need to find a basis of vectors orthogonal (wrt bilinear form) to x and y 
     orthoComp :=gens kernel((z||matrix(y))*A);   -- a (n-2) x n matrix.  
     
-    --now recursively apply wittDecomp to orthoComp^T*A*orthoComp a (n-2)-by-(n-2) Gram matrix
-    subComputation := wittDecomp(transpose(orthoComp)*A*orthoComp);
+    --now recursively apply WittDecomp to orthoComp^T*A*orthoComp a (n-2)-by-(n-2) Gram matrix
+    subComputation := WittDecomp(transpose(orthoComp)*A*orthoComp);
     
     -- subComputation_0 gives number of hyperbolic forms in (n-2) x (n-2) subform.  
     -- 1+ subComputation_0 is the number of hyperbolic forms in A
@@ -501,13 +501,13 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
 )
 
 
---wittDecomp method for InexactFieldFamily
+--WittDecomp method for InexactFieldFamily
 
--- wittDecompInexact calculates the Witt decomposition for matrix A over the fields kk=RR, CC
+-- WittDecompInexact calculates the Witt decomposition for matrix A over the fields kk=RR, CC
 -- Function assumes that A has maximal rank. 
 
-wittDecompInexact=method()
-wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
+WittDecompInexact=method()
+WittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
     k := ring A;
     
     -- checks that we have RR or CC as our field
@@ -523,7 +523,7 @@ wittDecompInexact (Matrix) := (ZZ,Matrix) => (A) -> (
     
     --if k is the real numbers, witt decomposition depends on rank and signature
     if (k===RR or instance(k,RealField)) then (
-        diagA := diagonalize(A);
+        diagA := congruenceDiagonalize(A);
         posEntries := 0; --for loop counts the number of positive diagonal entries of diagA
         negEntries := 0; --for loop counts the number of negative diagonal entries
 	for i from 0 to (n-1) do(
@@ -839,11 +839,11 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
 	return gwClass(identityMat)
 	);
     
-    -- If the field is the real numbers, we can run wittDecompInexact to determine its Witt index and anisotropic part
+    -- If the field is the real numbers, we can run WittDecompInexact to determine its Witt index and anisotropic part
     if (baseField(beta) === RR or instance(baseField(beta),RealField)) then(
 	
 	-- Get wittIndex and anisotropic part
-	(wittIndex,anisotropicPart) := wittDecompInexact(beta.matrix);
+	(wittIndex,anisotropicPart) := WittDecompInexact(beta.matrix);
 	
 	-- Make empty output matrix to populate
 	diagOutputMatrix := matrix(RR,{{}});
@@ -869,7 +869,7 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
 	);
     
     betaMatrix := beta.matrix;
-    diagonalFormOfBetaMatrix := diagonalize(betaMatrix);
+    diagonalFormOfBetaMatrix := congruenceDiagonalize(betaMatrix);
     beta.cache.diagonalForm = gwClass(diagonalFormOfBetaMatrix);
     return gwClass(diagonalFormOfBetaMatrix) 
     );
@@ -924,7 +924,7 @@ numPosEntries (GrothendieckWittClass) := ZZ => beta ->(
     if not (kk === RR or instance(kk,RealField) or kk === QQ) then(
         error "Field is not QQ or RR";
         );
-    diagB := diagonalize(B);
+    diagB := congruenceDiagonalize(B);
     posEntries := 0;
     for i from 0 to (numRows(B)-1) do (
         if diagB_(i,i) > 0 then(
@@ -944,7 +944,7 @@ numNegEntries (GrothendieckWittClass) := ZZ => beta ->(
     if not (kk === RR or instance(kk,RealField) or kk === QQ) then(
         error "Field is not QQ or RR";
         );
-    diagB := diagonalize(B);
+    diagB := congruenceDiagonalize(B);
     negEntries := 0;
     for i from 0 to (numRows(B)-1) do (
         if diagB_(i,i) < 0 then(
@@ -998,7 +998,7 @@ globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
     );
     
     -- If the field is RR, ask the user to run it over QQ instead, then simplify over RR
-    if (kk === RR or instance(kk,RealField)) then error "Error: globalA1Degree method does not work over the reals. Instead, define the polynomials over QQ to output a GrothendieckWittClass. Then extract the matrix, base change it to RR, and then run simplifyForm().";    
+    if (kk === RR or instance(kk,RealField)) then error "Error: globalA1Degree method does not work over the reals. Instead, define the polynomials over QQ to output a GrothendieckWittClass. Then extract the matrix, base change it to RR, and then run sumDecomposition().";    
     
     -- Create internal rings/matrices
     
@@ -1141,7 +1141,7 @@ localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
     );
     
     -- If the field is RR, ask the user to run it over QQ instead, then simplify over RR
-    if (kk === RR or instance(kk,RealField)) then error "Error: localA1Degree method does not work over the reals. Instead, define the polynomials over QQ to output a GrothendieckWittClass. Then extract the matrix, base change it to RR, and then run simplifyForm().";
+    if (kk === RR or instance(kk,RealField)) then error "Error: localA1Degree method does not work over the reals. Instead, define the polynomials over QQ to output a GrothendieckWittClass. Then extract the matrix, base change it to RR, and then run sumDecomposition().";
     
     
     -- Create internal rings/matrices
@@ -1335,8 +1335,8 @@ squareSymbol(ZZ, ZZ) := (ZZ) => (a, p) -> (
     );
     
 -- Given (a,b,p) integers, with a,b considered as p-adic numbers and p a prime, returns the Hilbert symbol (a,b)_p
-hilbertSymbol = method()
-hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
+HilbertSymbol = method()
+HilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
     -- When p is odd, the Hilbert symbol (a,b)_p can be expressed by a formula using Legendre symbols
     -- or equivalently, be defined, by the following condition.  
     if (odd p) then (
@@ -1375,17 +1375,17 @@ hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
     return hilb;	
 );
 
-hilbertSymbol (QQ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
+HilbertSymbol (QQ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
     if not liftable(a, ZZ) then error "first argument must be an integer";
     if not liftable(b, ZZ) then error "second argument must be an integer";
     a = sub(a,ZZ);
     b = sub(b,ZZ);
-    return hilbertSymbol(a,b,p)	
+    return HilbertSymbol(a,b,p)	
 )
 
 
-hilbertSymbolReal = method()
-hilbertSymbolReal (ZZ, ZZ):=(ZZ) => (a,b)->(
+HilbertSymbolReal = method()
+HilbertSymbolReal (ZZ, ZZ):=(ZZ) => (a,b)->(
     if (a<0 and b<0) then (
 	return -1;
 	)
@@ -1413,7 +1413,7 @@ hasseWittInvariant (List, ZZ) := ZZ => (f,p) -> (
 	   );
        for i from 0 to len-2 do (
        	   for j from i+1 to len-1 do (
-	       a= a * hilbertSymbol(f_i, f_j, p);
+	       a= a * HilbertSymbol(f_i, f_j, p);
 	       );
 	   );
        
@@ -1593,8 +1593,8 @@ isIsomorphicFormQ (Matrix, Matrix):= (Boolean) => (f, g) -> (
     if (numRows f != numRows g) then (return false;);
     
     -- First, we diagonalize both matrices
-    df:= diagonalize f;
-    dg:= diagonalize g;
+    df:= congruenceDiagonalize f;
+    dg:= congruenceDiagonalize g;
     
    
     -- Then make all entries integers, by multiplying by denominator squared, and clearing squares
@@ -1630,14 +1630,14 @@ isIsotropicDiagFormQp (List, ZZ):=(Boolean) => (f, p) -> (
 	)
     else (
 	if (n==3) then (
-	    if (hilbertSymbol(-1, -d, p) == hasseWittInvariant(f, p)) then (
+	    if (HilbertSymbol(-1, -d, p) == hasseWittInvariant(f, p)) then (
 		return true;
 		)
 	    else (return false);
 	    )
 	else (
 	    if (n==4) then (
-		if ((not equalUptoPadicSquare( d, 1, p)) or (equalUptoPadicSquare(d, 1, p) and (hilbertSymbol(-1,-1,p) == hasseWittInvariant(f, p)))) then (
+		if ((not equalUptoPadicSquare( d, 1, p)) or (equalUptoPadicSquare(d, 1, p) and (HilbertSymbol(-1,-1,p) == hasseWittInvariant(f, p)))) then (
 		    return true;
 		    )
 		else (return false);
@@ -1768,8 +1768,8 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
     if not isSquareAndSymmetric(A) then error "Underlying matrix is not symmetric";
     if not isSquareAndSymmetric(B) then error "Underlying matrix is not symmetric";
     
-    diagA := diagonalize(A);
-    diagB := diagonalize(B);
+    diagA := congruenceDiagonalize(A);
+    diagB := congruenceDiagonalize(B);
     
     -----------------------------------
     -- Complex numbers
@@ -1890,7 +1890,7 @@ isAnisotropicDiagQp (List, ZZ) := (Boolean) => (f, p) -> (
 	-- now use the criteria for n=3
 	-- need to check if (-1,-d)=hasseWittInvariant for f ; if equal, form is isotropic
 	if (n==3) then (
-	    if (hilbertSymbol(-1, -d, p) == hasseWittInvariant(f, p)) then (
+	    if (HilbertSymbol(-1, -d, p) == hasseWittInvariant(f, p)) then (
 		return false;
 		)
 	    else (return true);
@@ -1899,7 +1899,7 @@ isAnisotropicDiagQp (List, ZZ) := (Boolean) => (f, p) -> (
 	 -- now use the criteria for n=4
 	-- need to check (d=1 and (-1,-1) != =hasseWittInvariant for f) for form to be anisotropic 
 	    if (n==4) then (
-		if ((equalUptoPadicSquare( d, 1, p)) and  (not (hilbertSymbol(-1,-1,p) == hasseWittInvariant(f, p)))) then (
+		if ((equalUptoPadicSquare( d, 1, p)) and  (not (HilbertSymbol(-1,-1,p) == hasseWittInvariant(f, p)))) then (
 		    return true;
 		    )
 		else (return false);
@@ -1917,7 +1917,7 @@ isAnisotropicDiagQp (List, ZZ) := (Boolean) => (f, p) -> (
 
 --isAnisotropicQ takes n GWClass over QQ and returns a Boolean based on whether or not 
 --the class is anisotropic
---unlike simplifyForm it can say for certain if the form is anisotropic or not since it
+--unlike sumDecomposition it can say for certain if the form is anisotropic or not since it
 --does not use rationalPoints
 
 -- Input:  A GrothendieckWittClass for a quadratic form
@@ -1947,7 +1947,7 @@ isAnisotropicQ (GrothendieckWittClass) := Boolean => (alpha) -> (
 
     --if 2<= rank <=4, we need to take p-adic completions
     -- First, we diagonalize the matrix
-    diagA := diagonalize(A);  
+    diagA := congruenceDiagonalize(A);  
     -- Then obtain the diagonal entries.  These will be rational numbers;
     diagEntriesA := apply(n, i-> A_(i,i));
     -- Make then integers by multiplying by integer squares (so that the forms are equivalent);
@@ -2014,7 +2014,7 @@ isAnisotropic (GrothendieckWittClass) := (Boolean) => (alpha) -> (
     if A != transpose(A) then (
         error "Underlying matrix is not symmetric";
 	);
-    diagA := diagonalize(A);
+    diagA := congruenceDiagonalize(A);
     -- Over CC, a diagonal form is anisotropic if and only if it is nondegenerate and has dimension 0 or 1
     if (k === CC or instance(k,ComplexField)) then (
         nonzeroEntriesA := 0;
@@ -2069,8 +2069,8 @@ isIsotropic (GrothendieckWittClass) := (Boolean) => (alpha) -> (
 -- Simplifying a form
 ---------------------------------------
 
-simplifyFormVerbose = method()
-simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta -> (
+sumDecompositionVerbose = method()
+sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta -> (
     -- Check if the diagonalForm has already been computed, if so recall it from the cache    
     gamma := diagonalForm(beta);
     
@@ -2338,8 +2338,8 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
 	simplifiedFormQQ := matrix(k,{{}});
         outputStringQQ := "";
 	
-	-- Get number of confirmed hyperbolic forms and remainder from wittDecomp
-	(numHypForms,B) := wittDecomp(A);
+	-- Get number of confirmed hyperbolic forms and remainder from WittDecomp
+	(numHypForms,B) := WittDecomp(A);
 	
 	-- Add any hyperbolic forms if they exist
     if numHypForms = 1 then(
@@ -2367,15 +2367,15 @@ simplifyFormVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) =
     );
 
 
-simplifyForm = method()
-simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass) => beta -> (
-    beta.cache.diagonalForm = (simplifyFormVerbose(beta))_0;
-    return (simplifyFormVerbose(beta))_0
+sumDecomposition = method()
+sumDecomposition (GrothendieckWittClass) := (GrothendieckWittClass) => beta -> (
+    beta.cache.diagonalForm = (sumDecompositionVerbose(beta))_0;
+    return (sumDecompositionVerbose(beta))_0
 );
 
-simplifyFormString = method()
-simplifyFormString (GrothendieckWittClass) := (String) => beta -> (
-    return (simplifyFormVerbose(beta))_1
+sumDecompositionString = method()
+sumDecompositionString (GrothendieckWittClass) := (String) => beta -> (
+    return (sumDecompositionVerbose(beta))_1
 );
 
 
@@ -2480,9 +2480,9 @@ document {
         }
 
 document {
-	Key => {(diagonalize, Matrix), diagonalize},
+	Key => {(congruenceDiagonalize, Matrix), congruenceDiagonalize},
 	Headline => "diagonalizing a symmetric matrix via congruence",
-	Usage => "diagonalize(M)",
+	Usage => "congruenceDiagonalize(M)",
 	Inputs => {
 	    Matrix => "M" => {"a symmetric matrix over any field"}
 	    },
@@ -2492,7 +2492,7 @@ document {
 	PARA {"Given a symmetric matrix ", TEX///$M$///, " over any field, this command gives a diagonal matrix congruent to ", TEX///$M$///,". Note that the order in which the diagonal terms appear is not specified."},
 	EXAMPLE lines ///
 		 M=matrix(GF(17), {{7, 9}, {9, 6}});
-		 diagonalize(M)
+		 congruenceDiagonalize(M)
 	 	 ///,
 	SeeAlso => {"diagonalForm"}
      	}
@@ -2544,9 +2544,9 @@ document {
 }
 
 document {
-    Key => {(simplifyForm, GrothendieckWittClass), simplifyForm},
+    Key => {(sumDecomposition, GrothendieckWittClass), sumDecomposition},
     Headline => "produces a simplified diagonal representative of a Grothendieck Witt class",
-    Usage => "simplifyForm(beta)",
+    Usage => "sumDecomposition(beta)",
     Inputs => {
         GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over a field ", TEX///$k$///, "."},
     },
@@ -2558,26 +2558,26 @@ document {
     EXAMPLE lines ///
     M = matrix(RR,{{2.091,2.728,6.747},{2.728,7.329,6.257},{6.747,6.257,0.294}});
     beta = gwClass(M);
-    simplifyForm(beta)
+    sumDecomposition(beta)
     ///,
     PARA {"Over ", TEX///$\mathbb{R}$///, " there are only two square classes and a form is determined uniquely by its rank and signature [L05, II Proposition 3.2]. A form defined by the ", TEX///$3\times 3$///, " Gram matrix ", TT"M", " above is isomorphic to the form ", TEX///$\langle 1,-1,1\rangle $///, "."},
     EXAMPLE lines ///
     M = matrix(GF(13),{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
     beta = gwClass(M);
-    simplifyForm(beta)
+    sumDecomposition(beta)
     ///,
     PARA{EM "Citations:"},
     UL{
 	
 	{"[L05] T.Y. Lam, ", EM "Introduction to quadratic forms over fields,", " American Mathematical Society, 2005."},
 	},
-    SeeAlso => {"simplifyFormString"},
+    SeeAlso => {"sumDecompositionString"},
 }
 
 document {
-    Key => {(simplifyFormString, GrothendieckWittClass), simplifyFormString},
+    Key => {(sumDecompositionString, GrothendieckWittClass), sumDecompositionString},
     Headline => "produces a simplified diagonal representative of a Grothendieck Witt class",
-    Usage => "simplifyFormString(beta)",
+    Usage => "sumDecompositionString(beta)",
     Inputs => {
         GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over a field ", TEX///$k$///, "."},
     },
@@ -2589,13 +2589,13 @@ document {
     EXAMPLE lines ///
     M = matrix(RR,{{2.091,2.728,6.747},{2.728,7.329,6.257},{6.747,6.257,0.294}});
     beta = gwClass(M);
-    simplifyFormString(beta)
+    sumDecompositionString(beta)
     ///,
     PARA {"Over ", TEX///$\mathbb{R}$///, " there are only two square classes and a form is determined uniquely by its rank and signature [L05, II Proposition 3.2]. A form defined by the ", TEX///$3\times 3$///, " Gram matrix ", TT"M", " above is isomorphic to the form ", TEX///$\langle 1,-1,1\rangle $///, "."},
     EXAMPLE lines ///
     M = matrix(GF(13),{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
     beta = gwClass(M);
-    simplifyFormString(beta)
+    sumDecompositionString(beta)
     ///,
     PARA {"Over ", TEX///$\mathbb{F}_{q}$///, " forms can similarly be diagonalized. In this case as ", TEX///$\langle 1,-1,1,-6 \rangle$///, "."},
     PARA{EM "Citations:"},
@@ -2603,7 +2603,7 @@ document {
 	
 	{"[L05] T.Y. Lam, ", EM "Introduction to quadratic forms over fields,", " American Mathematical Society, 2005."},
 	},
-    SeeAlso => {"simplifyForm"},
+    SeeAlso => {"sumDecomposition"},
 }
 
 document {
@@ -2659,7 +2659,7 @@ document {
 	{"[BMP23] T. Brazelton, S. McKean, S. Pauli, ", EM "Bezoutians and the A1-Degree,", " Algebra & Number Theory, 2023."},
 	{"[SS76] S. Scheja, S. Storch, ", EM "Uber Spurfunktionen bei vollstandigen Durchschnitten,", " J. Reine Angew. Math., 1975."},
 	},
-    SeeAlso => {"localA1Degree", "simplifyForm", "simplifyFormString"}
+    SeeAlso => {"localA1Degree", "sumDecomposition", "sumDecompositionString"}
     }
 
 document {
@@ -2690,7 +2690,7 @@ document {
     EXAMPLE lines///
     gwIsomorphic(f1GD,f1LDsum)
     ///,
-    SeeAlso => {"globalA1Degree", "simplifyForm", "simplifyFormString"}
+    SeeAlso => {"globalA1Degree", "sumDecomposition", "sumDecompositionString"}
     }
 
 document{
@@ -2709,7 +2709,7 @@ document{
     beta = gwClass(M);
     signature(beta)
     ///,
-    SeeAlso => {"gwIsomorphic", "simplifyForm", "simplifyFormString"}
+    SeeAlso => {"gwIsomorphic", "sumDecomposition", "sumDecompositionString"}
     }
 
 document{
@@ -2762,7 +2762,7 @@ document{
     PARA{TEX///$(a,b)_p = \begin{cases} 1 & z^2 = ax^2 + by^2 \text{ has a nonzero solution in } K^3 \\ -1 & \text{otherwise.} \end{cases}$///},
     PARA{"Consider the following example, where we observe that ", TEX///$z^2 = 2x^2 + y^2$///," does admit nonzero solutions mod 7, in particular ", TEX///$(x,y,z) = (1,0,3)$///, ":"},
     EXAMPLE lines///
-    hilbertSymbol(2,1,7)
+    HilbertSymbol(2,1,7)
     ///,
     PARA{"The Hasse invariant will be 1 for almost all primes. In particular after diagonalizing a form ", TEX///$\beta \cong \left\langle a_1,\ldots,a_n\right\rangle$///, " then the Hasse invariant at a prime ", TEX///$p$///, " will be 1 automatically if ", TEX///$p\nmid a_i$///, " for all ", TEX///$i$///, ". Thus we only have finitely many Hasse invariants to compare for any pair of symmetric bilinear forms."},
     EXAMPLE lines///
@@ -2777,13 +2777,13 @@ document{
 	{"[L05] T.Y. Lam, ", EM "Introduction to quadratic forms over fields,", " American Mathematical Society, 2005."},
 	{"[MH73] Milnor and Husemoller, ", EM "Symmetric bilinear forms,", " Springer-Verlag, 1973."},
     },
-    SeeAlso => {"signature", "simplifyForm", "simplifyFormString"}
+    SeeAlso => {"signature", "sumDecomposition", "sumDecompositionString"}
 }
 
 document{
-    Key => {(hilbertSymbol, ZZ,ZZ,ZZ), hilbertSymbol},
+    Key => {(HilbertSymbol, ZZ,ZZ,ZZ), HilbertSymbol},
     Headline => "Computes the Hilbert symbol of two integers at a prime",
-    Usage => "hilbertSymbol(a,b,p)",
+    Usage => "HilbertSymbol(a,b,p)",
     Inputs => {
 	ZZ => "a" => {"Any integer, considered as an element of ", TEX///$\mathbb{Q}_p$///, "."},
 	ZZ => "b" => {"Any integer, considered as an element of ", TEX///$\mathbb{Q}_p$///, "."},
@@ -2796,7 +2796,7 @@ document{
     PARA{TEX///$(a,b)_p = \begin{cases} 1 & z^2 = ax^2 + by^2 \text{ has a nonzero solution in } K^3 \\ -1 & \text{otherwise.} \end{cases}$///},
     PARA{"Consider the following example, where we observe that ", TEX///$z^2 = 2x^2 + y^2$///," does admit nonzero solutions mod 7, in particular ", TEX///$(x,y,z) = (1,0,3)$///, ":"},
     EXAMPLE lines///
-    hilbertSymbol(2,1,7)
+    HilbertSymbol(2,1,7)
     ///,
     PARA{"Computing Hasse-Witt invariants is a key step in classifying symmetric bilinear forms over the rational numbers, and in particular certifying their ", TO2(isIsotropic, "(an)isotropy"), "."},
     PARA{EM "Citations:"},
@@ -2817,7 +2817,7 @@ document {
 	Outputs => {
 	    GrothendieckWittClass => {"a form isomorphic to ", TEX///$\beta$///, " with a diagonal Gram matrix"}
 	    },
-	PARA {"Given a symmetric bilinear form, this method calls the ", TO2(diagonalize,"diagonalize"), " command in order to produce a diagonal symmetric bilinear form isomorphic to ", TEX///$\beta$///, "."},
+	PARA {"Given a symmetric bilinear form, this method calls the ", TO2(congruenceDiagonalize,"congruenceDiagonalize"), " command in order to produce a diagonal symmetric bilinear form isomorphic to ", TEX///$\beta$///, "."},
 	EXAMPLE lines ///
 	beta = gwClass(matrix(QQ,{{0,0,2},{0,2,0},{2,0,0}}));
 	diagonalForm(beta)
@@ -2826,7 +2826,7 @@ document {
 	EXAMPLE lines///
 	beta.cache.diagonalForm
 	///,
-	SeeAlso => {"diagonalize","diagonalEntries"}
+	SeeAlso => {"congruenceDiagonalize","diagonalEntries"}
 	}
 
 document {
@@ -2849,7 +2849,7 @@ document {
 	gamma = gwClass(matrix(RR,{{0,0,1},{0,1,0},{1,0,0}}))
 	diagonalEntries gamma
 	///,
-	SeeAlso => {"diagonalForm", "diagonalize"}
+	SeeAlso => {"diagonalForm", "congruenceDiagonalize"}
 	}
     
     
@@ -2868,7 +2868,7 @@ document {
 	beta = gwClass(M);
 	integralDiagonalRep(beta)
         ///,
-	SeeAlso => {"diagonalForm", "diagonalEntries", "diagonalize"}
+	SeeAlso => {"diagonalForm", "diagonalEntries", "congruenceDiagonalize"}
 	}
 
 
@@ -2904,14 +2904,14 @@ document{
     isIsotropic(beta)
     diagonalForm(beta)
     ///,
-    PARA{"For forms of rank ", TEX///$\le 4$///, " there are simple criteria for isotropy over ", TEX///$\mathbb{Q}_p$///, " which can be found in [S73, III Theorem 6]. As an example for rank 3 forms, isotropy of a form ", TEX///$\beta \in \text{GW}(\mathbb{Q})$///, " over ", TEX///$\mathbb{Q}_p$///," is equivalent to the statement that ", TEX///$(-1,-\text{disc}(\beta))_p = H(\beta)$///, " where ", TEX///$H(\beta)$///, " denotes the Hasse-Witt invariant attached to ", TEX///$\beta$///, " and ", TEX///$(-,-)_p$///," is the ", TO2(hilbertSymbol, "Hilbert Symbol"), "."},
+    PARA{"For forms of rank ", TEX///$\le 4$///, " there are simple criteria for isotropy over ", TEX///$\mathbb{Q}_p$///, " which can be found in [S73, III Theorem 6]. As an example for rank 3 forms, isotropy of a form ", TEX///$\beta \in \text{GW}(\mathbb{Q})$///, " over ", TEX///$\mathbb{Q}_p$///," is equivalent to the statement that ", TEX///$(-1,-\text{disc}(\beta))_p = H(\beta)$///, " where ", TEX///$H(\beta)$///, " denotes the Hasse-Witt invariant attached to ", TEX///$\beta$///, " and ", TEX///$(-,-)_p$///," is the ", TO2(HilbertSymbol, "Hilbert Symbol"), "."},
     PARA{EM "Citations:"},
     UL{
 	
 	{"[S73] J.P. Serre, ", EM "A course in arithmetic,", " Springer-Verlag, 1973."},
 	{"[L05] T.Y. Lam, ", EM "Introduction to quadratic forms over fields,", " American Mathematical Society, 2005."},
     },
-    SeeAlso => {"isAnisotropic", "hilbertSymbol", "signature"}
+    SeeAlso => {"isAnisotropic", "HilbertSymbol", "signature"}
 }
 
 document{
@@ -2948,7 +2948,7 @@ document{
     PARA{EM "Citations:"},
     UL{	
 	{"[S73] J.P. Serre, ", EM "A course in arithmetic,", " Springer-Verlag, 1973."},
-    SeeAlso => {"isIsotropic", "isAnisotropic","hilbertSymbol"}
+    SeeAlso => {"isIsotropic", "isAnisotropic","HilbertSymbol"}
     },
 }
 
@@ -3021,7 +3021,7 @@ document {
 	diagonalClass(GF(29),5/13)
 	diagonalClass(RR,2)
 	///,
-    SeeAlso => {"diagonalForm", "diagonalize", "diagonalEntries"}
+    SeeAlso => {"diagonalForm", "congruenceDiagonalize", "diagonalEntries"}
 }
 
 document {
@@ -3069,7 +3069,7 @@ document {
 	EXAMPLE lines ///
         hyperbolicForm(RR,4)
 	///,
-    SeeAlso => {"isAnisotropic", "simplifyForm", "simplifyFormString"}
+    SeeAlso => {"isAnisotropic", "sumDecomposition", "sumDecompositionString"}
 }
 
 document{
@@ -3170,7 +3170,7 @@ T1 = QQ[z_1..z_2];
 f1 = {(z_1-1)*z_1*z_2, (3/5)*z_1^2 - (17/3)*z_2^2};
 f1GD = globalA1Degree(f1);
 f1GDmat = f1GD.matrix;
-assert((wittDecomp(f1GDmat))==(3,matrix(QQ,{{}})));
+assert((WittDecomp(f1GDmat))==(3,matrix(QQ,{{}})));
 q=ideal {z_1,z_2};
 r=ideal {z_1-1,z_2^2-(9/85)};
 f1LDq= localA1Degree(f1,q);
@@ -3184,12 +3184,12 @@ T2 = QQ[w];
 f2 = {w^4 + w^3 - w^2 - w};
 f2GD= globalA1Degree(f2);
 f2GDmat = f2GD.matrix;
-assert(wittDecomp(f2GDmat)==(2,matrix(QQ,{{}})));
+assert(WittDecomp(f2GDmat)==(2,matrix(QQ,{{}})));
 
 p=ideal {w+1};
 f2LDp = localA1Degree(f2, p);
 f2LDpmat = f2LDp.matrix;
-assert(wittDecomp(f2LDpmat)==(1,matrix(QQ,{{}})));
+assert(WittDecomp(f2LDpmat)==(1,matrix(QQ,{{}})));
 s=ideal{w-1};
 f2LDs = localA1Degree(f2, s);
 t=ideal{w};

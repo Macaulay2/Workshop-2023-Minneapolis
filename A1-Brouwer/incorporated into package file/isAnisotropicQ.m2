@@ -5,7 +5,7 @@ path = append(path, "../A1-Brouwer/");
 
 needs "GW-type.m2"
 needs "getInvariants.m2"
-needs "diagonalize.m2"
+needs "congruenceDiagonalize.m2"
 needs "squarefreepart.m2"
 needs "discForm.m2"
 needs "isAnisotropicDiagQp.m2"
@@ -14,7 +14,7 @@ needs "isAnisotropicDiagQp.m2"
 
 --isAnisotropicQ takes n GWClass over QQ and returns a Boolean based on whether or not 
 --the class is anisotropic
---unlike simplifyForm it can say for certain if the form is anisotropic or not since it
+--unlike sumDecomposition it can say for certain if the form is anisotropic or not since it
 --does not use rationalPoints
 
 -- Input:  A GrothendieckWittClass for a quadratic form
@@ -45,7 +45,7 @@ isAnisotropicQ (GrothendieckWittClass) := Boolean => (alpha) -> (
 
     --if 2<= rank <=4, we need to take p-adic completions
     -- First, we diagonalize the matrix
-    diagA := diagonalize(A);  
+    diagA := congruenceDiagonalize(A);  
     -- Then obtain the diagonal entries.  These will be rational numbers;
     diagEntriesA := apply(n, i-> A_(i,i));
     -- Make then integers by multiplying by integer squares (so that the forms are equivalent);

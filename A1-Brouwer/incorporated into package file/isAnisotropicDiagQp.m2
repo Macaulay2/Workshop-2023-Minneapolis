@@ -4,7 +4,7 @@ path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
 
 needs "discForm.m2"
-needs "hilbertSymbol.m2"
+needs "HilbertSymbol.m2"
 
 
 -- isAnisotropicDiagFormQp determines if a diagonal quadratic form with integral coefficients is anisotropic
@@ -47,7 +47,7 @@ isAnisotropicDiagQp (List, ZZ) := (Boolean) => (f, p) -> (
 	-- now use the criteria for n=3
 	-- need to check if (-1,-d)=hasseWittInvariant for f ; if equal, form is isotropic
 	if (n==3) then (
-	    if (hilbertSymbol(-1, -d, p) == hasseWittInvariant(f, p)) then (
+	    if (HilbertSymbol(-1, -d, p) == hasseWittInvariant(f, p)) then (
 		return false;
 		)
 	    else (return true);
@@ -56,7 +56,7 @@ isAnisotropicDiagQp (List, ZZ) := (Boolean) => (f, p) -> (
 	 -- now use the criteria for n=4
 	-- need to check (d=1 and (-1,-1) != =hasseWittInvariant for f) for form to be anisotropic 
 	    if (n==4) then (
-		if ((equalUptoPadicSquare( d, 1, p)) and  (not (hilbertSymbol(-1,-1,p) == hasseWittInvariant(f, p)))) then (
+		if ((equalUptoPadicSquare( d, 1, p)) and  (not (HilbertSymbol(-1,-1,p) == hasseWittInvariant(f, p)))) then (
 		    return true;
 		    )
 		else (return false);

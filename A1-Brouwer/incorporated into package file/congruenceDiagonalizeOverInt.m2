@@ -1,9 +1,9 @@
---diagonalizeOverInt method
+--congruenceDiagonalizeOverInt method
 --given a symmetric matrix, this function outputs a diagonal matrix congruent to original matrix
 --capable of diagonalizing over rings (algorithm has no divisions)
-diagonalizeOverInt = method()
+congruenceDiagonalizeOverInt = method()
 
-diagonalizeOverInt (Matrix) := (Matrix) => (AnonMut) -> (
+congruenceDiagonalizeOverInt (Matrix) := (Matrix) => (AnonMut) -> (
     A := mutableMatrix AnonMut;
     if A != transpose(A) then (
         error "Matrix is not symmetric";

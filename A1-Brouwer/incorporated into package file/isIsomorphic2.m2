@@ -4,9 +4,9 @@ path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
 
 needs "GW-type.m2"
-load "diagonalize.m2"
-load "hilbertSymbol.m2"
-load "simplifyForm.m2"
+load "congruenceDiagonalize.m2"
+load "HilbertSymbol.m2"
+load "sumDecomposition.m2"
 
 isIsomorphic2 = method()
 
@@ -29,8 +29,8 @@ isIsomorphic2 (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alp
     if B != transpose(B) then (
         error "Underlying matrix is not symmetric";
 	);
-    diagA := diagonalize(A);
-    diagB := diagonalize(B);
+    diagA := congruenceDiagonalize(A);
+    diagB := congruenceDiagonalize(B);
     -- Over CC, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of nonzero entries
     if (k1 === CC or instance(k1,ComplexField)) and (k2 === CC or instance(k2,ComplexField)) then (
         if (numRows(A) != numRows(B)) then (

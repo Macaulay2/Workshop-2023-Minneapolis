@@ -6,7 +6,7 @@ path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
 
 needs "GW-type.m2"
-load "wittDecomp.m2"
+load "WittDecomp.m2"
 load "diagonalForm.m2"
 load "safeBlockSum.m2"
 
@@ -23,10 +23,10 @@ legendreBoolean (RingElement) := (Boolean) => a -> (
 debugging = true;
 
 
--- simplifyForm method
+-- sumDecomposition method
 
-simplifyForm = method()
-simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta -> (
+sumDecomposition = method()
+sumDecomposition (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta -> (
     print("got here");
     -- Check if the diagonalForm has already been computed, if so recall it from the cache    
     gamma := diagonalForm(beta);
@@ -290,8 +290,8 @@ simplifyForm (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta 
 	simplifiedFormQQ := matrix(k,{{}});
         outputStringQQ := "";
 	
-	-- Get number of confirmed hyperbolic forms and remainder from wittDecomp
-	(numHypForms,B) := wittDecomp(A);
+	-- Get number of confirmed hyperbolic forms and remainder from WittDecomp
+	(numHypForms,B) := WittDecomp(A);
 	
 	-- Add any hyperbolic forms if they exist
 	if numHypForms > 0 then(

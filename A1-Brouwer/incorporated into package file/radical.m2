@@ -3,13 +3,13 @@
 path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
 
-load "diagonalize.m2"
+load "congruenceDiagonalize.m2"
 needs "GW-type.m2"
 
 
 
 
--- This is reliant on the diagonalize() method being applicable for singular matrices
+-- This is reliant on the congruenceDiagonalize() method being applicable for singular matrices
 
 truncateRadical=method()
 truncateRadical(Matrix):=(Matrix)=> (A) -> (
@@ -18,7 +18,7 @@ truncateRadical(Matrix):=(Matrix)=> (A) -> (
         print ("Input is not a square matrix");
     )
     else (
-        truncatedMatrix=mutableMatrix diagonalize(A);
+        truncatedMatrix=mutableMatrix congruenceDiagonalize(A);
         foundRadical=false;
         for i from 0 to (numRows(A)-1) do (
             if truncatedMatrix_(i, i)==0 then (

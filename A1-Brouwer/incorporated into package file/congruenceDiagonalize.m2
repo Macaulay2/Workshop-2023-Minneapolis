@@ -1,10 +1,10 @@
 --Authors: many people, essentially everyone
 
---Diagonalize method
+--congruenceDiagonalize method
 --Given a symmetric matrix, this function outputs a diagonal matrix congruent to original matrix
-diagonalize = method()
+congruenceDiagonalize = method()
 
-diagonalize (Matrix) := (Matrix) => (AnonMut) -> (
+congruenceDiagonalize (Matrix) := (Matrix) => (AnonMut) -> (
     k := ring AnonMut;
     if isField k == false then error "Error: expected matrix entries from a field";
     A := mutableMatrix AnonMut;

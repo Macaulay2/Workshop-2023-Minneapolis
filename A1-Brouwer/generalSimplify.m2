@@ -1,19 +1,19 @@
 path = append(path, "/home/macaulay/A1-Brouwer/");
 path = append(path, "../A1-Brouwer/");
 needs "GW-type.m2"
-load "diagonalize.m2"
+load "congruenceDiagonalize.m2"
 load "diagonalForm.m2"
-load "diagonalizeOverInt.m2"
+load "congruenceDiagonalizeOverInt.m2"
 load "easyIsomorphicGW.m2"
 load "isIsomorphic2.m2"
 load "getInvariants.m2"
 load "radical.m2"
 load "rationalsimplify.m2"
 load "splitoffobvioushyperbolics.m2"
-load "simplifyForm.m2"
+load "sumDecomposition.m2"
 load "squarefreepart.m2"
-load "wittDecomp.m2"
-load "wittDecompGeneral.m2"
+load "WittDecomp.m2"
+load "WittDecompGeneral.m2"
 
 gwSimplify=method();
 
@@ -21,12 +21,12 @@ gwSimplify=method();
 gwSimplify (GrothendieckWittClass) := (GrothendieckWittClass, ZZ, ZZ) => (alpha) -> (
     k=baseField(alpha);
     if (k === RR or instance(k,RealField)) then (
-        (wittIndex, anisotropic) := wittDecompInexact(alpha.matrix);
+        (wittIndex, anisotropic) := WittDecompInexact(alpha.matrix);
         return (diagonalForm(alpha), wittIndex, numRows(anisotropic));
     );
 --When the base field is RR, diagonalForm gives the nicest possible diagonal form
---and wittDecompInexact gives the Witt Index. Dimension of anisotropic part is given
---by number of rows of anisotropic part, also given by wittDecompInexact.
+--and WittDecompInexact gives the Witt Index. Dimension of anisotropic part is given
+--by number of rows of anisotropic part, also given by WittDecompInexact.
 
     if (k === CC or instance(k,ComplexField)) then (
      return (diagonalForm(alpha)), 0, numRows(alpha.matrix);
@@ -37,10 +37,10 @@ gwSimplify (GrothendieckWittClass) := (GrothendieckWittClass, ZZ, ZZ) => (alpha)
 
     if (k===QQ) then (
         output=mutableMatrix(QQ, {{}});
-        A=diagonalize(alpha.matrix);
+        A=congruenceDiagonalize(alpha.matrix);
         B = rationalSimplify(A);
         --The anisotropic part after factoring out the squares
-        (wittdim, mat):= wittDecomp(alpha.matrix);
+        (wittdim, mat):= WittDecomp(alpha.matrix);
         n=0;
         for i from 0 to (wittdim-1) do (
             output=safeBlockSum(output, matrix(QQ, {1/1, 0}{0, -1/1}));
@@ -50,12 +50,12 @@ gwSimplify (GrothendieckWittClass) := (GrothendieckWittClass, ZZ, ZZ) => (alpha)
         return (gwClass(C), wittdim, numRows(B));
     );
     if (instance (k, GaloisField)) then (
-        (resultGF, str) := simplifyForm(alpha.matrix);
+        (resultGF, str) := sumDecomposition(alpha.matrix);
         return (resultGF, wittIndexGF(alpha), (numRows(alpha.matrix)-2*num));
     );
 );
 
---Witt Index for Finite Field case (extracted from simplifyForm.m2):
+--Witt Index for Finite Field case (extracted from sumDecomposition.m2):
 wittIndexGF=method()
 wittIndexGF (GrothendieckWittClass) := ZZ => (beta) -> (
     if (instance (baseField(beta), GaloisField)===false) then (print "error: base field of input is not a finite field";)

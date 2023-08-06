@@ -18,10 +18,10 @@ B=matrix{{0,1/1},{1 ,0 }};
 C=matrix{{1,1/1},{1 ,1 }};
 D=matrix{{-1/1,-1,1,1},{-1,1,1,0},{1,1,0,0},{1,0,0,0}};
 
-print diagonalize(A)
-print diagonalize(B)
-print diagonalize(C)
-print diagonalize(D)
+print congruenceDiagonalize(A)
+print congruenceDiagonalize(B)
+print congruenceDiagonalize(C)
+print congruenceDiagonalize(D)
 
 
 
@@ -81,13 +81,13 @@ diagonalForm(hyp2)
 Crk3 = gwClass(matrix(CC,{{2,3},{3,5}}));
 Crk3
 
-print(simplifyForm(Crk3))
+print(sumDecomposition(Crk3))
 
 
 HypR = gwClass(matrix(RR,{{0,1},{1,0}}));
 HypR
 
-print(simplifyForm(HypR))
+print(sumDecomposition(HypR))
 
 
 
@@ -95,7 +95,7 @@ print(simplifyForm(HypR))
 
 M = matrix(GF(5),{{1,0,0},{0,3,0},{0,0,4}})
 beta = gwClass(M)
-print(simplifyForm(beta))
+print(sumDecomposition(beta))
 
 
 
@@ -116,4 +116,4 @@ T=QQ[x_1..x_4];
 Endo = {x_2-x_1*x_3, x_4-x_1-x_3^2, 1-x_1*x_4, -x_2-x_3*x_4};
 U= globalA1Degree(Endo);
 U
-diagonalize(U)
+congruenceDiagonalize(U)
