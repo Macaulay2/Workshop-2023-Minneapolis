@@ -74,14 +74,16 @@ export{
     "isIsotropicQp"
     }
 
---------------
+------------------------
 -- Arithmetic operations
---------------
+------------------------
 
--- Takes in a rational number or integer and outputs the smallest magnitude integer in its square class
+-- Input: A rational number
+-- Output: Smallest magnitude integer in its square class
+
 squarefreePart = method()
 squarefreePart (QQ) := (ZZ) => (n) -> (
-    if n==0 then (
+    if n == 0 then (
         return 0
         );
     if n > 0 then (
@@ -95,7 +97,7 @@ squarefreePart (QQ) := (ZZ) => (n) -> (
     )
 
 squarefreePart (ZZ) := (ZZ) => (n) -> (
-    if n==0 then (
+    if n == 0 then (
         return 0
         );
     if n > 0 then (
@@ -108,21 +110,24 @@ squarefreePart (ZZ) := (ZZ) => (n) -> (
         );
     )
 
--- Boolean function, inputting an element of a finite field. Returns true if an element of a finite field is a square and false otherwise
+-- Input: Element of a finite field
+-- Output: True if an element of a finite field is a square, false otherwise
+
 legendreBoolean = method()
 legendreBoolean (RingElement) := (Boolean) => a -> (
     if not instance(ring(a),GaloisField) then error "Error: this works only for Galois fields";
     q := (ring(a)).order;
-    -- The following Boolean detects if a is a square in F_q
+    -- Detects if a is a square in F_q
     a^((q-1)//2) == 1 
-)
+    )
 
--------------------------------------------
+------------------------------
 -- Commutative algebra methods
--------------------------------------------
+------------------------------
 
--- Input: L is list of functions {f1,...,fn} over same ring R and p is prime ideal of an isolated zero
--- Output: list of basis elements of local k-algebra Q_p(f) = R[x]_p/(f) 
+-- Input: A list L of functions f1,...,fn over the same ring R and p is a prime ideal of an isolated zero.
+-- Output: A list of basis elements of the local k-algebra Q_p(f) = R[x]_p/(f).
+
 localAlgebraBasis = method()
 localAlgebraBasis (List, Ideal) := (List) => (L,p) -> (
     
@@ -148,9 +153,12 @@ localAlgebraBasis (List, Ideal) := (List) => (L,p) -> (
     return flatten(entries(B))
     )
 
--- This is a method for obtaining the rank of a global algebra k[x_1..x_n] over a field, given the input of a zero-dimensional ideal (f_1,..f_n) < k[x_1..x_n]
+-- Input: A zero-dimensional ideal (f_1,..f_n) < k[x_1..x_n].
+-- Output: The rank of the global algebra  k[x_1..x_n].
+
 rankGlobalAlgebra = method()
 rankGlobalAlgebra (List) := (ZZ) => (Endo) -> (
+    
     -- Get the underlying field    
     kk := coefficientRing(ring(Endo#0));    
     if isField(kk) == false then(
@@ -158,7 +166,7 @@ rankGlobalAlgebra (List) := (ZZ) => (Endo) -> (
     	);
     
     -- Let S = k[x_1..x_n] be the ambient polynomial ring
-    S:=ring(Endo#0);
+    S := ring(Endo#0);
     
     -- First check if the morphism does not have isolated zeroes
     if dim ideal(Endo) > 0  then (
@@ -166,51 +174,59 @@ rankGlobalAlgebra (List) := (ZZ) => (Endo) -> (
 	);
     
     -- Get the rank of S/ideal(Endo) as a kk-vector space
-    return numColumns(basis(S/ideal(Endo)));
-    
-    );
+    return numColumns(basis(S/ideal(Endo)));   
+    )
 
-
-
----------------
+-----------------------
 -- Matrix manipulations
----------------
+-----------------------
 
--- Block sum "++" of a zero matrix with something else outputs the wrong thing
--- This internal method allows us to call block sums of possibly empty matrices
+-- Input: Two matrices.
+-- Output: The block sum of possibly empty matrices.
+
+-- Note: The block sum "++" of a zero matrix with something else outputs the wrong thing.
+-- This internal method allows us to call block sums of possibly empty matrices.
+
 safeBlockSum = method()
 safeBlockSum (Matrix, Matrix) := Matrix => (A,B) -> (
     if numColumns A == 0 then return B;
     if numColumns B == 0 then return A;    
-    return A ++ B
-    
-)
+    return A ++ B 
+    )
 
--- Check if a matrix is square
+-- Input: A matrix.
+-- Output: True if the matrix is a square; false otherwise.
+
 isSquare = method()
 isSquare (Matrix) := Boolean => M -> (
     numRows(M) == numColumns(M)
-)
+    )
 
--- Check if a matrix is square and symmetric
+-- Input: A matrix
+-- Output: True if the matrix is a square and symmetric; false otherwise.
+
 isSquareAndSymmetric = method()
 isSquareAndSymmetric (Matrix) := Boolean => M -> (
     transpose(M) == M
-)
+    )
 
--- Check if a matrix represents a degenerate bilinear form
+-- Input: A matrix.
+-- Output: True if the matrix represents a degenerate bilinear form; false otherwise.
+
 isDegenerate = method()
 isDegenerate (Matrix) := Boolean => M ->(
     det(M) == 0
     )
 
--- Check if a square matrix is upper left triangular, meaning that all the entries below the main antidiagonal are zero
+-- Input: A matrix.
+-- Output: True if the matrix is upper-left triangular, meaning that all the entries below the main antidiagonal are zero; false otherwise.
+
 isUpperLeftTriangular = method()
 isUpperLeftTriangular (Matrix) := Boolean => M -> (
     if not isSquare(M) then error "Error: matrix isn't square";
     n := numRows(M);
-    for i from 0 to n-1 do(
-	for j from 0 to n-1 do(
+    for i from 0 to n - 1 do(
+	for j from 0 to n - 1 do(
 	    
 	    -- Search in the matrix entries that lie below the main antidiagonal
 	    if i + j >= n then(
@@ -222,15 +238,16 @@ isUpperLeftTriangular (Matrix) := Boolean => M -> (
 		);
         );
     );
-true
-)
+    true
+    )
  
+-- Input: A square matrix.
+-- Output: True if the matrix is diagonal; false otherwise. 
 
--- Check if a square matrix is diagonal
 isDiagonal = method()
 isDiagonal (Matrix) := Boolean => M -> (
 
-    if not isSquare(M) then error "Error: matrix isn't square";
+    if not isSquare(M) then error "Error: matrix is not a square";
 
     n := numRows(M);
     
@@ -247,13 +264,14 @@ isDiagonal (Matrix) := Boolean => M -> (
 		);
         );
     );
-true
-)
+    true
+    )
 
+-- Input: A symmetric matrix.
+-- Output: A diagonal matrix congruent to the original matrix.
 
 -- TODO we should rename this if we want to export it.
---congruenceDiagonalize method
---Given a symmetric matrix, this function outputs a diagonal matrix congruent to original matrix
+
 congruenceDiagonalize = method()
 congruenceDiagonalize (Matrix) := (Matrix) => (AnonMut) -> (
     k := ring AnonMut;
@@ -261,7 +279,7 @@ congruenceDiagonalize (Matrix) := (Matrix) => (AnonMut) -> (
     if not isSquareAndSymmetric(AnonMut) then error "matrix is not symmetric";
     
     -- If the matrix is already diagonal then return it
-    if isDiagonal(AnonMut)==true then(
+    if isDiagonal(AnonMut) == true then(
 	return AnonMut
 	);
     
@@ -269,20 +287,20 @@ congruenceDiagonalize (Matrix) := (Matrix) => (AnonMut) -> (
     -- transpose operation on columns in order to reduce to a diagonal matrix congruent to the original
     A := mutableMatrix AnonMut;
     n := numRows(A);
-    for col from 0 to (n-1) do (
-	--If diagonal entry in column "col" is zero
+    for col from 0 to (n - 1) do (
+	-- If diagonal entry in column "col" is zero
         if A_(col,col) == 0 then (
-            for row from col+1 to n-1 do ( 
-		--Scan for nonzero entries below the diagonal entry
+            for row from col + 1 to n - 1 do ( 
+		-- Scan for nonzero entries below the diagonal entry
                 if A_(row,col) != 0 then (
                     if A_(row,row) == 0 then (
 		        --Row reduction to make A_(col,col) nonzero
                         rowAdd(A,col,1,row);
-		        --Column reduction to keep reduced matrix congruent to original matrix
+		        -- Column reduction to keep reduced matrix congruent to original matrix
                         columnAdd(A,col,1,row);
                         )
                     else (
-		        --Row and column swaps to make A_(col,col) nonzero
+		        -- Row and column swaps to make A_(col,col) nonzero
                         rowSwap(A,col,row);
                         columnSwap(A,col,row);
                         );
@@ -290,13 +308,13 @@ congruenceDiagonalize (Matrix) := (Matrix) => (AnonMut) -> (
                     );
                 );
             );
-        --Now A_(col,col) != 0 unless there was a zero row/column and we use it to clear the column below
+        -- Now A_(col,col) != 0 unless there was a zero row/column and we use it to clear the column below
         if A_(col,col) != 0 then (
             for row from (col+1) to (n-1) do (
                 temp:=A_(row,col);
-                --More row reduction make every entry below A_(col,col) is zero
+                -- More row reduction make every entry below A_(col,col) is zero
                 rowAdd(A,row,-temp/A_(col,col),col);
-	        --Column reduction to keep reduced matrix congruent
+	        -- Column reduction to keep reduced matrix congruent
                 columnAdd(A,row,-temp/A_(col,col),col);
                 );
             );
@@ -304,28 +322,28 @@ congruenceDiagonalize (Matrix) := (Matrix) => (AnonMut) -> (
     return matrix A 
     )
 
---congruenceDiagonalizeOverInt method
---given a symmetric matrix, this function outputs a diagonal matrix congruent to original matrix
---capable of diagonalizing over rings (algorithm has no divisions)
+-- Input: A symmetric matrix.
+-- Output: A diagonal matrix congruent to the original matrix, capable of diagonalizing over rings (algorithm has no divisions).
+
 congruenceDiagonalizeOverInt = method()
 congruenceDiagonalizeOverInt (Matrix) := (Matrix) => (AnonMut) -> (
     if not isSquareAndSymmetric(AnonMut) then error "matrix is not symmetric";
     
     A := mutableMatrix AnonMut;
-    n:=numRows(A);
-    for col from 0 to (n-1) do (
+    n := numRows(A);
+    for col from 0 to (n - 1) do (
         if A_(col,col) == 0 then (
-            for row from col+1 to n-1 do ( 
-		--Scan for nonzero entries below the diagonal entry
+            for row from col + 1 to n - 1 do ( 
+		-- Scan for nonzero entries below the diagonal entry
                 if A_(row,col) != 0 then (
                     if A_(row,row) == 0 then (
-		        --Row reduction to make A_(col,col) nonzero
+		        -- Row reduction to make A_(col,col) nonzero
                         rowAdd(A,col,1,row);
-		        --Column reduction to keep reduced matrix congruent to original matrix
+		        -- Column reduction to keep reduced matrix congruent to original matrix
                         columnAdd(A,col,1,row);
                         )
                     else (
-		        --Row and column swaps to make A_(col,col) nonzero
+		        -- Row and column swaps to make A_(col,col) nonzero
                         rowSwap(A,col,row);
                         columnSwap(A,col,row);
                         );
@@ -333,52 +351,68 @@ congruenceDiagonalizeOverInt (Matrix) := (Matrix) => (AnonMut) -> (
                     );
                 );
             );
-        --Now A_(col,col) != 0 unless there was a zero row/column and we use it to clear the column below
+	
+        -- Now A_(col,col) != 0 unless there was a zero row/column and we use it to clear the column below
         if A_(col,col) != 0 then (
             for row from (col+1) to (n-1) do (
-                temp:=A_(row,col);
-                rowMult(A,row,A_(col,col)); --multiply row row by A_(col,col)
-                columnMult(A,row,A_(col,col)); --column multiplication to keep reduced matrix congruent
-                rowAdd(A,row,-temp,col); --more row reduction make every entry below A_(col,col) is zero
-                columnAdd(A,row,-temp,col); --column reduction to keep reduced matrix congruent
+                temp := A_(row,col);
+		
+		-- Multiply row row by A_(col,col)
+                rowMult(A,row,A_(col,col)); 
+		
+		-- Column multiplication to keep reduced matrix congruent
+                columnMult(A,row,A_(col,col));
+		
+		-- More row reduction make every entry below A_(col,col) is zero
+                rowAdd(A,row,-temp,col); 
+		
+		-- Column reduction to keep reduced matrix congruent
+                columnAdd(A,row,-temp,col); 
                 );
             );
         );
     return matrix A 
     )
 
--- This function aims to find the radical of a quadratic space.
--- This is reliant on the congruenceDiagonalize() method being applicable for singular matrices
-truncateRadical=method()
-truncateRadical(Matrix):=(Matrix)=> (A) -> (
-    truncatedMatrix:= mutableMatrix A;
+-- Input: A square matrix.
+-- Output: The radical of a quadratic space.
+
+-- Note: This is reliant on the congruenceDiagonalize() method being applicable for singular matrices.
+
+truncateRadical = method()
+truncateRadical(Matrix) := (Matrix) => (A) -> (
+    truncatedMatrix := mutableMatrix A;
     if not isSquare(A) then error ("Input is not a square matrix");
    
-    truncatedMatrix=mutableMatrix congruenceDiagonalize(A);
-    foundRadical:=false;
-    for i from 0 to (numRows(A)-1) do (
-        if truncatedMatrix_(i, i)==0 then (
-            foundRadical=true;
+    truncatedMatrix = mutableMatrix congruenceDiagonalize(A);
+    foundRadical := false;
+    for i from 0 to (numRows(A) - 1) do (
+        if truncatedMatrix_(i, i) == 0 then (
+            foundRadical = true;
             break
             );
         error ("The quadratic space does not have a radical!");
         );
-    if foundRadical===true then (
-        n:=numRows(A)-1;
+    if foundRadical === true then (
+        n:=numRows(A) - 1;
         for i from 0 to n do (
-            truncatedMatrix=mutableMatrix submatrix'(matrix truncatedMatrix, {i}, {i});
-            if (n>0) then (n=n-1;)
+            truncatedMatrix = mutableMatrix submatrix'(matrix truncatedMatrix, {i}, {i});
+            if (n > 0) then (n = n - 1;)
             else (break);
             );
-        B:=matrix truncatedMatrix;
+        B := matrix truncatedMatrix;
         return B;
         );
-    );
+    )
+
+-- Input: A diagonal matrix.
+-- Output: 
 
 -- Given diagonal matrix, split off any <a>+<-a> and return number of times we can do this as well as smaller matrix with none of these
 splitOffObviousHyperbolic = method()
 splitOffObviousHyperbolic (Matrix) := (ZZ,Matrix) => (A) -> (
-    --matrix must be symmetric
+    
+    -- Matrix must be symmetric
     if not isSquareAndSymmetric(A) then error "Matrix is not symmetric";
 
     foundHyperbolic := 0;
@@ -394,7 +428,6 @@ splitOffObviousHyperbolic (Matrix) := (ZZ,Matrix) => (A) -> (
         );
     return(foundHyperbolic,remainingMatrix);
     )
-
 
 splitOffObviousHyperbolics = method()
 splitOffObviousHyperbolics (Matrix) := (ZZ,Matrix) => (A) -> (
