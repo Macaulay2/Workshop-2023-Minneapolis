@@ -15,6 +15,9 @@ doc ///
             This package provides functions for constructing and investigating matrix Schubert varieties. Many of the functions in this package can take as input either a permutation matrix in 1-line notation, or an alternating sign matrix.
         Text
             @UL {
+	    {"[CV20] Aldo Conca and Matteo Varbaro, ",
+	    HREF("https://arxiv.org/abs/1805.11923", EM "Square-free Grobner degenerations"),
+	    " , Inventiones mathematicae, 221(3), pp.713-730."},
 	    {"[Ful92] William Fulton, ",
 	    HREF("https://sites.math.washington.edu/~billey/classes/schubert.library/fulton.essential.set.pdf",
 		EM "Flags, Schubert polynomials, degeneracy loci, and determinantal formulas"),
@@ -25,22 +28,16 @@ doc ///
 	    {"[KM04] Allen Knutson and Ezra Miller, ",
 	    HREF("https://arxiv.org/abs/math/0309259", EM "Subword complexes in Coxeter groups"),
 	    " , Advances in Mathematics 184.1 (2004): 161-176."},
+	    {"[KW21] Patricia Klein and Anna Weigandt, ",
+	    HREF("https://arxiv.org/abs/2108.08370", EM "Bumpless pipe dreams encode Grobner geometry of Schubert polynomials"),
+	    " , arxiv preprint 2108.08370."},
             {"[PSW21] Oliver Pechenik, David Speyer, and Anna Weigandt, ",
             HREF("https://arxiv.org/abs/2111.10681", EM "Castelnuovo-Mumford regularity of matrix Schubert varieties"),
             " , arxiv preprint 2111.10681."},
             {"[Wei17] Anna Weigandt, ",
             HREF("https://arxiv.org/abs/1708.07236", EM "Prism tableaux for alternating sign matrix varieties"),
             " , arXiv preprint 1708.07236."}
-            }@
-        Example
-            w = {1,5,3,4,2};
-            essentialSet w   
-            netList fultonGens w
-        Text
-            This package also contains functions for studying homological properties of ASM varieties.
-        Example
-            grothendieckPoly w
-            betti res antiDiagInit w	  
+            }@  
         Text
             @SUBSECTION "Contributors"@
         Text
@@ -50,7 +47,7 @@ doc ///
             @HREF("https://www.clemson.edu/science/academics/departments/mathstat/about/profiles/arakoto", "Antsa Tantely Fandresena Rakotondrafara")@.
     SeeAlso 
         "Investigating matrix Schubert varieties"
-        "Constructing ASM varieties"
+        "Investigating ASM varieties"
         "Initial ideals of ASM ideals"
         "Functions for investigating permutations"
 ///
@@ -62,7 +59,7 @@ doc ///
     Key 
         "Investigating matrix Schubert varieties"
     Headline
-        information about basic constructors
+        basic functions for Schubert determinantal ideals
     Description
     	Text
 	    Matrix Schubert varieties were introduced by Fulton [Ful92] in the study of Schubert
@@ -115,6 +112,10 @@ doc ///
 	Text
 	    Given a list of permutations, this package also contains functions for intersecting and adding
 	    the Schubert determinantal ideals associated to the list of permutations.
+	Example
+	    L = {{3,1,5,4,2},{2,5,3,4,1}} -- a list of 2 permutations
+	    schubAdd L
+	    schubIntersect L
 	Text
 	    Finally, this package contains functions for investigating homological invariants of matrix Schubert
 	    varieties efficiently through combinatorial algorithms produced in recent work by [PSW21].
@@ -140,16 +141,103 @@ doc ///
 		TO (schubCodim, List)
 		}@
 ///
+
 doc ///
     Key 
-        "Constructing ASM varieties"
+        "Investigating ASM varieties"
     Headline
-        todo
+        basic functions for alternating sign matrix ideals
     Description
-        Text 
-            This is a stub
+    	Text
+	    Alternating sign matrix varieties were introduced by Weigandt [Wei17] as a generalization of
+	    matrix Schubert varieties. This package contains functions for investigating homological aspects
+	    of ASM varieties and their defining ideals.
+        Text
+            @UL {
+	    {"[CV20] Aldo Conca and Matteo Varbaro, ",
+	    HREF("https://arxiv.org/abs/1805.11923", EM "Square-free Grobner degenerations"),
+	    " , Inventiones mathematicae, 221(3), pp.713-730."},
+	    {"[Wei17] Anna Weigandt, ",
+            HREF("https://arxiv.org/abs/1708.07236", EM "Prism tableaux for alternating sign matrix varieties"),
+            " , arXiv preprint 1708.07236."}
+            }@
+	Text
+	    The general method for defining the ideal of an ASM variety is @TO schubDetIdeal@.
+	    The input is can be an alternating sign matrix or a partial alternating sign matrix,
+	    which always define the same ideal as some other ASM by results in [Wei17].
+	    This package contains functions for checking if a matrix is a partial ASM,
+	    extending a partial ASM to an ASM, and computing the rank matrix for an ASM.
+	Example
+	    A = matrix{{0,0,0},{0,1,0},{1,-1,0}} --Example 3.15 in [Wei17]
+	    isPartialASM A
+	    A' = partialASMToASM A
+	Text
+	    This package contains functions for investigating the rank matrix,
+	    the empty boxes of the Rothe diagram, and the essential boxes of the Rothe diagram
+	    of a partial ASM as defined by Fulton in [Ful92] and Weigandt in [Wei17].
+	Example
+	    rotheDiagram A
+	    essentialSet A
+	    rankMatrix A
+	    netList fultonGens A	    
+	Text
+	    The default presentation given by @TO schubDetIdeal@ is given by the Fulton generators of the ideal.
+	    In order to access the minimal generating set, use @TO trim@.
+	Example
+	    I = schubDetIdeal A;
+	    # (I_*)
+	    # ((trim I)_*)
+	Text
+	    This package also contains methods for investigating initial ideals of ASM ideals.
+	Example
+	    antiDiagInit A
+	Text
+	    Every ASM ideal can be written as the intersection of Schubert determinantal ideals.
+	    The function @TO schubDecomposition@ outputs the list of permutations whose corresponding
+	    Schubert determinantal ideals form the prime components of the ASM ideal associated to A.
+	Example
+	    schubDecomposition I
+	Text
+	    Given a list of partial ASMs, this package also contains functions for intersecting and adding
+	    the ASM ideals associated to the list of partial ASMs.
+	Example
+	    B = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
+	    L = {A', B} -- a list of 2 partial ASMs
+	    schubAdd L
+	    schubIntersect L
+	Text
+	    Finally, this package contains functions for investigating homological invariants of ASM ideals
+	    efficiently by computing the associated invariants for their antidiagonal initial ideals,
+	    which are known to be squarefree by [Wei17] and therefore the extremal Betti numbers
+	    (such as the regularity and projective dimension) coincide by [CV20].
+	Example
+	    time schubReg A
+	    time regularity comodule I 
+	Text
+	    @SUBSECTION "Functions for investigating ASM varieties"@
+	Text
+	    @UL {
+		TO (isPartialASM, Matrix),
+		TO (partialASMToASM, Matrix),
+		TO (rankMatrix, Matrix),
+		TO (rankTableFromMatrix, Matrix),
+		TO (rankTableToASM, Matrix),
+		TO (isASMIdeal, Ideal),
+		TO (isASMUnion, List),
+		TO (rotheDiagram, Matrix),
+		TO (augmentedRotheDiagram, Matrix),
+		TO (essentialSet, Matrix),
+		TO (augmentedEssentialSet, Matrix),
+		TO (schubDetIdeal, Matrix),
+		TO (fultonGens, Matrix),
+		TO (schubIntersect, List),
+		TO (schubAdd, List),
+		TO (schubReg, Matrix),
+		TO (schubCodim, Matrix),
+		TO (permOverASM, Matrix),
+		TO (getPermFromASM, Matrix),
+		}@
 ///
-
 doc ///
     Key 
         "Initial ideals of ASM ideals"
