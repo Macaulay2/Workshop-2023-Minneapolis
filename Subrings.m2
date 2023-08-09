@@ -34,7 +34,7 @@ subring Matrix := genMatrix -> (
     nGens := numgens source genMatrix;
     k := coefficientRing R;
     p := symbol p;
-    P := k[p_1..p_nGens];
+    P := k[p_0..p_(nGens-1)];
     
     -- compute presentation map 
     f := map(R, P, genMatrix);
