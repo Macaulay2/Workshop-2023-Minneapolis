@@ -130,7 +130,10 @@ isSubringElement(RingElement, Subring) := (r, S) -> (
 
 -- equality of Subrings
 -- check that every generator of S1 is in S2 and every generator of S2 is in S1
-Subring == Subring := (S1, S2) -> all(entries(subringGenerators S1)_0, f -> isSubringElement(f, S2)) and all(entries(subringGenerators S2)_0, f -> isSubringElement(f, S1))
+Subring == Subring := (S1, S2) -> (
+    if not (ambient S1) === (ambient S2) then return false;
+    all(entries(subringGenerators S1)_0, f -> isSubringElement(f, S2)) and all(entries(subringGenerators S2)_0, f -> isSubringElement(f, S1))
+    )
 
 
 
@@ -166,3 +169,7 @@ presentationRing S1
 mingens
 
 gens S1
+
+-- run tests
+check Subrings
+
