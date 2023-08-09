@@ -3,7 +3,7 @@ entryCalculatorModified = (mu,j) -> (
     -- mu is a composition and j ranges from 0 to n
     -- Note the we get compositions with strictly positive parts
     -- by taking compositions with non-negative parts and adding one
-    u=0;
+    u:=0;
     for mui in (reverse mu) do (
 	u=u+mui+1;
 	if u == j+1 then (
@@ -21,7 +21,7 @@ entryCalculatorTrans = (j,mu) -> (
     -- mu is a composition and j ranges from 0 to n
     -- Note the we get compositions with strictly positive parts
     -- by taking compositions with non-negative parts and adding one
-    u=0;
+    u:=0;
     for i from 0 to #mu-1 do (
 	u=u+mu_i+1;
 	if u == j+1 then (
@@ -61,8 +61,8 @@ rowOfId = (n,l) -> splice {l:0,1,(n-1-l):0}
 -- n-1 so that the result has n-many columns
     
 
-faceMapZero = (n,len) -> (
-    -- Output is topDeg-many rows and sum(len,i->binomial(n,i))-many columns
+faceMapZero = (n,maxK) -> (
+    -- Output is topDeg-many rows and sum(maxK,i->binomial(n,i))-many columns
     -* This probably can be optimized
     The output is extremely sparse, so should probably be reimplemented
     as a hash table or function of some kind that specifies rules for 
@@ -71,16 +71,16 @@ faceMapZero = (n,len) -> (
     -- If bounded => true then do this
     -- TODO implement option toggle for bounded complexes
     -- (otherwise why sum these binomial coefficients)
-    maxRows = sum(len+1,i->binomial(n-1,i));
+    maxRows := sum(maxK+1,i->binomial(n-1,i));
     -- The number of rows, taking into account complex length bound
     -- When len is larger than n, we'll have 2^n many rows
-    offset = 0; -- keeps track of what the top zero pad should be
-    verticalStrips = for k to maxK list (
+    offset := 0; -- keeps track of what the top zero pad should be
+    verticalStrips := for k to maxK list (
     -- First loop over the vertical strips of columns
-	bink=binomial(n,k); -- Each strip is width binomial(n,k)
-    	topZeros = zeroMatrix(offset,bink);
+	bink:=binomial(n,k); -- Each strip is width binomial(n,k)
+    	topZeros := zeroMatrix(offset,bink);
     -- Create appropriately sized top pad of zeros
-	modifiedMat = for row to bink-1 list (
+	modifiedMat := for row to bink-1 list (
     -- This modified identity matrix uses Pascal's identity
     -- First binomial(n-1,k-1) entries will be differential
     	    if row<=binomial(n-1,k-1)-1 then splice{row:0,k+1,(bink-1-row):0}
@@ -88,11 +88,11 @@ faceMapZero = (n,len) -> (
 	    else splice{row:0, -k-1,(bink-1-row):0}
     -- -k-1 to keep track of which identity map we'll need (identity map of C_k)
 	    );
-	botZeros = zeroMatrix(maxRows-offset-binomial(n,k),binomial(n,k));
+	botZeros := zeroMatrix(maxRows-offset-binomial(n,k),binomial(n,k));
     -- Create appropriately sized bottom pad of zeros
     	offset = offset + binomial(n-1,k-1);
     -- Update the offset
-    	verticalStrip = flatten{topZeros,modifiedMat,botZeros}
+    	verticalStrip := flatten{topZeros,modifiedMat,botZeros}
     -- Concat the modified matrix with the pads
 	);
     for row to maxRows-1 list (
@@ -109,13 +109,13 @@ faceMapnkModified = (n,k) -> (
     -- I think we need to zero pad extra rows at when faceMapi is called below
 	{{0}}
     else (
-	Abigvector = ACol(n,k,n);
+	Abigvector := ACol(n,k,n);
     -- Selects the nth column of AMat(n,k)
-	Asmallvector = ACol(n-1,k,n-1);
+	Asmallvector := ACol(n-1,k,n-1);
     -- Selects the (n-1)th column of AMat(n-1,k)
-	onePos = positions(Abigvector, i -> i==1);
+	onePos := positions(Abigvector, i -> i==1);
     -- The positions of ones in Asmallvector describe horizontal locations where we'll want a row of the identity matrix
-	outputMat = onePos / (l -> rowOfId(binomial(n,k),l))
+	outputMat := onePos / (l -> rowOfId(binomial(n,k),l))
 	)
     )
     
@@ -126,11 +126,11 @@ faceMapnkModified = (n,k) -> (
     -- I think we need to zero pad extra rows at when faceMapi is called below
 	{{0}}
     else (
-	Abigvector = ACol(n,k,n);
+	Abigvector := ACol(n,k,n);
     -- Selects the nth column of AMat(n,k)
-	Asmallvector = ACol(n-1,k,n-1);
+	Asmallvector := ACol(n-1,k,n-1);
     -- Selects the (n-1)th column of AMat(n-1,k)
-	onePos = positions(Abigvector, i -> i==1);
+	onePos := positions(Abigvector, i -> i==1);
     -- The positions of ones in Asmallvector describe horizontal locations where we'll want a row of the identity matrix
 	outputMat = onePos / (l -> rowOfId(binomial(n,k),l))
 	)
@@ -142,14 +142,14 @@ faceMapikModified = (n,k,i) -> (
     -- I think my timing code was wack and this is actually slower than the earlier implementation
     -- Need to go back and check that
     -- From what I recall, they were both pretty close though so it's not a high priority
-    Abigvector = ACol(n,k,i);
-    Asmallvector = ACol(n-1,k,i-1);
-    zeroPos = positions(Abigvector, i -> i==0);
-    onePos = positions(Abigvector, i -> i==1);
-    outputMat = new MutableList from zeroPos / (l -> rowOfId(binomial(n,k),l));
-    sumPositions = positions(Asmallvector, i->i>=1);
+    Abigvector := ACol(n,k,i);
+    Asmallvector := ACol(n-1,k,i-1);
+    zeroPos := positions(Abigvector, i -> i==0);
+    onePos := positions(Abigvector, i -> i==1);
+    outputMat := new MutableList from zeroPos / (l -> rowOfId(binomial(n,k),l));
+    sumPositions := positions(Asmallvector, i->i>=1);
     for l to #sumPositions-1 do (
-	myIndex = sumPositions_l;
+	myIndex := sumPositions_l;
 	outputMat#myIndex = outputMat#myIndex + (rowOfId(binomial(n,k),onePos#l));
     );
     toList outputMat
@@ -160,21 +160,22 @@ faceMapiModified = (n,i,C) -> (
     -- Instead of first passing to matrices
     -- and then saving the creation of the matrix option till the very end
     
-    maxK = min(length C,n-1);
     -- Are we running till maxK? or until maxK+1?
     if i==0 then (
-	maxK = min(length C,n);
+	maxK := min(length C,n);
 	promoteFaceMapZerotoComplex(faceMapZero(n,maxK),C)
 	)
     else if i==n then (
-	preMat = fold(directSum,for k from 0 to maxK list (
+	maxK := min(length C,n-1);
+	preMat := fold(directSum,for k from 0 to maxK list (
 	    promoteMaptoComplex(faceMapnkModified(n,k),k,C)
     	    -- Notice that we only pass in k at most n-1, so the check for k==n in faceMapi isn't needed
 	    )); 
 	preMat | map(target preMat,C_n,0) 
 	)
     else (
-    	preMat = fold(directSum,for k from 0 to maxK list (
+	maxK := min(length C,n-1);
+    	preMat := fold(directSum,for k from 0 to maxK list (
 	     promoteMaptoComplex(faceMapikModified(n,k,i),k,C)
 	    )); 
 	preMat | map(target preMat,C_n,0) 
@@ -184,11 +185,11 @@ faceMapiModified = (n,i,C) -> (
 degenMapikModified = (n, k, i) -> (
     -- We'll have binomial(n,k) many columns #A(n+1,k)=binomial(n+1,k)-many rows
     
-    numCols = binomial(n,k);
-    zeroes = new List from (numCols) : 0;
-    col = ACol(n+1,k,i);
-    sig = new MutableList from 0..(#col-1);
-    l = 0;
+    numCols := binomial(n,k);
+    zeroes := new List from (numCols) : 0;
+    col := ACol(n+1,k,i);
+    sig := new MutableList from 0..(#col-1);
+    l := 0;
     for j to (#col-1) do(
 	if (col#j == 0) then (
 	    sig#j = rowOfId(numCols,l);
@@ -201,8 +202,8 @@ degenMapikModified = (n, k, i) -> (
     )
 
 degenMapiModified = (n,i,C) -> (
-    maxK = min(length C,n);
-    preMat = fold(directSum,for k from 0 to maxK list (
+    maxK := min(length C,n);
+    preMat := fold(directSum,for k from 0 to maxK list (
 	    promoteMaptoComplex(degenMapikModified(n,k,i),k,C)
 	    )
 	);
