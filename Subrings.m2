@@ -87,7 +87,10 @@ toQuotientRing Subring := S -> (
 subringGenerators = method() -- TODO: is there a way to call just "gens"/"generators"?
 subringGenerators Subring := S -> S#generators
 
-generators Subring := S -> S#generators
+generators Subring := Matrix => opts -> S -> (
+    if  S#?generators then S#generators
+    else if S.cache.?generators then S.cache.generators
+    else S.cache.generators = S#generators)
 
 ambient Subring := S -> S#ambient
 
@@ -161,3 +164,5 @@ net S3
 mingens S1
 presentationRing S1
 mingens
+
+gens S1
