@@ -25,7 +25,6 @@ export {"Subring",
 
 Subring = new Type of HashTable
 
-
 -- a method to create subrings from a `Matrix` of generators
 subring = method()
 subring Matrix := genMatrix -> (
@@ -85,11 +84,10 @@ toQuotientRing Subring := S -> (
     return P/I;
     )
 
-subringGenerators = method()
+subringGenerators = method() -- TODO: is there a way to call just "gens"/"generators"?
 subringGenerators Subring := S -> S#generators
 
--- generators is an alias for subringGenerators
-generators = subringGenerators
+generators Subring := S -> S#generators
 
 ambient Subring := S -> S#ambient
 
@@ -158,3 +156,8 @@ S3 = subring {x}
 S1 == S3 --true
 S1 == S2 --false
 
+net S3
+
+mingens S1
+presentationRing S1
+mingens
