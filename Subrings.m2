@@ -71,7 +71,6 @@ presentationMap Subring := S -> (
 
 presentationIdeal = method()
 presentationIdeal Subring := S -> (
-    --P := presentationRing S;
     f := presentationMap S;
     return ker f; --kernel is cached automatically
     )
@@ -84,7 +83,7 @@ toQuotientRing Subring := S -> (
     return P/I;
     )
 
-subringGenerators = method() -- TODO: is there a way to call just "gens"/"generators"?
+subringGenerators = method()
 subringGenerators Subring := S -> S#generators
 
 generators Subring := Matrix => opts -> S -> (
