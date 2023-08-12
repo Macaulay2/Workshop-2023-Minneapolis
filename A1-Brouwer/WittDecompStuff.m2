@@ -1,36 +1,5 @@
 
 
--- Input: A square matrix.
--- Output: The radical of a quadratic space.
-
--- Note: This is reliant on the congruenceDiagonalize() method being applicable for singular matrices.
-
-truncateRadical = method()
-truncateRadical(Matrix) := (Matrix) => (A) -> (
-    truncatedMatrix := mutableMatrix A;
-    if not isSquare(A) then error ("Input is not a square matrix");
-   
-    truncatedMatrix = mutableMatrix congruenceDiagonalize(A);
-    foundRadical := false;
-    for i from 0 to (numRows(A) - 1) do (
-        if truncatedMatrix_(i, i) == 0 then (
-            foundRadical = true;
-            break
-            );
-        error ("The quadratic space does not have a radical!");
-        );
-    if foundRadical === true then (
-        n:=numRows(A) - 1;
-        for i from 0 to n do (
-            truncatedMatrix = mutableMatrix submatrix'(matrix truncatedMatrix, {i}, {i});
-            if (n > 0) then (n = n - 1;)
-            else (break);
-            );
-        B := matrix truncatedMatrix;
-        return B;
-        );
-    )
-
 -- Input: A diagonal matrix.
 -- Output: The number of times we split off any hyperbolic forms < a > + < - a > as well as the smaller matrix with none of them.
 

@@ -1,7 +1,3 @@
-
-
-
-
 isIsomorphicDiagFormQ = method ()
 isIsomorphicDiagFormQ (List, List):= (Boolean) => (f, g) -> (
     -- Input: (f,g):  f, g are lists of diagonal elements (in integers) of two forms over Q

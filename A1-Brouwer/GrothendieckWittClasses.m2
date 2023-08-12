@@ -1,16 +1,11 @@
----------------
--- Types
----------------
-
 -- We define GrothendieckWittClass to be a new type,
 --    meant to represent the isomorphism class of a symmetric bilinear form
 --    over a base field.
 GrothendieckWittClass = new Type of HashTable
 GrothendieckWittClass.synonym = "Grothendieck Witt Class"
 
-gwClass = method()
-
 -- A class in GW can be constructed from a representing matrix
+gwClass = method()
 gwClass (Matrix) := GrothendieckWittClass => M -> (
   new GrothendieckWittClass from {
       symbol matrix => M,
