@@ -1,10 +1,14 @@
 installPackage("A1BrouwerDegrees")
+beta = gwClass(matrix(QQ,{{1,4,7},{4,3,-1},{7,-1,5}}))
 viewHelp A1BrouwerDegrees
 
+relevantPrimes(beta)
 
-M = matrix(QQ,{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
-beta = gwClass(M)
 integralDiagonalRep(beta)
+
+factor 3497
+
+primeFactors(1)
 
 installPackage("A1BrouwerDegrees", RerunExamples=>true)
 check A1BrouwerDegrees
@@ -49,31 +53,6 @@ beta.cache.diagonalForm
 class c
 
 
-
--- Check if a matrix is square
-isSquare = method()
-isSquare (Matrix) := Boolean => M -> (
-    numRows(M) == numColumns(M)
-)
-
--- Check if a matrix is diagonal
-isDiagonal = method()
-isDiagonal (Matrix) := Boolean => M -> (
-    if not isSquare(M) then error "Error: matrix isn't square";
-    n := numRows(M);
-    for i from 0 to n-1 do(
-	for j from 0 to n-1 do(
-    	    if i != j then(
-		if not M_(i,j) == 0 then(
-		    return false
-		    );
-		);
-	    );
-	);
-    true
-    )
-
-
 N = matrix(QQ,{{1,0,0},{0,1,0},{0,0,1}})
 N1 = matrix(QQ,{{1,1,0},{0,1,0},{0,0,1}})
 N2 = matrix(QQ,{{1,0,1},{0,1,0},{0,0,1}})
@@ -82,5 +61,28 @@ N4 = matrix(QQ,{{1,0,0},{0,1,1},{0,0,1}})
 N5 = matrix(QQ,{{1,0,0},{0,1,0},{1,0,1}})
 N6 = matrix(QQ,{{1,0,0},{0,1,0},{0,1,1}})
 
-isDiagonal(N)
-congruenceDiagonalize(N)
+
+integralDiscriminant = method()
+integralDiscriminant (GrothendieckWittClass) := (ZZ) => (beta) -> (
+    B:= beta.matrix;
+    rankForm:= numRows(B);
+    kk:= ring B;
+    
+    if (not (kk===QQ)) then (error "GrothendieckWittClass is not over QQ");
+    
+    -- Take an integral diagonal representative for beta
+    gamma := integralDiagonalRep(beta);
+    G := gamma.matrix;
+    
+    discrimForm:= 1;
+    for i from 0 to (rankForm-1) do(
+	discrimForm = discrimForm * (G_(i,i));
+	);
+    
+    return sub(squarefreePart(discrimForm),ZZ);
+    );
+
+
+M = matrix(QQ,{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
+
+integralDiscriminant(gwClass(M))
