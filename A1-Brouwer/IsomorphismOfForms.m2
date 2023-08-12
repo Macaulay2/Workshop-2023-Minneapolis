@@ -1,28 +1,6 @@
 
 
 
--- TODO rewrite this 
-isIsomorphicFormQp = method ()
-isIsomorphicFormQp (List, List, ZZ):= (Boolean) => (f, g, p) -> (
-    -- Input: (f,g ,p):  f, g are lists of diagonal elements (in integers) of two forms over Qp
-    --         p is a prime number
-    -- Output: true if f, g are isomorphic over Qp
-    
-    -- Should check that the elements in the list are all integers. 
-    a:= invariantFormQp(f,p);
-    b:= invariantFormQp(g,p);
-    if (a_0 == b_0 and a_2 == b_2 and  equalUptoPadicSquare(a_1, b_1, p)) then (
-	-- all three of the invariant are the same, so the forms are isom. over Qp
-	return true;
-	)
-    else (
-	-- one of the invariants differ, so the forms are different.
-	return false;
-    );
-);
-
-
-
 
 isIsomorphicDiagFormQ = method ()
 isIsomorphicDiagFormQ (List, List):= (Boolean) => (f, g) -> (

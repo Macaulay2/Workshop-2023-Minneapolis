@@ -137,31 +137,6 @@ hasseWittInvariant(GrothendieckWittClass, ZZ) := ZZ => (beta,p) -> (
 
 
 
-invariantFormQp =method()
-
--- Input: (Q, p): Quadratic form Q given by list of diagonal elements.  For now, assume list to to be integers
---                p is a prime number
--- Output:  (Rank, Disc, Hasse Invariant)
-
-invariantFormQp (List, ZZ):= (ZZ, ZZ, ZZ) => (f, p) -> (
-    -- currently will export the discriminant as a square free integer
-    -- Note:  Still need a way to treat two integers as defining the same discriminant, if they differ by a
-    --  square in Z_p.  They need to have the same parity of power of prime p, and the quotient of their 
-    -- (prime-to-p) parts must define a unit square in Z_p^*.
-
-    len:=#f;
-    for i from 0 to (len-1) do (
-	if (f_i==0) then (error "Error: Form is degenerate");
-	if not liftable(f_i, ZZ ) then (error "Error: Diagonal elements of form should be integers");
-	);
-    a:=len;
-    b:=1;
-    for i from 0 to len-1 do (b=b*f_i);
-    b=squarefreePart(sub(b, QQ));
-    c:=hasseWittInvariant(f, p);
-    return(a, b, c);
-    );
-
 
 
 -- TODO can we delete this

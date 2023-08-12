@@ -35,7 +35,6 @@ discForm (Sequence):=(ZZ) => (f) -> (
 -- Goals  (6/9/23)
 -- Done:
 -- 0. Expand code to have function that outputs all the invariants for a rational quadratic form over Qp 
---     Done with function invariantFormQp
 -- 1.  Use invatiants of two forms to tell whether two rational forms are isomorphic over Q
 -- 2.  Use invariant to determine if a rational q. form is anisotropic
 
