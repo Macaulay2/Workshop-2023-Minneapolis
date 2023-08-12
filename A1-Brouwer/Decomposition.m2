@@ -1,3 +1,76 @@
+-- Given a form q over QQ of anisotropic dimension d>=4, returns a form <a> so that q+<-a> has anisotropic dimension d-1
+-- This is Koprowski/Rothkegel's Algorithm 5 in the case of QQ
+QQanisotropicDimension4 = method()
+QQanisotropicDimension4 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
+    if not (anisotropicDimensionQQ(beta) >= 4) then error "anisotropic dimension of inputted form is not >=4";
+    
+    -- If the signature is non-negative then return <1>
+    if signature(beta) >= 0 then(
+	return gwClass(matrix(QQ,{{1}}))
+	);
+    
+    -- Otherwise return <-1>
+    if signature(beta) < 0 then(
+	return gwClass(matrix(QQ,{{-1}}))	        
+        );
+	
+    );
+
+-- Given a form q over QQ of anisotropic dimension 3, returns a form <a> so that q+<-a> has anisotropic dimension 2
+-- This is Koprowski/Rothkegel's Algorithm 7 in the case of QQ
+QQanisotropicDimension3 = method()
+QQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
+    d := integralDiscriminant(beta);
+    
+    -- Build lists of primes where the p-adic valuation of the discriminant is even or is odd
+    L1:={};
+    L2:={};
+    S1:={};
+    S2:={};
+    for p in relevantPrimes(beta) do(
+	if odd PadicValuation(d,p) then(
+	    L1 = append(L1,p);
+	    S1 = append(S1,d-1);
+	    );
+	if even PadicValuation(d,p) then(
+	    L2 = append(L2,p^2);
+	    S2 = append(L2,p)
+	    );
+	);
+    
+    -- We are looking for an element which is equivalent to d-1 mod p for each p in L1, and equivalent to p mod p^2 for each p in L2
+    -- we use the chineseRemainder method from the "Parametrization" package to find such an element
+    alpha := chineseRemainder(S1 | S2, L1 |L2);
+    a := squarefreePart(alpha);
+    
+    return gwClass(QQ,{{a}});
+
+    );
+
+-- Constructs the anisotropic part of a form with anisotropic dimension 2
+-- 
+-- QQanisotropicDimension2 = method()
+-- QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
+--     -- If the witt Index isn't 0 mod 4, add on some hyperbolic forms so that 
+--     n := numRows beta.matrix;
+--     wittIndexBeta := n - anisotropicDimensionQQ(beta);
+--     q:= beta;
+--     -- If the Witt Index isn't 0 mod 4 it must be 2 mod 4, so we add on a hyperbolic form
+--     if (not wittIndexBeta % 4 == 0) then(
+-- 	q = gwAdd(beta, hyperbolicForm(QQ));
+-- 	);
+    
+--     d:= integralDiscriminant(q);
+    
+--     W:= matrix(QQ,{{}});
+--     if (d <= 0) then(
+-- 	W = W | matrix(QQ,{{1/2 - signature(q)/4}});
+-- 	);
+    
+--     for p in relevantPrimes(beta) do(
+-- 	W = W | matrix(QQ,{{(1 - (hasseWittInvariant(q,p)))/2}});	
+-- 	);    
+--    );
 
 
 ---------------------------------------

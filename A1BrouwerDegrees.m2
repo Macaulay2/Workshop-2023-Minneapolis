@@ -34,8 +34,9 @@ newPackage(
 	},
     Headline=>"TODO",
     PackageImports=>{
-	"RationalPoints2",
-	"RealRoots"
+	"Parametrization",
+	"RealRoots",
+	"RationalPoints2"
 	},
     PackageExports=>{},
     DebuggingMode=>true
@@ -48,6 +49,8 @@ export{
     "legendreBoolean",
     "localAlgebraBasis",
     "primeFactors",
+    "PadicValuation",
+    "squareSymbol",
 
     --MatrixMethods.m2
     "congruenceDiagonalize",
@@ -94,6 +97,7 @@ export{
     --AnisotropicDimension.m2
     "isHyperbolicQp",
     "anisotropicDimensionQp",
+    "anisotropicDimensionQQ",
     
     --Decomposition.m2
     "sumDecomposition",

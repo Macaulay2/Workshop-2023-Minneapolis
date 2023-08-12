@@ -53,6 +53,22 @@ primeFactors (QQ) := List => (n) -> (
     
     )
 
+
+-- Given an integer n and prime number p, returns the highest r so that p^r | n
+PadicValuation = method()
+PadicValuation (ZZ, ZZ) := (ZZ) => (n, p) -> (
+    if (n<0) then (n=-n);
+    if (n==0) then error "Error: Trying to find prime factorization of 0";
+    H:=hashTable (factor n);
+    a:=0;
+    if H#?p then (
+    	a=H#p;)
+    else (
+	a=0;
+	);
+    return a;
+    );
+
 -- Input: Element of a finite field
 -- Output: True if an element of a finite field is a square, false otherwise
 legendreBoolean = method()
@@ -62,6 +78,33 @@ legendreBoolean (RingElement) := (Boolean) => a -> (
     -- Detects if a is a square in F_q
     a^((q-1)//2) == 1 
     )
+
+-- Input: An integer a and a prime p
+-- Output: 1, if a is a unit square,  -1, if a=p^(even power)x  (non-square unit), 0 otherwise
+-- Note:  The terminology "Square Symbol" comes from John Voight's Quaternion Algebra book
+squareSymbol = method()
+squareSymbol(ZZ, ZZ) := (ZZ) => (a, p) -> (
+    x := getSymbol "x";
+    R:=GF(p, Variable => x);
+    e1:=PadicValuation(a,p);
+    if (even e1) then (
+    	a1:= sub(a/(p^e1), ZZ);
+	a2:=sub(a1, R);
+	if legendreBoolean(a2) then (
+	    ans:=1;
+	    ) 
+	else (
+	    ans=-1;
+	    );
+	)
+    else (
+	ans=0;
+	);
+    return ans;
+    );
+
+
+
 
 ------------------------------
 -- P-adic methods
@@ -77,7 +120,7 @@ if (odd p) then (
     -- differ by a square in GF(p)
     a1:=squarefreePart(a);
     b1:=squarefreePart(b);
-    if (exponentPrimeFact(a1, p ) != exponentPrimeFact(b1, p)) then (
+    if (PadicValuation(a1, p ) != PadicValuation(b1, p)) then (
 	return false;
         )
     else (
@@ -92,7 +135,7 @@ else (
     -- that the units agree mod 8.
     a1=squarefreePart(a);
     b1=squarefreePart(b);
-    if (exponentPrimeFact(a1, p ) != exponentPrimeFact(b1, p)) then (
+    if (PadicValuation(a1, p ) != PadicValuation(b1, p)) then (
 	return false;
         )
     else (
