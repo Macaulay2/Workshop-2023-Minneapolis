@@ -84,3 +84,62 @@ truncateRadical(Matrix) := (Matrix) => (A) -> (
         return B;
         );
     )
+
+
+
+
+-- Input: A diagonal matrix.
+-- Output: The number of times we split off any hyperbolic forms < a > + < - a > as well as the smaller matrix with none of them.
+
+splitOffObviousHyperbolic = method()
+splitOffObviousHyperbolic (Matrix) := (ZZ,Matrix) => (A) -> (
+    
+    -- Matrix must be symmetric
+    if not isSquareAndSymmetric(A) then error "Matrix is not symmetric";
+
+    foundHyperbolic := 0;
+    remainingMatrix := A;
+    for i from 0 to (numRows(A) - 1) do (
+        for j from (i + 1) to (numRows(A) - 1) do (
+            if (A_(i,i) == -A_(j,j) and A_(i,i) != 0) then (
+                 foundHyperbolic = 1;
+                 remainingMatrix = submatrix'(A,{i,j},{i,j});
+                 return(foundHyperbolic,remainingMatrix)
+                 );
+            );
+        );
+    return(foundHyperbolic,remainingMatrix);
+    )
+
+splitOffObviousHyperbolics = method()
+splitOffObviousHyperbolics (Matrix) := (ZZ,Matrix) => (A) -> (
+    numberHyperbolics := 0;
+    notFinished := 1;
+    while (notFinished == 1) do (
+        currentState := splitOffObviousHyperbolic(A);
+        notFinished = currentState_0;
+        numberHyperbolics = numberHyperbolics + notFinished;
+        A = currentState_1;
+        );
+    return (numberHyperbolics,A);
+    )
+
+-- Input: A symmetric matrix with rational entries.
+-- Output: The number of times we split off any hyperbolic forms < a > + < - a > as well as the smaller matrix with none of them.
+
+-- Note: Takes in symmetric matrix over QQ and diagonalizes, removes squares from entries, and splits off hyperbolic forms that immediately appear as < a > + < - a >
+rationalSimplify = method()
+rationalSimplify (Matrix) := (ZZ,Matrix) => (A) -> (
+    -- Matrix must be symmetric
+    if not isSquareAndSymmetric(A) then error "Matrix is not symmetric";
+
+    -- congruenceDiagonalize the matrix
+    B := mutableMatrix(congruenceDiagonalize(A));
+    -- Replace entry with smallest magnitude integer in square class
+    for i from 0 to (numRows(B)-1) do (
+        B_(i,i) = squarefreePart(B_(i,i));
+        );
+    C := matrix B;
+    -- Split off hyperbolic forms < a > + < - a >
+    return(splitOffObviousHyperbolics(C))
+    )
