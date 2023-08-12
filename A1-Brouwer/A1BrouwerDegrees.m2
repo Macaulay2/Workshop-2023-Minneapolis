@@ -71,7 +71,10 @@ export{
     "PfisterForm",
     "diagonalEntries",
     "integralDiagonalRep",
-    "isIsotropicQp"
+    "isIsotropicQp",
+    "integralDiscriminant",
+    "primeFactors",
+    "relevantPrimes"
     }
 
 ------------------------
@@ -110,9 +113,28 @@ squarefreePart (ZZ) := (ZZ) => (n) -> (
         );
     )
 
+-- Returns a list of prime factors of an integer
+primeFactors = method()
+primeFactors (ZZ) := List => (n) -> (
+    if abs(n)==1 then(
+	return {};
+	);
+    
+    return keys(hashTable(factor(abs(n))))
+    );
+
+primeFactors (QQ) := List => (n) -> (
+    if (not liftable(n,ZZ) == true) then(
+	error "tried to take prime factors of a rational";
+	);
+    
+    return primeFactors(sub(n,ZZ));
+    
+    )
+
+
 -- Input: Element of a finite field
 -- Output: True if an element of a finite field is a square, false otherwise
-
 legendreBoolean = method()
 legendreBoolean (RingElement) := (Boolean) => a -> (
     if not instance(ring(a),GaloisField) then error "Error: this works only for Galois fields";
@@ -1285,6 +1307,50 @@ localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
 -- Comparing forms over QQ
 ---------------------------
 
+-- Inputting a form over QQ, outputs a squarefree integral representative of its discriminant
+integralDiscriminant = method()
+integralDiscriminant (GrothendieckWittClass) := (ZZ) => (beta) -> (
+    B:= beta.matrix;
+    rankForm:= numRows(B);
+    kk:= ring B;
+    
+    if (not (kk===QQ)) then (error "GrothendieckWittClass is not over QQ");
+    
+    -- Take an integral diagonal representative for beta
+    gamma := integralDiagonalRep(beta);
+    G := gamma.matrix;
+    
+    discrimForm:= 1;
+    for i from 0 to (rankForm-1) do(
+	discrimForm = discrimForm * (G_(i,i));
+	);
+    
+    return sub(squarefreePart(discrimForm),ZZ);
+    );
+
+-- Given a form over QQ, returns the smallest list of primes that divide its discriminat
+relevantPrimes = method()
+relevantPrimes (GrothendieckWittClass) := List => (beta) -> (
+    B:= beta.matrix;
+    rankForm:= numRows(B);
+    kk:= ring B;
+    
+    -- Take a diagonal integral representative of the form
+    gamma := integralDiagonalRep(beta);
+    D := diagonalEntries(gamma);
+    
+    L := {};
+    
+    -- Append all the prime factors of each of the entries appearing on a diagonal
+    for x in D do(
+	L = unique(L | primeFactors(sub(x,ZZ)));
+	);
+    
+    return L
+    );
+
+
+
 -- discForm computes the product of the entries of a list;
 -- used to compute the discriminant of a diagonal form, where form is given by list of diagonal entries
 discForm = method ()
@@ -2106,6 +2172,13 @@ isIsotropic (GrothendieckWittClass) := (Boolean) => (alpha) -> (
     )
 
 ---------------------------------------
+-- Anisotropic dimension
+---------------------------------------
+
+
+
+
+---------------------------------------
 -- Simplifying a form
 ---------------------------------------
 
@@ -2763,7 +2836,7 @@ document{
     Outputs => {
 	Boolean => {"returns true or false depending on whether two Grothendieck Witt classes are equal in the Grothendieck-Witt ring"},
 	},
-    PARA{"Given two matrices representing symmetric bilinear forms over a field ", TEX///$k$///, ", it is a fundamental question to ask when they are representing the same symmetric bilinear form, i.e. when they are equal in the Grothendieck-Witt ring ", TEX///$\text{GW}(k)$///,"."},
+    PARA{"Given two matrices representing symmetric bilinear forms over a field ", TEX///$k$///, ", it is a fundamental question to ask when they are representing the same symmetric ibilinear form, i.e. when they are equal in the Grothendieck-Witt ring ", TEX///$\text{GW}(k)$///,"."},
     
     PARA{EM "Sylvester's Law of Inertia", " proves that any symmetric bilinear form can be diagonalized into a block sum of rank one symmetric bilinear forms. Since the rank one forms ", TEX///$\langle a \rangle \colon k \times k \to k$///, ", ", TEX///$(x,y) \mapsto axy$///, " and ", TEX///$\langle ab^2 \rangle \colon k \times k \to k$///, ", ", TEX///$(x,y) \mapsto ab^2xy$///, " differ by a change of basis in the ground field, it follows they are isomorphic (provided that ", TEX///$a,b\ne 0$///, "). Thus after diagonalizing a form, it suffices to consider the square class of each entry appearing along the diagonal. Consider the following example."},
     EXAMPLE lines ///
@@ -2969,6 +3042,8 @@ document{
 }
 
 
+
+
 document{
     Key => {(isIsotropicQp, GrothendieckWittClass,ZZ), isIsotropicQp},
     Headline => "determines whether a rational form is isotropic locally at a prime",
@@ -3132,6 +3207,22 @@ document{
     ///,
     }
 
+document{
+    Key => {(integralDiscriminant, GrothendieckWittClass), integralDiscriminant},
+    Headline => "outputs an integral discriminant for a rational symmetric bilinear form",
+    Usage => "integralDiscriminant(beta)",
+    Inputs => {
+	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(\mathbb{Q})$///, "."},
+	},
+    Outputs => {
+        ZZ => {"An integral square class representative of ", TEX///$\text{disc}(\beta)$///, "."},
+	},
+    EXAMPLE lines ///
+    beta = gwClass(matrix(QQ,{{1,4,7},{4,3,-1},{7,-1,5}}));
+    integralDiscriminant(beta)
+    integralDiagonalRep(beta)
+    ///,
+}
 
 
 ----------------------------
