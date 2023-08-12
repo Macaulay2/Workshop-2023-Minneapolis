@@ -2263,6 +2263,35 @@ anisotropicDimensionQp (GrothendieckWittClass, ZZ) := ZZ => (beta, p) ->(
 	);
     );
 
+-- Computes the anisotropic dimension of a form over QQ
+-- following Algorithm 9 of Koprowski/Czogala
+anisotropicDimensionQQ = method()
+anisotropicDimensionQQ (GrothendieckWittClass) := ZZ => (beta) -> (
+    B:= beta.matrix;
+    rankForm:= numRows(B);
+    kk:= ring B;
+    
+    if (not (kk===QQ)) then (error "GrothendieckWittClass is not over QQ");
+    if (isDegenerate(B)) then (error "form is degenerate");
+    
+    -- The anisotropic dimension of a form over Q is the maximum of its anisotropic dimensions at any of its completions
+    
+    ListOfLocalAnistropicDimensions := {};
+    
+    -- The anisotropic dimension at RR is the absolute value of the signature of the form
+    ListOfLocalAnistropicDimensions = append(ListOfLocalAnistropicDimensions, abs(signature(beta)));
+    
+    -- For math reasons(?) we always have to add the anisotropic dimension at the prime 2
+    ListOfLocalAnistropicDimensions = append(ListOfLocalAnistropicDimensions, anisotropicDimensionQp(beta,2));
+       
+    -- For the remaining local fields, we can just look at relevant primes
+    for p in relevantPrimes(beta) do(
+	ListOfLocalAnistropicDimensions = append(ListOfLocalAnistropicDimensions, anisotropicDimensionQp(beta,p))
+	
+	);
+    
+    return max ListOfLocalAnistropicDimensions;
+    );
 
 
 ---------------------------------------
