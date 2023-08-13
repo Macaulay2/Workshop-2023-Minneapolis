@@ -63,7 +63,6 @@ anisotropicDimension (Matrix) := (ZZ) => (A) -> (
     )
 
 
-anisotropicDimensionGW = method()
-anisotropicDimensionGW (GrothendieckWittClass) := (ZZ) => (alpha) -> (
-    return (anisotropicDimension(alpha.matrix));
+anisotropicDimension (GrothendieckWittClass) := (ZZ) => (alpha) -> (
+    return(anisotropicDimension(alpha.matrix));
     )
