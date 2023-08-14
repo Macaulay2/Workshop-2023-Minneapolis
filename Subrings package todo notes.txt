@@ -58,6 +58,8 @@
 -- they have maps to subrings, they also use 4ti2
 >> should we just let them know about SubalgebraBases?
 
+4. Misc items
+-- If S is a subring, it would be nice to be able to access the generators (like a ring) with S_0, S_1, etc.
 
 Aside for Francesca: 
 R = QQ[for s in subsets(1 .. 4,2) list p_(toSequence s)]
