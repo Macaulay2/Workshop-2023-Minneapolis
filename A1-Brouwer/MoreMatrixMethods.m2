@@ -11,6 +11,10 @@ numNonzeroDiagEntries (Matrix) := (Matrix) => (A) -> (
 
 numPosDiagEntries = method()
 numPosDiagEntries (Matrix) := (Matrix) => (A) -> (
+    k := ring A;
+    if not (kk === RR or instance(kk,RealField) or kk === QQ) then(
+        error "Only implemented over QQ and RR";
+        );
     posDiagEntries := 0;
     for i from 0 to (numRows(A)-1) do (
         if A_(i,i) > 0 then (
@@ -22,6 +26,10 @@ numPosDiagEntries (Matrix) := (Matrix) => (A) -> (
 
 numNegDiagEntries = method()
 numNegDiagEntries (Matrix) := (Matrix) => (A) -> (
+    k := ring A;
+    if not (kk === RR or instance(kk,RealField) or kk === QQ) then(
+        error "Only implemented over QQ and RR";
+        );
     negDiagEntries := 0;
     for i from 0 to (numRows(A)-1) do (
         if A_(i,i) < 0 then (
