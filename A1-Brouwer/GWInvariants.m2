@@ -139,39 +139,3 @@ HasseWittInvariant(GrothendieckWittClass, ZZ) := ZZ => (beta,p) -> (
     return HasseWittInvariant(diagonalEntries(beta),p)
     
     )
-
-
-
-
-
-
--- TODO can we delete this
-signatureRealQForm = method ()
-signatureRealQForm (List):=(ZZ, ZZ, ZZ) => (f) -> (
-    -- Input: f = list of diagonal elements of quadratic form
-    -- Output: (r, s, t): Signature of form over the reals. 
-    --      r= # of positive entries, s= # of negative entries, t= number of zeros
-    posEntries :=0;
-    negEntries:= 0;
-    zeroEntries:=0;
-    --for loop counts the number of negative diagonal entries
-    n:=#f;
-    for i from 0 to (n-1) do(
-            if f_(i)>0 then(
-                posEntries=posEntries+1;
-            	)
-	    else (
-		if f_(i)<0 then(
-                    negEntries=negEntries+1;
-            	)
-	    else (
-		zeroEntries = zeroEntries +1;
-		)
-	    )
-	);
-    return (posEntries, negEntries, zeroEntries);
-    
-	     
-    );
-
-
