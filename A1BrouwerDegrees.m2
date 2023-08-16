@@ -54,8 +54,6 @@ export{
 
     --MatrixMethods.m2
     "congruenceDiagonalize",
-
-    --WittDecompStuff.m2
     
     --GrothendieckWittClasses.m2    
     "GrothendieckWittClass",
@@ -114,10 +112,6 @@ load "./A1-Brouwer/ArithmeticMethods.m2"
 
 -- Basic manipulations of matrices we will use
 load "./A1-Brouwer/MatrixMethods.m2"
-
--- For decomposing forms
--- can probably delete this later
-load "./A1-Brouwer/WittDecompStuff.m2"
 
 -- Establishing the GrothendieckWittClass type and some basic manipulations
 load "./A1-Brouwer/GrothendieckWittClasses.m2"
@@ -668,11 +662,11 @@ document{
     isIsotropic(gwClass(matrix(GF(7),{{3,0},{0,3}})))
     ///,
     PARA{"Over ", TEX///$\mathbb{Q}$///, " things become a bit more complicated. We can exploit the local-to-global principle for isotropy (the ", EM "Hasse-Minkowski principle", "), which states that a form is isotropic over ", TEX///$\mathbb{Q}$///, " if and only if it is isotropic over all its completions, meaning all the ", TEX///$p$///, "-adic numbers and ", TEX///$\mathbb{R}$///, " [L05, VI.3.1]. We note, however, the classical result that all forms of rank ", TEX///$\ge 5$///, " in ", TEX///$\mathbb{Q}_p$///, " are isotropic [S73, IV Theorem 6]. Thus isotropy in this range of ranks is equivalent to checking it over the real numbers."},
-    -- EXAMPLE lines///
-    -- beta = gwClass(matrix(QQ,{{1, 0, 2, 0, 3}, {0, 6, 1, 1, -1},{2, 1, 5, 2, 0}, {0, 1, 2, 4, -1}, {3, -1, 0,-1, 1}}));
-    -- isIsotropic(beta)
-    -- diagonalForm(beta)
-    -- ///,
+    EXAMPLE lines///
+    beta = gwClass(matrix(QQ,{{1, 0, 2, 0, 3}, {0, 6, 1, 1, -1},{2, 1, 5, 2, 0}, {0, 1, 2, 4, -1}, {3, -1, 0,-1, 1}}));
+    isIsotropic(beta)
+    diagonalForm(beta)
+    ///,
     PARA{"For forms of rank ", TEX///$\le 4$///, " we should understand when the form is isotropic over local fields."},
     PARA{"Ternary forms are isotropic away from primes dividing the coefficients of the form in a diagonal basis by e.g. [L05, VI.2.5(2)], so there are only finitely many things to check. Over these relevant primes, isotropy of a form ", TEX///$\beta \in \text{GW}(\mathbb{Q})$///, " over ", TEX///$\mathbb{Q}_p$///," is equivalent to the statement that ", TEX///$(-1,-\text{disc}(\beta))_p = H(\beta)$///, " where ", TEX///$H(\beta)$///, " denotes the Hasse-Witt invariant attached to ", TEX///$\beta$///, " and ", TEX///$(-,-)_p$///," is the ", TO2(HilbertSymbol, "Hilbert Symbol"), "."},
     PARA{"A binary form ", TEX///$q$///, " is isotropic if and only if it is isomorphic to the hyperbolic form, which implies in particular that the rank, signature, and discriminant of ", TEX///$q$///, " agree with that of ", TEX///$\mathbb{H}=\langle 1,-1\rangle$///, ". " },

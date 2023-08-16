@@ -2,11 +2,7 @@
 -- Simplifying forms
 ------------
 
----------
--- diagonalForm method
--- inputs a GWClass and outputs its diagonal form as a GWClass
----------
-
+-- Outputs a diagonalized form of a class in GrothendieckWitt
 diagonalForm = method()
 diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
         
@@ -25,37 +21,28 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
 	return gwClass(identityMat)
 	);
     
-    -- If the field is the real numbers, we can run WittDecompInexact to determine its Witt index and anisotropic part
+    -- If the field is the real numbers, we can diagonalize and then replace each entry on the diagon with +1 or -1 depending on its square class
     if (baseField(beta) === RR or instance(baseField(beta),RealField)) then(
 	
-	-- Get wittIndex and anisotropic part
-	(wittIndex,anisotropicPart) := WittDecompInexact(beta.matrix);
-	
-	-- Make empty output matrix to populate
-	diagOutputMatrix := matrix(RR,{{}});
-	H := matrix(RR,{{1,0},{0,-1}});
-	
-	
-	
-	-- Sum as many hyperbolic forms as the Witt index
-	if wittIndex > 0 then(
-	    for i in 1..wittIndex do(
-		diagOutputMatrix = safeBlockSum(diagOutputMatrix,H);
+	diagForm := congruenceDiagonalize(beta.matrix);
+	L := ();
+	for i from 0 to (n-1) do(
+	    if diagForm_(i,i) > 0 then(
+		L = append(L,1);
 		);
-	    
+	    if diagForm_(i,i) < 0 then(
+		L = append(L,-1);
+		);
 	    );
-	
-	-- Add on the anisotropic part
-	diagOutputMatrix = safeBlockSum(diagOutputMatrix, anisotropicPart);
-	
-	-- Cache and return
-	beta.cache.diagonalForm = diagOutputMatrix;
-	return gwClass(diagOutputMatrix)
+	return diagonalClass(RR,L);
 	
 	);
     
+    -- Otherwise just run congruenceDiagonalize
     betaMatrix := beta.matrix;
     diagonalFormOfBetaMatrix := congruenceDiagonalize(betaMatrix);
+    
+    -- The diagonal form gets cached in the GWclass type
     beta.cache.diagonalForm = gwClass(diagonalFormOfBetaMatrix);
     return gwClass(diagonalFormOfBetaMatrix) 
     );

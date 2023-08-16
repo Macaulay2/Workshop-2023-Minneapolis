@@ -73,6 +73,78 @@ QQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 --    );
 
 
+
+
+
+
+WittDecomp = method()
+WittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
+    k := ring A;   
+  
+    -- Add error in case the base field is RR or CC
+    if (instance(k,InexactFieldFamily) or instance(k,RealField) or instance(k,ComplexField)) then error "Error: base field is inexact, use WittDecompInexact() instead";
+    
+    -- Rank of matrix
+    n := numRows(A);
+    x := symbol x;
+    -- Local variable ring
+    R := k[x_0..x_(n - 1)];
+    
+    -- Create quadratic from f from matrix A
+    f := sum (
+        for i from 0 to (n - 1) list (
+            sum (for j from 0 to (n - 1) list (A_(i,j)*x_i*x_j))
+            )
+        );
+ 
+    -- will use rationalPoints package to see if f has a zero.  If so, A is isotropic.  
+    -- rationalPoints package seeks a zero upto variable bound
+    
+    use k;
+    solnPt := new MutableList;
+    solnFound := false;
+    for bound from 1 to 10 do (
+        solns := new MutableList from rationalPoints(ideal(f),Bound => bound);
+        if (#solns > 1) then(
+            if solns#0 == toList(n:0) then (solnPt = solns#1) else (solnPt = solns#0);
+            solnFound = true;
+            break;
+        );
+    );
+
+
+    -- If no solutions found, then we assume the form is anisotropic
+    if (not solnFound) then (return (0,A));
+    
+    -- If solution is found for a rank 2 form, then the form is purely hyperbolic
+    if ((n == 2) and  (det(A) == 0))then (error "Matrix singular, run WittDecompGeneral instead" );
+    if (n == 2) then (return (1,matrix(k,{{}})));
+
+    -- If found a solution, record it as row matrix z. Then find vector y such that < z,y > <>0.  
+    -- z and y then generate a hyberbolic plane. 
+    -- z as a row matrix
+    z := matrix{toList solnPt};
+    zA := z*A;
+    y := new MutableMatrix from matrix{toList(n:(0/1))};
+    for i from 0 to (n - 1) do (
+        if (zA_(0,i) != 0) then (y_(0,i) = 1; break;);
+    );
+    
+    -- Now z and y span a copy of |H in the bilinear form
+    -- We need to find a basis of vectors orthogonal (wrt bilinear form) to x and y 
+    -- An (n - 2) x n matrix.
+    orthoComp := gens kernel((z||matrix(y))*A);
+    
+    -- Now recursively apply WittDecomp to orthoComp^T*A*orthoComp a (n - 2) x (n - 2) Gram matrix
+    subComputation := WittDecomp(transpose(orthoComp)*A*orthoComp);
+    
+    -- subComputation_0 gives number of hyperbolic forms in (n - 2) x (n - 2) subform  
+    -- 1+ subComputation_0 is the number of hyperbolic forms in A
+    -- subComputation_1 is the anisotropic part of A and (also) the subform part
+    
+    return (1+subComputation_0, subComputation_1);
+    )
+
 ---------------------------------------
 -- Simplifying a form
 ---------------------------------------

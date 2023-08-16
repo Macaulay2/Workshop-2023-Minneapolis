@@ -19,7 +19,7 @@ isHyperbolicQp (GrothendieckWittClass, ZZ) := Boolean => (beta, p) ->(
     
     -- Hyperbolic forms don't have square discriminants
     d:= integralDiscriminant(beta);
-    if isPadicSquare(d) then return false;
+    if isPadicSquare(d,p) then return false;
     
     -- At this stage, the rank and discriminant of our beta agrees with that of a hyperbolic form,
     -- so by e.g. Lam V.3.25 it suffices to check if their Hasse-Witt invariants agree
@@ -28,7 +28,7 @@ isHyperbolicQp (GrothendieckWittClass, ZZ) := Boolean => (beta, p) ->(
 	m := sub(rankForm/2,ZZ);
 	
 	-- The Hasse-Witt invariant of mH:
-	HasseWittHyperbolicForm := HilbertSymbol(-1,-1,p)^{m*(m-1)/2};
+	HasseWittHyperbolicForm := (HilbertSymbol(-1,-1,p))^(m*(m-1)/2);
 	HasseWittBeta := HasseWittInvariant(beta,p);
 	return (HasseWittHyperbolicForm == HasseWittBeta)
 	);
@@ -53,7 +53,7 @@ anisotropicDimensionQp (GrothendieckWittClass, ZZ) := ZZ => (beta, p) ->(
 	-- If the form is hyperbolic it has no anisotropic part
 	if isHyperbolicQp(beta,p) then return 0;
        	
-	if isPadicSquare(integralDiscriminant(beta)) then return 2;
+	if isPadicSquare(integralDiscriminant(beta),p) then return 2;
 	
 	return 4;
        
@@ -61,9 +61,9 @@ anisotropicDimensionQp (GrothendieckWittClass, ZZ) := ZZ => (beta, p) ->(
     
     if odd rankForm then(
 	
-	c := (-1)^{rankForm*(rankForm+1)/2} * integralDiscriminant(beta);
+	c := (-1)^(rankForm*(rankForm+1)/2) * integralDiscriminant(beta);
 	
-	gamma := gwAdd(beta, gwClass(QQ,{{c}}));
+	gamma := gwAdd(beta, gwClass(matrix(QQ,{{c}})));
 	
 	if isHyperbolicQp(gamma,p) then return 1;
 	
@@ -141,7 +141,7 @@ anisotropicDimension (Matrix) := (ZZ) => (A) -> (
         )
     -- Over QQ, call anisotropicDimensionQQ
     else if (k === QQ) then (
-        error "This will call anisotropicDimensionQQ when that is finished"
+        return anisotropicDimensionQQ(gwClass(A));
         )
     -- Over a finite field, if the number of nonzero diagonal entries is odd, then the anisotropic dimension is 1; if the number of nonzero diagonal entries is even, then the anisotropic dimension is either 0 or 2 depending on whether the nondegenerate part of the form is totally hyperbolic
     else if (instance(k, GaloisField) and k.char != 2) then (
