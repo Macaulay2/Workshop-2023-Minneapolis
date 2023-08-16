@@ -42,11 +42,11 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
     k1:=baseField(alpha);
     k2:=baseField(beta);
     -- Ensure both base fields are supported
-    if not (k1 === CC or instance(k1,ComplexField) or k1 === RR or instance(k1,RealField) or k1 === QQ or instance(k1, GaloisField)) then (
-        error "Base field not supported; only implemented over QQ, RR, CC, and finite fields";
+    if not (k1 === CC or instance(k1,ComplexField) or k1 === RR or instance(k1,RealField) or k1 === QQ or (instance(k1, GaloisField) and k1.char != 2)) then (
+        error "Base field not supported; only implemented over QQ, RR, CC, and finite fields of characteristic not 2";
         );
-    if not (k2 === CC or instance(k2,ComplexField) or k2 === RR or instance(k2,RealField) or k2 === QQ or instance(k2, GaloisField)) then (
-        error "Base field not supported; only implemented over QQ, RR, CC, and finite fields";
+    if not (k2 === CC or instance(k2,ComplexField) or k2 === RR or instance(k2,RealField) or k2 === QQ or (instance(k1, GaloisField) and k1.char != 2)) then (
+        error "Base field not supported; only implemented over QQ, RR, CC, and finite fields of characteristic not 2";
         );
     
     A:=alpha.matrix;
@@ -126,6 +126,65 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
 		);
 	    );
         return ((countNonzeroDiagA == countNonzeroDiagB) and (legendreBoolean(prodNonzeroDiagA) == legendreBoolean(prodNonzeroDiagB)));
+        )
+    -- If we get here, the base fields are not isomorphic
+    else error "Base fields are not isomorphic"
+    )
+
+-- Boolean checking whether two symmetric bilinear forms are isometric
+isIsometricForm = method()
+isIsometricForm (Matrix,Matrix) := (Boolean) => (A,B) -> (
+    k1:=ring A;
+    k2:=ring B;
+    -- Ensure both base fields are supported
+    if not (k1 === CC or instance(k1,ComplexField) or k1 === RR or instance(k1,RealField) or k1 === QQ or (instance(k1, GaloisField) and k1.char != 2)) then (
+        error "Base field not supported; only implemented over QQ, RR, CC, and finite fields of characteristic not 2";
+        );
+    if not (k2 === CC or instance(k2,ComplexField) or k2 === RR or instance(k2,RealField) or k2 === QQ or (instance(k1, GaloisField) and k1.char != 2)) then (
+        error "Base field not supported; only implemented over QQ, RR, CC, and finite fields of characteristic not 2";
+        );
+    
+    -- Ensure both matrices are symmetric
+    if not isSquareAndSymmetric(A) then error "Underlying matrix is not symmetric";
+    if not isSquareAndSymmetric(B) then error "Underlying matrix is not symmetric";
+    
+    diagA := congruenceDiagonalize(A);
+    diagB := congruenceDiagonalize(B);
+    
+    -----------------------------------
+    -- Complex numbers
+    -----------------------------------
+    
+    -- Over CC, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of nonzero entries
+    if (k1 === CC or instance(k1,ComplexField)) and (k2 === CC or instance(k2,ComplexField)) then (
+        return ((numRows(A) == numRows(B)) and (numNonzeroDiagEntries(diagA) == numNonzeroDiagEntries(diagB)));
+        )
+    
+    -----------------------------------
+    -- Real numbers
+    -----------------------------------
+    
+    --Over RR, diagonal forms of the same dimension are equivalent if and only if they have the same number of positive and negative entries
+    else if ((k1 === RR or instance(k1,RealField)) and (k2 === RR or instance(k2,RealField))) then (
+        return ((numRows(A) == numRows(B)) and (numPosDiagEntries(diagA) == numPosDiagEntries(diagB)) and (numNegDiagEntries(diagA) == numNegDiagEntries(diagB)));
+        )
+    
+    -----------------------------------
+    -- Rational numbers
+    -----------------------------------
+    
+    -- Over QQ, call isIsomorphicFormQ, which checks equivalence over all completions
+    else if ((k1 === QQ) and (k2 === QQ)) then (
+        return isIsomorphicFormQ(gwClass(A),gwClass(B));
+        )
+    
+    -----------------------------------
+    -- Finite fields
+    -----------------------------------
+    
+    -- Over a finite field, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of nonzero entries and the product of these nonzero entries is in the same square class
+    else if (instance(k1, GaloisField) and instance(k2, GaloisField) and k1.char !=2 and k2.char != 2 and k1.order == k2.order) then (
+        return (numRows(A) == numRows(B)) and (numNonzeroDiagEntries(diagA) == numNonzeroDiagEntries(diagB)) and (det(nondegeneratePartDiagonal(A)) == sub(det(nondegeneratePartDiagonal(B)),k1));
         )
     -- If we get here, the base fields are not isomorphic
     else error "Base fields are not isomorphic"
