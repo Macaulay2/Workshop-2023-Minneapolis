@@ -173,9 +173,9 @@ isIsometricForm (Matrix,Matrix) := (Boolean) => (A,B) -> (
     -- Rational numbers
     -----------------------------------
     
-    -- Over QQ, call isIsomorphicFormQ, which checks equivalence over all completions
+    -- Over QQ, if spaces have same dimension and nondegenerate parts have same dimension, then call isIsomorphicFormQ, which checks equivalence over all completions
     else if ((k1 === QQ) and (k2 === QQ)) then (
-        return isIsomorphicFormQ(gwClass(A),gwClass(B));
+        return ((numRows(A) == numRows(B)) and (numRows(nondegeneratePartDiagonal(A)) == numRows(nondegeneratePartDiagonal(B))) and (isIsomorphicFormQ(gwClass(nondegeneratePartDiagonal(A)),gwClass(nondegeneratePartDiagonal(B)))));
         )
     
     -----------------------------------
