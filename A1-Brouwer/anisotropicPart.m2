@@ -10,14 +10,8 @@ anisotropicPart (Matrix) := (Matrix) => (A) -> (
         error "Underlying matrix is not symmetric";
 	);
     diagA := congruenceDiagonalize(A);
-    -- Over CC, the anisotropic part is either the rank 0 form or the rank 1 form, depending on the parity of the number of nonzero diagonal entries
+    -- Over CC, the anisotropic part is either the rank 0 form or the rank 1 form, depending on the anisotropic dimension
     if (k === CC or instance(k,ComplexField)) then (
-        nonzeroEntriesA := 0;
-        for i from 0 to (numRows(A)-1) do (
-            if diagA_(i,i) != 0 then (
-                nonzeroEntriesA = nonzeroEntriesA + 1;
-                );
-            );
         if (anisotropicDimension(A)==0) then (
             return (diagonalMatrix(CC,{}));
             )
@@ -27,21 +21,13 @@ anisotropicPart (Matrix) := (Matrix) => (A) -> (
         )
     --Over RR, the anisotropic part consists of the positive entries in excess of the number of negative entries, or vice versa
     else if (k === RR or instance(k,RealField)) then (
-        posEntriesA := 0;
-        negEntriesA := 0;
-        for i from 0 to (numRows(A)-1) do (
-            if diagA_(i,i) > 0 then (
-                posEntriesA = posEntriesA + 1;
-                );
-            if diagA_(i,i) < 0 then (
-                negEntriesA = negEntriesA + 1;
-                );
-            );
-        if (posEntriesA > negEntriesA) then (
-            return (id_(RR^(posEntriesA-negEntriesA)));
+        posEntries := numPosDiagEntries(diagA);
+        negEntries := numNegDiagEntries(diagA);
+        if (posEntries > negEntries) then (
+            return (id_(RR^(posEntries-negEntries)));
             )
-        else if (posEntriesA < negEntriesA) then (
-            return (-id_(RR^(negEntriesA-posEntriesA)));
+        else if (posEntries < negEntries) then (
+            return (-id_(RR^(negEntries-posEntries)));
             )
         else (
             return (diagonalMatrix(RR,{}));
@@ -53,22 +39,14 @@ anisotropicPart (Matrix) := (Matrix) => (A) -> (
         )
     -- Over a finite field, if the anisotropic dimension is 1, then the form is either <1> or <e>, where e is any nonsquare representative, and if the anisotropic dimension is 2 then the form is <1,-e>
     else if (instance(k, GaloisField) and k.char != 2) then (
-        countNonzeroDiagA := 0;
-        prodNonzeroDiagA := 1;
-        for i from 0 to (numRows(A)-1) do (
-	    if diagA_(i,i) != 0 then (
-		countNonzeroDiagA = countNonzeroDiagA + 1;
-                prodNonzeroDiagA = prodNonzeroDiagA * diagA_(i,i);
-		);
-	    );
         if (anisotropicDimension(A)==1) then (
-            return (matrix(k,{{sub((-1)^((countNonzeroDiagA-1)/2),k)*prodNonzeroDiagA}}));
+            return (matrix(k,{{sub((-1)^((numNonzeroDiagEntries(diagA)-1)/2),k)*det(nondegeneratePartDiagonal(diagA))}}));
             )
         else if (anisotropicDimension(A)==0) then (
             return (diagonalMatrix(k,{}));
             )
         else (
-            return (matrix(k,{{1,0},{0,sub((-1)^((countNonzeroDiagA-2)/2),k)*prodNonzeroDiagA}}));
+            return (matrix(k,{{1,0},{0,sub((-1)^((numNonzeroDiagEntries(diagA)-2)/2),k)*det(nondegeneratePartDiagonal(diagA))}}));
             );
         )
     -- We should never get here
