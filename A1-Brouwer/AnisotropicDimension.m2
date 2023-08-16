@@ -172,3 +172,13 @@ anisotropicDimension (GrothendieckWittClass) := (ZZ) => (alpha) -> (
     return(anisotropicDimension(alpha.matrix));
     );
 
+isotropicDimension = method()
+isotropicDimension (GrothendieckWittClass) := ZZ -> (alpha) -> (
+    n := numRows(alpha.matrix);
+    return (n - anisotropicDimension(alpha))
+    );
+
+WittIndex = method()
+WittIndex (GrothendieckWittClass) := ZZ -> (alpha) -> (
+    return isotropicDimension(alpha)
+    );

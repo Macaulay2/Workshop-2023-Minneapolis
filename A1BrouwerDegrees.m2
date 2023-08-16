@@ -93,7 +93,7 @@ export{
     "gwIsomorphic",
     
     --Isotropy.m2
-    "isIsotropicQp",
+    --"isIsotropicQp",
     "isIsotropic",
     "isAnisotropic",
 
@@ -101,6 +101,8 @@ export{
     "isHyperbolicQp",
     "anisotropicDimensionQp",
     "anisotropicDimensionQQ",
+    "anisotropicDimension",
+    "WittIndex",
     
     --Decomposition.m2
     "sumDecomposition",
@@ -666,11 +668,11 @@ document{
     isIsotropic(gwClass(matrix(GF(7),{{3,0},{0,3}})))
     ///,
     PARA{"Over ", TEX///$\mathbb{Q}$///, " things become a bit more complicated. We can exploit the local-to-global principle for isotropy (the ", EM "Hasse-Minkowski principle", "), which states that a form is isotropic over ", TEX///$\mathbb{Q}$///, " if and only if it is isotropic over all its completions, meaning all the ", TEX///$p$///, "-adic numbers and ", TEX///$\mathbb{R}$///, " [L05, VI.3.1]. We note, however, the classical result that all forms of rank ", TEX///$\ge 5$///, " in ", TEX///$\mathbb{Q}_p$///, " are isotropic [S73, IV Theorem 6]. Thus isotropy in this range of ranks is equivalent to checking it over the real numbers."},
-    EXAMPLE lines///
-    beta = gwClass(matrix(QQ,{{1, 0, 2, 0, 3}, {0, 6, 1, 1, -1},{2, 1, 5, 2, 0}, {0, 1, 2, 4, -1}, {3, -1, 0,-1, 1}}));
-    isIsotropic(beta)
-    diagonalForm(beta)
-    ///,
+    -- EXAMPLE lines///
+    -- beta = gwClass(matrix(QQ,{{1, 0, 2, 0, 3}, {0, 6, 1, 1, -1},{2, 1, 5, 2, 0}, {0, 1, 2, 4, -1}, {3, -1, 0,-1, 1}}));
+    -- isIsotropic(beta)
+    -- diagonalForm(beta)
+    -- ///,
     PARA{"For forms of rank ", TEX///$\le 4$///, " we should understand when the form is isotropic over local fields."},
     PARA{"Ternary forms are isotropic away from primes dividing the coefficients of the form in a diagonal basis by e.g. [L05, VI.2.5(2)], so there are only finitely many things to check. Over these relevant primes, isotropy of a form ", TEX///$\beta \in \text{GW}(\mathbb{Q})$///, " over ", TEX///$\mathbb{Q}_p$///," is equivalent to the statement that ", TEX///$(-1,-\text{disc}(\beta))_p = H(\beta)$///, " where ", TEX///$H(\beta)$///, " denotes the Hasse-Witt invariant attached to ", TEX///$\beta$///, " and ", TEX///$(-,-)_p$///," is the ", TO2(HilbertSymbol, "Hilbert Symbol"), "."},
     PARA{"A binary form ", TEX///$q$///, " is isotropic if and only if it is isomorphic to the hyperbolic form, which implies in particular that the rank, signature, and discriminant of ", TEX///$q$///, " agree with that of ", TEX///$\mathbb{H}=\langle 1,-1\rangle$///, ". " },
@@ -698,31 +700,71 @@ document{
     SeeAlso => {"isIsotropic"}   
 }
 
-
-
-
 document{
-    Key => {(isIsotropicQp, GrothendieckWittClass,ZZ), isIsotropicQp},
-    Headline => "determines whether a rational form is isotropic locally at a prime",
-    Usage => "isIsotropicQp(beta,p)",
+    Key => {(anisotropicDimensionQp, GrothendieckWittClass, ZZ), anisotropicDimensionQp},
+    Headline => "Returns the anisotropic dimension of a rational symmetric bilinear form over the p-adics",
+    Usage => "anisotropicDimensionQp(beta, p)",
     Inputs => {
-	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(\mathbb{Q})$///, "."},
-	ZZ => "p" => {"a prime"},
+	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(\mathbb{Q})$///, ". "},
+	ZZ => "p" => {"A prime number"},
 	},
     Outputs => {
-        Boolean => {"Whether ", TEX///$\beta$///, " is isotropic over ", TEX///$\mathbb{Q}_p$///,"."},
+        ZZ => {"The rank of the anisotropic part of ", TEX///$\beta$///, " over ", TEX///$\mathbb{Q}_p$///, "."},
 	},
-    PARA{"Every rank one nondegenerate form is anisotropic, while every form of rank ", TEX///$\ge 5$///, " is isotropic."},
-    EXAMPLE lines ///
-    isIsotropicQp(gwClass(matrix(QQ,{{2}})),7)
-    ///,
-    PARA{"For ranks two, three, and four, we can use various criteria for isotropy as in [S73, IV Theorem 6]."},
+    PARA{"This is an implementation of [KC18, Algorithm 8] in Macaulay2, which certifies anisotropy of rational forms over the ", TEX///$p$///,"-adics. Note that any form of rank ", TEX///$\ge 5$///, " is always isotropic, so this method will return 0, 1, 2, 3, or 4."},
     PARA{EM "Citations:"},
-    UL{	
-	{"[S73] J.P. Serre, ", EM "A course in arithmetic,", " Springer-Verlag, 1973."},	
-      },
-    SeeAlso => {"isIsotropic", "isAnisotropic","HilbertSymbol"},
-    
+    UL{
+	
+	{"[KC18] P. Koprowski, A. Czogala, ", EM "Computing with quadratic forms over number fields,", " Journal of Symbolic Computation, 2018."},
+    },
+    SeeAlso => {"anisotropicDimensionQQ", "anisotropicDimension"}   
+}
+
+document{
+    Key => {(anisotropicDimensionQQ, GrothendieckWittClass), anisotropicDimensionQQ},
+    Headline => "Returns the anisotropic dimension of a symmetric bilinear form over the rationals",
+    Usage => "anisotropicDimensionQQ(beta)",
+    Inputs => {
+	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(\mathbb{Q})$///, ". "},
+	},
+    Outputs => {
+        ZZ => {"The rank of the anisotropic part of ", TEX///$\beta$///, "."},
+	},
+    PARA{"This is an implementation of [KC18, Algorithm 9] in Macaulay2. Using ", TO2(anisotropicDimensionQp,"anisotropicDimensionQp"), " and  ", TO2(signature,"signature"), " we can understand the anisotropic dimension of ", TEX///$\beta$///, " at all its relevant completions. The anisotropic dimension over ", TEX///$\mathbb{Q}$///, " is then computed as the maximum of the anisotropic dimensions over all completions."},
+    PARA{EM "Citations:"},
+    UL{
+	
+	{"[KC18] P. Koprowski, A. Czogala, ", EM "Computing with quadratic forms over number fields,", " Journal of Symbolic Computation, 2018."},
+    },
+    SeeAlso => {"anisotropicDimensionQp", "anisotropicDimension"}   
+}
+
+document{
+    Key => {(anisotropicDimension, GrothendieckWittClass), anisotropicDimension},
+    Headline => "Returns the anisotropic dimension of a symmetric bilinear form",
+    Usage => "anisotropicDimension(beta)",
+    Inputs => {
+	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(k)$///, " where ", TEX///$k$///, " is the complex numbers, reals, rationals, or a finite field."},
+	},
+    Outputs => {
+        ZZ => {"The rank of the anisotropic part of ", TEX///$\beta$///, "."},
+	},
+    PARA{"By Witt decomposition, any form decomposes uniquely as ", TEX///$\beta \cong k \mathbb{H} \oplus \beta_a$///," where the form ", TEX///$\beta_a$///," is anisotropic. The rank of ", TEX///$\beta_a$///, " is called the ", EM "anisotropic dimension", " of ", TEX///$\beta$///, "."},
+    SeeAlso => {"WittIndex", "anisotropicDimensionQp", "anisotropicDimension"}   
+}
+
+document{
+    Key => {(WittIndex, GrothendieckWittClass), WittIndex},
+    Headline => "Returns the Witt index of a symmetric bilinear form",
+    Usage => "WittIndex(beta)",
+    Inputs => {
+	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(k)$///, " where ", TEX///$k$///, " is the complex numbers, reals, rationals, or a finite field."},
+	},
+    Outputs => {
+        ZZ => {"The rank of the totally isotropic part of ", TEX///$\beta$///, "."},
+	},
+    PARA{"By Witt decomposition, any form decomposes uniquely as ", TEX///$\beta \cong k \mathbb{H} \oplus \beta_a$///," where the form ", TEX///$\beta_a$///," is anisotropic. The integer ", TEX///$2k$///, " is called the ", EM "Witt index", " of ", TEX///$\beta$///, "."},
+    SeeAlso => {"anisotropicDimension", "anisotropicDimensionQp", "anisotropicDimension"}   
 }
 
 
