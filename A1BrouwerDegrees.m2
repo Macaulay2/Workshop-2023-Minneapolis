@@ -142,7 +142,8 @@ load "./A1-Brouwer/Code/AnisotropicDimension.m2"
 -- Finally, decomposing forms
 load "./A1-Brouwer/Code/Decomposition.m2"
 
-
+load "./A1-Brouwer/MoreMatrixMethods.m2"
+load "./A1-Brouwer/NondegeneratePartDiagonal.m2"
 
 
 
