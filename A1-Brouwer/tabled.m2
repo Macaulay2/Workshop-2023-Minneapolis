@@ -143,3 +143,42 @@ rationalSimplify (Matrix) := (ZZ,Matrix) => (A) -> (
     -- Split off hyperbolic forms < a > + < - a >
     return(splitOffObviousHyperbolics(C))
     )
+
+
+
+
+-- TODO can we delete?
+    
+-- Input: (Q): Quadratic form Q given by list of diagonal elements.  
+--      Assume list constists of integers
+-- Output:  (Rank, Disc, Signature, Hasse Invariant for all primes p when not 1)    
+invariantFormQ =method()
+invariantFormQ (List):= (ZZ, ZZ, List, List) => (f) -> (
+    -- currently will export the discriminant as a square free integer
+    -- Note:  Still need a way to treat two integers as defining the same discriminant, if they differ by a
+    --  square in Z_p.  They need to have the same parity of power of prime p, and the quotient of their 
+    -- (prime-to-p) parts must define a unit square in Z_p^*.
+
+    len:=#f;
+    for i from 0 to (len-1) do (
+    if (f_i==0) then (error "Error: Form is degenerate");
+    if not liftable(f_i,ZZ ) then (error "Error: Diagonal elements of form should be integers");
+    );
+    a:=len;
+    b:=discForm(f);
+    c:=signatureRealQForm(f);
+    d:=b;
+    if (b<0) then (d=-b);
+    -- The keys of H contain all primes dividing coefficients
+    H:= hashTable( factor d);
+    k:= keys H;
+    l:={};
+    if ((not H#?2) and HasseWittInvariant(f, 2) == -1) then l=append(l, 2);
+    for i from 0 to #k-1 do (
+    if  (HasseWittInvariant(f, k_i) == -1) then (
+        l=append(l,k_i);
+        );
+    );
+    l=sort(l);
+    return (a, b, c, l);
+    );

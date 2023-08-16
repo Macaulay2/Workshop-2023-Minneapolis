@@ -1,182 +1,66 @@
+-- Boolean determining if a rational symmetric bilinear form is isotropic over Qp.
+-- We can reduce to cases as in Serre Chapter IV Theorem 6
+isIsotropicQp = method()
+isIsotropicQp (GrothendieckWittClass, ZZ) := (Boolean) => (beta, p) ->(
+    kk := baseField beta;
+    n := numRows(beta.matrix);
+    if not (kk === QQ) then error "method is only implemented over the rationals";
+    if not isPrime(p) then error "second argument must be a prime number";
 
-
--- Boolean checking if a diagonal form over QQ with integer coefficients is isotropic locally at a prime p
-isIsotropicDiagFormQp = method()
-isIsotropicDiagFormQp (List, ZZ):=(Boolean) => (f, p) -> (
+    -- Get the discriminant and Hasse-Witt invariant of the form at p
+    d := integralDiscriminant(beta);
     
-    n:=#f;
-    d:=lift(discForm(f),ZZ);
-    e:=hasseWittInvariant(f, p);
+    -- Non-degenerate rank one forms are always anisotropic
+    if (n==1) then(
+	if det(beta.matrix) != 0 then(
+	    return false;		
+	    );
+	);       
+    
+    -- If the form is rank 2, we check if d == -1 as square classes in Qp
     if (n==2) then (
-    -- need to compare d ==-1 in Qp^*/Qp^2	
 	if (equalUptoPadicSquare(sub(-1, ZZ), d, p)) then (
 	    return true;
 	    )
 	else (return false);
-	)
-    else (
-	if (n==3) then (
-	    if (HilbertSymbol(-1, -d, p) == hasseWittInvariant(f, p)) then (
-		return true;
-		)
-	    else (return false);
+	);
+    
+    -- If the form is rank 3, we need to check if the Hilbert symbol
+    -- (-1,-d)_p agrees with the Hasse-Witt invariant of the form    
+    if (n==3) then(
+	if (HilbertSymbol(-1, -d, p) == HasseWittInvariant(beta, p)) then (
+	    return true;
 	    )
-	else (
-	    if (n==4) then (
-		if ((not equalUptoPadicSquare( d, 1, p)) or (equalUptoPadicSquare(d, 1, p) and (HilbertSymbol(-1,-1,p) == hasseWittInvariant(f, p)))) then (
-		    return true;
-		    )
-		else (return false);
-		)
-	    else (
-		return true;
-		)
+	else (return false);
+    	);
+    
+    -- If the form is rank 4, and d is a non-square, true. If d is a square and the
+    -- HasseWitt invariant is equal to the Hilbert symbol (-1,-1)_p, the form is isotropic.
+    -- Otherwise it isn't
+    if (n==4) then(
+	if ((not equalUptoPadicSquare( d, 1, p)) or (equalUptoPadicSquare(d, 1, p) and (HilbertSymbol(-1,-1,p) == HasseWittInvariant(beta, p)))) then (
+	    return true;
 	    )
-	)
+	else (return false);		
+	);    
+    
+    -- All forms of rank >=5 are isotropic
+    if (n>=5) then(
+	return true;
+	);
     );
-
-
-
-
--- Boolean determining if a form is isotropic over Qp
-isIsotropicQp = method()
-isIsotropicQp (GrothendieckWittClass, ZZ) := (Boolean) => (beta, p) ->(
-    kk := baseField beta;
-    if not (kk === QQ) then error "method is only implemented over the rationals";
-    if not isPrime(p) then error "second argument must be a prime number";
-    
-    -- Take a diagonal integral representative of beta
-    betaInt := integralDiagonalRep(beta);
-    
-    -- Extract its diagonal entries as a list
-    L := toList(diagonalEntries(betaInt));
-    
-    -- Call the previous function
-    return isIsotropicDiagFormQp(L,p)
-    )
 
 isIsotropicQp (Matrix, ZZ) := (Boolean) => (M, p) ->(
     beta := gwClass(M);
     return isIsotropicQp(beta,p)
     )    
-    
 
 
--- Boolean checking if a diagonal form over QQ with integer coefficients is isotropic at every local field including RR
-isIsotropicDiagFormQ = method()
-isIsotropicDiagFormQ (List):=(Boolean) => (f) ->(
-    -- need to check if anisotropic over RR and all Qp
-    n:= #f;
-    a:=signatureRealQForm(f);
-    -- if real form is definite then form f is not isotropic
-    if (a_0 * a_1 <=0 ) then (
-	return false;
-	) 
-    else (
-	if (n>4) then (return true; ) 
-	else (
-	    if (n==1 ) then (return false; );
-	    -- for n=2,3,4, the form is isotropic if p!=2 and p doesn't divide any of the 
-	    -- diagonal terms as the conditions in Q_p are automatically satisfied.
-	    d:= discForm(f);
-	    d1:= d;
-	    if (d1<0) then (d1=-d1);
-	    H:= hashTable( factor d1);
-	    k:= keys H;
-	    i:=0;
-	    l:= #k;
-	    if (not isIsotropicDiagFormQp(f, 2)) then (return false);
-	    while (i< l) do (
-	    	p := k_i;
-		if ( not isIsotropicDiagFormQp(f, p)) then (return false);
-		i=i+1;
-		);
-	    return true;
-	    );
-	);
-    );
-
-	
+-- We can exploit the local-to-global principle for isotropy to check 
 
 
---------------------------
--- Checking isotropy
---------------------------
 
--- isAnisotropicDiagFormQp determines if a diagonal quadratic form with integral coefficients is anisotropic over the p-adic field Q_p
--- Methods cited here can be founded in Serre's "A course in arithmetic," Chapter III, Theorem 6
-  
-isAnisotropicDiagQp = method()
-isAnisotropicDiagQp (List, ZZ) := (Boolean) => (f, p) -> (
-    -- Input: (f, p): f list of integrers (the diagonal elements of the form), p an integral prime
-    -- Output: true if form does not represent 0 over Qp
-    
-    -- Check if f is list, p is prime 
-    if not isPrime(p) then error "Error: isAnisotropicDiagFormQp called with p not an integer prime";
-    n:=#f;
-    for i from 0 to n-1 do (
-    	if (not  liftable(f_i,ZZ)) then (error "Error: isAnisotropicDiagFormQp called with a non-integral list");
-    );
-    d:=discForm(f);
-    
-    -- if discriminant is 0, then form is degenerate and is isotropic
-    if (d==0) then (return false);
-    
-    -- can now assume form is nondegenerate
-    -- a rank 1 non-degenerate form is anisotropic
-    if (n==1) then (return true);
-    -- a rank >=5 form is isotropic
-    if (n>4) then (return false);
-    
-    -- now only need to consider ranks 2, 3, 4
-    
-    e:=hasseWittInvariant(f, p);
-    
-    if (n==2) then (
-    -- need to compare d ==-1 in Qp^*/Qp^2; if so, form is isotropic	
-	if (equalUptoPadicSquare(sub(-1, ZZ), d, p)) then (
-	    return false;
-	    )
-	else (return true);
-	)
-    else (
-	-- now use the criteria for n=3
-	-- need to check if (-1,-d)=hasseWittInvariant for f ; if equal, form is isotropic
-	if (n==3) then (
-	    if (HilbertSymbol(-1, -d, p) == hasseWittInvariant(f, p)) then (
-		return false;
-		)
-	    else (return true);
-	    )
-	else (
-	 -- now use the criteria for n=4
-	-- need to check (d=1 and (-1,-1) != =hasseWittInvariant for f) for form to be anisotropic 
-	    if (n==4) then (
-		if ((equalUptoPadicSquare( d, 1, p)) and  (not (HilbertSymbol(-1,-1,p) == hasseWittInvariant(f, p)))) then (
-		    return true;
-		    )
-		else (return false);
-		)
-	    
-	    -- TODO - we should be able to delete this else case since it won't ever be hit?
-	    else (
-		error "Error: rank should have been 2, 3, 4, but isn't";
-		return false;
-		)
-	    )
-	)
-    );
-
-
---isAnisotropicQ takes n GWClass over QQ and returns a Boolean based on whether or not 
---the class is anisotropic
---unlike sumDecomposition it can say for certain if the form is anisotropic or not since it
---does not use rationalPoints
-
--- Input:  A GrothendieckWittClass for a quadratic form
--- Output: True if form is Anisotropic;  False, if form is Isotropic
-
-
+--
 isAnisotropicQ = method()
 isAnisotropicQ (GrothendieckWittClass) := Boolean => (alpha) -> (
     A:= alpha.matrix;
@@ -223,7 +107,7 @@ isAnisotropicQ (GrothendieckWittClass) := Boolean => (alpha) -> (
 	 );
      
   
-    -- if p>2, then hilbert symbol (a,b)=1 if, a, b not divisible by p.  So hasseWittInvariant is also 1.  
+    -- if p>2, then hilbert symbol (a,b)=1 if, a, b not divisible by p.  So HasseWittInvariant is also 1.  
     -- Then for n=3,4, form is automatically isotropic if p doesn't divide disc. 
     -- So only need to check if f is anisotropic over Q_p for p=2 and primes p dividing disc.
     

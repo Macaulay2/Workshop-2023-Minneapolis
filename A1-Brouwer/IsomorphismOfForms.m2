@@ -1,82 +1,38 @@
-isIsomorphicDiagFormQ = method ()
-isIsomorphicDiagFormQ (List, List):= (Boolean) => (f, g) -> (
-    -- Input: (f,g):  f, g are lists of diagonal elements (in integers) of two forms over Q
-    --         
-    -- Output: true if f, g are isomorphic over Q
+-- Boolean checking if two forms over Q are isomorphic
+isIsomorphicFormQ = method()
+isIsomorphicFormQ (GrothendieckWittClass, GrothendieckWittClass) := Boolean => (alpha, beta) -> (
+    if (not baseField(alpha) === QQ) then error "first input must be a form defined over QQ";
+    if (not baseField(beta) === QQ) then error "second input must be a form defined over QQ";
     
-    -- Method:  Calculate rank, discriminant over Q, signature over R
-    --          These must all agree.
-    --	      	If so, then need to see if Hasse invariant agrees for all primes p.
-    --          Hasse symbol is 1 if prime p doesn't divide any of the diagonal elts of form
-    --          So (i) determine the list of primes dividing any of the diagonal elts. 
-    --             (ii) Calculate and compare Hasse invariant at each p.  If equal for all p,
-    --                  then isomorphic forms
-
-    -- Compare signatures over R
-    disc1 := squarefreePart(discForm(f));
-    disc2 := squarefreePart(discForm(g));
+    -- Check if the ranks agree
+    if (not numRows(alpha.matrix) == numRows(beta.matrix)) then return false;
     
-    if (signatureRealQForm(f) == signatureRealQForm(g) and disc1 == disc2) then (
-	    -- signature and discriminants agree. Now need to test Hasse invariant
-	    d:= disc1 * disc2;
-	    if (d<0) then (d = -d);
-	    if (d==0) then error "Error: Form is degenerate";
-	    H:=hashTable (factor d);
-	    k:= keys H;    
-	    i:=0;
-	    flag:=0;
-	    while (i< #k and flag==0)  do (
-		p:=k_i;
-		if (hasseWittInvariant(f, p) != hasseWittInvariant(g, p)) then (
-		    flag=1;
-		    );
-		i=i+1;
-		);
-    	    if flag==0 then (
-		return true;
-		)
-    	    else (
-		return false;
-		);
-	    )
-	else (
-	    return false;
+    -- Check if the signatures (Hasse-Witt invariants at RR) agree
+    if (not signature(alpha) == signature(beta)) then return false;
+    
+    -- Check if the discriminants agree
+    if (not integralDiscriminant(alpha) == integralDiscriminant(beta)) then return false;
+    
+    -- Check if all the Hasse-Witt invariants agree
+    PrimesToCheck := unique(relevantPrimes(alpha) | relevantPrimes(beta));
+    flag := 0;
+    for p in PrimesToCheck do(
+	if (HasseWittInvariant(alpha,p) != HasseWittInvariant(beta,p)) then(
+	    flag = 1;
+	    break;
 	    );
+	);
+    if flag == 0 then (
+	return true;
+	)
+    else (
+	return false;
+	);
     );
 
-
-
-
--- Boolean checking if two symmetric bilinear forms over QQ are isomorphic
-isIsomorphicFormQ = method ()
-isIsomorphicFormQ (Matrix, Matrix):= (Boolean) => (f, g) -> (
-    
-    -- Check same size
-    if (numRows f != numRows g) then (return false;);
-    
-    -- First, we diagonalize both matrices
-    df:= congruenceDiagonalize f;
-    dg:= congruenceDiagonalize g;
-    
-   
-    -- Then make all entries integers, by multiplying by denominator squared, and clearing squares
-    -- create list of diagonal entries in integers
-    n:=numRows f;
-    f1:=apply(n, i-> df_(i,i));
-    g1:=apply(n, i-> dg_(i,i));
-    
-  
-    -- convert rational diagonals to square-free integers by multiplying by squares
-    
-    f2:= apply(n, i-> squarefreePart(sub(numerator(f1_i) * denominator(f1_i),ZZ)));
-    g2:= apply(n, i-> squarefreePart(sub(numerator(g1_i) * denominator(g1_i),ZZ)));
-    
-    -- Now compare forms
-    return isIsomorphicDiagFormQ(f2, g2);
-    
+isIsomorphicFormQ (Matrix, Matrix) := Boolean => (M,N) -> (
+    return isIsomorphicFormQ(gwClass(M),gwClass(N));
     );
-    
-
 
 
 
@@ -143,10 +99,7 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
     
     -- Over QQ, call isIsomorphicFormQ, which checks equivalence over all completions
     else if ((k1 === QQ) and (k2 === QQ)) then (
-        if (numRows(A) != numRows(B)) then (
-            return false;
-            );
-        return isIsomorphicFormQ(diagA,diagB);
+        return isIsomorphicFormQ(alpha,beta);
         )
     
     -----------------------------------

@@ -68,7 +68,7 @@ QQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 -- 	);
     
 --     for p in relevantPrimes(beta) do(
--- 	W = W | matrix(QQ,{{(1 - (hasseWittInvariant(q,p)))/2}});	
+-- 	W = W | matrix(QQ,{{(1 - (HasseWittInvariant(q,p)))/2}});	
 -- 	);    
 --    );
 

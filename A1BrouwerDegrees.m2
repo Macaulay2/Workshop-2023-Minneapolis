@@ -81,12 +81,15 @@ export{
     "signature",
     "integralDiscriminant",
     "relevantPrimes",
+    "HasseWittInvariant",
 
     --LocalGlobalDegrees.m2
     "globalA1Degree",
     "localA1Degree",
     
     --IsomorphismOfForms.m2
+    "isIsomorphicFormQTommy",
+    "isIsomorphicFormQ",
     "gwIsomorphic",
     
     --Isotropy.m2
@@ -521,7 +524,7 @@ document{
     gwIsomorphic(alphaF,gammaF)
     gwIsomorphic(betaF,gammaF)
     ///,
-    PARA{"Over the rationals, further invariants must be considered. We first check if the rank, discriminant, and signature (when considered as a real form) all agree. If so, we must further check whether the ", EM "Hasse-Witt invariants", " agree at all primes. This is an instance of the ", EM "Hasse-Minkowski principle", " which states that quadratic forms are isomorphic over a global field if and they are isomorphic over all its completions (see [S73, III Theorem 7] or [L05, VI.3.3])."},
+    PARA{"Over the rationals, further invariants must be considered. We first check if the rank, discriminant, and signature (when considered as a real form) all agree. If so, we must further check whether the ", EM "Hasse-Witt invariants", " agree at all primes. This is an instance of the ", EM "Hasse-Minkowski principle", " which states that quadratic forms are isomorphic over a global field if and they are isomorphic over all its completions (see [S73, IV Theorem 7] or [L05, VI.3.3])."},
     PARA{"The ", EM "Hasse-Witt invariant", " of a diagonal form ", TEX///$\langle a_1,\ldots,a_n\rangle$///, " over a field ", TEX///$K$///, " is defined to be the product ", TEX///$\prod_{i<j} \left( \phi(a_i,a_j) \right)$///, " where ", TEX///$\phi \colon K \times K \to \left\{\pm 1\right\}$///, " is any ", EM "symbol", " (see e.g. [MH73, III.5.4] for a definition). It is a classical result of Hilbert that over a local field of characteristic not equal to two, there is one and only symbol, ", TEX///$(-,-)_p$///,  " called the ", EM "Hilbert symbol", " ([S73, Chapter III]) computed as follows:"},
     PARA{TEX///$(a,b)_p = \begin{cases} 1 & z^2 = ax^2 + by^2 \text{ has a nonzero solution in } K^3 \\ -1 & \text{otherwise.} \end{cases}$///},
     PARA{"Consider the following example, where we observe that ", TEX///$z^2 = 2x^2 + y^2$///," does admit nonzero solutions mod 7, in particular ", TEX///$(x,y,z) = (1,0,3)$///, ":"},
@@ -662,13 +665,16 @@ document{
     isIsotropic(gwClass(matrix(GF(7),{{1,0,0},{0,1,0},{0,0,1}})))
     isIsotropic(gwClass(matrix(GF(7),{{3,0},{0,3}})))
     ///,
-    PARA{"Over ", TEX///$\mathbb{Q}$///, " things become a bit more complicated. We can exploit the local-to-global principle for isotropy (the ", EM "Hasse-Minkowski principle", "), which states that a form is isotropic over ", TEX///$\mathbb{Q}$///, " if and only if it is isotropic over all its completions, meaning all the ", TEX///$p$///, "-adic numbers and ", TEX///$\mathbb{R}$///, " [L05, VI.3.1]. We note, however, the classical result that all forms of rank ", TEX///$\ge 5$///, " in ", TEX///$\mathbb{Q}_p$///, " are isotropic [S73, III Theorem 6]. Thus isotropy in this range of ranks is equivalent to checking it over the real numbers."},
+    PARA{"Over ", TEX///$\mathbb{Q}$///, " things become a bit more complicated. We can exploit the local-to-global principle for isotropy (the ", EM "Hasse-Minkowski principle", "), which states that a form is isotropic over ", TEX///$\mathbb{Q}$///, " if and only if it is isotropic over all its completions, meaning all the ", TEX///$p$///, "-adic numbers and ", TEX///$\mathbb{R}$///, " [L05, VI.3.1]. We note, however, the classical result that all forms of rank ", TEX///$\ge 5$///, " in ", TEX///$\mathbb{Q}_p$///, " are isotropic [S73, IV Theorem 6]. Thus isotropy in this range of ranks is equivalent to checking it over the real numbers."},
     EXAMPLE lines///
     beta = gwClass(matrix(QQ,{{1, 0, 2, 0, 3}, {0, 6, 1, 1, -1},{2, 1, 5, 2, 0}, {0, 1, 2, 4, -1}, {3, -1, 0,-1, 1}}));
     isIsotropic(beta)
     diagonalForm(beta)
     ///,
-    PARA{"For forms of rank ", TEX///$\le 4$///, " there are simple criteria for isotropy over ", TEX///$\mathbb{Q}_p$///, " which can be found in [S73, III Theorem 6]. As an example for rank 3 forms, isotropy of a form ", TEX///$\beta \in \text{GW}(\mathbb{Q})$///, " over ", TEX///$\mathbb{Q}_p$///," is equivalent to the statement that ", TEX///$(-1,-\text{disc}(\beta))_p = H(\beta)$///, " where ", TEX///$H(\beta)$///, " denotes the Hasse-Witt invariant attached to ", TEX///$\beta$///, " and ", TEX///$(-,-)_p$///," is the ", TO2(HilbertSymbol, "Hilbert Symbol"), "."},
+    PARA{"For forms of rank ", TEX///$\le 4$///, " we should understand when the form is isotropic over local fields."},
+    PARA{"Ternary forms are isotropic away from primes dividing the coefficients of the form in a diagonal basis by e.g. [L05, VI.2.5(2)], so there are only finitely many things to check. Over these relevant primes, isotropy of a form ", TEX///$\beta \in \text{GW}(\mathbb{Q})$///, " over ", TEX///$\mathbb{Q}_p$///," is equivalent to the statement that ", TEX///$(-1,-\text{disc}(\beta))_p = H(\beta)$///, " where ", TEX///$H(\beta)$///, " denotes the Hasse-Witt invariant attached to ", TEX///$\beta$///, " and ", TEX///$(-,-)_p$///," is the ", TO2(HilbertSymbol, "Hilbert Symbol"), "."},
+    PARA{"A binary form ", TEX///$q$///, " is isotropic if and only if it is isomorphic to the hyperbolic form, which implies in particular that the rank, signature, and discriminant of ", TEX///$q$///, " agree with that of ", TEX///$\mathbb{H}=\langle 1,-1\rangle$///, ". " },
+    PARA{"TODO --- rewrite this whole documentation using anisotropicDimension to compute isIsotropic / isAnisotropic booleans"},
     PARA{EM "Citations:"},
     UL{
 	
@@ -710,7 +716,7 @@ document{
     EXAMPLE lines ///
     isIsotropicQp(gwClass(matrix(QQ,{{2}})),7)
     ///,
-    PARA{"For ranks two, three, and four, we can use various criteria for isotropy as in [S73, III Theorem 6]."},
+    PARA{"For ranks two, three, and four, we can use various criteria for isotropy as in [S73, IV Theorem 6]."},
     PARA{EM "Citations:"},
     UL{	
 	{"[S73] J.P. Serre, ", EM "A course in arithmetic,", " Springer-Verlag, 1973."},	

@@ -48,7 +48,8 @@ HilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
     
     -- Finally if p=2
     if p==2 then(
-	return ((-1)^(((u-1)/2)*((v-1)/2) + alpha*((v^2-1)/8) + beta*((u^2-1)/8)))
+	d := sub(((u-1)/2)*((v-1)/2) + alpha*((v^2-1)/8) + beta*((u^2-1)/8),ZZ);
+	return ((-1)^d)
 	);
     
     );

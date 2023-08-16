@@ -103,16 +103,23 @@ relevantPrimes (GrothendieckWittClass) := List => (beta) -> (
  -- Two Q forms over Q_p are isomorphic if they have same rank, same discriminant, and same Hasse-Witt invariant   
 
       
-hasseWittInvariant = method()
+HasseWittInvariant = method()
 
 -- epsilonHilbert computes the epsilon function for a diagonal quadratic form over Q_p
 -- Function requires the list of the diagonal elements of the quadratic form, to be integers
 -- Input:  A list of the diagonal elements (f_i) for the quadratic form, assumed to be integers, and a prime p
--- Output: The hasseWittInvariant function for the quadratic form (f_i) for Q_p
+-- Output: The HasseWittInvariant function for the quadratic form (f_i) for Q_p
 
-hasseWittInvariant (List, ZZ) := ZZ => (f,p) -> (
+HasseWittInvariant (List, ZZ) := ZZ => (L,p) -> (
        a:=1;
-       len:=#f;
+       len:=#L;
+       
+       -- Replace every entry of L with its squarefree part so we can be sure we're evaluating at integers
+       f := {};
+       for x in L do(
+	   f = append(f,squarefreePart(x));
+	   );
+       
        for i from 0 to len-1 do (
 	   if not liftable(f_i,ZZ) then (error "Error:  Hilbert symbol evaluated at a non-integer");
 	   );
@@ -122,15 +129,14 @@ hasseWittInvariant (List, ZZ) := ZZ => (f,p) -> (
 	       );
 	   );
        
-       return a;          
+       return a;
     );
 
-hasseWittInvariant(GrothendieckWittClass, ZZ) := ZZ => (beta,p) -> (
+HasseWittInvariant(GrothendieckWittClass, ZZ) := ZZ => (beta,p) -> (
     kk := baseField beta;
     if not (kk === QQ) then error "method is only implemented over the rationals";
     if not isPrime(p) then error "second argument must be a prime number";
-    
-    return hasseWittInvariant(diagonalEntries(beta),p)
+    return HasseWittInvariant(diagonalEntries(beta),p)
     
     )
 
@@ -168,40 +174,4 @@ signatureRealQForm (List):=(ZZ, ZZ, ZZ) => (f) -> (
 	     
     );
 
-
--- TODO can we delete?
-	
--- Input: (Q): Quadratic form Q given by list of diagonal elements.  
---  	Assume list constists of integers
--- Output:  (Rank, Disc, Signature, Hasse Invariant for all primes p when not 1)	
-invariantFormQ =method()
-invariantFormQ (List):= (ZZ, ZZ, List, List) => (f) -> (
-    -- currently will export the discriminant as a square free integer
-    -- Note:  Still need a way to treat two integers as defining the same discriminant, if they differ by a
-    --  square in Z_p.  They need to have the same parity of power of prime p, and the quotient of their 
-    -- (prime-to-p) parts must define a unit square in Z_p^*.
-
-    len:=#f;
-    for i from 0 to (len-1) do (
-	if (f_i==0) then (error "Error: Form is degenerate");
-	if not liftable(f_i,ZZ ) then (error "Error: Diagonal elements of form should be integers");
-	);
-    a:=len;
-    b:=discForm(f);
-    c:=signatureRealQForm(f);
-    d:=b;
-    if (b<0) then (d=-b);
-    -- The keys of H contain all primes dividing coefficients
-    H:= hashTable( factor d);
-    k:= keys H;
-    l:={};
-    if ((not H#?2) and hasseWittInvariant(f, 2) == -1) then l=append(l, 2);
-    for i from 0 to #k-1 do (
-	if  (hasseWittInvariant(f, k_i) == -1) then (
-	    l=append(l,k_i);
-	    );
-	);
-    l=sort(l);
-    return (a, b, c, l);
-    );
 

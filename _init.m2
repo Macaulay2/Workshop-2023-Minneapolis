@@ -1,88 +1,57 @@
 installPackage("A1BrouwerDegrees")
-beta = gwClass(matrix(QQ,{{1,4,7},{4,3,-1},{7,-1,5}}))
 viewHelp A1BrouwerDegrees
 
-relevantPrimes(beta)
-
-integralDiagonalRep(beta)
-
-factor 3497
-
-primeFactors(1)
 
 installPackage("A1BrouwerDegrees", RerunExamples=>true)
 check A1BrouwerDegrees
 
+T1 = QQ[z_1..z_2];
+f1 = {(z_1-1)*z_1*z_2, (3/5)*z_1^2 - (17/3)*z_2^2};
+f1GD = globalA1Degree(f1);
+q=ideal {z_1,z_2};
+r=ideal {z_1-1,z_2^2-(9/85)};
+f1LDq= localA1Degree(f1,q)
+f1LDr= localA1Degree(f1,r)
+f1LDsum = gwAdd(f1LDq, f1LDr)
 
-T4 = CC[v];
-f5 = {v^4 + v^3 - v^2 - v};
-f5GD = globalA1Degree(f5);
-f5GD
+alpha = f1GD
+beta = f1LDsum
 
-
-
-
-T4Q = QQ[v];
-f5Q = {v^4 + v^3 - v^2 - v};
-f5QGD = globalA1Degree(f5Q);
-f5QGD
-
-
-ff = GF(17);
-T3 = ff[y_1..y_3];
-f3 = {y_1^2, y_2^2, y_3^2};
-f4 = {y_2^2, y_3^2, y_1^2};
-f3GD = globalA1Degree(f3)
-f4GD = globalA1Degree(f4)
-
-
-ff = GF(17);
-T3 = ff[w_1..w_3];
-f3 = {w_1^2, w_2^2, w_3^2};
-globalA1Degree(f3)
-
-
-M = matrix(GF(13),{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
-beta = gwClass(M);
-c=sumDecomposition(beta)
-
-beta
-M
-beta.cache.diagonalForm
-
-class c
-
-
-N = matrix(QQ,{{1,0,0},{0,1,0},{0,0,1}})
-N1 = matrix(QQ,{{1,1,0},{0,1,0},{0,0,1}})
-N2 = matrix(QQ,{{1,0,1},{0,1,0},{0,0,1}})
-N3 = matrix(QQ,{{1,0,0},{1,1,0},{0,0,1}})
-N4 = matrix(QQ,{{1,0,0},{0,1,1},{0,0,1}})
-N5 = matrix(QQ,{{1,0,0},{0,1,0},{1,0,1}})
-N6 = matrix(QQ,{{1,0,0},{0,1,0},{0,1,1}})
-
-
-integralDiscriminant = method()
-integralDiscriminant (GrothendieckWittClass) := (ZZ) => (beta) -> (
-    B:= beta.matrix;
-    rankForm:= numRows(B);
-    kk:= ring B;
+numRows(alpha.matrix) == numRows(beta.matrix)
     
-    if (not (kk===QQ)) then (error "GrothendieckWittClass is not over QQ");
+    -- Check if the signatures (Hasse-Witt invariants at RR) agree
+signature(alpha) == signature(beta)
     
-    -- Take an integral diagonal representative for beta
-    gamma := integralDiagonalRep(beta);
-    G := gamma.matrix;
+    -- Check if the discriminants agree
+integralDiscriminant(alpha) == integralDiscriminant(beta)
     
-    discrimForm:= 1;
-    for i from 0 to (rankForm-1) do(
-	discrimForm = discrimForm * (G_(i,i));
-	);
-    
-    return sub(squarefreePart(discrimForm),ZZ);
-    );
+    -- Check if all the Hasse-Witt invariants agree
+unique(relevantPrimes(alpha) | relevantPrimes(beta))
 
+diagonalForm(alpha)
 
-M = matrix(QQ,{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
+HilbertSymbol(
 
-integralDiscriminant(gwClass(M))
+diagonalEntries(alpha)
+
+hasseWittInvariant(alpha,2)
+
+isIsomorphicFormQ(f1GD,f1LDsum)
+
+-- HERE"S THE ERROR
+HilbertSymbol(-102,15,2)
+-- ----
+
+installPackage("A1BrouwerDegrees")
+a= -102
+b = 15
+p = 2
+alpha := PadicValuation(a,p)
+beta := PadicValuation(b,p)
+u := sub(a/p^alpha,ZZ)
+v := sub(b/p^beta, ZZ)
+d := ((u-1)/2)*((v-1)/2) + alpha*((v^2-1)/8) + beta*((u^2-1)/8)
+
+(-1)^(-154)
+
+(u^2-1)/8q
