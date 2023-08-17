@@ -41,7 +41,7 @@ primeFactors (ZZ) := List => (n) -> (
 	return {};
 	);
     
-    return keys(hashTable(factor(abs(n))))
+    return sort keys(hashTable(factor(abs(n))))
     );
 
 primeFactors (QQ) := List => (n) -> (

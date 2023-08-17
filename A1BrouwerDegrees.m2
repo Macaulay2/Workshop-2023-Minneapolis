@@ -398,4 +398,10 @@ G1 = gwClass(M1);
 assert((integralDiagonalRep(G1)).matrix == M2);
 ///
 
+-- Test for prime factors
+-- Test 17
+TEST ///
+assert(primeFactors(17) == {17});
+assert(primeFactors(120) == {2, 3, 5});
+///
 end
