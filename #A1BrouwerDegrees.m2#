@@ -1,3 +1,4 @@
+
 --A1BrouwerDegrees.m2
 newPackage(
     "A1BrouwerDegrees",
@@ -310,23 +311,6 @@ t=ideal{w};
 f2LDt = localA1Degree(f2, t);
 f2LDsum = gwAdd(gwAdd(f2LDp, f2LDs),f2LDt);
 assert(gwIsomorphic(f2LDsum, f2GD));
-///
-
--- Testing for building forms
--- Test 7
-TEST ///
-twoH = hyperbolicForm(GF(17),4);
-P = PfisterForm(GF(17),(2,3));
-assert(gwIsomorphic(P,twoH));
-///
-
--- Test 8
-TEST ///
-H = hyperbolicForm(RR);
-A = diagonalClass(RR,(1,-1));
-B = gwClass(matrix(RR,{{0,1},{1,0}}));
-assert(gwIsomorphic(H,A));
-assert(gwIsomorphic(H,B));
 ///
     
 
