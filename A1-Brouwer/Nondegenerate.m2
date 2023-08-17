@@ -12,3 +12,8 @@ nondegeneratePartDiagonal (Matrix) := (Matrix) => (A) -> (
         );
     return (diagA);
     )
+
+nondegenerateDimension = method()
+nondegenerateDimension (Matrix) := (ZZ) => (A) -> (
+    return (numRows(nondegeneratePartDiagonal(A)));
+    )
