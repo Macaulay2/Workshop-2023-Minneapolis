@@ -422,7 +422,7 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
 	(numHypForms,B) := WittDecomp(A);
 	
 	-- Add any hyperbolic forms if they exist
-    if numHypForms = 1 then(
+    if numHypForms == 1 then(
         simplifiedFormQQ = H;
         outputStringQQ = outputStringQQ | "H + potentially anisotropic part";
     );

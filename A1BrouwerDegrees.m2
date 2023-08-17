@@ -102,6 +102,7 @@ export{
     "WittIndex",
     
     --Decomposition.m2
+    "WittDecomp",
     "sumDecomposition",
     "sumDecompositionString"
     }
@@ -143,7 +144,7 @@ load "./A1-Brouwer/Code/AnisotropicDimension.m2"
 load "./A1-Brouwer/Code/Decomposition.m2"
 
 load "./A1-Brouwer/MoreMatrixMethods.m2"
-load "./A1-Brouwer/NondegeneratePartDiagonal.m2"
+load "./A1-Brouwer/Nondegenerate.m2"
 
 
 
@@ -215,6 +216,7 @@ load "./A1-Brouwer/Documentation/DecompositionDoc.m2"
 ------------------
 
 -- Diagonal form testing
+-- Test 0
 TEST ///
 print("diagonal form testing");
 M1=matrix(RR, {{0, 1}, {1, 0}});
@@ -223,6 +225,7 @@ M2=diagonalForm(G1);
 assert(M2.matrix===matrix(RR, {{1, 0}, {0, -1}}));
 ///
 
+-- Test 1
 TEST ///
 M3=matrix(CC, {{1, 2, 3}, {2, 4, 5}, {3, 5, 7}});
 G2=gwClass(M3);
@@ -232,7 +235,7 @@ assert(M4.matrix===matrix(CC, {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}));
 -- assert(G2.cache.?diagonalForm)
 ///
 
-
+--Test 2
 TEST ///
 M3=matrix(QQ, {{1, 2, 3}, {2, 4, 5}, {3, 5, 7}});
 G2=gwClass(M3);
@@ -241,6 +244,7 @@ assert(M4.matrix===matrix(QQ,{{1, 0, 0}, {0, -2, 0}, {0, 0, 1/2}}));
 ///
 
 -- gwTypeTest.m2
+-- Test 3
 TEST ///
 M = matrix(QQ,{{1,0},{0,1}});
 N = matrix(QQ, {{1, 2}, {2, 5}})
@@ -263,7 +267,8 @@ assert(isWellDefined(sigma) === false);
 ///
 
 
--- degreeTesting.m2
+-- Testing for global and local A1 degrees
+-- Test 4 (OK)
 TEST ///
 T1 = QQ[x]
 f = {x^2}
@@ -272,32 +277,33 @@ gamma = gwClass(matrix(QQ,{{0,1},{1,0}}))
 assert(gwIsomorphic(beta,gamma))
 ///
 
-
+-- Test 5 (OK)
 TEST ///
 T1 = QQ[z_1..z_2];
 f1 = {(z_1-1)*z_1*z_2, (3/5)*z_1^2 - (17/3)*z_2^2};
 f1GD = globalA1Degree(f1);
 f1GDmat = f1GD.matrix;
-assert((WittDecomp(f1GDmat))==(3,matrix(QQ,{{}})));
+assert(WittDecomp(f1GDmat)==(3,0));
 q=ideal {z_1,z_2};
 r=ideal {z_1-1,z_2^2-(9/85)};
 f1LDq= localA1Degree(f1,q);
 f1LDr= localA1Degree(f1,r);
 f1LDsum = gwAdd(f1LDq, f1LDr);
 assert(gwIsomorphic(f1LDsum, f1GD));
+///
 
-
-
+-- Test 6 (OK)
+TEST ///
 T2 = QQ[w];
 f2 = {w^4 + w^3 - w^2 - w};
 f2GD= globalA1Degree(f2);
 f2GDmat = f2GD.matrix;
-assert(WittDecomp(f2GDmat)==(2,matrix(QQ,{{}})));
+assert(WittDecomp(f2GDmat)==(2,0));
 
 p=ideal {w+1};
 f2LDp = localA1Degree(f2, p);
 f2LDpmat = f2LDp.matrix;
-assert(WittDecomp(f2LDpmat)==(1,matrix(QQ,{{}})));
+assert(WittDecomp(f2LDpmat)==(1,0));
 s=ideal{w-1};
 f2LDs = localA1Degree(f2, s);
 t=ideal{w};
