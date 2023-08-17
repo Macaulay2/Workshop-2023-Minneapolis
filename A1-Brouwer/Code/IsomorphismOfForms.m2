@@ -65,20 +65,7 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
     
     -- Over CC, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of nonzero entries
     if (k1 === CC or instance(k1,ComplexField)) and (k2 === CC or instance(k2,ComplexField)) then (
-        if (numRows(A) != numRows(B)) then (
-            return false;
-            );
-        nonzeroEntriesA := 0;
-        nonzeroEntriesB := 0;
-        for i from 0 to (numRows(A)-1) do (
-            if diagA_(i,i) != 0 then (
-                nonzeroEntriesA = nonzeroEntriesA + 1;
-                );
-            if diagB_(i,i) != 0 then (
-                nonzeroEntriesB = nonzeroEntriesB + 1;
-                );
-            );
-        return (nonzeroEntriesA == nonzeroEntriesB);
+        return ((numRows(A) == numRows(B)) and (numNonzeroDiagEntries(diagA) == numNonzeroDiagEntries(diagB)));
         )
     
     -----------------------------------
@@ -87,10 +74,7 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
     
     --Over RR, diagonal forms are equivalent if and only if they have the same number of positive, negative, and zero entries
     else if ((k1 === RR or instance(k1,RealField)) and (k2 === RR or instance(k2,RealField))) then (
-        if (numRows(A) != numRows(B)) then (
-            return false;
-            );
-        return (signature(alpha)==signature(beta));
+        return ((numRows(A) == numRows(B)) and (signature(alpha) == signature(beta)));
         )
     
     -----------------------------------
@@ -107,25 +91,8 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
     -----------------------------------
     
     -- Over a finite field, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of nonzero entries and the product of these nonzero entries is in the same square class
-    else if (instance(k1, GaloisField) and instance(k2, GaloisField) and k1.order == k2.order) then (
-        if (numRows(A) != numRows(B)) then (
-            return false;
-            );
-        countNonzeroDiagA := 0;
-        countNonzeroDiagB := 0;
-        prodNonzeroDiagA := 1;
-        prodNonzeroDiagB := 1;
-        for i from 0 to (numRows(A)-1) do (
-	    if diagA_(i,i) != 0 then (
-		countNonzeroDiagA = countNonzeroDiagA + 1;
-                prodNonzeroDiagA = prodNonzeroDiagA * diagA_(i,i);
-		);
-	    if diagB_(i,i) != 0 then (
-		countNonzeroDiagB = countNonzeroDiagB + 1;
-                prodNonzeroDiagB = prodNonzeroDiagB * diagB_(i,i);
-		);
-	    );
-        return ((countNonzeroDiagA == countNonzeroDiagB) and (legendreBoolean(prodNonzeroDiagA) == legendreBoolean(prodNonzeroDiagB)));
+    else if (instance(k1, GaloisField) and instance(k2, GaloisField) and k1.char !=2 and k2.char != 2 and k1.order == k2.order) then (
+        return (numRows(A) == numRows(B)) and (numNonzeroDiagEntries(diagA) == numNonzeroDiagEntries(diagB)) and (det(nondegeneratePartDiagonal(A)) == sub(det(nondegeneratePartDiagonal(B)),k1));
         )
     -- If we get here, the base fields are not isomorphic
     else error "Base fields are not isomorphic"
