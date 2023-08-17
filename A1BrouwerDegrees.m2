@@ -329,6 +329,20 @@ assert(gwIsomorphic(H,A));
 assert(gwIsomorphic(H,B));
 ///
     
+-- Test for the smallest magnitude representative of a square class over the rationals or integers
+-- Test 9
+TEST ///
+assert(squarefreePart(15/72) == 30);
+assert(squarefreePart(-1/3) == -3);
+///
 
+-- Test for local algebra basis
+-- Test 10
+TEST ///
+QQ[x,y]
+f = {x^2+1-y,y};
+p = ideal(x^2+1,y);
+assert(localAlgebraBasis(f,p) == {1,x}); 
+///
 
 end
