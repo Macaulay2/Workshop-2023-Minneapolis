@@ -345,4 +345,57 @@ p = ideal(x^2+1,y);
 assert(localAlgebraBasis(f,p) == {1,x}); 
 ///
 
+-- Tests for diagonalForm and diagonalEntries
+-- Test 11
+TEST ///
+M1 = matrix(CC,{{1,0,0},{0,2,0},{0,0,-3}});
+M2 = matrix(CC,{{1,0,0},{0,1,0},{0,0,1}});
+G = gwClass(M1);
+assert((diagonalForm(G)).matrix == M2);
+assert(diagonalEntries(G) == {1,1,1});
+
+///
+
+-- Test 12
+TEST ///
+M1 = matrix(RR,{{1,0,0},{0,2,0},{0,0,-3}});
+M2 = matrix(RR,{{1,0,0},{0,1,0},{0,0,-1}});
+G = gwClass(M1);
+assert((diagonalForm(G)).matrix == M2);
+assert(diagonalEntries(G) == {1,1,-1});
+///
+
+-- Test 13
+TEST ///
+M = matrix(QQ,{{1,0,0},{0,2,0},{0,0,-3}});
+G = gwClass(M);
+assert((diagonalForm(G)).matrix == M);
+assert(diagonalEntries(G) == {1,2,-3})
+///
+    
+-- Test 14
+TEST ///
+M = matrix(GF(5),{{1,0,0},{0,2,0},{0,0,-3}});
+G = gwClass(M);
+assert((diagonalForm(G)).matrix == M);
+assert(diagonalEntries(G) == {1,2,-3});
+///
+
+-- Test 15
+TEST ///
+M = matrix(GF(7),{{1,0,0},{0,2,0},{0,0,-3}});
+G = gwClass(M);
+assert((diagonalForm(G)).matrix == M);
+assert(diagonalEntries(G) == {1,2,-3});
+///
+
+-- Tests for integralDiagonalRep
+-- Test 16
+TEST ///
+M1 = matrix(QQ,{{18,0,0},{0,125/9,0},{0,0,-8/75}});
+M2 = matrix(QQ,{{2,0,0},{0,5,0},{0,0,-6}});
+G1 = gwClass(M1);
+assert((integralDiagonalRep(G1)).matrix == M2);
+///
+
 end
