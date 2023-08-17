@@ -92,7 +92,7 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
     
     -- Over a finite field, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of nonzero entries and the product of these nonzero entries is in the same square class
     else if (instance(k1, GaloisField) and instance(k2, GaloisField) and k1.char !=2 and k2.char != 2 and k1.order == k2.order) then (
-        return (numRows(A) == numRows(B)) and (numNonzeroDiagEntries(diagA) == numNonzeroDiagEntries(diagB)) and (det(nondegeneratePartDiagonal(A)) == sub(det(nondegeneratePartDiagonal(B)),k1));
+        return ((numRows(A) == numRows(B)) and (numNonzeroDiagEntries(diagA) == numNonzeroDiagEntries(diagB)) and (legendreBoolean(det(nondegeneratePartDiagonal(A))) == legendreBoolean(sub(det(nondegeneratePartDiagonal(B)),k1))));
         )
     -- If we get here, the base fields are not isomorphic
     else error "Base fields are not isomorphic"
@@ -151,7 +151,7 @@ isIsometricForm (Matrix,Matrix) := (Boolean) => (A,B) -> (
     
     -- Over a finite field, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of nonzero entries and the product of these nonzero entries is in the same square class
     else if (instance(k1, GaloisField) and instance(k2, GaloisField) and k1.char !=2 and k2.char != 2 and k1.order == k2.order) then (
-        return (numRows(A) == numRows(B)) and (numNonzeroDiagEntries(diagA) == numNonzeroDiagEntries(diagB)) and (det(nondegeneratePartDiagonal(A)) == sub(det(nondegeneratePartDiagonal(B)),k1));
+        return ((numRows(A) == numRows(B)) and (numNonzeroDiagEntries(diagA) == numNonzeroDiagEntries(diagB)) and (legendreBoolean(det(nondegeneratePartDiagonal(A))) == legendreBoolean(sub(det(nondegeneratePartDiagonal(B)),k1))));
         )
     -- If we get here, the base fields are not isomorphic
     else error "Base fields are not isomorphic"
