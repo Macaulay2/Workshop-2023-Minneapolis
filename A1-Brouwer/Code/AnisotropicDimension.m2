@@ -2,15 +2,17 @@
 -- Anisotropic dimension
 ---------------------------------------
 
+-- Input: A Grothendieck-Witt class beta (over QQ) and an integer
+-- Output: True if matrix representation of beta is hyperbolic
+-- Notes: Koprowski/Czogala Algorithm 6
 
--- Koprowski/Czogala Algorithm 6
 isHyperbolicQp = method()
 isHyperbolicQp (GrothendieckWittClass, ZZ) := Boolean => (beta, p) ->(
-    B:= beta.matrix;
-    rankForm:= numRows(B);
-    kk:= ring B;
+    B := beta.matrix;
+    rankForm := numRows(B);
+    kk := ring B;
     
-    if (not (kk===QQ)) then (error "GrothendieckWittClass is not over QQ");
+    if (not (kk === QQ)) then (error "GrothendieckWittClass is not over QQ");
     if not isPrime(p) then error "second argument must be a prime number";
     if (isDegenerate(B)) then (error "form is degenerate");
     
@@ -18,7 +20,7 @@ isHyperbolicQp (GrothendieckWittClass, ZZ) := Boolean => (beta, p) ->(
     if odd rankForm then return false; 
     
     -- Hyperbolic forms don't have square discriminants
-    d:= integralDiscriminant(beta);
+    d := integralDiscriminant(beta);
     if isPadicSquare(d,p) then return false;
     
     -- At this stage, the rank and discriminant of our beta agrees with that of a hyperbolic form,
@@ -28,24 +30,27 @@ isHyperbolicQp (GrothendieckWittClass, ZZ) := Boolean => (beta, p) ->(
 	m := sub(rankForm/2,ZZ);
 	
 	-- The Hasse-Witt invariant of mH:
-	HasseWittHyperbolicForm := (HilbertSymbol(-1,-1,p))^(m*(m-1)/2);
+	HasseWittHyperbolicForm := (HilbertSymbol(-1,-1,p))^(m*(m - 1)/2);
 	HasseWittBeta := HasseWittInvariant(beta,p);
 	return (HasseWittHyperbolicForm == HasseWittBeta)
 	);
     );
 
+-- Input: A Grothendieck-Witt class beta and an integer
+-- Output: An integer, the rank of the anisotropic part of beta over Q_p
 
--- Given a symmetric bilinear form over QQ, and a prime p, outputs the anisotropic
+-- Note: Given a symmetric bilinear form over QQ, and a prime p, outputs the anisotropic
 -- dimension of the form over the p-adic numbers Q_p. Note that as all quadratic forms
--- over Q_p of dimension >=5 are isotropic, this method will always output 0, 1, 2, 3, or 4.
+-- over Q_p of dimension >= 5 are isotropic, this method will always output 0, 1, 2, 3, or 4.
 -- This is an implementation of Koprowski/Czogala Algorithm 8
+
 anisotropicDimensionQp = method()
 anisotropicDimensionQp (GrothendieckWittClass, ZZ) := ZZ => (beta, p) ->(
-    B:= beta.matrix;
-    rankForm:= numRows(B);
-    kk:= ring B;
+    B := beta.matrix;
+    rankForm := numRows(B);
+    kk := ring B;
     
-    if (not (kk===QQ)) then (error "GrothendieckWittClass is not over QQ");
+    if (not (kk === QQ)) then (error "GrothendieckWittClass is not over QQ");
     if not isPrime(p) then error "second argument must be a prime number";
     if (isDegenerate(B)) then (error "form is degenerate");
     
@@ -72,15 +77,18 @@ anisotropicDimensionQp (GrothendieckWittClass, ZZ) := ZZ => (beta, p) ->(
 	);
     );
 
--- Computes the anisotropic dimension of a form over QQ
+-- Input: A Grothendieck-Witt class beta in GW(QQ)
+-- Output: An integer, the rank of the anisotropic part of beta
+-- Notes: Computes the anisotropic dimension of a form over QQ
 -- following Algorithm 9 of Koprowski/Czogala
+
 anisotropicDimensionQQ = method()
 anisotropicDimensionQQ (GrothendieckWittClass) := ZZ => (beta) -> (
-    B:= beta.matrix;
-    rankForm:= numRows(B);
-    kk:= ring B;
+    B := beta.matrix;
+    rankForm := numRows(B);
+    kk := ring B;
     
-    if (not (kk===QQ)) then (error "GrothendieckWittClass is not over QQ");
+    if (not (kk === QQ)) then (error "GrothendieckWittClass is not over QQ");
     if (isDegenerate(B)) then (error "form is degenerate");
     
     -- The anisotropic dimension of a form over Q is the maximum of its anisotropic dimensions at any of its completions
@@ -102,6 +110,8 @@ anisotropicDimensionQQ (GrothendieckWittClass) := ZZ => (beta) -> (
     return max ListOfLocalAnistropicDimensions;
     );
 
+-- Input: A Grothendieck-Witt class beta in GW(k), where k is the complex numbers, the real, the rationals or a finite field
+-- Output: An integer, the rank of the anisotropic part of beta
 
 anisotropicDimension = method()
 anisotropicDimension (Matrix) := (ZZ) => (A) -> (
@@ -129,7 +139,7 @@ anisotropicDimension (Matrix) := (ZZ) => (A) -> (
         )
     -- Over a finite field, if the number of nonzero diagonal entries is odd, then the anisotropic dimension is 1; if the number of nonzero diagonal entries is even, then the anisotropic dimension is either 0 or 2 depending on whether the nondegenerate part of the form is totally hyperbolic
     else if (instance(k, GaloisField) and k.char != 2) then (
-        if (numNonzeroDiagEntries(A)%2==1) then (
+        if (numNonzeroDiagEntries(A)%2 == 1) then (
             return 1;
             )
         else if (legendreBoolean(det(nondegeneratePartDiagonal(diagA))) == legendreBoolean(sub((-1)^(numRows(nondegeneratePartDiagonal(diagA))/2),k))) then (
@@ -143,16 +153,21 @@ anisotropicDimension (Matrix) := (ZZ) => (A) -> (
     else error "Problem with base field"
     )
 
-
 anisotropicDimension (GrothendieckWittClass) := (ZZ) => (alpha) -> (
     return(anisotropicDimension(alpha.matrix));
     );
+
+-- Input: A Grothendieck-Witt class beta in GW(k), where k is the complex numbers, the real, the rationals or a finite field
+-- Output:  An integer, the rank of the isotropic part of beta
 
 isotropicDimension = method()
 isotropicDimension (GrothendieckWittClass) := ZZ -> (alpha) -> (
     n := numRows(alpha.matrix);
     return (n - anisotropicDimension(alpha))
     );
+
+-- Input: A Grothendieck-Witt class beta in GW(k), where k is the complex numbers, the real, the rationals or a finite field
+-- Output: An integer, the rank of the totally isotropic part of beta
 
 WittIndex = method()
 WittIndex (GrothendieckWittClass) := ZZ -> (alpha) -> (
