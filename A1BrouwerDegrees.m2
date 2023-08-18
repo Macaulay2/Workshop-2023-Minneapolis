@@ -404,4 +404,18 @@ TEST ///
 assert(primeFactors(17) == {17});
 assert(primeFactors(120) == {2, 3, 5});
 ///
+
+-- Test for p-adic valuation
+-- Test 18
+TEST ///
+assert(PadicValuation(27,3) == 3);
+///
+
+-- Test for squareSymbol
+TEST ///
+assert(squareSymbol(27,3) == 0);
+assert(squareSymbol(64,2) == 1);
+assert(squareSymbol(64,8) == -1);
+///
+
 end
