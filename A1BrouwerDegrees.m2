@@ -412,6 +412,7 @@ assert(PadicValuation(27,3) == 3);
 ///
 
 -- Test for squareSymbol
+-- Test 19
 TEST ///
 assert(squareSymbol(27,3) == 0);
 assert(squareSymbol(64,2) == 1);
