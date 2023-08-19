@@ -46,17 +46,13 @@ isUpperLeftTriangular = method()
 isUpperLeftTriangular (Matrix) := Boolean => M -> (
     if not isSquare(M) then error "Error: matrix isn't square";
     n := numRows(M);
-    for i from 0 to n - 1 do(
-	for j from 0 to n - 1 do(
-	    
-	    -- Search in the matrix entries that lie below the main antidiagonal
-	    if i + j >= n then(
-		
-		-- If any entry in this range is nonzero then the matrix isn't upper left triangular
+    for i from 1 to n - 1 do(
+	for j from 0 to i - 1 do(
+    	-- If any entry in this range is nonzero then the matrix isn't upper left triangular
 		if not M_(i,j) == 0 then(
 		    return false
 		    );
-		);
+		
         );
     );
     true
@@ -113,13 +109,14 @@ congruenceDiagonalize (Matrix) := (Matrix) => (AnonMut) -> (
 		-- Scan for nonzero entries below the diagonal entry
                 if A_(row,col) != 0 then (
                     if A_(row,row) == 0 then (
-		        --Row reduction to make A_(col,col) nonzero
+		        -- Row reduction to make A_(col,col) nonzero
                         rowAdd(A,col,1,row);
 		        -- Column reduction to keep reduced matrix congruent to original matrix
                         columnAdd(A,col,1,row);
                         )
                     else (
 		        -- Row and column swaps to make A_(col,col) nonzero
+                -- Better alternative for keeping entries smaller in A in case A_(row,row)!=0
                         rowSwap(A,col,row);
                         columnSwap(A,col,row);
                         );

@@ -419,4 +419,15 @@ assert(squareSymbol(64,2) == 1);
 assert(squareSymbol(64,8) == -1);
 ///
 
+-- Test for congruenceDiagonalize
+-- Test 20
+TEST ///
+B=matrix(QQ,{{0/1,1},{1,0}});
+assert((WittDecomp(congruenceDiagonalize(B)))_0 == 1);
+P=matrix(QQ,{{0/1, 5,1},{2,2,1},{0,0,1}});
+A=matrix(QQ,{{1/1,0,0},{0,-1,0},{0,0,1}});
+assert((WittDecomp(congruenceDiagonalize(P*A*transpose(P))))_0 == 1);
+///
+
+
 end

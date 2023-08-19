@@ -100,9 +100,11 @@ WittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     -- will use rationalPoints package to see if f has a zero.  If so, A is isotropic.  
     -- rationalPoints package seeks a zero upto variable bound
     
+    
     use k;
     solnPt := new MutableList;
     solnFound := false;
+    if n>1 then(
     for bound from 1 to 10 do (
         solns := new MutableList from rationalPoints(ideal(f),Bound => bound);
         if (#solns > 1) then(
@@ -111,7 +113,7 @@ WittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
             break;
         );
     );
-
+    );
 
     -- If no solutions found, then we assume the form is anisotropic
     if (not solnFound) then (return (0,A));
