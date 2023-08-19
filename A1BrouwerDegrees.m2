@@ -430,4 +430,16 @@ assert((WittDecomp(congruenceDiagonalize(P*A*transpose(P))))_0 == 1);
 ///
 
 
+-- Test for gwClass
+-- Test 21
+TEST ///
+M = matrix(ZZ,{{1,0,0},{0,1,0},{0,0,1}});
+M1 = matrix(QQ,{{1/1,0,0},{0,1,0},{0,0,1}});
+M2 = matrix(QQ,{{1/1,24/10,0},{24/10,-5,0},{0,0,69}});
+assert(class(gwClass(M)) === GrothendieckWittClass);
+assert(class(gwClass(M1)) === GrothendieckWittClass);
+assert(class(gwClass(M2)) === GrothendieckWittClass);
+///
+
+
 end
