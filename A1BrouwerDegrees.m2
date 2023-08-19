@@ -441,5 +441,16 @@ assert(class(gwClass(M1)) === GrothendieckWittClass);
 assert(class(gwClass(M2)) === GrothendieckWittClass);
 ///
 
+-- Test for baseField
+-- Test 22
+TEST ///
+M = gwClass(matrix(QQ,{{1/1,0,0},{0,2,3},{0,3,1}}));
+M1 = gwClass(matrix(RR,{{1.0,24/10,-2.41},{24/10,-5,0},{-2.41,0,69}}));
+M2 = gwClass(matrix(CC,{{1*ii,24/10,-2.41},{24/10,-5,0},{-2.41,0,69+ii}}));
+assert(baseField(M) === QQ);
+assert(baseField(M1) === RR_53);
+assert(baseField(M2) === CC_53);
+///
+
 
 end
