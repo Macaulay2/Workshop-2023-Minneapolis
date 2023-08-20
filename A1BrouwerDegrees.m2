@@ -456,6 +456,17 @@ assert(baseField(M2) === CC_53);
 assert(toString(baseField(M3)) === toString(GF(7)));
 ///
 
+-- Test for gwAdd
+-- Test 23
+TEST ///
+M1 = gwClass(matrix(QQ, {{1/1,0,-3},{0,23,0},{-3,0,-2/5}}));
+M2 = gwClass(matrix(QQ, {{0,1/2,0},{1/2,5/9,0},{0,0,1}}));
+
+G1 = gwClass(matrix(RR, {{sqrt(2),0,-3},{0,sqrt(5),0},{-3,0,-1/5}}));
+G2 = gwClass(matrix(RR,{{1/3}}));
+
+assert(true);
+///
 
 
 end
