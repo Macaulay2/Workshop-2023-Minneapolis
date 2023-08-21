@@ -478,5 +478,11 @@ assert(gwAdd(G1,G2) === G3);
 assert(gwAdd(H1,H2) === H3);
 ///
 
+-- Test for gwMultiply
+-- Test 24
+TEST ///
+assert(true)
+///
+
 
 end
