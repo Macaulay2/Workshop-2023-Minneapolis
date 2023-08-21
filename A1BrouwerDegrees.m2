@@ -437,6 +437,7 @@ M = matrix(ZZ,{{1,0,0},{0,1,0},{0,0,1}});
 M1 = matrix(QQ,{{1/1,0,0},{0,1,0},{0,0,1}});
 M2 = matrix(QQ,{{1/1,24/10,0},{24/10,-5,0},{0,0,69}});
 M3 = matrix(GF(7),{{1,0,0},{0,2,0},{0,0,-3}});
+
 assert(class(gwClass(M)) === GrothendieckWittClass);
 assert(class(gwClass(M1)) === GrothendieckWittClass);
 assert(class(gwClass(M2)) === GrothendieckWittClass);
@@ -450,6 +451,7 @@ M = gwClass(matrix(QQ,{{1/1,0,0},{0,2,3},{0,3,1}}));
 M1 = gwClass(matrix(RR,{{1.0,24/10,-2.41},{24/10,-5,0},{-2.41,0,69}}));
 M2 = gwClass(matrix(CC,{{1*ii,24/10,-2.41},{24/10,-5,0},{-2.41,0,69+ii}}));
 M3 = gwClass(matrix(GF(7),{{1,0,0},{0,2,0},{0,0,-3}}));
+
 assert(baseField(M) === QQ);
 assert(baseField(M1) === RR_53);
 assert(baseField(M2) === CC_53);
