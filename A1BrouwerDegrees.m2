@@ -461,11 +461,19 @@ assert(toString(baseField(M3)) === toString(GF(7)));
 TEST ///
 M1 = gwClass(matrix(QQ, {{1/1,0,-3},{0,23,0},{-3,0,-2/5}}));
 M2 = gwClass(matrix(QQ, {{0,1/2,0},{1/2,5/9,0},{0,0,1}}));
+M3 = gwClass(matrix(QQ, {{1/1,0,-3,0,0,0},{0,23,0,0,0,0},{-3,0,-2/5,0,0,0},{0,0,0,0,1/2,0},{0,0,0,1/2,5/9,0},{0,0,0,0,0,1}}))
 
 G1 = gwClass(matrix(RR, {{sqrt(2),0,-3},{0,sqrt(5),0},{-3,0,-1/5}}));
-G2 = gwClass(matrix(RR,{{1/3}}));
+G2 = gwClass(matrix(RR, {{1/3}}));
+G3 = gwClass(matrix(RR, {{sqrt(2),0,-3,0},{0,sqrt(5),0,0},{-3,0,-1/5,0},{0,0,0,1/3}}));
 
-assert(true);
+H1 = gwClass(matrix(CC, {{2*ii,0,0},{0,-2,0},{0,0,-3}}));
+H2 = gwClass(matrix(CC, {{1,0,-3+ii,0},{0,-2,0,0},{-3+ii,0,-3,0},{0,0,0,5}}));
+H3 = gwClass(matrix(CC, {{2*ii,0,0,0,0,0,0},{0,-2,0,0,0,0,0},{0,0,-3,0,0,0,0},{0,0,0,1,0,-3+ii,0},{0,0,0,0,-2,0,0},{0,0,0,-3+ii,0,-3,0},{0,0,0,0,0,0,5}}));
+
+assert(gwAdd(M1,M2) === M3);
+assert(gwAdd(G1,G2) === G3);
+assert(gwAdd(H1,H2) === H3);
 ///
 
 
