@@ -1,5 +1,9 @@
--- Given a form q over QQ of anisotropic dimension d>=4, returns a form <a> so that q+<-a> has anisotropic dimension d-1
--- This is Koprowski/Rothkegel's Algorithm 5 in the case of QQ
+
+-- Input: A form 1 over QQ of anisotropic dimension d >= 4
+-- Output: A form < a > so that q + < a > has anisotropic dimension d - 1
+
+-- Note: This is Koprowski/Rothkegel's Algorithm 5 in the case of QQ
+
 QQanisotropicDimension4 = method()
 QQanisotropicDimension4 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
     if not (anisotropicDimensionQQ(beta) >= 4) then error "anisotropic dimension of inputted form is not >=4";
@@ -12,21 +16,23 @@ QQanisotropicDimension4 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     -- Otherwise return <-1>
     if signature(beta) < 0 then(
 	return gwClass(matrix(QQ,{{-1}}))	        
-        );
-	
+        );	
     );
 
--- Given a form q over QQ of anisotropic dimension 3, returns a form <a> so that q+<-a> has anisotropic dimension 2
--- This is Koprowski/Rothkegel's Algorithm 7 in the case of QQ
+-- Input: A form q over QQ of anisotropic dimension 3
+-- Output: A form < a > so that q + < -a > has anisotropic dimension 2
+
+-- Note: This is Koprowski/Rothkegel's Algorithm 7 in the case of QQ
+
 QQanisotropicDimension3 = method()
 QQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
     d := integralDiscriminant(beta);
     
     -- Build lists of primes where the p-adic valuation of the discriminant is even or is odd
-    L1:={};
-    L2:={};
-    S1:={};
-    S2:={};
+    L1 := {};
+    L2 := {};
+    S1 := {};
+    S2 := {};
     for p in relevantPrimes(beta) do(
 	if odd PadicValuation(d,p) then(
 	    L1 = append(L1,p);
@@ -73,9 +79,8 @@ QQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 --    );
 
 
-
-
-
+-- Input: A matrix whose base field is not inexact
+-- Output: The number of hyperbolic forms in A, and the anisotropic part of A and (also) the subform part
 
 WittDecomp = method()
 WittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
@@ -99,7 +104,6 @@ WittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
  
     -- will use rationalPoints package to see if f has a zero.  If so, A is isotropic.  
     -- rationalPoints package seeks a zero upto variable bound
-    
     
     use k;
     solnPt := new MutableList;
@@ -135,6 +139,7 @@ WittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     -- Now z and y span a copy of |H in the bilinear form
     -- We need to find a basis of vectors orthogonal (wrt bilinear form) to x and y 
     -- An (n - 2) x n matrix.
+    
     orthoComp := gens kernel((z||matrix(y))*A);
     
     -- Now recursively apply WittDecomp to orthoComp^T*A*orthoComp a (n - 2) x (n - 2) Gram matrix
@@ -150,6 +155,9 @@ WittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
 ---------------------------------------
 -- Simplifying a form
 ---------------------------------------
+
+-- Input: A Grothendieck-Witt class beta over a field k
+-- Output: A simplified diagonal representative of beta
 
 sumDecompositionVerbose = method()
 sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta -> (
@@ -448,12 +456,17 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
 --	);-- End number field case   
     );
 
+-- Input: A Grothendieck-Witt class beta over a field k
+-- Output: A simplified diagonal representative of beta
 
 sumDecomposition = method()
 sumDecomposition (GrothendieckWittClass) := (GrothendieckWittClass) => beta -> (
     beta.cache.diagonalForm = (sumDecompositionVerbose(beta))_0;
     return (sumDecompositionVerbose(beta))_0
 );
+
+-- Input: A Grothendieck-Witt class beta over a field k
+-- Output: The decomposition as a sum of hyperbolic and rank one forms
 
 sumDecompositionString = method()
 sumDecompositionString (GrothendieckWittClass) := (String) => beta -> (
