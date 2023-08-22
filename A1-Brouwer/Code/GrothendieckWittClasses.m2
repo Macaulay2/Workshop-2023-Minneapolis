@@ -4,14 +4,18 @@
 GrothendieckWittClass = new Type of HashTable
 GrothendieckWittClass.synonym = "Grothendieck Witt Class"
 
--- A class in GW can be constructed from a representing matrix
+-- Input: A symmetric matrix M defined over an arbitrary field
+-- Output: The isomorphism class of a symmetric bilinear form represented by M
+
+-- Note: A class in GW can be constructed from a representing matrix
+
 gwClass = method()
 gwClass (Matrix) := GrothendieckWittClass => M -> (
   new GrothendieckWittClass from {
       symbol matrix => M,
       symbol cache => new CacheTable
       }
-)
+  )
 
 -- This allows us to extract the matrix from a class
 matrix GrothendieckWittClass := Matrix => beta -> beta.matrix
@@ -47,15 +51,18 @@ isWellDefined GrothendieckWittClass := Boolean => beta -> (
     
     true);
 
--- Method for returning the ring the matrix is defined over
+-- Input: A Grothendieck-Witt class beta, the isomorphism class of a symmetric bilinear form
+-- Output: The base ring of beta
+
 baseField = method()
 baseField GrothendieckWittClass := Ring => beta -> (
-    if(isWellDefined(beta)===true) then (ring beta.matrix)
-)
+    if(isWellDefined(beta) === true) then (ring beta.matrix)
+    )
 
--- Method for taking a direct sum of two Grothendieck-Witt classes
+-- Input: Two Grothendieck-Witt classes beta and gamma
+-- Output: The direct sum of beta and gamma
+
 gwAdd = method()
-
 gwAdd(GrothendieckWittClass, GrothendieckWittClass) := GrothendieckWittClass => (beta, gamma) -> (
     Kb := baseField(beta);
     Kg := baseField(gamma);
@@ -72,7 +79,9 @@ gwAdd(GrothendieckWittClass, GrothendieckWittClass) := GrothendieckWittClass => 
     	return gwClass(safeBlockSum(beta.matrix, gamma.matrix))
     )
 
--- Method for taking a tensor product of two Grothendieck-Witt classes
+-- Input: Two Grothendieck-Witt classes beta and gamma
+-- Output: The tensor product of beta and gamma
+
 gwMultiply = method()
 
 gwMultiply(GrothendieckWittClass, GrothendieckWittClass) := GrothendieckWittClass => (beta, gamma) -> (
