@@ -105,7 +105,7 @@ antiDiagInit = method(
 antiDiagInit Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     zMatrix := genMat(numrows A, numcols A, CoefficientRing => o.CoefficientRing, Variable=> o.Variable); --generic matrix
-    rankMat := rankMatrix A; --rank matrix for A
+    rankMat := rankTable A; --rank matrix for A
     essBoxes := essentialSet A;
     if essBoxes == {} then (
     	R := ring zMatrix;
@@ -139,8 +139,8 @@ antiDiagInit List := o -> w -> (
 --Author: Yuyuan Luo
 --TODO: add tests for this function
 ----------------------------------------
-rankMatrix = method()
-rankMatrix Matrix := Matrix => A -> (
+rankTable = method()
+rankTable Matrix := Matrix => A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     n := numrows A;
     m := numcols A;
@@ -152,10 +152,10 @@ rankMatrix Matrix := Matrix => A -> (
     matrix rankMat
     )
 
-rankMatrix List := Matrix => (w) -> (
+rankTable List := Matrix => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     A := permToMatrix w;
-    rankMatrix A
+    rankTable A
 )
 
 -------------
@@ -201,12 +201,12 @@ rotheDiagram List := List => (w) -> (
 augmentedRotheDiagram = method()
 augmentedRotheDiagram List := List => w -> (
     L := rotheDiagram(w);
-    R := rankMatrix(w);
+    R := rankTable(w);
     apply(L, (i, j) -> ((i, j), R_(i-1, j-1)))
 )
 augmentedRotheDiagram Matrix := List => w -> (
     L := rotheDiagram(w);
-    R := rankMatrix(w);
+    R := rankTable(w);
     apply(L, (i, j) -> ((i, j), R_(i-1, j-1)))
 )
 
@@ -238,12 +238,12 @@ essentialSet List := List => (w) -> (
 augmentedEssentialSet = method()
 augmentedEssentialSet List := List => w -> (
     L := essentialSet(w);
-    R := rankMatrix(w);
+    R := rankTable(w);
     apply(L, (i, j) -> ((i, j), R_(i-1, j-1)))
 )
 augmentedEssentialSet Matrix := List => A -> (
     L := essentialSet(A);
-    R := rankMatrix(A);
+    R := rankTable(A);
     apply(L, (i, j) -> ((i, j), R_(i-1, j-1)))
 )
 
@@ -261,7 +261,7 @@ schubDetIdeal Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     A = partialASMToASM(A);
     zMatrix := genMat(numrows A, numcols A, CoefficientRing=> o.CoefficientRing, Variable => o.Variable); --generic matrix
-    rankMat := rankMatrix A; --rank matrix for A
+    rankMat := rankTable A; --rank matrix for A
     essBoxes := essentialSet A;
     if essBoxes == {} then (
     	R := ring zMatrix;
@@ -417,7 +417,7 @@ entrywiseMinRankTable List := Matrix => L -> (
 
     -- comb through the list to get the minimal entries
     for M in L do (
-        listRankM := entries rankMatrix(M);
+        listRankM := entries rankTable(M);
         if (#listRankM != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
         if not(isPartialASM(M)) then error("The input must be a list containing partial alternating sign matrices.");
 
@@ -443,7 +443,7 @@ entrywiseMaxRankTable List := Matrix => L -> (
 
     -- comb through the list to get the maximal entries
     for M in L do (
-        listRankM := entries rankMatrix(M);
+        listRankM := entries rankTable(M);
         if (#listRankM != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
         if not(isPartialASM(M)) then error("The input must be a list containing partial alternating sign matrices.");
 

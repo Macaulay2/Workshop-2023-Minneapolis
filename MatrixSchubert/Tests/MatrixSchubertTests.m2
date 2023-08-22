@@ -68,9 +68,9 @@ assert(I == ideal (R_0,R_1,R_2,R_4,R_5*R_8));
 ///
 
 TEST ///
---rankMatrix
-assert(rankMatrix({1,3,2}) == matrix{{1, 1, 1}, {1, 1, 2}, {1, 2, 3}});
-assert(rankMatrix(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}) == matrix{{0, 0, 0, 1}, {0, 1, 1, 2}, {1, 1, 2, 3}, {1, 2, 3, 4}});
+--rankTable
+assert(rankTable({1,3,2}) == matrix{{1, 1, 1}, {1, 1, 2}, {1, 2, 3}});
+assert(rankTable(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}) == matrix{{0, 0, 0, 1}, {0, 1, 1, 2}, {1, 1, 2, 3}, {1, 2, 3, 4}});
  
 ///
 

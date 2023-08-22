@@ -74,9 +74,9 @@ w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-assert(rankMatrix(w) == matrix{{0, 1, 1, 1, 1, 1}, {1, 2, 2, 2, 2, 2}, {1, 2, 2, 2, 2, 3}, {1, 2, 3, 3, 3, 4}, {1, 2, 3, 3, 4, 5}, {1, 2, 3, 4, 5, 6}} );
-assert(rankMatrix(I) == matrix{{0, 0, 1, 1, 1}, {0, 1, 1, 2, 2}, {1, 1, 2, 3, 3}, {1, 2, 3, 3, 4}, {1, 2, 3, 4, 5}} );
-assert(rankMatrix(PI) == matrix{{0, 0, 1, 1, 1}, {0, 1, 1, 2, 2}, {1, 1, 2, 3, 3}, {1, 2, 3, 3, 3}, {1, 2, 3, 4, 4}} );
+assert(rankTable(w) == matrix{{0, 1, 1, 1, 1, 1}, {1, 2, 2, 2, 2, 2}, {1, 2, 2, 2, 2, 3}, {1, 2, 3, 3, 3, 4}, {1, 2, 3, 3, 4, 5}, {1, 2, 3, 4, 5, 6}} );
+assert(rankTable(I) == matrix{{0, 0, 1, 1, 1}, {0, 1, 1, 2, 2}, {1, 1, 2, 3, 3}, {1, 2, 3, 3, 4}, {1, 2, 3, 4, 5}} );
+assert(rankTable(PI) == matrix{{0, 0, 1, 1, 1}, {0, 1, 1, 2, 2}, {1, 1, 2, 3, 3}, {1, 2, 3, 3, 3}, {1, 2, 3, 4, 4}} );
 ///
 
 TEST ///
@@ -468,9 +468,9 @@ w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-assert(isMinRankTable rankMatrix w == true );
-assert(isMinRankTable rankMatrix I == true );
-assert(isMinRankTable rankMatrix PI == true );
+assert(isMinRankTable rankTable w == true );
+assert(isMinRankTable rankTable I == true );
+assert(isMinRankTable rankTable PI == true );
 ///
 
 TEST ///
@@ -479,9 +479,9 @@ w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-assert(rankTableToASM rankMatrix w == matrix{{0, 1, 0, 0, 0, 0}, {1, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 1}, {0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 1, 0}, {0, 0, 0, 1, 0, 0}});
-assert(rankTableToASM rankMatrix I == I);
-assert(rankTableToASM rankMatrix PI == PI);
+assert(rankTableToASM rankTable w == matrix{{0, 1, 0, 0, 0, 0}, {1, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 1}, {0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 1, 0}, {0, 0, 0, 1, 0, 0}});
+assert(rankTableToASM rankTable I == I);
+assert(rankTableToASM rankTable PI == PI);
 ///
 
 

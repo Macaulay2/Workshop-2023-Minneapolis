@@ -92,7 +92,7 @@ doc ///
 	    p = {2,1,6,3,5,4};
 	    rotheDiagram p
 	    essentialSet p
-	    rankMatrix p
+	    rankTable p
 	    netList fultonGens p	    
 	Text
 	    The default presentation given by @TO schubDetIdeal@ is given by the Fulton generators of the ideal.
@@ -127,7 +127,7 @@ doc ///
 	Text
 	    @UL {
 		TO (antiDiagInit, List),
-		TO (rankMatrix, List),
+		TO (rankTable, List),
 		TO (rotheDiagram, List),
 		TO (augmentedRotheDiagram, List),
 		TO (essentialSet, List),
@@ -178,7 +178,7 @@ doc ///
 	Example
 	    rotheDiagram A
 	    essentialSet A
-	    rankMatrix A
+	    rankTable A
 	    netList fultonGens A	    
 	Text
 	    The default presentation given by @TO schubDetIdeal@ is given by the Fulton generators of the ideal.
@@ -219,7 +219,7 @@ doc ///
 	    @UL {
 		TO (isPartialASM, Matrix),
 		TO (partialASMToASM, Matrix),
-		TO (rankMatrix, Matrix),
+		TO (rankTable, Matrix),
 		TO (rankTableFromMatrix, Matrix),
 		TO (rankTableToASM, Matrix),
 		TO (isASMIdeal, Ideal),
@@ -346,14 +346,14 @@ doc ///
 
 doc ///
     Key
-        (rankMatrix, List)
-        (rankMatrix, Matrix)
-        rankMatrix
+        (rankTable, List)
+        (rankTable, Matrix)
+        rankTable
     Headline
-        compute a matrix of rank conditions that determines a Schubert determinantal ideal or, more generally, an alternating sign matrix ideal.
+        compute a table of rank conditions that determines a Schubert determinantal ideal or, more generally, an alternating sign matrix ideal.
     Usage
-        rankMatrix(w)
-        rankMatrix(A)
+        rankTable(w)
+        rankTable(A)
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
@@ -361,10 +361,10 @@ doc ///
 	:Matrix
     Description
         Text
-            Given an alternating sign matrix or a permutation in 1-line notation, outputs the matrix of rank condition associated to that alternating sign matrix or permutation.
+            Given an alternating sign matrix or a permutation in 1-line notation, outputs the matrix of rank conditions associated to that alternating sign matrix or permutation.
         Example
-            rankMatrix({1,3,2})
-            rankMatrix(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+            rankTable({1,3,2})
+            rankTable(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
 ///
 
 doc ///
@@ -400,7 +400,7 @@ doc ///
         (augmentedRotheDiagram, Matrix)
         augmentedRotheDiagram
     Headline
-        find the Rothe diagram of a partial alternating sign matrix together with the rank conditions determining the alternating sign matrix variety
+        find the Rothe diagram of a partial alternating sign matrix together with the rank table determining the alternating sign matrix variety
     Usage
         augmentedRotheDiagram(w)
         augmentedRotheDiagram(A)

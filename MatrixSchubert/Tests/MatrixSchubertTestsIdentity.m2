@@ -16,8 +16,8 @@ assert(testIdealPerm == ideal(0_(ring testIdealPerm)));
 assert(testIdealMat == ideal(0_(ring testIdealMat)));
 
 --rankMatrix--
-assert(rankMatrix(w) == matrix{{1,1,1,1},{1,2,2,2},{1,2,3,3},{1,2,3,4}} );
-assert(rankMatrix(I) == matrix{{1,1,1,1},{1,2,2,2},{1,2,3,3},{1,2,3,4}} );
+assert(rankTable(w) == matrix{{1,1,1,1},{1,2,2,2},{1,2,3,3},{1,2,3,4}} );
+assert(rankTable(I) == matrix{{1,1,1,1},{1,2,2,2},{1,2,3,3},{1,2,3,4}} );
 
 --rotheDiagram--
 assert(rotheDiagram(w) == {} );
@@ -96,8 +96,8 @@ assert(getASM schubDetIdeal w == I );
 assert(getASM schubDetIdeal I == I );
 
 --isMinRankTable--
-assert(isMinRankTable rankMatrix w == true );
-assert(isMinRankTable rankMatrix I == true );
+assert(isMinRankTable rankTable w == true );
+assert(isMinRankTable rankTable I == true );
 
 --rankTableToASM--
 --Examples in other file

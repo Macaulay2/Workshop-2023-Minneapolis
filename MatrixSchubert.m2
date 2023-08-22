@@ -43,7 +43,7 @@ export{
     "isPartialASM",    	       	    --documented ++
     "partialASMToASM",	      	    --documented ++
     "antiDiagInit",    	       	    --documented ++
-    "rankMatrix",    	     	    --documented ++  
+    "rankTable",    	     	    --documented ++  
     "rotheDiagram",    	       	    --documented ++  
     "augmentedRotheDiagram",	    --documented ++
     "essentialSet",	     	    --documented ++
