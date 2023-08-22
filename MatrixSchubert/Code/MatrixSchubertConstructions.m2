@@ -151,28 +151,7 @@ rankMatrix Matrix := Matrix => A -> (
 	);
     matrix rankMat
     )
--*
---old code was being weird for nonsquare matrices
-rankMatrix = method()
-rankMatrix Matrix := Matrix => (A) -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    n := numrows A;
-    m := numcols A;
-    rankA := {};
-    for i from 0 to m-1 do (
-        temp := toList(n:0);
-        for j from 0 to n-1 do (
-            if (j>0) then prev := temp#(j-1);
-            if (i == 0 and j == 0) then temp = replace(j, A_(0,0), temp)
-            else if (i == 0) then temp = replace(j, prev+A_(i,j), temp)
-            else if (j==0) then temp = replace(j, rankA_{i-1}#0#(j)+A_(i,j), temp)
-            else temp = replace(j, rankA_{i-1}#0#(j)+prev-rankA_{i-1}#0#(j-1)+A_(i,j), temp)
-        );
-        rankA=append(rankA, temp)
-    );
-    matrix rankA
-)
-*-
+
 rankMatrix List := Matrix => (w) -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     A := permToMatrix w;
@@ -724,7 +703,7 @@ schubIntersect List := Ideal => (L) -> (
 schubAdd = method()
 schubAdd List := Ideal => (L) -> (
     if (#L == 0) then error("Please enter a nonempty list.");
-    listPermM := L / (i -> if instance(i, Matrix) then i else if instance(i_0, List) then matrix i else permToMatrix i);
+    listPermM := L / (i -> if instance(i, Matrix) then (partialASMToASM i) else if instance(i_0, List) then matrix i else permToMatrix i);
     rankM := entrywiseMinRankTable(listPermM);
     schubDetIdeal rankTableToASM(rankM)
 );
