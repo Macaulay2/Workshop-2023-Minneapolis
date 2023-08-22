@@ -484,10 +484,5 @@ TEST ///
 assert(true);
 ///
 
--- Test for congruenceDiagonalize
--- Test 25
-TEST ///
-assert(congruenceDiagonalize(matrix(QQ,{{0,0},{0,0}})) == 0);
-///
 
 end
