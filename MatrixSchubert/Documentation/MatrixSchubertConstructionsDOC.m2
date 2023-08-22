@@ -51,9 +51,11 @@ doc ///
         "Initial ideals of ASM ideals"
         "Functions for investigating permutations"
 ///
-------------------------
--- See Also Doc Nodes --
-------------------------
+------------------------------
+------------------------------
+-- * See Also Doc Nodes * --
+------------------------------
+------------------------------
 
 doc ///
     Key 
@@ -235,17 +237,93 @@ doc ///
 		TO (schubReg, Matrix),
 		TO (schubCodim, Matrix),
 		TO (permOverASM, Matrix),
-		TO (getPermFromASM, Matrix),
+		TO (getPermFromASM, Matrix)
 		}@
 ///
 doc ///
     Key 
         "Initial ideals of ASM ideals"
     Headline
-        todo
+        basic functions for investigating initial ideals of ASM varieties
     Description
-        Text 
-            This is a stub
+    	Text
+	    By work of Knutson and Miller [KM05] and Weigandt [Wei17],
+	    the Fulton generators form a Grobner basis for an ASM ideal with respect to any antidiagonal term order.
+	    However, the Grobner bases for ASM ideals with respect to other term orders, especially diagonal ones, 
+	    remain largely mysterious, though their study was initiated for matrix Schuber varieties by Klein and Weigandt [KW21].
+        Text
+	    @UL {
+	    {"[CV20] Aldo Conca and Matteo Varbaro, ",
+	    HREF("https://arxiv.org/abs/1805.11923", EM "Square-free Grobner degenerations"),
+	    " , Inventiones mathematicae, 221(3), pp.713-730."},
+            {"[KM05] Allen Knutson and Ezra Miller, ",
+            HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
+            " , Annals of Mathematics (2005): 1245-1318."},
+	    {"[KW21] Patricia Klein and Anna Weigandt, ",
+	    HREF("https://arxiv.org/abs/2108.08370", EM "Bumpless pipe dreams encode Grobner geometry of Schubert polynomials"),
+	    " , arxiv preprint 2108.08370."},
+            {"[Wei17] Anna Weigandt, ",
+            HREF("https://arxiv.org/abs/1708.07236", EM "Prism tableaux for alternating sign matrix varieties"),
+            " , arXiv preprint 1708.07236."}
+            }@
+	Text
+	    Given a permutation or a partial ASM, one may compute its antidiagonal initial ideal.
+	    By [KM05] and [Wei17], the Fulton generators form a Grobner basis for any ASM ideal with respect to
+	    any antidiagonal term order.
+        Example
+	    w = {2,1,4,3,6,5};
+	    I = schubDetIdeal w;
+	    inI = antiDiagInit w;
+	    netList transpose {inI_*, I_*}
+	Text
+	    In particular, by work of Conca and Varbaro [CV21], we know that the extremal Betti numbers (such as regularity
+	    and projective dimension) of an ASM ideal and its antidiagonal initial ideal must coincide.
+	    Curiously, for this running example, all of the Betti numbers coincide (not just the extremal ones).
+	Example
+	    (betti res I, betti res inI)
+	Text
+	    By work of Knutson and Miller [KM05], the prime components of the antidiagonal initial ideal
+	    of a Schubert determinantal ideal for a permutation w are in bijection with the pipe dreams associated
+	    to the permutation w.
+	    If w is a permutation of n, then a pipe dream is a filling of an nxn grid with
+	    elbow tiles (denoted /) and cross tiles (denoted +) such that no two pipes
+	    cross twice.
+	Example
+	    # pipeDreams w == # (decompose inI)
+	Text
+	    In particular, to read off an associated prime of the antidiagonal initial ideal from a pipe dream,
+	    one simply needs to read off the + tiles from the grid.
+	Example
+	    netList ((pipeDreams w)_0)
+	    (decompose inI)_0
+	Text
+	    Diagonal term orders are less well understood for Schubert determinantal ideals and ASM ideals. 
+	    Their study was initiated by [KW21].
+	    This package provides functionality for investigating three diagonal term orders:
+	    One which uses lex and orders the variables diagonally reading from the southeast corner @TO diagLexInitSE@,
+	    one which uses lex and orders the variables diagonaly reading from the northwest corner @TO diagLexInitNW@,
+	    and one which uses revlex on the variables diagonally reading from the northwest corner @TO diagRevLexInit@.
+	Text
+	    In our running example, the two lex diagonal orders give two distinct initial ideals which are not squarefree.
+	Example
+	    diagLexInitSE w
+	    netList (decompose oo)
+	    diagLexInitNW w
+	    netList (decompose oo)
+	Text
+	    For this running example, diagRevLexInit and diagLexInitSE give the same initial ideal.
+	    It is unknown if this is the case in general.
+	Example
+	    diagRevLexInit w
+	Text
+	    @UL {
+		TO (antiDiagInit, Matrix),
+		TO (diagLexInitSE, Matrix),
+		TO (diagLexInitNW, Matrix),
+		TO (diagRevLexInit, Matrix),
+		TO (pipeDreams, List)
+		}@
+	
 ///
 
 doc ///
