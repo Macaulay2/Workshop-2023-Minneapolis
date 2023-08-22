@@ -18,7 +18,7 @@ ASMRandomList = method()
 ASMRandomList (ZZ,ZZ) := List => (n,m) -> (
     if (n < 1 or n > 7) then error("There is no available list for this n.");
     fullList := ASMFullList(n);
-    randNums := for i to m list random (#fullList-1);
+    randNums := for i to m-1 list random (#fullList-1);
     listOfMatrices := apply(randNums, i -> fullList#i);
     listOfMatrices
 );
