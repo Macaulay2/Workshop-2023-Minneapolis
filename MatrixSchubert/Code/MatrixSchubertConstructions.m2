@@ -512,6 +512,11 @@ schubDecomposition Ideal := List => I -> (
     unique cycleDecomp
 )
 
+schubDecomposition Matrix := List => A -> (
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
+    I := schubDetIdeal A;
+    schubDecomposition I
+    )
 -------------------------------------------
 --INPUT: a partial ASM A
 --OUTPUT: the smallest permutations bigger than A in Bruhat order

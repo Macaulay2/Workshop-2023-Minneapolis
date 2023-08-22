@@ -680,7 +680,12 @@ doc ///
 	Example
 	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
 	    J = schubDetIdeal A;
-	    netList schubDecomposition J	    
+	    netList schubDecomposition J
+	Text
+	    If the ASM ideal for an ASM $A$ has not het been computed, one may also give the ASM $A$ as input.
+	Example
+	    A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}};
+	    netList schubDecomposition A	    
 ///
 
 doc ///
