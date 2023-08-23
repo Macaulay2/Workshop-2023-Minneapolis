@@ -349,7 +349,23 @@ doc ///
         Text 
             This package provides significantly expanded functionality for studying permutations
 	    in Macaulay2.
-	    For instance, given a List of integers, one can check if it is indeed a permutation,
+	Text
+	    @UL {
+	    {"[HPW22] Zachary Hamaker, Oliver Pechenik, and Anna Weigandt, ",
+	    HREF("https://arxiv.org/abs/2003.13719", EM "Grobner geometry of Schubert polynomials through ice"),
+	    " , Advances in Mathematics 398 (2022): 108228."},
+	    {"[Kle23] Patricia Klein, ",
+	    HREF("https://arxiv.org/abs/2008.01717", EM "Diagonal degenerations of matrix Schubert varieties"),
+	    " , to appear in Algebraic Combinatorics."},	
+            {"[KM05] Allen Knutson and Ezra Miller, ",
+            HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
+            " , Annals of Mathematics (2005): 1245-1318."},
+	    {"[KW21] Patricia Klein and Anna Weigandt, ",
+	    HREF("https://arxiv.org/abs/2108.08370", EM "Bumpless pipe dreams encode Grobner geometry of Schubert polynomials"),
+	    " , arxiv preprint 2108.08370."}
+	    }@
+	Text
+	    Given a permutation as a list of integers, one can check if it is indeed a permutation,
 	    what its descent set is, what its inverse is, and the Coxeter length of the permutation.
 	Example
 	    v = {2,1,6,3,5,4};

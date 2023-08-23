@@ -63,7 +63,7 @@ assert(testIdealPerm == monomialIdeal(0_(ring testIdealPerm)));
 assert(testIdealMat == monomialIdeal(0_(ring testIdealMat)));
 
 --subwordComplex--
---Person who wrote this needs to adjust code so that handles identity permutation as a special case.
+assert(# facets subwordComplex w == 1)
 
 --entrywiseMin--
 --Examples in other file
