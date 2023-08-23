@@ -22,6 +22,9 @@ doc ///
 	    HREF("https://sites.math.washington.edu/~billey/classes/schubert.library/fulton.essential.set.pdf",
 		EM "Flags, Schubert polynomials, degeneracy loci, and determinantal formulas"),
 	    " , Duke Math J. 65 (1992): 381-420."},
+	    {"[Kle23] Patricia Klein, ",
+	    HREF("https://arxiv.org/abs/2008.01717", EM "Diagonal degenerations of matrix Schubert varieties"),
+	    " , to appear in Algebraic Combinatorics."},
             {"[KM05] Allen Knutson and Ezra Miller, ",
             HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
             " , Annals of Mathematics (2005): 1245-1318."},
@@ -73,6 +76,9 @@ doc ///
 	    HREF("https://sites.math.washington.edu/~billey/classes/schubert.library/fulton.essential.set.pdf",
 		EM "Flags, Schubert polynomials, degeneracy loci, and determinantal formulas"),
 	    " , Duke Math J. 65 (1992): 381-420."},
+	    {"[HPW22] Zachary Hamaker, Oliver Pechenik, and Anna Weigandt, ",
+	    HREF("https://arxiv.org/abs/2003.13719", EM "Grobner geometry of Schubert polynomials through ice"),
+	    " , Advances in Mathematics 398 (2022): 108228."},
             {"[KM05] Allen Knutson and Ezra Miller, ",
             HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
             " , Annals of Mathematics (2005): 1245-1318."},
@@ -256,6 +262,12 @@ doc ///
 	    {"[CV20] Aldo Conca and Matteo Varbaro, ",
 	    HREF("https://arxiv.org/abs/1805.11923", EM "Square-free Grobner degenerations"),
 	    " , Inventiones mathematicae, 221(3), pp.713-730."},
+	    {"[HPW22] Zachary Hamaker, Oliver Pechenik, and Anna Weigandt, ",
+	    HREF("https://arxiv.org/abs/2003.13719", EM "Grobner geometry of Schubert polynomials through ice"),
+	    " , Advances in Mathematics 398 (2022): 108228."},
+	    {"[Kle23] Patricia Klein, ",
+	    HREF("https://arxiv.org/abs/2008.01717", EM "Diagonal degenerations of matrix Schubert varieties"),
+	    " , to appear in Algebraic Combinatorics."},	
             {"[KM05] Allen Knutson and Ezra Miller, ",
             HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
             " , Annals of Mathematics (2005): 1245-1318."},
@@ -277,7 +289,7 @@ doc ///
 	    netList transpose {inI_*, I_*}
 	Text
 	    In particular, by work of Conca and Varbaro [CV21], we know that the extremal Betti numbers (such as regularity
-	    and projective dimension) of an ASM ideal and its antidiagonal initial ideal must coincide.
+	    and projective dimension) of an ASM ideal and its antidiagonal initial ideal must coincide because the antidiagonal initial ideal is squarefree.
 	    Curiously, for this running example, all of the Betti numbers coincide (not just the extremal ones).
 	Example
 	    (betti res I, betti res inI)
@@ -298,7 +310,7 @@ doc ///
 	    (decompose inI)_0
 	Text
 	    Diagonal term orders are less well understood for Schubert determinantal ideals and ASM ideals. 
-	    Their study was initiated by [KW21].
+	    Their study was initiated by [Kle23] and has also been investigated in [KW21] and [HPW22].
 	    This package provides functionality for investigating three diagonal term orders:
 	    One which uses lex and orders the variables diagonally reading from the southeast corner @TO diagLexInitSE@,
 	    one which uses lex and orders the variables diagonaly reading from the northwest corner @TO diagLexInitNW@,
