@@ -484,5 +484,59 @@ TEST ///
 assert(true);
 ///
 
+-- Test for isIsotropic/isAnisotropic
+-- Test 25 (OK)
+
+TEST ///
+A1=matrix(QQ, {{0, 1/1},{1/1, 0}});
+assert(isIsotropic(A1)===true);
+assert(isAnisotropic(gwClass(A1))===false);
+
+A2=matrix(RR, {{1, -2, 4}, {-2, 2, 0}, {4, 0, -7}});
+assert(isAnisotropic(A2)===false);
+assert(isIsotropic(gwClass(A2))===true);
+
+K=GF(13^4);
+A3=matrix(K, {{7, 81, 63}, {81, 7, 55}, {63, 55, 109}});
+assert(isIsotropic(gwClass(A3))===true);
+--Isotropic by the Chevalley-Warning Theorem.
+
+A4=matrix(QQ, {{5, 0}, {0, 5}});
+assert(isAnisotropic(A4)===true);
+
+A5=matrix(CC, {{3+ii, 0}, {0, 5-ii}});
+assert(isAnisotropic(A5)===false);
+///
+
+--Test for isIsomorphicFormQ
+-- Test 26
+
+TEST ///
+B1=matrix(QQ, {{1/1, -2/1, 4/1}, {-2/1, 2/1, 0}, {4/1, 0, -7/1}});
+B2=matrix(QQ, {{-17198/4225, -166126/975, -71771/1560}, {-166126/975, -27758641/4050, -251077/135}, {-71771/1560, -251077/135, -290407/576}});
+assert(isIsomorphicFormQ(B1, B2)===true);
+assert(isIsomorphicFormQ(gwClass(B1), gwClass(B2))===true);
+
+B3=matrix(QQ, {{-38/1, -50/1, 23/1}, {-50/1, -62/1, 41/1}, {23/1, 41/1, 29/1}});
+assert(isIsomorphicFormQ(B1, B3)===true);
+assert(isIsomorphicFormQ(gwClass(B1), gwClass(B3))===true);
+///
+
+
+--Test for gwIsomorphic
+--Test 27 (OK)
+
+TEST ///
+assert(gwIsomorphic(gwClass(B1), gwClass(B3))===true);
+
+C1=matrix(RR, {{1/1, -2/1, 4/1}, {-2/1, 2/1, 0}, {4/1, 0, -7/1}});
+C2=matrix(RR, {{-38/1, -50/1, 23/1}, {-50/1, -62/1, 41/1}, {23/1, 41/1, 29/1}});
+assert(gwIsomorphic(gwClass(C1), gwClass(C2))===true);
+
+M=GF(13^1)
+C3=matrix(M, {{1, 11, 4}, {11, 2, 0}, {4, 0, 6}});
+C4=matrix(M, {{1, 2, 10}, {2, 3, 2}, {10, 2, 3}});
+assert(gwIsomorphic(gwClass(C3), gwClass(C4))===true);
+///
 
 end
