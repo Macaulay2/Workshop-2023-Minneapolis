@@ -328,6 +328,8 @@ doc ///
 	Example
 	    diagRevLexInit w
 	Text
+	    @SUBSECTION "Functions for studying initial ideals of ASM ideals"@
+	Text
 	    @UL {
 		TO (antiDiagInit, Matrix),
 		TO (diagLexInitSE, Matrix),
@@ -342,10 +344,77 @@ doc ///
     Key 
         "Functions for investigating permutations"
     Headline
-        todo
+        basic functions for permutations
     Description
         Text 
-            This is a stub
+            This package provides significantly expanded functionality for studying permutations
+	    in Macaulay2.
+	    For instance, given a List of integers, one can check if it is indeed a permutation,
+	    what its descent set is, what its inverse is, and the Coxeter length of the permutation.
+	Example
+	    v = {2,1,6,3,5,4};
+	    isPerm v --checks if v is indeed a permutation
+	    lastDescent v
+	    firstDescent v
+	    inverseOf v
+	    #(getOneReducedWord v) == permLength v
+	Text
+	    This package also allows one to quickly compute certain combinatorial polynomials
+	    associated to a permutation, such as the (double) Schubert polynomial and the
+	    Grothendieck polynomial.
+	Example
+	    schubertPoly v
+	    doubleSchubertPoly v
+	    grothendieckPoly v
+	Text
+	    Moreover, this package contains functionality for checking whether
+	    a permutation avoids a set of patterns.
+	    For instance, @TO isCDG@ checkes whether a permutation is
+	    Conca-De Negri-Gorla (or CDG); @TO isVexillary@ checks whether a permutation
+	    is 2143-avoiding; and @TO isCartwrightSturmfels@ checks whether
+	    a permutation is Cartwright-Sturmfels.
+	Example
+	    w = {1,2,3,9,8,4,5,6,7};
+	    isPatternAvoiding(w,{4,1,2,3})
+	    isVexillary w
+	    isCartwrightSturmfels w
+	    isCDG w
+	Text
+	    Finally, this package contains functionality for studying
+	    both reduced and nonreduced pipe dreams of a permutation.
+	Example
+	    u = {3,1,4,2};
+	    decompose antiDiagInit u
+	    apply(pipeDreams u, i -> netList i)	    
+	    apply(pipeDreamsNonReduced u, i-> netList i)
+	Text
+	    @SUBSECTION "Functions for studying permutations"@
+	Text
+	    @UL {
+		TO (isPerm, List),
+		TO (permToMatrix, List),
+		TO (lastDescent, List),
+		TO (firstDescent, List),
+		TO (permLength, List),
+		TO (inverseOf, List),
+		TO (longestPerm, ZZ),
+		TO (getOneReducedWord, List),
+		TO (toOneLineNotation, List, ZZ),
+		TO (composePerms, List, List),
+		TO (isPatternAvoiding, List, List),
+		TO (isVexillary, List),
+		TO (avoidsAllPatterns, List, List),
+		TO (isCartwrightSturmfels, List),
+		TO (isCDG, List),
+		TO (rajCode, List),
+		TO (rajIndex, List),
+		TO (grothendieckPoly,List),
+		TO (schubertPoly, List),
+		TO (doubleSchubertPoly, List),
+		TO (pipeDreams, List),
+		TO (pipeDreamsNonReduced, List),
+		TO (netPD, List)
+		}@
 ///
 
 doc ///

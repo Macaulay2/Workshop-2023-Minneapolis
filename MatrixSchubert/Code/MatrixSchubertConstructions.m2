@@ -540,8 +540,9 @@ isIntersectionSchubIdeals = method()
 isIntersectionSchubIdeals Ideal := Boolean => I -> (
     isIntersection := true;
     if (I == radical(I)) then {
-        schubDecomp := schubDecomposition I;
-        isIntersection = I == intersect apply(apply(schubDecomp, i-> schubDetIdeal(i, CoefficientRing => coefficientRing(ring I))), J -> sub(J, vars ring I));
+        schubDecomp := apply(schubDecomposition I, i-> schubDetIdeal(i, CoefficientRing => coefficientRing(ring I)));
+	Q := ring schubDecomp_0;
+        isIntersection = sub(I,Q) == intersect apply(schubDecomp, J -> sub(J,Q));
     }
     else {
         isIntersection = false;

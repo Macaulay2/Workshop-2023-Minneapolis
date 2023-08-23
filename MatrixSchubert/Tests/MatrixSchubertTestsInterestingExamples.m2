@@ -400,8 +400,7 @@ assert(toExternalString L_12 == "z_(1,5)*z_(2,4)*z_(2,2)*z_(3,2)*z_(4,1)");
 ///
 
 --subwordComplex--
---Needs to be added to other file.
---Code needs to be adjusted so that handles identity permutation as a special case.
+--added to other file
 
 --entrywiseMinRankTable--
 --Example in other file.
@@ -437,7 +436,7 @@ PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
 assert(isIntersectionSchubIdeals schubDetIdeal w == true );
 assert(isIntersectionSchubIdeals schubDetIdeal I == true );
---PI buggy
+assert(isIntersectionSchubIdeals schubDetIdeal PI == true);
 ///
 
 TEST ///
@@ -448,7 +447,7 @@ PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
 assert(isASMIdeal schubDetIdeal w == true );
 assert(isASMIdeal schubDetIdeal I == true );
---PI buggy
+assert(isASMIdeal schubDetIdeal PI == true);
 ///
 
 
@@ -463,7 +462,7 @@ PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
 assert(getASM schubDetIdeal w == matrix{{0, 1, 0, 0, 0, 0}, {1, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 1}, {0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 1, 0}, {0, 0, 0, 1, 0, 0}} );
 assert(getASM schubDetIdeal I == I );
---PI buggy
+assert(getASM schubDetIdeal PI == PI);
 ///
 
 TEST ///
@@ -506,8 +505,7 @@ PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
 assert(getPermFromASM getASM schubDetIdeal w == w );
 assert(getPermFromASM getASM schubDetIdeal I == {} );
---PI buggy
---assert(getPermFromASM getASM schubDetIdeal PI == {} );
+assert(getPermFromASM getASM schubDetIdeal PI == {});
 ///
 
 
