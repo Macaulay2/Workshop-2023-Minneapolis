@@ -141,6 +141,6 @@ HasseWittInvariant(GrothendieckWittClass, ZZ) := ZZ => (beta,p) -> (
     kk := baseField beta;
     if not (kk === QQ) then error "method is only implemented over the rationals";
     if not isPrime(p) then error "second argument must be a prime number";
-    return HasseWittInvariant(diagonalEntries(beta),p)
+    return HasseWittInvariant(diagonalEntries(integralDiagonalRep(beta)),p)
     
     )
