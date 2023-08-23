@@ -527,7 +527,9 @@ assert(isIsomorphicFormQ(gwClass(B1), gwClass(B3))===true);
 --Test 27 (OK)
 
 TEST ///
-assert(gwIsomorphic(gwClass(B1), gwClass(B3))===true);
+D1=matrix(QQ, {{1/1, -2/1, 4/1}, {-2/1, 2/1, 0}, {4/1, 0, -7/1}});
+D2=matrix(QQ, {{-38/1, -50/1, 23/1}, {-50/1, -62/1, 41/1}, {23/1, 41/1, 29/1}});
+assert(gwIsomorphic(gwClass(D1), gwClass(D2))===true);
 
 C1=matrix(RR, {{1/1, -2/1, 4/1}, {-2/1, 2/1, 0}, {4/1, 0, -7/1}});
 C2=matrix(RR, {{-38/1, -50/1, 23/1}, {-50/1, -62/1, 41/1}, {23/1, 41/1, 29/1}});
