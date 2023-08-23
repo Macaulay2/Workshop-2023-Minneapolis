@@ -155,6 +155,31 @@ end---------------------------------------------------------------------------
 --Ayah's sandbox
 ---------------------
 
+M = matrix{{0,1,0},{1,-1,0}};
+N = matrix{{1,0,0},{0,0,1}};
+I = schubAdd{M,N}
+isASMIdeal I
+
+schubDecomp = schubDecomposition I
+
+primeComps = schubDecomp/schubDetIdeal
+R = ring(primeComps_0)
+intersectCheck = intersect(apply(primeComps, J-> sub(J, R)))
+intersectCheck == sub(I, R)
+
+
+apply((schubDecomp/schubDetIdeal), J-> sub(J, vars ring I))
+ring I
+        permMatrices = (schubDecomp / permToMatrix)
+        rkTable = entrywiseMaxRankTable permMatrices
+        A = rankTableToASM matrix rkTable
+        ASMIdeal = schubDetIdeal matrix A
+	varHash = hashTable(apply((ring ASMIdeal)_*, i-> (last baseName i)=> i));
+	phi = map(ring ASMIdeal, ring I, apply((ring I)_*, i-> varHash#(last baseName i)));
+	ASMIdeal == sub(I, ring ASMIdeal)
+        isASM = (ASMIdeal == phi I)
+        if isASM then I.cache.ASM = ASM;
+
 ------------------------------------
 --Development Section
 ------------------------------------

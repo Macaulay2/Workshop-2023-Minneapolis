@@ -559,13 +559,18 @@ isASMIdeal = method()
 isASMIdeal Ideal := Boolean => (I) -> (
     isASM := true;
     schubDecomp := schubDecomposition I;
-    if (isASM = I == intersect apply(schubDecomp/schubDetIdeal, J -> sub(J, vars ring I))) then {
+    primeComps := schubDecomp / schubDetIdeal;
+    Q := ring primeComps_0;
+    intersectCheck := intersect(apply(primeComps, J-> sub(J,Q)));
+    if (isASM = (intersectCheck == sub(I,Q))) then {
         permMatrices := (schubDecomp / permToMatrix);
-        rankTable := rankTableFromMatrix matrix entrywiseMaxRankTable permMatrices;
-        ASM := rankTableToASM matrix rankTable;
-        ASMIdeal := schubDetIdeal matrix ASM;
-        isASM = I == sub(ASMIdeal, vars ring I);
-        if isASM then I.cache.ASM = ASM;
+        rkTable := entrywiseMaxRankTable permMatrices;
+        A := rankTableToASM matrix rkTable;
+        ASMIdeal := schubDetIdeal matrix A;
+--	varHash := hashTable(apply((ring ASMIdeal)_*, i-> (last baseName i)=> i));
+--	phi := map(ring ASMIdeal, ring I, apply((ring I)_*, i-> varHash#(last baseName i)));
+        isASM = (ASMIdeal == sub(I, ring ASMIdeal));
+        if isASM then I.cache.ASM = A;
     }
     else {
         isASM = false;
