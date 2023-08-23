@@ -1,4 +1,7 @@
--- Boolean checking if two forms over Q are isomorphic
+
+-- Input: Two Grothendieck-Witt classes alpha and beta over QQ
+-- Output: Boolean checking if alpha and beta are isomorphic
+
 isIsomorphicFormQ = method()
 isIsomorphicFormQ (GrothendieckWittClass, GrothendieckWittClass) := Boolean => (alpha, beta) -> (
     if (not baseField(alpha) === QQ) then error "first input must be a form defined over QQ";
@@ -34,13 +37,13 @@ isIsomorphicFormQ (Matrix, Matrix) := Boolean => (M,N) -> (
     return isIsomorphicFormQ(gwClass(M),gwClass(N));
     );
 
+-- Input: Two Grothendieck-Witt classes alpha and beta
+-- Output: Boolean checking if alpha and beta are the same
 
-
--- Boolean checking if two Grothendieck-Witt classes are the same
 gwIsomorphic = method()
 gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alpha,beta) -> (
-    k1:=baseField(alpha);
-    k2:=baseField(beta);
+    k1 := baseField(alpha);
+    k2 := baseField(beta);
     -- Ensure both base fields are supported
     if not (k1 === CC or instance(k1,ComplexField) or k1 === RR or instance(k1,RealField) or k1 === QQ or (instance(k1, GaloisField) and k1.char != 2)) then (
         error "Base field not supported; only implemented over QQ, RR, CC, and finite fields of characteristic not 2";
@@ -72,7 +75,7 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
     -- Real numbers
     -----------------------------------
     
-    --Over RR, diagonal forms are equivalent if and only if they have the same number of positive, negative, and zero entries
+    -- Over RR, diagonal forms are equivalent if and only if they have the same number of positive, negative, and zero entries
     else if ((k1 === RR or instance(k1,RealField)) and (k2 === RR or instance(k2,RealField))) then (
         return ((numRows(A) == numRows(B)) and (signature(alpha) == signature(beta)));
         )
@@ -98,11 +101,13 @@ gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alph
     else error "Base fields are not isomorphic"
     )
 
--- Boolean checking whether two symmetric bilinear forms are isometric
+-- Input: Two symmetric bilinear forms represented as matrices
+-- Output: Boolean checking whether two symmetric bilinear forms are isometric
+
 isIsometricForm = method()
 isIsometricForm (Matrix,Matrix) := (Boolean) => (A,B) -> (
-    k1:=ring A;
-    k2:=ring B;
+    k1 := ring A;
+    k2 := ring B;
     -- Ensure both base fields are supported
     if not (k1 === CC or instance(k1,ComplexField) or k1 === RR or instance(k1,RealField) or k1 === QQ or (instance(k1, GaloisField) and k1.char != 2)) then (
         error "Base field not supported; only implemented over QQ, RR, CC, and finite fields of characteristic not 2";
@@ -131,7 +136,7 @@ isIsometricForm (Matrix,Matrix) := (Boolean) => (A,B) -> (
     -- Real numbers
     -----------------------------------
     
-    --Over RR, diagonal forms of the same dimension are equivalent if and only if they have the same number of positive and negative entries
+    -- Over RR, diagonal forms of the same dimension are equivalent if and only if they have the same number of positive and negative entries
     else if ((k1 === RR or instance(k1,RealField)) and (k2 === RR or instance(k2,RealField))) then (
         return ((numRows(A) == numRows(B)) and (numPosDiagEntries(diagA) == numPosDiagEntries(diagB)) and (numNegDiagEntries(diagA) == numNegDiagEntries(diagB)));
         )
