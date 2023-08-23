@@ -517,6 +517,10 @@ B2=matrix(QQ, {{-17198/4225, -166126/975, -71771/1560}, {-166126/975, -27758641/
 assert(isIsomorphicFormQ(B1, B2)===true);
 assert(isIsomorphicFormQ(gwClass(B1), gwClass(B2))===true);
 
+B2=matrix(QQ, {{-17198/4225, -166126/975, -71771/1560}, {-166126/975, -27758641/4050, -251077/135}, {-71771/1560, -251077/135, -290407/576}});
+assert(isIsomorphicFormQ(B1, B2)===true);
+assert(isIsomorphicFormQ(gwClass(B1), gwClass(B2))===true);
+
 B3=matrix(QQ, {{-38/1, -50/1, 23/1}, {-50/1, -62/1, 41/1}, {23/1, 41/1, 29/1}});
 assert(isIsomorphicFormQ(B1, B3)===true);
 assert(isIsomorphicFormQ(gwClass(B1), gwClass(B3))===true);
