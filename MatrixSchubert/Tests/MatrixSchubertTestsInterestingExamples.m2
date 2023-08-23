@@ -378,6 +378,9 @@ assert(toExternalString L_4 == "z_(2,2)*z_(3,1)" );
 assert(toExternalString L_5 == "z_(1,3)*z_(2,4)*z_(3,1)*z_(4,2)" );
 assert(toExternalString L_6 == "z_(1,4)*z_(2,2)^2*z_(3,3)*z_(4,1)" );
 
+-*
+--from Ayah: I don't understand this test.
+----Why should one expect this diagonal ideal to be squarefree?
 L = diagRevLexInit PI; 
 assert(numgens L == 13);
 assert(toExternalString L_0 == "z_(1,2)" );
@@ -393,6 +396,7 @@ assert(toExternalString L_9 == "z_(1,5)*z_(2,4)*z_(3,3)*z_(4,1)");
 assert(toExternalString L_10 == "z_(1,5)*z_(2,2)^2*z_(3,3)*z_(4,1)");
 assert(toExternalString L_11 == "z_(1,4)*z_(2,2)^2*z_(3,3)*z_(4,1)");
 assert(toExternalString L_12 == "z_(1,5)*z_(2,4)*z_(2,2)*z_(3,2)*z_(4,1)");
+*-
 ///
 
 --subwordComplex--

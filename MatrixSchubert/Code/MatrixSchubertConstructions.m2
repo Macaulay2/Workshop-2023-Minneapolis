@@ -259,13 +259,15 @@ schubDetIdeal = method(
 )
 schubDetIdeal Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    A = partialASMToASM(A);
+ --   A = partialASMToASM(A);
     zMatrix := genMat(numrows A, numcols A, CoefficientRing=> o.CoefficientRing, Variable => o.Variable); --generic matrix
     rankMat := rankTable A; --rank matrix for A
     essBoxes := essentialSet A;
+    R := ring zMatrix;
+    I := ideal(0_R);
     if essBoxes == {} then (
-    	R := ring zMatrix;
-	    return ideal(0_R)
+	I.cache.ASM = A;
+	return I;
 	);
     zBoxes := apply(essBoxes, i -> flatten table(i_0, i_1, (j, k) -> (j+1, k+1))); --smaller matrix indices for each essential box
     ranks := apply(essBoxes, i -> rankMat_(i_0-1, i_1-1)); --ranks for each essential box
@@ -274,7 +276,9 @@ schubDetIdeal Matrix := o -> A -> (
     	pos := position(essBoxes, i -> i == box);
         fultonGens#(#fultonGens) = (minors(ranks_pos+1, zMatrix^{0..(box_0-1)}_{0..(box_1-1)}))_*;
     );
-    return ideal(unique flatten toList fultonGens)
+    I = ideal (unique flatten toList fultonGens);
+    I.cache.ASM = A;
+    return I;
 )
 schubDetIdeal List := o -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");    
@@ -405,25 +409,28 @@ subwordComplex List := SimplicialComplex => w -> (
 entrywiseMinRankTable = method()
 entrywiseMinRankTable List := Matrix => L -> (
     if (#L == 0) then error("The input must be a nonempty list.");
-    n := #(entries L#0);
-    minimalRankMtx := mutableMatrix(ZZ, n, n);
+    n := min(L/numrows);
+    m := min(L/numcols);
+    a := max(n,m);
+    minimalRankMtx := mutableMatrix(ZZ, n, m);
 
     -- initialize the minimalRankMtx to something with big entries everywhere
     for i from 0 to n-1 do (
-        for j from 0 to n-1 do (
-            minimalRankMtx_(i, j) = n + 1;
+        for j from 0 to m-1 do (
+            minimalRankMtx_(i, j) = a + 1;
         );
     );
 
     -- comb through the list to get the minimal entries
     for M in L do (
-        listRankM := entries rankTable(M);
-        if (#listRankM != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
+	T := rankTable M;
+--      if (numrows M != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
+--	if (numcols M != m) then error ("The input must be a list of partial alternating sign matrices of the same size.");	
         if not(isPartialASM(M)) then error("The input must be a list containing partial alternating sign matrices.");
 
         for i from 0 to n-1 do (
-            for j from 0 to n-1 do (
-                minimalRankMtx_(i,j) = min {minimalRankMtx_(i,j), listRankM#i#j};
+            for j from 0 to m-1 do (
+                minimalRankMtx_(i,j) = min{minimalRankMtx_(i,j), T_(i,j)};
             );
         );
     );
@@ -438,18 +445,20 @@ entrywiseMinRankTable List := Matrix => L -> (
 entrywiseMaxRankTable = method()
 entrywiseMaxRankTable List := Matrix => L -> (
     if (#L == 0) then error("The input must be a nonempty list.");
-    n := #(entries L#0);
-    maximalRankMtx := mutableMatrix(ZZ, n, n);
+    n := max(L/numrows);
+    m := max(L/numcols);
+    maximalRankMtx := mutableMatrix(ZZ, n, m);
 
     -- comb through the list to get the maximal entries
     for M in L do (
-        listRankM := entries rankTable(M);
-        if (#listRankM != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
+	T := rankTable M;
+--        if (numrows M != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
+--	if (numcols M != m) then error ("The input must be a list of partial alternating sign matrices of the same size.");
         if not(isPartialASM(M)) then error("The input must be a list containing partial alternating sign matrices.");
 
-        for i from 0 to n-1 do (
-            for j from 0 to n-1 do (
-                maximalRankMtx_(i,j) = max {maximalRankMtx_(i,j), listRankM#i#j};
+        for i from 0 to (numrows M)-1 do (
+            for j from 0 to (numcols M)-1 do (
+                maximalRankMtx_(i,j) = max {maximalRankMtx_(i,j), T_(i,j)};
             );
         );
     );
@@ -472,15 +481,24 @@ monomialRank (RingElement, ZZ) := ZZ => (mon, maxIdx) -> (
 --INPUT: an ASM ideal
 --OUTPUT: the primary decomposition of the ASM ideal
 --TODO: docs and tests
---TODO: input validation/type checking
 -------------------------------------------
+
 schubDecomposition = method()
+
 schubDecomposition Ideal := List => I -> (
     if I == 0 then (
         return {toList (1..floor sqrt numgens ring I)};
     );
+    maxIdx := 0;
+    if I.cache.?ASM then (
+	M := I.cache.ASM;
+        entrySum := sum flatten entries M;
+	maxIdx = 2*(numcols M) - entrySum;
+	);
+    if not(I.cache.?ASM) then (
+	maxIdx = max((flatten entries vars ring I) / indexOfVariable // max);
+	);
     primeDecomp := decompose ideal leadTerm I;
-    maxIdx := max((flatten entries vars ring I) / indexOfVariable // max);
     -- varWeights := (monoid ring I).Options.MonomialOrder#1#1;
     cycleDecomp := {};
     for primeComp in primeDecomp do {
@@ -492,10 +510,12 @@ schubDecomposition Ideal := List => I -> (
 )
 
 schubDecomposition Matrix := List => A -> (
-    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubDetIdeal A;
+    if not(isPartialASM A) then error("The input must be a partial alternating sign matrix.");
+    A' := partialASMToASM A;
+    I := schubDetIdeal A';
     schubDecomposition I
     )
+
 -------------------------------------------
 --INPUT: a partial ASM A
 --OUTPUT: the smallest permutations bigger than A in Bruhat order
@@ -586,17 +606,15 @@ getASM Ideal := Matrix => (I) -> (
 ------------------------------------------
 isMinRankTable = method()
 isMinRankTable Matrix := Boolean => (A) -> (
-    AList := entries A;
-    a := #AList;
-    b := #(AList#0);
-    if not(a == b) then return false;
-
+    a := numrows A;
+    b := numcols A;
+--    if not(a == b) then return false;
     for i from 0 to a-1 do (    
-        for j from 0 to a-1 do (
-            if (i == 0 and j == 0 and not(AList#i#j == 0 or AList#i#j == 1)) then return false
-            else if (i == 0 and j != 0 and (not(AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1) or not(AList#i#j == 0 or AList#i#j == 1))) then return false
-            else if (i != 0 and j == 0 and (not(AList#i#j-AList#(i-1)#j == 0 or AList#i#j-AList#(i-1)#j == 1) or not(AList#i#j == 0 or AList#i#j == 1))) then return false
-            else if (i != 0 and j != 0 and (not(AList#i#j-AList#i#(j-1) == 0 or AList#i#j-AList#i#(j-1) == 1) or not(AList#i#j-AList#(i-1)#j == 0 or AList#i#j-AList#(i-1)#j == 1))) then return false;
+        for j from 0 to b-1 do (
+            if (i == 0 and j == 0 and not(A_(i,j) == 0 or A_(i,j) == 1)) then return false
+            else if (i == 0 and j != 0 and (not(A_(i,j)-A_(i,j-1) == 0 or A_(i,j)-A_(i,j-1) == 1) or not(A_(i,j) == 0 or A_(i,j) == 1))) then return false
+            else if (i != 0 and j == 0 and (not(A_(i,j)-A_(i-1,j) == 0 or A_(i,j)-A_(i-1,j) == 1) or not(A_(i,j) == 0 or A_(i,j) == 1))) then return false
+            else if (i != 0 and j != 0 and (not(A_(i,j)-A_(i,j-1) == 0 or A_(i,j)-A_(i,j-1) == 1) or not(A_(i,j)-A_(i-1,j) == 0 or A_(i,j)-A_(i-1,j) == 1))) then return false;
         );
     );
     true
@@ -610,23 +628,23 @@ isMinRankTable Matrix := Boolean => (A) -> (
 rankTableToASM = method()
 rankTableToASM Matrix := Matrix => (A) -> (
     if not(isMinRankTable(A)) then error("The inputted matrix is not a valid minimal rank table.");
-    AList := entries A;
-    n := #AList;
-    ASMret := mutableMatrix(ZZ, n, n);
+    n := numrows A;
+    m := numcols A;
+    ASMret := mutableMatrix(ZZ, n, m);
     for i from 0 to n-1 do (
-        for j from 0 to n-1 do (
+        for j from 0 to m-1 do (
             if (i == 0 and j == 0) then (
-                if (AList#0#0 == 1) then (ASMret_(0,0) = 1;);
+                if (A_(0,0) == 1) then (ASMret_(0,0) = 1;);
             )
             else if (i == 0) then (
-                if (AList#i#j == 1 and AList#i#(j-1)==0) then (ASMret_(i,j) = 1;);
+                if (A_(i,j) == 1 and A_(i,j-1)==0) then (ASMret_(i,j) = 1;);
             )
             else if (j == 0) then (
-                if (AList#i#j == 1 and AList#(i-1)#j==0) then (ASMret_(i,j) = 1;);
+                if (A_(i,j) == 1 and A_(i-1,j)==0) then (ASMret_(i,j) = 1;);
             )
             else (
-                if (AList#i#j - AList#i#(j-1) == 1 and AList#i#j - AList#(i-1)#j == 1 and AList#(i-1)#j == AList#(i-1)#(j-1)) then (ASMret_(i,j) = 1;)
-                else if (AList#i#j == AList#i#(j-1) and AList#i#j == AList#(i-1)#j and AList#i#j > AList#(i-1)#(j-1)) then (ASMret_(i,j) = -1;);
+                if (A_(i,j) - A_(i,j-1) == 1 and A_(i,j) - A_(i-1,j) == 1 and A_(i-1,j) == A_(i-1,j-1)) then (ASMret_(i,j) = 1;)
+                else if (A_(i,j) == A_(i,j-1) and A_(i,j) == A_(i-1,j) and A_(i,j) > A_(i-1,j-1)) then (ASMret_(i,j) = -1;);
             );
         );
     );
@@ -639,33 +657,33 @@ rankTableToASM Matrix := Matrix => (A) -> (
 -- TODO: tests and documentation
 --------------------------------------------
 rankTableFromMatrix = method()
-rankTableFromMatrix Matrix := Matrix => (A) -> (
-    AList := entries A;
-    n := #AList;
-    rankTable := mutableMatrix(ZZ,n,n);
-    if not(#(AList#0) == n) then error("Must be a square matrix.");
+rankTableFromMatrix Matrix := Matrix => A -> (
+    if not ((ring A) === ZZ) then error ("Must be an integer matrix.");
+    n := numrows A;
+    m := numcols A;
+    rankTable := mutableMatrix(ZZ,n,m);
+--    if not(#(AList#0) == n) then error("Must be a square matrix.");
 
     for i from 0 to n-1 do (
-        for j from 0 to n-1 do(
-            if not(ring(AList#i#j) === ZZ) then error("Must be an integer matrix."); --TODO: == or ===?
-            if (AList#i#j < 0) then error("Must be a matrix with nonnegative entries.");
+        for j from 0 to m-1 do(
+            if (A_(i,j) < 0) then error("Must be a matrix with nonnegative entries.");
             if (i == 0 and j == 0) then (
-                rankTable_(n-1, n-1) = min(n, AList#(n-1)#(n-1));
+                rankTable_(n-1, n-1) = min(n, A_(n-1,n-1));
             )
             else if (i == 0) then (
-                rankTable_(n-1-i, n-1-j) = min(n-i, n-j, AList#(n-1-i)#(n-1-j), rankTable_(n-1-i,n-j));
+                rankTable_(n-1-i, n-1-j) = min(n-i, n-j, A_(n-1-i, n-1-j), rankTable_(n-1-i,n-j));
             )
             else if (j == 0) then (
-                rankTable_(n-1-i, n-1-j) = min(n-i, n-j, AList#(n-1-i)#(n-1-j), rankTable_(n-i,n-j-1));
+                rankTable_(n-1-i, n-1-j) = min(n-i, n-j, A_(n-1-i,n-1-j), rankTable_(n-i,n-j-1));
             )
             else (
-                rankTable_(n-1-i, n-1-j) = min(n-i, n-j, AList#(n-1-i)#(n-1-j), rankTable_(n-1-i, n-j), rankTable_(n-i,n-j-1));
+                rankTable_(n-1-i, n-1-j) = min(n-i, n-j, A_(n-1-i,n-1-j), rankTable_(n-1-i, n-j), rankTable_(n-i,n-j-1));
             );
         );
     );
 
     for i from 0 to n-1 do (
-        for j from 0 to n-1 do(
+        for j from 0 to m-1 do(
             if (i == 0 and j == 0) then (
                 rankTable_(i, j) = min(1, rankTable_(i, j));
             )
@@ -703,7 +721,7 @@ schubIntersect List := Ideal => (L) -> (
 schubAdd = method()
 schubAdd List := Ideal => (L) -> (
     if (#L == 0) then error("Please enter a nonempty list.");
-    listPermM := L / (i -> if instance(i, Matrix) then (partialASMToASM i) else if instance(i_0, List) then matrix i else permToMatrix i);
+    listPermM := L / (i -> if instance(i, Matrix) then i else if instance(i_0, List) then matrix i else (permToMatrix i));
     rankM := entrywiseMinRankTable(listPermM);
     schubDetIdeal rankTableToASM(rankM)
 );
