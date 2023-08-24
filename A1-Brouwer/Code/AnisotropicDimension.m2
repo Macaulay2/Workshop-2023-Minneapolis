@@ -58,9 +58,9 @@ anisotropicDimensionQp (GrothendieckWittClass, ZZ) := ZZ => (beta, p) ->(
 	-- If the form is hyperbolic it has no anisotropic part
 	if isHyperbolicQp(beta,p) then return 0;
        	
-	if isPadicSquare(integralDiscriminant(beta),p) then return 4;
+	if isPadicSquare(integralDiscriminant(beta),p) then return 2;
 	
-	return 2;
+	return 4;
        
 	);
     
@@ -91,11 +91,6 @@ anisotropicDimensionQQ (GrothendieckWittClass) := ZZ => (beta) -> (
     if (not (kk === QQ)) then (error "GrothendieckWittClass is not over QQ");
     if (isDegenerate(B)) then (error "form is degenerate");
     
-    -- Shortcut -- if the form has signature > 2 it must achieve its maximal anisotropic dimension over R
-    if (abs(signature(beta))>2) then(
-	return abs(signature(beta));
-	);
-    
     -- The anisotropic dimension of a form over Q is the maximum of its anisotropic dimensions at any of its completions
     
     ListOfLocalAnistropicDimensions := {};
@@ -109,6 +104,7 @@ anisotropicDimensionQQ (GrothendieckWittClass) := ZZ => (beta) -> (
     -- For the remaining local fields, we can just look at relevant primes
     for p in relevantPrimes(beta) do(
 	ListOfLocalAnistropicDimensions = append(ListOfLocalAnistropicDimensions, anisotropicDimensionQp(beta,p))
+	
 	);
     
     return max ListOfLocalAnistropicDimensions;

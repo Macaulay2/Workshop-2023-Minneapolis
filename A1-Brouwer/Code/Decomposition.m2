@@ -9,12 +9,12 @@ QQanisotropicDimension4 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     if not (anisotropicDimensionQQ(beta) >= 4) then error "anisotropic dimension of inputted form is not >=4";
     
     -- If the signature is non-negative then return <1>
-    if signature(beta) > 0 then(
+    if signature(beta) >= 0 then(
 	return gwClass(matrix(QQ,{{1}}))
 	);
     
     -- Otherwise return <-1>
-    if signature(beta) <= 0 then(
+    if signature(beta) < 0 then(
 	return gwClass(matrix(QQ,{{-1}}))	        
         );	
     );
@@ -53,15 +53,19 @@ QQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 
     );
 
--- Input: A form q over QQ of anisotropic dimension 2
--- Output: The anisotropic part <a, -da> of q
+-- Constructs the anisotropic part of a form with anisotropic dimension 2
+-- 
+-- QQanisotropicDimension2 = method()
+-- QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
+--     -- If the witt Index isn't 0 mod 4, add on some hyperbolic forms so that 
+--     n := numRows beta.matrix;
+--     wittIndexBeta := n - anisotropicDimensionQQ(beta);
+--     q:= beta;
+--     -- If the Witt Index isn't 0 mod 4 it must be 2 mod 4, so we add on a hyperbolic form
+--     if (not wittIndexBeta % 4 == 0) then(
+-- 	q = gwAdd(beta, hyperbolicForm(QQ));
+-- 	);
 
--- Note: This is Koprowski/Rothkegel's Algorithm 8 in the case of QQ
-
-QQanisotropicDimension2 = method()
-QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
-    n := numRows beta.matrix;
-    
     -- Shortcut: if the form has anisotropic dimension 2 and the form is dimension 2, return the form itself
     -- if (n==2) then(
     -- 	return beta;
