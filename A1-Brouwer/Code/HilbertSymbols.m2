@@ -3,8 +3,8 @@
 -- Over k = R, the real symbol is 1 if either a or b is positive, and -1 if they are both negative.
 -- See Serre, III Theorem 1
 
-HilbertSymbolReal = method()
-HilbertSymbolReal (QQ, QQ) := (ZZ) => (a, b) -> (
+hilbertSymbolReal = method()
+hilbertSymbolReal (QQ, QQ) := (ZZ) => (a, b) -> (
     if (a < 0 and b < 0) then (
 	return -1;
 	)
@@ -13,28 +13,28 @@ HilbertSymbolReal (QQ, QQ) := (ZZ) => (a, b) -> (
 	);
     );
 
-HilbertSymbolReal (QQ, ZZ) := (ZZ) => (a,b) -> (
+hilbertSymbolReal (QQ, ZZ) := (ZZ) => (a,b) -> (
     b1 := b/1;
-    return HilbertSymbolReal(a, b1);
+    return hilbertSymbolReal(a, b1);
     );
 
-HilbertSymbolReal (ZZ, QQ) := (ZZ) => (a,b) -> (
+hilbertSymbolReal (ZZ, QQ) := (ZZ) => (a,b) -> (
     a1 := a/1;
-    return HilbertSymbolReal(a1, b);
+    return hilbertSymbolReal(a1, b);
     );
 
-HilbertSymbolReal (ZZ, ZZ) := (ZZ) => (a,b) -> (
+hilbertSymbolReal (ZZ, ZZ) := (ZZ) => (a,b) -> (
     a1:= a/1;
     b1:= b/1;
-    return HilbertSymbolReal(a1, b1);
+    return hilbertSymbolReal(a1, b1);
     );
 
 
 -- Input: Any integers a and b and a prime p. The integers a and b are considered as elements of QQ_p.
 -- Output: The Hilbert symbol (a,b)_p following Serre III Theorem 1
 
-HilbertSymbol = method()
-HilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
+hilbertSymbol = method()
+hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
     if (not isPrime(p)) then error "third argument of HilbertSymbol must be a prime";
     
     alpha := PadicValuation(a,p);
@@ -109,7 +109,7 @@ HilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
 --     return hilb;	
 -- );
 
-HilbertSymbol (QQ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
+hilbertSymbol (QQ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
  
 -- if a, b are rational numbers with denominators,  one can multiply by square of denominator to 
 -- get a', b' integers.  Then evaluate hilbertSymbol (a', b', p);
@@ -128,17 +128,15 @@ HilbertSymbol (QQ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
     
     a = sub(a,ZZ);
     b = sub(b,ZZ);
-    return HilbertSymbol(a,b,p);
+    return hilbertSymbol(a,b,p);
     );
 
-HilbertSymbol (ZZ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
+hilbertSymbol (ZZ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
     a1:=a/1;
-    return HilbertSymbol(a1,b, p);    
+    return hilbertSymbol(a1,b, p);    
    );
 
-HilbertSymbol (QQ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
+hilbertSymbol (QQ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
    b1:=b/1;
-   return HilbertSymbol(a, b1, p);    
+   return hilbertSymbol(a, b1, p);    
    );
-
-

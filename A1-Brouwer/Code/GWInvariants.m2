@@ -4,6 +4,7 @@
 
 -- Input: A Grothendieck-Witt class beta defined over QQ or RR
 -- Output: The number of positive entries in its diagonalization
+-- Note:  numPosEntries is *not* included as a method in the A1BrowerDegrees package
 
 numPosEntries = method()
 numPosEntries (GrothendieckWittClass) := ZZ => beta ->(
@@ -26,6 +27,7 @@ numPosEntries (GrothendieckWittClass) := ZZ => beta ->(
 
 -- Input: A Grothendieck-Witt class beta defined over QQ or RR
 -- Output: The number of negative entries in its diagonalization
+-- Note:  numNegEntries is *not* included as a method in the A1BrowerDegrees package
 
 numNegEntries = method()
 numNegEntries (GrothendieckWittClass) := ZZ => beta ->(
@@ -130,7 +132,7 @@ HasseWittInvariant (List, ZZ) := ZZ => (L,p) -> (
 	   );
        for i from 0 to len - 2 do (
        	   for j from i + 1 to len - 1 do (
-	       a = a * HilbertSymbol(f_i, f_j, p);
+	       a = a * hilbertSymbol(f_i, f_j, p);
 	       );
 	   );
        

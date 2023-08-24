@@ -115,7 +115,7 @@ QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     	B := mutableIdentity(QQ,r);
     	for i from 0 to (r-1) do(
 	    for j from 0 to (r-1) do(
-	    	B_(i,j) = (1 - HilbertSymbol(L_j, d, L_i))/2;
+	    	B_(i,j) = (1 - hilbertSymbol(L_j, d, L_i))/2;
 	    	);
 	    );
 	B = matrix(B);

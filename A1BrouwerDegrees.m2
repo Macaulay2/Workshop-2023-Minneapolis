@@ -73,8 +73,8 @@ export{
     "integralDiagonalRep",
     
     --HilbertSymbols.m2
-    "HilbertSymbol",
-    "HilbertSymbolReal",
+    "hilbertSymbol",
+    "hilbertSymbolReal",
     
     --GWInvariants.m2
     "signature",
@@ -543,32 +543,45 @@ C4=matrix(M, {{1, 2, 10}, {2, 3, 2}, {10, 2, 3}});
 assert(gwIsomorphic(gwClass(C3), gwClass(C4))===true);
 ///
 
---Test for HilbertSymbols
---Test 28
+-- Test for GWinvariants
+-- Test 28
+
+TEST ///
+M1 = gwClass(matrix(QQ, {{1/1,0,-3},{0,23,0},{-3,0,-2/5}}));
+M2 = gwClass(matrix(QQ, {{1/1,0,0},{0, 23,0},{0,0,-2/5}}));
+M3 = gwClass(matrix(QQ, {{1/1,0,0},{0,-23,0},{0,0,-2/5}}));
+M4 = gwClass(matrix(QQ, {{-1/1,0,0},{0,-23,0},{0,0,-2/5}}));
+
+assert(signature(M1) == 1);
+assert(signature(M2) == 1);
+assert(signature(M3) == -1);
+assert(signature(M4) == -3);
+///
+
+-- Test for hilbertSymbols
+-- Test 29
 
 TEST ///
 
-a = HilbertSymbol(100, 7, 3);
+a = hilbertSymbol(100, 7, 3);
 assert(a==1);
 
-b = HilbertSymbol(100/121, 7/169, 3);
+b = hilbertSymbol(100/121, 7/169, 3);
 assert(b==1);
 
-assert(HilbertSymbol(5, 1/9, 7)==1);
-assert(HilbertSymbol(1/9, 5, 7)==1);
+assert(hilbertSymbol(5, 1/9, 7)==1);
+assert(hilbertSymbol(1/9, 5, 7)==1);
 
-assert(HilbertSymbol(3, 11, 3)==-1);
-assert(HilbertSymbol(3, 11, 2)==-1);
-assert(HilbertSymbol(-3, -11, 2)==1);
-assert(HilbertSymbol(-5, 11, 2) == -1);
-
-
-assert(HilbertSymbolReal(-3/1, 5)==1);
-assert(HilbertSymbolReal(-3, -5/1)==-1);
-assert(HilbertSymbolReal(-3/1, -5)==-1);
-assert(HilbertSymbolReal(3, 5)==1);
+assert(hilbertSymbol(3, 11, 3)==-1);
+assert(hilbertSymbol(3, 11, 2)==-1);
+assert(hilbertSymbol(-3, -11, 2)==1);
+assert(hilbertSymbol(-5, 11, 2) == -1);
 
 
+assert(hilbertSymbolReal(-3/1, 5)==1);
+assert(hilbertSymbolReal(-3, -5/1)==-1);
+assert(hilbertSymbolReal(-3/1, -5)==-1);
+assert(hilbertSymbolReal(3, 5)==1);
 ///
-end
+
 
