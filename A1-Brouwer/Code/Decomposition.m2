@@ -34,11 +34,11 @@ QQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     S1 := {};
     S2 := {};
     for p in relevantPrimes(beta) do(
-	if odd PadicValuation(d,p) then(
+	if odd padicValuation(d,p) then(
 	    L1 = append(L1,p);
 	    S1 = append(S1,d-1);
 	    );
-	if even PadicValuation(d,p) then(
+	if even padicValuation(d,p) then(
 	    L2 = append(L2,p^2);
 	    S2 = append(L2,p)
 	    );

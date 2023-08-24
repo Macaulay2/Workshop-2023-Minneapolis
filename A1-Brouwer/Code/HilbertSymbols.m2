@@ -37,8 +37,8 @@ hilbertSymbol = method()
 hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
     if (not isPrime(p)) then error "third argument of HilbertSymbol must be a prime";
     
-    alpha := PadicValuation(a,p);
-    beta := PadicValuation(b,p);
+    alpha := padicValuation(a,p);
+    beta := padicValuation(b,p);
     u := sub(a/p^alpha,ZZ);
     v := sub(b/p^beta, ZZ);
     

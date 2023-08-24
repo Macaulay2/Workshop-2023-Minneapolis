@@ -49,7 +49,7 @@ export{
     "legendreBoolean",
     "localAlgebraBasis",
     "primeFactors",
-    "PadicValuation",
+    "padicValuation",
     "squareSymbol",
 
     --MatrixMethods.m2

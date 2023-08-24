@@ -57,8 +57,8 @@ primeFactors (QQ) := List => (n) -> (
 -- Input: An integer n and a prime number p
 -- Output: The highest non-negative integer r so that p^r | n
 
-PadicValuation = method()
-PadicValuation (ZZ, ZZ) := (ZZ) => (n, p) -> (
+padicValuation = method()
+padicValuation (ZZ, ZZ) := (ZZ) => (n, p) -> (
     if (n < 0) then (n = -n);
     if (n == 0) then error "Error: Trying to find prime factorization of 0";
     H := hashTable (factor n);
@@ -90,7 +90,7 @@ squareSymbol = method()
 squareSymbol(ZZ, ZZ) := (ZZ) => (a, p) -> (
     x := getSymbol "x";
     R := GF(p, Variable => x);
-    e1 := PadicValuation(a,p);
+    e1 := padicValuation(a,p);
     if (even e1) then (
     	a1 := sub(a/(p^e1), ZZ);
 	a2 := sub(a1, R);
@@ -123,7 +123,7 @@ if (odd p) then (
     -- differ by a square in GF(p)
     a1 := squarefreePart(a);
     b1 := squarefreePart(b);
-    if (PadicValuation(a1, p ) != PadicValuation(b1, p)) then (
+    if (padicValuation(a1, p ) != padicValuation(b1, p)) then (
 	return false;
         )
     else (
@@ -138,7 +138,7 @@ else (
     -- that the units agree mod 8.
     a1 = squarefreePart(a);
     b1 = squarefreePart(b);
-    if (PadicValuation(a1, p ) != PadicValuation(b1, p)) then (
+    if (padicValuation(a1, p ) != padicValuation(b1, p)) then (
 	return false;
         )
     else (

@@ -38,6 +38,24 @@ document{
     ///,
     }
 
+document{
+    Key => {(padicValuation, ZZ, ZZ), padicValuation},
+    Headline => "p-adic valuation of a rational number",
+    Usage => "padicValuation(a, p)",
+    Inputs => {
+	ZZ => "a" => {"A non-zero rational number in ", TEX///$\mathbb{Q}_p$///, "."},
+	ZZ => "p" => {"A rational prime number."},
+	},
+    Outputs =>{
+	ZZ => {"An integer ", TEX///$n$///, " where ",TEX///$a=p^n u$///, " and ", TEX///$u$///," is a unit in ", TEX///$\mathbb{Z}_p$///},
+        },
+    EXAMPLE lines///
+    a = 363/7;
+    padicValuation(a, 11)
+    ///,
+    }
+
+
 document {
     Key => {(localAlgebraBasis, List, Ideal), localAlgebraBasis},
 	Headline => "produces a basis for a local finitely generated algebra over a field k",
