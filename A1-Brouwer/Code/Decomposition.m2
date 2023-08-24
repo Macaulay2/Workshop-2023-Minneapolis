@@ -66,21 +66,21 @@ QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     -- if (n==2) then(
     -- 	return beta;
     -- 	);
+        
     
-
-    
-    
-    -- Step 1: If the Witt Index isn't 0 mod 4 it must be 2 mod 4, so we add on a hyperbolic form
-    wittIndexBeta := n - anisotropicDimensionQQ(beta);
+    -- Step 1: We want the Witt index to be 0 mod 4 in their terminology --- note they define the Witt index to be
+    -- the integer w so that q = wH + q_a. This is not the same as the dimension of a maximal totally isotropic subspace
+    w := (n - anisotropicDimensionQQ(beta))/2;
+    w = sub(w,ZZ);
     q:= beta;
-    if (not wittIndexBeta % 4 == 0) then(
-	q = gwAdd(beta, hyperbolicForm(QQ));
-	n = n+2;
+    if ((w % 4) != 0) then(
+	w = w % 4;
+	q = gwAdd(q, hyperbolicForm(QQ,2*(4-w)));
+	n = n + 2*(4-w);
 	);
     
     -- Step 2: Compute discriminant (note they use a signed version of the discriminant in their algorithm)
     d:= ((-1)^(n*(n-1)/2))*integralDiscriminant(q);
-    print("\nd is " | toString(d));
     
     -- Step 3: Take relevant primes plus dyadic ones
     L := relevantPrimes(beta);
@@ -95,14 +95,12 @@ QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     
     while not solnFound do(
 	r := #L;
-	print("\nL is " | toString(L)); 	          
     	-- Step 5c: Make a vector of exponents of Hasse invariants
 	W := mutableMatrix(QQ,r,1);
 	for i from 0 to (r-1) do(
 	    W_(i,0) = (1 - (HasseWittInvariant(q,L_i)))/2;
 	    );
        	
-	print("\nbefore appending W is " | toString(W));
 
 	-- Step 5b: 
 	W = matrix(W);
@@ -125,7 +123,6 @@ QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 	    	);
 	    );
 	B = matrix(B);
-	print("\nbefore appending B is " | toString(B));
     	
 	-- Step 5d: Append a zero column on the front if the discriminant is negative
     	if (d < 0) then(
@@ -138,17 +135,10 @@ QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
         kk := GF(2);
     	W = matrix(kk,entries(W));
     	B = matrix(kk,entries(B));
-	
-	
-	print("W is" | toString(W) | " over field " | toString(ring W));
-	print("\nB is" | toString(B)| " over field " | toString(ring B));
-	
+
 	
 	if (class(solve(B,W)) === Matrix) then(
-	    print("\nLoop started");
-	    print("\nL is " | toString(L));
 	    X := solve(B,W);
-	    print("X is " | toString(X));
 	    solnFound = true;
 	    break;
 	    )
@@ -159,7 +149,6 @@ QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 		);
 
 	    L = append(L,p);
-	    print("\np is " | toString(p));
 	    );
 	);
   
