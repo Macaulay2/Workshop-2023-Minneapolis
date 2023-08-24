@@ -65,7 +65,7 @@ export{
     --BuildingForms.m2
     "diagonalClass",
     "hyperbolicForm",
-    "PfisterForm",
+    "pfisterForm",
     
     --SimplifiedRepresentatives.m2
     "diagonalForm",
@@ -104,7 +104,7 @@ export{
     
     --Decomposition.m2
     "wittDecomp",
-    "QQanisotropicDimension2",
+    "qQanisotropicDimension2",
     "sumDecomposition",
     "sumDecompositionString"
     }
@@ -318,7 +318,7 @@ assert(gwIsomorphic(f2LDsum, f2GD));
 -- Test 7
 TEST ///
 twoH = hyperbolicForm(GF(17),4);
-P = PfisterForm(GF(17),(2,3));
+P = pfisterForm(GF(17),(2,3));
 assert(gwIsomorphic(P,twoH));
 ///
 

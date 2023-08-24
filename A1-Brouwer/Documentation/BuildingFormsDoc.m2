@@ -24,10 +24,10 @@ document {
 }
 
 document {
-    Key => {PfisterForm, (PfisterForm, Ring, RingElement), (PfisterForm,Ring,ZZ),(PfisterForm,Ring,QQ),(PfisterForm,Ring,Sequence), (PfisterForm,InexactFieldFamily,RingElement), (PfisterForm,InexactFieldFamily,ZZ), (PfisterForm,InexactFieldFamily,QQ),(PfisterForm,InexactFieldFamily,Sequence)},
+    Key => {pfisterForm, (pfisterForm, Ring, RingElement), (pfisterForm,Ring,ZZ),(pfisterForm,Ring,QQ),(pfisterForm,Ring,Sequence), (pfisterForm,InexactFieldFamily,RingElement), (pfisterForm,InexactFieldFamily,ZZ), (pfisterForm,InexactFieldFamily,QQ),(pfisterForm,InexactFieldFamily,Sequence)},
     Headline => "the Grothendieck-Witt class of a Pfister form",     
-	Usage => "PfisterForm(k,a)
-	          PfisterForm(k,L)",
+	Usage => "pfisterForm(k,a)
+	          pfisterForm(k,L)",
 	Inputs => {
 	    Ring => "k" => {"a field"},
 	    RingElement => "a" => {"any element ", TEX///$a\in k$///},
@@ -38,12 +38,12 @@ document {
 	    },
 	PARA {"Given a sequence of elements ", TEX///$a_1,\ldots,a_n \in k$///, " we can form the Pfister form ", TEX///$\langle\langle a_1,\ldots,a_n\rangle\rangle$///, " defined to be the rank ", TEX///$2^n$///, " form defined as the product ", TEX///$\langle 1, -a_1\rangle \otimes \cdots \otimes \langle 1, -a_n \rangle$///, "."},
 	EXAMPLE lines ///
-    	    	 PfisterForm(QQ,(2,6))
+    	    	 pfisterForm(QQ,(2,6))
 	 	 ///,
 	PARA{"Inputting a ring element, an integer, or a rational instead of a sequence will produce a one-fold Pfister form instead. For instance:"},
 	EXAMPLE lines ///
-	PfisterForm(GF(13),-2/3)
-	PfisterForm(CC,3)
+	pfisterForm(GF(13),-2/3)
+	pfisterForm(CC,3)
 	///
 }
 

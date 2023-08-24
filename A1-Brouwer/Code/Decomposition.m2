@@ -4,8 +4,8 @@
 
 -- Note: This is Koprowski/Rothkegel's Algorithm 5 in the case of QQ
 
-QQanisotropicDimension4 = method()
-QQanisotropicDimension4 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
+qQanisotropicDimension4 = method()
+qQanisotropicDimension4 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
     if not (anisotropicDimensionQQ(beta) >= 4) then error "anisotropic dimension of inputted form is not >=4";
     
     -- If the signature is non-negative then return <1>
@@ -24,8 +24,8 @@ QQanisotropicDimension4 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 
 -- Note: This is Koprowski/Rothkegel's Algorithm 7 in the case of QQ
 
-QQanisotropicDimension3 = method()
-QQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
+qQanisotropicDimension3 = method()
+qQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
     d := integralDiscriminant(beta);
     
     -- Build lists of primes where the p-adic valuation of the discriminant is even or is odd
@@ -55,8 +55,8 @@ QQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 
 -- Constructs the anisotropic part of a form with anisotropic dimension 2
 -- 
-QQanisotropicDimension2 = method()
-QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
+qQanisotropicDimension2 = method()
+qQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
     n := numRows beta.matrix;
 
     -- Shortcut: if the form has anisotropic dimension 2 and the form is dimension 2, return the form itself
@@ -160,8 +160,8 @@ QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 
 -- Input: Any form over QQ
 -- Output: Its anisotropic part
-QQanisotropicPart = method()
-QQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
+qQanisotropicPart = method()
+qQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
     beta = integralDiagonalRep(beta);
     
     n := numRows(beta.matrix);
@@ -177,23 +177,23 @@ QQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -
     
     while d>=4 do(
 	d = anisotropicDimension(beta);
-	outputForm = gwAdd(outputForm,QQanisotropicDimension4(beta));
-	alpha = (QQanisotropicDimension4(beta).matrix)_(0,0);
+	outputForm = gwAdd(outputForm,qQanisotropicDimension4(beta));
+	alpha = (qQanisotropicDimension4(beta).matrix)_(0,0);
 	
 	beta = gwAdd(beta, diagonalClass(QQ,((-1)*alpha)));
 	
 	);
     
     if d==3 then(
-	outputForm = gwAdd(outputForm,QQanisotropicDimension3(beta));
-	alpha = (QQanisotropicDimension3(beta).matrix)_(0,0);
+	outputForm = gwAdd(outputForm,qQanisotropicDimension3(beta));
+	alpha = (qQanisotropicDimension3(beta).matrix)_(0,0);
 	
 	beta = gwAdd(beta, diagonalClass(QQ,((-1)*alpha)));
 	
 	);
     
     if d==2 then(
-       outputForm = gwAdd(outputForm, QQanisotropicDimension2(beta));
+       outputForm = gwAdd(outputForm, qQanisotropicDimension2(beta));
        );
     
     if d==1 then(
