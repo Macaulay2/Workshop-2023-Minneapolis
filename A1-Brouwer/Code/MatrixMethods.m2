@@ -2,8 +2,8 @@
 -- Matrix manipulations
 -----------------------
 
--- Input: Two matrices.
--- Output: The block sum of possibly empty matrices.
+-- Input: Two matrices
+-- Output: The block sum of possibly empty matrices
 
 -- Note: The block sum "++" of a zero matrix with something else outputs the wrong thing.
 -- This internal method allows us to call block sums of possibly empty matrices.
@@ -15,8 +15,8 @@ safeBlockSum (Matrix, Matrix) := Matrix => (A,B) -> (
     return A ++ B 
     )
 
--- Input: A matrix.
--- Output: True if the matrix is a square; false otherwise.
+-- Input: A matrix
+-- Output: True if the matrix is a square; false otherwise
 
 isSquare = method()
 isSquare (Matrix) := Boolean => M -> (
@@ -24,23 +24,23 @@ isSquare (Matrix) := Boolean => M -> (
     )
 
 -- Input: A matrix
--- Output: True if the matrix is a square and symmetric; false otherwise.
+-- Output: True if the matrix is a square and symmetric; false otherwise
 
 isSquareAndSymmetric = method()
 isSquareAndSymmetric (Matrix) := Boolean => M -> (
     transpose(M) == M
     )
 
--- Input: A matrix.
--- Output: True if the matrix represents a degenerate bilinear form; false otherwise.
+-- Input: A matrix
+-- Output: True if the matrix represents a degenerate bilinear form; false otherwise
 
 isDegenerate = method()
 isDegenerate (Matrix) := Boolean => M ->(
     det(M) == 0
     )
 
--- Input: A matrix.
--- Output: True if the matrix is upper-left triangular, meaning that all the entries below the main antidiagonal are zero; false otherwise.
+-- Input: A matrix
+-- Output: True if the matrix is upper-left triangular, meaning that all the entries below the main antidiagonal are zero; false otherwise
 
 isUpperLeftTriangular = method()
 isUpperLeftTriangular (Matrix) := Boolean => M -> (
@@ -58,8 +58,8 @@ isUpperLeftTriangular (Matrix) := Boolean => M -> (
     true
     )
  
--- Input: A square matrix.
--- Output: True if the matrix is diagonal; false otherwise. 
+-- Input: A square matrix
+-- Output: True if the matrix is diagonal; false otherwise
 
 isDiagonal = method()
 isDiagonal (Matrix) := Boolean => M -> (
@@ -84,8 +84,8 @@ isDiagonal (Matrix) := Boolean => M -> (
     true
     )
 
--- Input: A symmetric matrix.
--- Output: A diagonal matrix congruent to the original matrix.
+-- Input: A symmetric matrix
+-- Output: A diagonal matrix congruent to the original matrix
 
 congruenceDiagonalize = method()
 congruenceDiagonalize (Matrix) := (Matrix) => (AnonMut) -> (

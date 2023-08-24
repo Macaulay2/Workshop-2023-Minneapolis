@@ -1,8 +1,10 @@
-------------
+---------------------
 -- Simplifying forms
-------------
+---------------------
 
--- Outputs a diagonalized form of a class in GrothendieckWitt
+-- Input: A Grothendieck-Witt class beta
+-- Output: A diagonalized form of beta
+
 diagonalForm = method()
 diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
         
@@ -48,7 +50,9 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
     );
 
 
--- Extracts the diagonal entries of a matrix as a list
+-- Input: A Grothendieck-Witt class beta
+-- Output: The diagonal entries of beta.matrix as a list
+
 diagonalEntries = method()
 diagonalEntries (GrothendieckWittClass) := (List) => (beta) -> (
     
@@ -63,7 +67,9 @@ diagonalEntries (GrothendieckWittClass) := (List) => (beta) -> (
     return L
     );
 
--- Given a form over QQ, returns a diagonal form with integral entries
+-- Input: A Grothendieck-Witt class beta over QQ
+-- Output: A diagonal form with integral entries
+
 integralDiagonalRep = method()
 integralDiagonalRep (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
     kk := baseField beta;
