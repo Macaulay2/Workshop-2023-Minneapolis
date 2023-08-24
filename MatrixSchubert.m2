@@ -155,6 +155,21 @@ end---------------------------------------------------------------------------
 --Ayah's sandbox
 ---------------------
 
+restart
+uninstallPackage "MatrixSchubert"
+restart
+installPackage "MatrixSchubert"
+restart
+needsPackage "MatrixSchubert"
+initialIdealsList 3
+
+    n = 3
+    if (n < 3 or n > 6) then error("There is no available list for this n.");
+    filename = concatenate("./MatrixSchubert/ASMData/antiDiagIniIdeal/ideals", toString n, ".txt");
+    z = getSymbol "z";
+    S = QQ(monoid[z_(1,1)..z_(n,n)]);
+    listOfIdeals = apply(lines get filename, i -> (use S; value i))
+    listOfIdeals
 
 ------------------------------------
 --Development Section

@@ -59,6 +59,6 @@ initialIdealsList ZZ := List => (n) -> (
     filename := concatenate("./MatrixSchubert/ASMData/antiDiagIniIdeal/ideals", toString n, ".txt");
     z := getSymbol "z";
     S := QQ(monoid[z_(1,1)..z_(n,n)]);
-    listOfIdeals := apply(lines get filename, i -> sub(value i,S));
+    listOfIdeals := apply(lines get filename, i -> (use S; value i));
     listOfIdeals
 );
