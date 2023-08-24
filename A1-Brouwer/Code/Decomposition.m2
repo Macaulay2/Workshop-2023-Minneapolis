@@ -94,7 +94,7 @@ QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     	-- Step 5c: Make a vector of exponents of Hasse invariants
 	W := mutableMatrix(QQ,r,1);
 	for i from 0 to (r-1) do(
-	    W_(i,0) = (1 - (HasseWittInvariant(q,L_i)))/2;
+	    W_(i,0) = (1 - (hasseWittInvariant(q,L_i)))/2;
 	    );
        	
 

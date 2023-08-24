@@ -80,7 +80,7 @@ export{
     "signature",
     "integralDiscriminant",
     "relevantPrimes",
-    "HasseWittInvariant",
+    "hasseWittInvariant",
 
     --LocalGlobalDegrees.m2
     "globalA1Degree",
@@ -559,9 +559,9 @@ assert(signature(M4) == -3);
 
 assert(integralDiscriminant(M1)==-5405);
 assert(relevantPrimes(M1) == {23, 5, 47} );
-assert(HasseWittInvariant(M1, 5) == -1);
-assert(HasseWittInvariant(M1, 23) == 1);
-assert(HasseWittInvariant(M1, 47) == -1);
+assert(hasseWittInvariant(M1, 5) == -1);
+assert(hasseWittInvariant(M1, 23) == 1);
+assert(hasseWittInvariant(M1, 47) == -1);
 ///
 
 -- Test for hilbertSymbols

@@ -20,7 +20,7 @@ isIsomorphicFormQ (GrothendieckWittClass, GrothendieckWittClass) := Boolean => (
     PrimesToCheck := unique(relevantPrimes(alpha) | relevantPrimes(beta));
     flag := 0;
     for p in PrimesToCheck do(
-	if (HasseWittInvariant(alpha,p) != HasseWittInvariant(beta,p)) then(
+	if (hasseWittInvariant(alpha,p) != hasseWittInvariant(beta,p)) then(
 	    flag = 1;
 	    break;
 	    );
