@@ -114,7 +114,8 @@ QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 	    );
 	B = matrix(B);
 	print("\nbefore appending B is " | toString(B));
-    	-- Step 5d: Append a zero column on the front if the discriminant is negative
+    	
+	-- Step 5d: Append a zero column on the front if the discriminant is negative
     	if (d<0) then(
 	    zeroVec := mutableMatrix(QQ,1,r);
 	    for i from 0 to (r-1) do(
@@ -148,6 +149,55 @@ QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     return diagonalClass(QQ,(alpha, -alpha*d))
     
    );
+
+
+
+-- Input: Any form over QQ
+-- Output: Its anisotropic part
+QQanisotropicPart = method()
+QQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
+    beta = integralDiagonalRep(beta);
+    
+    n := numRows(beta.matrix);
+    d := anisotropicDimension(beta);
+    
+    -- If the form is anisotropic 
+    if n == d then(return beta);
+    
+    -- Initialize an empty quadratic form
+    outputForm := diagonalClass(QQ,());
+    alpha := 1;
+    
+    -- 
+    while d>=4 do(
+	d = anisotropicDimension(beta);
+	outputForm = gwAdd(outputForm,QQanisotropicDimension4(beta));
+	alpha = (QQanisotropicDimension4(beta).matrix)_(0,0);
+	
+	beta = gwAdd(beta, diagonalClass(QQ,((-1)*alpha)));
+	
+	);
+    
+    if d==3 then(
+	outputForm = gwAdd(outputForm,QQanisotropicDimension3(beta));
+	alpha = (QQanisotropicDimension3(beta).matrix)_(0,0);
+	
+	beta = gwAdd(beta, diagonalClass(QQ,((-1)*alpha)));
+	
+	);
+    
+    if d==2 then(
+       outputForm = gwAdd(outputForm, QQanisotropicDimension2(beta));
+       );
+    
+    if d==1 then(
+	outputForm = gwAdd(outputForm, diagonalClass(QQ,(integralDiscriminant(beta))));
+	);
+    
+    return outputForm;
+    
+    );
+
 
 
 -- Input: A matrix whose base field is not inexact
