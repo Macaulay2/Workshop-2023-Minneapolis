@@ -1,5 +1,5 @@
 document{
-    Key => {(hilbertSymbol, QQ, QQ,ZZ), hilbertSymbol},
+    Key => {hilbertSymbol, (hilbertSymbol, ZZ, ZZ, ZZ),  (hilbertSymbol, QQ, QQ, ZZ),  (hilbertSymbol, ZZ, QQ, ZZ),  (hilbertSymbol, QQ, ZZ, ZZ)},
     Headline => "Computes the Hilbert symbol of two integers or rational numbers at a prime",
     Usage => "hilbertSymbol(a,b,p)",
     Inputs => {
@@ -26,7 +26,7 @@ document{
 }
 
 document{
-    Key => {(hilbertSymbolReal, QQ, QQ), hilbertSymbolReal},
+    Key => {hilbertSymbolReal, (hilbertSymbolReal, QQ, QQ),  (hilbertSymbolReal, ZZ, ZZ),  (hilbertSymbolReal, ZZ, QQ),  (hilbertSymbolReal, QQ, ZZ)},
     Headline => "Computes the Hilbert symbol of two rational numbers over the reals",
     Usage => "hilbertSymbolReal(a,b,p)",
     Inputs => {
