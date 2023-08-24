@@ -9,12 +9,12 @@ QQanisotropicDimension4 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     if not (anisotropicDimensionQQ(beta) >= 4) then error "anisotropic dimension of inputted form is not >=4";
     
     -- If the signature is non-negative then return <1>
-    if signature(beta) >= 0 then(
+    if signature(beta) > 0 then(
 	return gwClass(matrix(QQ,{{1}}))
 	);
     
     -- Otherwise return <-1>
-    if signature(beta) < 0 then(
+    if signature(beta) <= 0 then(
 	return gwClass(matrix(QQ,{{-1}}))	        
         );	
     );
@@ -53,22 +53,33 @@ QQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 
     );
 
--- Constructs the anisotropic part of a form with anisotropic dimension 2
+-- Input: A form q over QQ of anisotropic dimension 2
+-- Output: The anisotropic part <a, -da> of q
+
+-- Note: This is Koprowski/Rothkegel's Algorithm 8 in the case of QQ
 
 QQanisotropicDimension2 = method()
 QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
-    -- If the witt Index isn't 0 mod 4, add on some hyperbolic forms so that 
     n := numRows beta.matrix;
-    wittIndexBeta := n - anisotropicDimensionQQ(beta);
-    q:= beta;
+    
+    -- Shortcut: if the form has anisotropic dimension 2 and the form is dimension 2, return the form itself
+    -- if (n==2) then(
+    -- 	return beta;
+    -- 	);
+    
+
+    
     
     -- Step 1: If the Witt Index isn't 0 mod 4 it must be 2 mod 4, so we add on a hyperbolic form
+    wittIndexBeta := n - anisotropicDimensionQQ(beta);
+    q:= beta;
     if (not wittIndexBeta % 4 == 0) then(
 	q = gwAdd(beta, hyperbolicForm(QQ));
+	n = n+2;
 	);
     
-    -- Step 2: Compute discriminant
-    d:= integralDiscriminant(q);
+    -- Step 2: Compute discriminant (note they use a signed version of the discriminant in their algorithm)
+    d:= ((-1)^(n*(n-1)/2))*integralDiscriminant(q);
     print("\nd is " | toString(d));
     
     -- Step 3: Take relevant primes plus dyadic ones
@@ -83,7 +94,8 @@ QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     
     
     while not solnFound do(
-	r := #L;    	          
+	r := #L;
+	print("\nL is " | toString(L)); 	          
     	-- Step 5c: Make a vector of exponents of Hasse invariants
 	W := mutableMatrix(QQ,r,1);
 	for i from 0 to (r-1) do(
@@ -109,14 +121,14 @@ QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     	B := mutableIdentity(QQ,r);
     	for i from 0 to (r-1) do(
 	    for j from 0 to (r-1) do(
-	    	B_(i,j) = (1 - HilbertSymbol(L_i, d, L_j))/2;
+	    	B_(i,j) = (1 - HilbertSymbol(L_j, d, L_i))/2;
 	    	);
 	    );
 	B = matrix(B);
 	print("\nbefore appending B is " | toString(B));
     	
 	-- Step 5d: Append a zero column on the front if the discriminant is negative
-    	if (d<0) then(
+    	if (d < 0) then(
 	    zeroVec := mutableMatrix(QQ,1,r);
 	    for i from 0 to (r-1) do(
 	    	zeroVec_(0,i) = 0
@@ -127,18 +139,27 @@ QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     	W = matrix(kk,entries(W));
     	B = matrix(kk,entries(B));
 	
+	
 	print("W is" | toString(W) | " over field " | toString(ring W));
 	print("\nB is" | toString(B)| " over field " | toString(ring B));
 	
 	
 	if (class(solve(B,W)) === Matrix) then(
+	    print("\nLoop started");
+	    print("\nL is " | toString(L));
 	    X := solve(B,W);
 	    print("X is " | toString(X));
+	    solnFound = true;
 	    break;
 	    )
 	else(
 	    p = nextPrime(p+1);
+	    while (member(p,L)==true) do(
+		p = nextPrime(p+1);
+		);
+
 	    L = append(L,p);
+	    print("\np is " | toString(p));
 	    );
 	);
   
@@ -168,7 +189,7 @@ QQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -
     outputForm := diagonalClass(QQ,());
     alpha := 1;
     
-    -- 
+    
     while d>=4 do(
 	d = anisotropicDimension(beta);
 	outputForm = gwAdd(outputForm,QQanisotropicDimension4(beta));
@@ -195,6 +216,7 @@ QQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -
 	);
     
     return outputForm;
+    
     
     );
 
