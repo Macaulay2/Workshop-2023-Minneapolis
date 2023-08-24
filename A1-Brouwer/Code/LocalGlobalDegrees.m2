@@ -2,6 +2,9 @@
 -- A1-Brouwer degree methods
 ----------------------------
 
+-- Input: A list f = {f_1, f_2, ..., f_n} of polynomials kk^n -> kk^n
+-- Output: The Grothendieck-Witt class deg^(A^1)(f)
+
 globalA1Degree = method()
 globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
     -- Endo is the list {f_1, f_2, ..., f_n} of polynomials kk^n -> kk^n
@@ -37,12 +40,10 @@ globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
     -- Create internal rings/matrices
     
     -- Initialize a polynomial ring in X_i's and Y_i's to compute the Bezoutian in
-    X:=local X;
-    Y:=local Y;
- --   Rtemp := kk(monoid[X_1..X_n]);
- --   R := Rtemp(monoid[Y_1..Y_n]);
+    X := local X;
+    Y := local Y;
  
-   R:=kk(monoid[X_1..X_n|Y_1..Y_n]);
+    R := kk(monoid[X_1..X_n|Y_1..Y_n]);
     -- Create an (n x n) matrix D which will be populated by \Delta_{ij} in the paper
     D := "";
     try D = mutableMatrix id_((frac R)^n) else D= mutableMatrix id_(R^n);
@@ -83,12 +84,12 @@ globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
 	);
 
     -- Define formal variables X_i, Y_i that replace x_i
-    RX:=kk[X_1..X_n]; 
-    RY:=kk[Y_1..Y_n];
+    RX := kk[X_1..X_n]; 
+    RY := kk[Y_1..Y_n];
 
     -- mapxtoX replaces all instances of x_i with X_i. mapxtoY does the same but with Y_i's
-    mapxtoX:= (map(RX,S,toList(X_1..X_n))); 
-    mapxtoY:=(map(RY,S,toList(Y_1..Y_n)));
+    mapxtoX := (map(RX,S,toList(X_1..X_n))); 
+    mapxtoY := (map(RY,S,toList(Y_1..Y_n)));
 
     -- Compute the standard basis of kk[X_1, ..., X_n]/(f_1, ..., f_n)
     standBasisX := basis (RX/(ideal (leadTerm (mapxtoX ideal Endo)))); 
@@ -100,10 +101,10 @@ globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
     id2 := (ideal apply(toList(0..n-1), i-> mapxtoY(Endo_i))); 
 
     -- takes the sum of the ideals (f_1(X),...,f_n(X)) + (f_1(Y),...,f_n(Y)) in the ring kk[X_1..Y_n]
-    promotedEndo :=sub(id1,R)+sub(id2,R); 
+    promotedEndo := sub(id1,R)+sub(id2,R); 
 
     -- Here we're using that (R/I) \otimes_R (R/J) = R/(I+J) in order to express Q(f) \otimes Q(f), where X's are the variables in first term, Y's are variables in second par
-    Rquot:= R/promotedEndo; 
+    Rquot := R/promotedEndo; 
 
 
     -- moves the standard bases to the quotient ring
@@ -118,25 +119,29 @@ globalA1Degree (List) := (GrothendieckWittClass) => (Endo) -> (
     phi0 := map(kk,Rquot,(toList ((2*n):0))); 
 
     -- m is the dimension of the basis for the algebra
-    m:= numColumns(sBXProm);
+    m := numColumns(sBXProm);
 
     -- Now create Bezoutian matrix B for the quadratic form by reading off the coefficients. 
     -- B is a (m x m) matrix.  Coefficent B_(i,j) is the coefficient of the (ith basis vector x jth basis vector) in tensor product.
     -- phi0 maps the coefficient to kk
-    B:= mutableMatrix id_(kk^m);
-    for i from 0 to m-1 do (
-        for j from 0 to m-1 do (
-            B_(i,j)=phi0(coefficient((sBXProm_(0,i)**sBYProm_(0,j))_(0,0), bezDetRed));
+    B := mutableMatrix id_(kk^m);
+    for i from 0 to m - 1 do (
+        for j from 0 to m - 1 do (
+            B_(i,j) = phi0(coefficient((sBXProm_(0,i)**sBYProm_(0,j))_(0,0), bezDetRed));
         );
     );
     return gwClass(matrix(B));
 
-);
+    );
 
 
------
+---------
 -- Local
------
+---------
+
+-- Input: A list f = {f_1, f_2, ..., f_n} of polynomials kk^n -> kk^n and a prime ideal in the zero locus V(f)
+-- Output: The Grothendieck-Witt class deg^(A^1)_p (f)
+
 localA1Degree = method()
 localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
     -- Endo is the list {f_1, f_2, ..., f_n} of polynomials kk^n -> kk^n
@@ -155,10 +160,10 @@ localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
 
     
     -- Let S = k[x_1..x_n] be the ambient polynomial ring
-    S:=ring(Endo#0);
+    S := ring(Endo#0);
     
     -- Create the ideal J.  It has prop that  k[x_1 .. x_n]_p/I_p is isom to k[x_1 .. x_n]/J    
-    J:=(ideal Endo):saturate(ideal Endo,p);
+    J := (ideal Endo):saturate(ideal Endo,p);
     
     -- Get the dimension of the local algebra Q_p(f)
     localFormRank := numColumns(basis(S/J));
@@ -207,8 +212,8 @@ localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
     );
     
     -- Set up the local variables bezDet and bezDetR
-    bezDet:="";
-    bezDetR:="";   
+    bezDet := "";
+    bezDetR := "";   
     
     -- The determinant of D is interpreted as living in Frac(k[x_1..x_n]),
     -- so we can try to lift it to k[x_1..x_n]           
@@ -225,12 +230,12 @@ localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
 	);    
     
     -- Define formal variables X_i, Y_i that replace x_i
-    RX:=kk[X_1..X_n]; 
-    RY:=kk[Y_1..Y_n];
+    RX := kk[X_1..X_n]; 
+    RY := kk[Y_1..Y_n];
     
     -- mapxtoX replaces all instances of x_i with X_i. mapxtoY does the same but with Y_i's
-    mapxtoX:= (map(RX,S,toList(X_1..X_n)));
-    mapxtoY:=(map(RY,S,toList(Y_1..Y_n)));
+    mapxtoX := (map(RX,S,toList(X_1..X_n)));
+    mapxtoY := (map(RY,S,toList(Y_1..Y_n)));
 
     -- Find standard basis and define local quotient ring
     list1 := (apply(toList(0..n-1), i-> mapxtoX(Endo_i))); -- list (f_1(X), ..., f_n(X))
@@ -247,8 +252,8 @@ localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
     Rquot:=R/localIdeal;
 
     -- Move the standard bases to the quotient ring
-    sBXProm :=apply(toList(0..#standBasisX-1),i-> sub(standBasisX_i,Rquot));
-    sBYProm :=apply(toList(0..#standBasisY-1),i-> sub(standBasisY_i,Rquot));
+    sBXProm := apply(toList(0..#standBasisX-1),i-> sub(standBasisX_i,Rquot));
+    sBYProm := apply(toList(0..#standBasisY-1),i-> sub(standBasisY_i,Rquot));
    
     -- Now reduce the bezDetR determinant subject to the local ideal in both the X's, Y's.
     bezDetRed := bezDetR % localIdeal;
@@ -257,7 +262,7 @@ localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
     phi0 := map(kk,Rquot,(toList ((2*n):0))); 
     
     -- m is the dimension of the basis for the local ring
-    m:= #sBXProm;
+    m := #sBXProm;
     
     -- Now create Bezoutian matrix B for the quadratic form by reading off the local coefficients. 
     -- B is a (m x m) matrix.  Coefficent B_(i,j) is the coefficient of the (ith basis vector x jth basis vector) in tensor product.
@@ -269,7 +274,7 @@ localA1Degree (List, Ideal) := (GrothendieckWittClass) => (Endo,p) -> (
         );
     );
     return gwClass(matrix(B));
-);
+    );
 
 
 
