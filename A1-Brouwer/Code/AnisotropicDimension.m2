@@ -58,9 +58,9 @@ anisotropicDimensionQp (GrothendieckWittClass, ZZ) := ZZ => (beta, p) ->(
 	-- If the form is hyperbolic it has no anisotropic part
 	if isHyperbolicQp(beta,p) then return 0;
        	
-	if isPadicSquare(integralDiscriminant(beta),p) then return 2;
+	if isPadicSquare(integralDiscriminant(beta),p) then return 4;
 	
-	return 4;
+	return 2;
        
 	);
     

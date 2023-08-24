@@ -55,16 +55,9 @@ QQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 
 -- Constructs the anisotropic part of a form with anisotropic dimension 2
 -- 
--- QQanisotropicDimension2 = method()
--- QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
---     -- If the witt Index isn't 0 mod 4, add on some hyperbolic forms so that 
---     n := numRows beta.matrix;
---     wittIndexBeta := n - anisotropicDimensionQQ(beta);
---     q:= beta;
---     -- If the Witt Index isn't 0 mod 4 it must be 2 mod 4, so we add on a hyperbolic form
---     if (not wittIndexBeta % 4 == 0) then(
--- 	q = gwAdd(beta, hyperbolicForm(QQ));
--- 	);
+QQanisotropicDimension2 = method()
+QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
+    n := numRows beta.matrix;
 
     -- Shortcut: if the form has anisotropic dimension 2 and the form is dimension 2, return the form itself
     -- if (n==2) then(
@@ -76,13 +69,12 @@ QQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     -- the integer w so that q = wH + q_a. This is not the same as the dimension of a maximal totally isotropic subspace
     w := (n - anisotropicDimensionQQ(beta))/2;
     w = sub(w,ZZ);
-    q:= beta;
+    q := beta;
     if ((w % 4) != 0) then(
 	w = w % 4;
 	q = gwAdd(q, hyperbolicForm(QQ,2*(4-w)));
 	n = n + 2*(4-w);
 	);
-    
     -- Step 2: Compute discriminant (note they use a signed version of the discriminant in their algorithm)
     d:= ((-1)^(n*(n-1)/2))*integralDiscriminant(q);
     
