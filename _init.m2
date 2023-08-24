@@ -1,11 +1,14 @@
 restart
 installPackage("A1BrouwerDegrees")
 beta = diagonalClass(QQ,(2,3))
+anisotropicDimension(beta)
+anisotropicDimensionQp(beta,2)
+anisotropicDimensionQp(beta,3)
+
 QQanisotropicDimension2(beta)
 
 
 viewHelp A1BrouwerDegrees
-
 
 installPackage("A1BrouwerDegrees", RerunExamples=>true)
 check A1BrouwerDegrees
