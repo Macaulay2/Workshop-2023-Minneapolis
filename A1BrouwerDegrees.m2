@@ -103,7 +103,6 @@ export{
     "WittIndex",
     
     --Decomposition.m2
-    "QQanisotropicDimension2",
     "WittDecomp",
     "sumDecomposition",
     "sumDecompositionString"

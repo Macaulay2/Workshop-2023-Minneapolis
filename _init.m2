@@ -1,14 +1,6 @@
-restart
 installPackage("A1BrouwerDegrees")
-beta = diagonalClass(QQ,(2,3))
-anisotropicDimension(beta)
-anisotropicDimensionQp(beta,2)
-anisotropicDimensionQp(beta,3)
-
-QQanisotropicDimension2(beta)
-
-
 viewHelp A1BrouwerDegrees
+
 
 installPackage("A1BrouwerDegrees", RerunExamples=>true)
 check A1BrouwerDegrees
@@ -63,55 +55,3 @@ d := ((u-1)/2)*((v-1)/2) + alpha*((v^2-1)/8) + beta*((u^2-1)/8)
 (-1)^(-154)
 
 (u^2-1)/8q
-
-
-B1=matrix(QQ, {{1/1, -2/1, 4/1}, {-2/1, 2/1, 0}, {4/1, 0, -7/1}});
-B2=matrix(QQ, {{-17198/4225, -166126/975, -71771/1560}, {-166126/975, -27758641/4050, -251077/135}, {-71771/1560, -251077/135, -290407/576}});
-assert(isIsomorphicFormQ(B1, B2)===true);
-assert(isIsomorphicFormQ(gwClass(B1), gwClass(B2))===true);
-
-B3=matrix(QQ, {{-38/1, -50/1, 23/1}, {-50/1, -62/1, 41/1}, {23/1, 41/1, 29/1}});
-assert(isIsomorphicFormQ(B1, B3)===true);
-assert(isIsomorphicFormQ(gwClass(B1), gwClass(B3))===true);
-
-
-relevantPrimes(gwClass(B1))
-HasseWittInvariant(gwClass(B1),2)
-B2=gwClass(matrix(QQ, {{-17198/4225, -166126/975, -71771/1560}, {-166126/975, -27758641/4050, -251077/135}, {-71771/1560, -251077/135, -290407/576}}))
-
-relevantPrimes(B2)
-HasseWittInvariant(B2,2)
-
-L1 = diagonalEntries(integralDiagonalRep(B2))
-D2= diagonalClass(QQ,toSequence(diagonalEntries(B2)))
-
-HasseWittInvariant(integralDiagonalRep(B2),2)
-
-L1 = diagonalEntries(B2)
-
-HilbertSymbol(L1_0,L1_2,2)
-
-class L1_0
-
-liftable(-17198/4225,ZZ)
-
-
-u = 31
-
-u = (u % 2)
-
-u
-
-
-alpha = diagonalClass(QQ,(2,3))
-beta = diagonalClass(QQ,(1,6))
-
-relevantPrimes(alpha)
-relevantPrimes(beta)
-
-HasseWittInvariant(alpha,2)
-HasseWittInvariant(alpha,3)
-HasseWittInvariant(beta,2)
-HasseWittInvariant(beta,3)
-
-integralDiscriminant alpha
