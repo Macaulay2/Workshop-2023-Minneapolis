@@ -54,29 +54,100 @@ QQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     );
 
 -- Constructs the anisotropic part of a form with anisotropic dimension 2
--- 
--- QQanisotropicDimension2 = method()
--- QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
---     -- If the witt Index isn't 0 mod 4, add on some hyperbolic forms so that 
---     n := numRows beta.matrix;
---     wittIndexBeta := n - anisotropicDimensionQQ(beta);
---     q:= beta;
---     -- If the Witt Index isn't 0 mod 4 it must be 2 mod 4, so we add on a hyperbolic form
---     if (not wittIndexBeta % 4 == 0) then(
--- 	q = gwAdd(beta, hyperbolicForm(QQ));
--- 	);
+
+QQanisotropicDimension2 = method()
+QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
+    -- If the witt Index isn't 0 mod 4, add on some hyperbolic forms so that 
+    n := numRows beta.matrix;
+    wittIndexBeta := n - anisotropicDimensionQQ(beta);
+    q:= beta;
     
---     d:= integralDiscriminant(q);
+    -- Step 1: If the Witt Index isn't 0 mod 4 it must be 2 mod 4, so we add on a hyperbolic form
+    if (not wittIndexBeta % 4 == 0) then(
+	q = gwAdd(beta, hyperbolicForm(QQ));
+	);
     
---     W:= matrix(QQ,{{}});
---     if (d <= 0) then(
--- 	W = W | matrix(QQ,{{1/2 - signature(q)/4}});
--- 	);
+    -- Step 2: Compute discriminant
+    d:= integralDiscriminant(q);
+    print("\nd is " | toString(d));
     
---     for p in relevantPrimes(beta) do(
--- 	W = W | matrix(QQ,{{(1 - (HasseWittInvariant(q,p)))/2}});	
--- 	);    
---    );
+    -- Step 3: Take relevant primes plus dyadic ones
+    L := relevantPrimes(beta);
+    if not member(2,L) then(
+	L = append(L,2);
+	);
+    
+    -- Start the loop at p=2
+    p:=2;
+    solnFound := false;
+    
+    
+    while not solnFound do(
+	r := #L;    	          
+    	-- Step 5c: Make a vector of exponents of Hasse invariants
+	W := mutableMatrix(QQ,r,1);
+	for i from 0 to (r-1) do(
+	    W_(i,0) = (1 - (HasseWittInvariant(q,L_i)))/2;
+	    );
+       	
+	print("\nbefore appending W is " | toString(W));
+
+	-- Step 5b: 
+	W = matrix(W);
+    	if (d < 0) then(
+	    if not (abs(signature(q)) == 2) then (error "signature isn't pm 2");
+	    
+	    if (signature(q) == 2) then (
+		W = matrix(QQ,{{0}}) || W;
+		);
+	    if (signature(q) == -2) then(
+		W = matrix(QQ,{{1}}) || W;
+	    );
+	);
+        
+    	-- Step 5e: Make a matrix of Hilbert symbols
+    	B := mutableIdentity(QQ,r);
+    	for i from 0 to (r-1) do(
+	    for j from 0 to (r-1) do(
+	    	B_(i,j) = (1 - HilbertSymbol(L_i, d, L_j))/2;
+	    	);
+	    );
+	B = matrix(B);
+	print("\nbefore appending B is " | toString(B));
+    	-- Step 5d: Append a zero column on the front if the discriminant is negative
+    	if (d<0) then(
+	    zeroVec := mutableMatrix(QQ,1,r);
+	    for i from 0 to (r-1) do(
+	    	zeroVec_(0,i) = 0
+	    	);
+	    B = matrix(zeroVec) || B;
+	    );
+        kk := GF(2);
+    	W = matrix(kk,entries(W));
+    	B = matrix(kk,entries(B));
+	
+	print("W is" | toString(W) | " over field " | toString(ring W));
+	print("\nB is" | toString(B)| " over field " | toString(ring B));
+	
+	
+	if (class(solve(B,W)) === Matrix) then(
+	    X := solve(B,W);
+	    print("X is " | toString(X));
+	    break;
+	    )
+	else(
+	    p = nextPrime(p+1);
+	    L = append(L,p);
+	    );
+	);
+  
+    alpha := sub(1,ZZ);
+    for j from 0 to (r-1) do(
+	alpha = alpha * ((L_j)^(sub(X_(j,0),ZZ)));
+	);
+    return diagonalClass(QQ,(alpha, -alpha*d))
+    
+   );
 
 
 -- Input: A matrix whose base field is not inexact
