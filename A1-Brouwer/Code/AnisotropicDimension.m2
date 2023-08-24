@@ -169,7 +169,7 @@ isotropicDimension (GrothendieckWittClass) := ZZ -> (alpha) -> (
 -- Input: A Grothendieck-Witt class beta in GW(k), where k is the complex numbers, the real, the rationals or a finite field
 -- Output: An integer, the rank of the totally isotropic part of beta
 
-WittIndex = method()
-WittIndex (GrothendieckWittClass) := ZZ -> (alpha) -> (
+wittIndex = method()
+wittIndex (GrothendieckWittClass) := ZZ -> (alpha) -> (
     return isotropicDimension(alpha)
     );

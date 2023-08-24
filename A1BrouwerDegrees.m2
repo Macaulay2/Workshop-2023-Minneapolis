@@ -100,10 +100,10 @@ export{
     "anisotropicDimensionQp",
     "anisotropicDimensionQQ",
     "anisotropicDimension",
-    "WittIndex",
+    "wittIndex",
     
     --Decomposition.m2
-    "WittDecomp",
+    "wittDecomp",
     "QQanisotropicDimension2",
     "sumDecomposition",
     "sumDecompositionString"
@@ -285,7 +285,7 @@ T1 = QQ[z_1..z_2];
 f1 = {(z_1-1)*z_1*z_2, (3/5)*z_1^2 - (17/3)*z_2^2};
 f1GD = globalA1Degree(f1);
 f1GDmat = f1GD.matrix;
-assert(WittDecomp(f1GDmat)==(3,0));
+assert(wittDecomp(f1GDmat)==(3,0));
 q=ideal {z_1,z_2};
 r=ideal {z_1-1,z_2^2-(9/85)};
 f1LDq= localA1Degree(f1,q);
@@ -300,12 +300,12 @@ T2 = QQ[w];
 f2 = {w^4 + w^3 - w^2 - w};
 f2GD= globalA1Degree(f2);
 f2GDmat = f2GD.matrix;
-assert(WittDecomp(f2GDmat)==(2,0));
+assert(wittDecomp(f2GDmat)==(2,0));
 
 p=ideal {w+1};
 f2LDp = localA1Degree(f2, p);
 f2LDpmat = f2LDp.matrix;
-assert(WittDecomp(f2LDpmat)==(1,0));
+assert(wittDecomp(f2LDpmat)==(1,0));
 s=ideal{w-1};
 f2LDs = localA1Degree(f2, s);
 t=ideal{w};
@@ -410,7 +410,7 @@ assert(primeFactors(120) == {2, 3, 5});
 -- Test for p-adic valuation
 -- Test 18
 TEST ///
-assert(PadicValuation(27,3) == 3);
+assert(padicValuation(27,3) == 3);
 ///
 
 -- Test for squareSymbol
@@ -425,10 +425,10 @@ assert(squareSymbol(64,8) == -1);
 -- Test 20
 TEST ///
 B=matrix(QQ,{{0/1,1},{1,0}});
-assert((WittDecomp(congruenceDiagonalize(B)))_0 == 1);
+assert((wittDecomp(congruenceDiagonalize(B)))_0 == 1);
 P=matrix(QQ,{{0/1, 5,1},{2,2,1},{0,0,1}});
 A=matrix(QQ,{{1/1,0,0},{0,-1,0},{0,0,1}});
-assert((WittDecomp(congruenceDiagonalize(P*A*transpose(P))))_0 == 1);
+assert((wittDecomp(congruenceDiagonalize(P*A*transpose(P))))_0 == 1);
 ///
 
 

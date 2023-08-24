@@ -54,9 +54,9 @@ document{
 }
 
 document{
-    Key => {(WittIndex, GrothendieckWittClass), WittIndex},
+    Key => {(wittIndex, GrothendieckWittClass), wittIndex},
     Headline => "Returns the Witt index of a symmetric bilinear form",
-    Usage => "WittIndex(beta)",
+    Usage => "wittIndex(beta)",
     Inputs => {
 	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(k)$///, " where ", TEX///$k$///, " is the complex numbers, reals, rationals, or a finite field."},
 	},

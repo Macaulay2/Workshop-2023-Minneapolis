@@ -210,8 +210,8 @@ QQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -
 -- Input: A matrix whose base field is not inexact
 -- Output: The number of hyperbolic forms in A, and the anisotropic part of A and (also) the subform part
 
-WittDecomp = method()
-WittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
+wittDecomp = method()
+wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     k := ring A;   
   
     -- Add error in case the base field is RR or CC
@@ -271,7 +271,7 @@ WittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     orthoComp := gens kernel((z||matrix(y))*A);
     
     -- Now recursively apply WittDecomp to orthoComp^T*A*orthoComp a (n - 2) x (n - 2) Gram matrix
-    subComputation := WittDecomp(transpose(orthoComp)*A*orthoComp);
+    subComputation := wittDecomp(transpose(orthoComp)*A*orthoComp);
     
     -- subComputation_0 gives number of hyperbolic forms in (n - 2) x (n - 2) subform  
     -- 1+ subComputation_0 is the number of hyperbolic forms in A
@@ -557,7 +557,7 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
         outputStringQQ := "";
 	
 	-- Get number of confirmed hyperbolic forms and remainder from WittDecomp
-	(numHypForms,B) := WittDecomp(A);
+	(numHypForms,B) := wittDecomp(A);
 	
 	-- Add any hyperbolic forms if they exist
     if numHypForms == 1 then(
