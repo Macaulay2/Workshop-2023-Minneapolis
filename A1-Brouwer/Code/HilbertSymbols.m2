@@ -55,8 +55,11 @@ HilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
     
     -- Finally if p=2
     if p == 2 then(
-	u = (u % 2);
-	v = (v % 2);
+	-- The reductions of u, v must be mod 8, as the calculation of (u-1)/2, (u^2-1)/8 below 
+	-- depends on 
+	-- the mod 8 reduction
+	u = (u % 8);
+	v = (v % 8);
 	alpha = (alpha % 2);
 	beta = (beta % 2);
 	d := sub(((u-1)/2)*((v-1)/2) + alpha*((v^2-1)/8) + beta*((u^2-1)/8),ZZ);

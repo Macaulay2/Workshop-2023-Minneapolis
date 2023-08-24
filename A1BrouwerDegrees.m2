@@ -557,6 +557,8 @@ assert(HilbertSymbol(5, 1/9, 7)==1);
 assert(HilbertSymbol(1/9, 5, 7)==1);
 
 assert(HilbertSymbol(3, 11, 3)==-1);
+assert(HilbertSymbol(3, 11, 2)==-1);
+
 
 assert(HilbertSymbolReal(-3/1, 5)==1);
 assert(HilbertSymbolReal(-3, -5/1)==-1);
