@@ -1,4 +1,35 @@
 
+
+-- Over k = R, the real symbol is 1 if either a or b is positive, and -1 if they are both negative.
+-- See Serre, III Theorem 1
+
+HilbertSymbolReal = method()
+HilbertSymbolReal (QQ, QQ) := (ZZ) => (a, b) -> (
+    if (a < 0 and b < 0) then (
+	return -1;
+	)
+    else (
+	return 1;
+	);
+    );
+
+HilbertSymbolReal (QQ, ZZ) := (ZZ) => (a,b) -> (
+    b1 := b/1;
+    return HilbertSymbolReal(a, b1);
+    );
+
+HilbertSymbolReal (ZZ, QQ) := (ZZ) => (a,b) -> (
+    a1 := a/1;
+    return HilbertSymbolReal(a1, b);
+    );
+
+HilbertSymbolReal (ZZ, ZZ) := (ZZ) => (a,b) -> (
+    a1:= a/1;
+    b1:= b/1;
+    return HilbertSymbolReal(a1, b1);
+    );
+
+
 -- Input: Any integers a and b and a prime p. The integers a and b are considered as elements of QQ_p.
 -- Output: The Hilbert symbol (a,b)_p following Serre III Theorem 1
 
@@ -76,22 +107,35 @@ HilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
 -- );
 
 HilbertSymbol (QQ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
-    if not liftable(a, ZZ) then error "first argument must be an integer";
-    if not liftable(b, ZZ) then error "second argument must be an integer";
+ 
+-- if a, b are rational numbers with denominators,  one can multiply by square of denominator to 
+-- get a', b' integers.  Then evaluate hilbertSymbol (a', b', p);
+    
+    if not liftable(a, ZZ) then (
+	a1 := numerator a;
+	a2 := denominator a;
+	a = a1*a2;
+	);
+	
+    if not liftable(b, ZZ) then (
+	b1 := numerator b;
+	b2 := denominator b;
+	b = b1*b2;
+	);
+    
     a = sub(a,ZZ);
     b = sub(b,ZZ);
-    return HilbertSymbol(a,b,p)	
-    )
-
--- Over k = R, the real symbol is 1 if either a or b is positive, and -1 if they are both negative.
--- See Serre, III Theorem 1
-
-HilbertSymbolReal = method()
-HilbertSymbolReal (ZZ, ZZ) := (ZZ) => (a,b) -> (
-    if (a < 0 and b < 0) then (
-	return -1;
-	)
-    else (
-	return 1;
-	)
+    return HilbertSymbol(a,b,p);
     );
+
+HilbertSymbol (ZZ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
+    a1:=a/1;
+    return HilbertSymbol(a1,b, p);    
+   );
+
+HilbertSymbol (QQ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
+   b1:=b/1;
+   return HilbertSymbol(a, b1, p);    
+   );
+
+

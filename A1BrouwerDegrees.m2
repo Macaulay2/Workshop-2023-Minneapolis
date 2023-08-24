@@ -74,6 +74,7 @@ export{
     
     --HilbertSymbols.m2
     "HilbertSymbol",
+    "HilbertSymbolReal",
     
     --GWInvariants.m2
     "signature",
@@ -541,4 +542,28 @@ C4=matrix(M, {{1, 2, 10}, {2, 3, 2}, {10, 2, 3}});
 assert(gwIsomorphic(gwClass(C3), gwClass(C4))===true);
 ///
 
+--Test for HilbertSymbols
+--Test 28
+
+TEST ///
+
+a = HilbertSymbol(100, 7, 3);
+assert(a==1);
+
+b = HilbertSymbol(100/121, 7/169, 3);
+assert(b==1);
+
+assert(HilbertSymbol(5, 1/9, 7)==1);
+assert(HilbertSymbol(1/9, 5, 7)==1);
+
+assert(HilbertSymbol(3, 11, 3)==-1);
+
+assert(HilbertSymbolReal(-3/1, 5)==1);
+assert(HilbertSymbolReal(-3, -5/1)==-1);
+assert(HilbertSymbolReal(-3/1, -5)==-1);
+assert(HilbertSymbolReal(3, 5)==1);
+
+
+///
 end
+
