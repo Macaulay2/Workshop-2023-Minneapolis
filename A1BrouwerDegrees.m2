@@ -106,7 +106,11 @@ export{
     "wittDecomp",
     "qQanisotropicDimension2",
     "sumDecomposition",
-    "sumDecompositionString"
+    "sumDecompositionString",
+
+    "congruenceDiagonalizeSimplify",
+    "diagonalFormNoSimplify",
+    "diagonalFormSimplify"
     }
 
 -- Basic arithmetic, p-adic, and commutative algebra operations we will use
@@ -146,6 +150,7 @@ load "./A1-Brouwer/Code/AnisotropicDimension.m2"
 load "./A1-Brouwer/Code/Decomposition.m2"
 
 load "./A1-Brouwer/MoreMatrixMethods.m2"
+load "./A1-Brouwer/MoreSimplifiedRepresentatives.m2"
 load "./A1-Brouwer/Nondegenerate.m2"
 
 
