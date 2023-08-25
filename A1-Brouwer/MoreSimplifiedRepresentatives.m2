@@ -56,12 +56,14 @@ congruenceDiagonalizeSimplify (Matrix) := (Matrix) => (AnonMut) -> (
 
     -- Over a finite field, we can diagonalize and replace every entry by 1 or a nonsquare representative
     else if (instance(k, GaloisField) and k.char != 2) then (
-        nonSquareRep := 0;
-	for i from 0 to (n-1) do (
-	    if (diagForm_(i,i) != 0 and not legendreBoolean(diagForm_(i,i))) then (
-		nonSquareRep = diagForm_(i,i);
-                break;
-		);
+        nonSquareRep := sub(-1,k);
+        if (legendreBoolean(sub(-1,k))) then (
+	    for i from 0 to (n-1) do (
+	        if (diagForm_(i,i) != 0 and (not legendreBoolean(diagForm_(i,i)))) then (
+	     	    nonSquareRep = diagForm_(i,i);
+                    break;
+		    );
+                );
 	    );
 	for i from 0 to (n-1) do (
 	    if (A_(i,i) != 0 and legendreBoolean(A_(i,i))) then (
