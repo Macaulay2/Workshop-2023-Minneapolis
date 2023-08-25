@@ -5,11 +5,15 @@
 
 hilbertSymbolReal = method()
 hilbertSymbolReal (QQ, QQ) := (ZZ) => (a, b) -> (
+    if (a==0) then (error "first argument to hilbertSymbolReal must be nonzero");
+    if (b==0) then (error "second argument to hilbertSymbolReal must be nonzero");
     if (a < 0 and b < 0) then (
 	return -1;
 	)
     else (
-	return 1;
+	if (a>0 or b>0) then (
+	    return 1;
+	    );
 	);
     );
 
@@ -35,7 +39,8 @@ hilbertSymbolReal (ZZ, ZZ) := (ZZ) => (a,b) -> (
 
 hilbertSymbol = method()
 hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
-    if (not isPrime(p)) then error "third argument of HilbertSymbol must be a prime";
+    if (a==0 or b==0) then error "first two arguments to hilbertSymbol must be nonzero";
+    if (not isPrime(p)) then error "third argument of hilbertSymbol must be a prime";
     
     alpha := padicValuation(a,p);
     beta := padicValuation(b,p);
