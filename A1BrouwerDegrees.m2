@@ -110,7 +110,9 @@ export{
 
     "congruenceDiagonalizeSimplify",
     "diagonalFormNoSimplify",
-    "diagonalFormSimplify"
+    "diagonalFormSimplify",
+    "nondegenerateDimension",
+    "nondegeneratePartDiagonal"
     }
 
 -- Basic arithmetic, p-adic, and commutative algebra operations we will use
