@@ -245,7 +245,7 @@ anisotropicPart (Matrix) := (Matrix) => (A) -> (
         )
     -- Over QQ, call anisotropicPartQQ
     else if (k === QQ) then (
-        return (qQanisotropicPart(gwClass(A))).matrix;
+        return (qQanisotropicPart(gwClass(nondegeneratePart(A)))).matrix;
         )
     -- Over a finite field, if the anisotropic dimension is 1, then the form is either <1> or <e>, where e is any nonsquare representative, and if the anisotropic dimension is 2 then the form is <1,-e>
     else if (instance(k, GaloisField) and k.char != 2) then (
