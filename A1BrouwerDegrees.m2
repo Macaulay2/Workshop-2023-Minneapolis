@@ -54,6 +54,9 @@ export{
 
     --MatrixMethods.m2
     "congruenceDiagonalize",
+    "congruenceDiagonalizeSimplify",
+    "nondegenerateDimension",
+    "nondegeneratePartDiagonal",
     
     --GrothendieckWittClasses.m2    
     "GrothendieckWittClass",
@@ -69,6 +72,8 @@ export{
     
     --SimplifiedRepresentatives.m2
     "diagonalForm",
+    "diagonalFormNoSimplify",
+    "diagonalFormSimplify",
     "diagonalEntries",
     "integralDiagonalRep",
     
@@ -103,17 +108,11 @@ export{
     "wittIndex",
     
     --Decomposition.m2
+    "anisotropicPart",
     "wittDecomp",
     "qQanisotropicDimension2",
     "sumDecomposition",
     "sumDecompositionString",
-
-    "anisotropicPart",
-    "congruenceDiagonalizeSimplify",
-    "diagonalFormNoSimplify",
-    "diagonalFormSimplify",
-    "nondegenerateDimension",
-    "nondegeneratePartDiagonal"
     }
 
 -- Basic arithmetic, p-adic, and commutative algebra operations we will use
@@ -151,11 +150,6 @@ load "./A1-Brouwer/Code/AnisotropicDimension.m2"
 
 -- Finally, decomposing forms
 load "./A1-Brouwer/Code/Decomposition.m2"
-
-load "./A1-Brouwer/anisotropicPart.m2"
-load "./A1-Brouwer/MoreMatrixMethods.m2"
-load "./A1-Brouwer/MoreSimplifiedRepresentatives.m2"
-load "./A1-Brouwer/Nondegenerate.m2"
 
 
 

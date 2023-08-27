@@ -2,27 +2,75 @@
 -- Invariants
 ---------------------------------------
 
+-- Input: A diagonal matrix
+-- Output: The number of nonzero entries on its diagonal
+-- Note: numNonzeroDiagEntries is *not* included as a method in the A1BrowerDegrees package
+
+numNonzeroDiagEntries = method()
+numNonzeroDiagEntries (Matrix) := (Matrix) => (A) -> (
+    if not isDiagonal(A) then(
+        error "input of numNonzeroDiagEntries must be diagonal";
+        );
+    nonzeroDiagEntries := 0;
+    for i from 0 to (numRows(A)-1) do (
+        if A_(i,i) != 0 then (
+            nonzeroDiagEntries = nonzeroDiagEntries + 1;
+            );
+        );
+    return(nonzeroDiagEntries);
+    )
+
+-- Input: A diagonal matrix over QQ or RR
+-- Output: The number of positive entries on its diagonal
+-- Note: numPosDiagEntries is *not* included as a method in the A1BrowerDegrees package
+
+numPosDiagEntries = method()
+numPosDiagEntries (Matrix) := (Matrix) => (A) -> (
+    if not isDiagonal(A) then(
+        error "input of numPosDiagEntries must be diagonal";
+        );
+    k := ring A;
+    if not (k === RR or instance(k,RealField) or k === QQ) then(
+        error "Only implemented over QQ and RR";
+        );
+    posDiagEntries := 0;
+    for i from 0 to (numRows(A)-1) do (
+        if A_(i,i) > 0 then (
+            posDiagEntries = posDiagEntries + 1;
+            );
+        );
+    return(posDiagEntries);
+    )
+
+-- Input: A diagonal matrix over QQ or RR
+-- Output: The number of positive entries on its diagonal
+-- Note: numPosDiagEntries is *not* included as a method in the A1BrowerDegrees package
+
+numNegDiagEntries = method()
+numNegDiagEntries (Matrix) := (Matrix) => (A) -> (
+    if not isDiagonal(A) then(
+        error "input of numNegDiagEntries must be diagonal";
+        );
+    k := ring A;
+    if not (k === RR or instance(k,RealField) or k === QQ) then(
+        error "Only implemented over QQ and RR";
+        );
+    negDiagEntries := 0;
+    for i from 0 to (numRows(A)-1) do (
+        if A_(i,i) < 0 then (
+            negDiagEntries = negDiagEntries + 1;
+            );
+        );
+    return(negDiagEntries);
+    )
+
 -- Input: A Grothendieck-Witt class beta defined over QQ or RR
 -- Output: The number of positive entries in its diagonalization
 -- Note:  numPosEntries is *not* included as a method in the A1BrowerDegrees package
 
 numPosEntries = method()
 numPosEntries (GrothendieckWittClass) := ZZ => beta ->(
-    B := beta.matrix;
-    n := numRows(B);
-    kk := ring B;
-    if not (kk === RR or instance(kk,RealField) or kk === QQ) then(
-        error "Field is not QQ or RR";
-        );
-    diagB := congruenceDiagonalize(B);
-    posEntries := 0;
-    for i from 0 to (numRows(B) - 1) do (
-        if diagB_(i,i) > 0 then(
-            posEntries = posEntries+1;
-            );
-	);
-
-    return posEntries
+    return(numPosDiagEntries(congruenceDiagonalize(beta.matrix)));
     );
 
 -- Input: A Grothendieck-Witt class beta defined over QQ or RR
@@ -31,21 +79,7 @@ numPosEntries (GrothendieckWittClass) := ZZ => beta ->(
 
 numNegEntries = method()
 numNegEntries (GrothendieckWittClass) := ZZ => beta ->(
-    B := beta.matrix;
-    n := numRows(B);
-    kk := ring B;
-    if not (kk === RR or instance(kk,RealField) or kk === QQ) then(
-        error "Field is not QQ or RR";
-        );
-    diagB := congruenceDiagonalize(B);
-    negEntries := 0;
-    for i from 0 to (numRows(B)-1) do (
-        if diagB_(i,i) < 0 then(
-            negEntries = negEntries+1;
-            );
-	);
-
-    return negEntries
+    return(numNegDiagEntries(congruenceDiagonalize(beta.matrix)));
     );
 
 -- Input: A Grothendieck-Witt class beta defined over QQ or RR
