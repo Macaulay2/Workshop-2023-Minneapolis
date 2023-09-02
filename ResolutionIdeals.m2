@@ -55,7 +55,7 @@ newPackage(
 	that this is not universal, but allow the possibility 
 	that sums of 2 consecutive ideals of this type do stabilize.
 	
-	The following is the exaple of Gasharov-Peeva.
+	The following is the example of Gasharov-Peeva.
        Example
         kk = GF(13)
 	
@@ -104,4 +104,4 @@ newPackage(
      restart
      installPackage "ResolutionIdeals"
      viewHelp "ResolutionIdeals"
-     viewHelp SimpleDoc
+

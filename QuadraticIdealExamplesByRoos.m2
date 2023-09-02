@@ -13,18 +13,19 @@ newPackage(
 	Headline => "Examples of Quadratic Ideals with Embedding Dimension Four by Jan-Erik Roos",
 	PackageExports => {"Depth"},
 	DebuggingMode => true)
+
 export {
-<<<<<<< HEAD
  "roosTable", 
  "higherDepthTable", 
  "depthZeroTable",
  "almostKoszul"
-=======
- "roosTable", "higherDepthTable", "depthZeroTable", "roosIsotopes", "almostKoszul"
 }
 
 
----TO DO: make this a method to allow user to pick coefficient field
+-*TO DO:
+1. Make roosTable a method to allow user to pick coefficient field
+2. document and export onedimIrrationalPoincare and twodimIrrationalPoincare
+*-
 roosTable = (S = QQ[x,y,z,u];
 L= {
 sub(ideal "0",S),
@@ -276,6 +277,7 @@ Description
 doc ///
 Key
  almostKoszul
+ (almostKoszul,Ring,ZZ)
 Headline
  Examples discovered by Jan-Erik Roos
 Usage
@@ -312,10 +314,10 @@ Description
    F = res (coker vars R, LengthLimit =>6)
    betti F
 References
-  Unpublished paper by Jan-Erik Roos. See announcement: J.E.Roos, Commutative non Koszul algebras
+  Commutative non Koszul algebras
   having a linear resolution of arbitrarily high order.
   Applications to torsion in loop space homology,
-  C. R. Acad. Sci. Paris 316 (1993),1123-1128.
+  Jan-Erik Roos, C. R. Acad. Sci. Paris 316 (1993),1123-1128.
 ///
 
 
