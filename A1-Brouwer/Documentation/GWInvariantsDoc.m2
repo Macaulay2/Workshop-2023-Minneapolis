@@ -35,9 +35,9 @@ document{
 }
 
 document{
-    Key => {(hasseWittInvariant, GrothendieckWittClass, ZZ), hasseWittInvariant},
+    Key => {(HasseWittInvariant, GrothendieckWittClass, ZZ), HasseWittInvariant},
     Headline => "outputs the Hasse-Witt invariant for a prime p for the quadratic form of the Grothendieck-Witt class",
-    Usage => "hasseWittInvariant(beta, p)",
+    Usage => "HasseWittInvariant(beta, p)",
     Inputs => {
 	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(\mathbb{Q})$///, "."},
 	ZZ => "p" => {"A integral prime number."},
@@ -47,6 +47,6 @@ document{
 	},
     EXAMPLE lines ///
     beta = gwClass(matrix(QQ,{{1,4,7},{4,3,-1},{7,-1,5}}));
-    hasseWittInvariant(beta, 7)
+    HasseWittInvariant(beta, 7)
     ///,
 }

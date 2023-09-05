@@ -94,7 +94,7 @@ qQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     	-- Step 5c: Make a vector of exponents of Hasse invariants
 	W := mutableMatrix(QQ,r,1);
 	for i from 0 to (r-1) do(
-	    W_(i,0) = (1 - (hasseWittInvariant(q,L_i)))/2;
+	    W_(i,0) = (1 - (HasseWittInvariant(q,L_i)))/2;
 	    );
        	
 
@@ -115,7 +115,7 @@ qQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     	B := mutableIdentity(QQ,r);
     	for i from 0 to (r-1) do(
 	    for j from 0 to (r-1) do(
-	    	B_(i,j) = (1 - hilbertSymbol(L_j, d, L_i))/2;
+	    	B_(i,j) = (1 - HilbertSymbol(L_j, d, L_i))/2;
 	    	);
 	    );
 	B = matrix(B);
@@ -272,8 +272,8 @@ anisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (alpha) ->
 -- Input: A matrix whose base field is not inexact
 -- Output: The number of hyperbolic forms in A, and the anisotropic part of A and (also) the subform part
 
-wittDecomp = method()
-wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
+WittDecomp = method()
+WittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     k := ring A;   
   
     -- Add error in case the base field is RR or CC
@@ -333,7 +333,7 @@ wittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     orthoComp := gens kernel((z||matrix(y))*A);
     
     -- Now recursively apply WittDecomp to orthoComp^T*A*orthoComp a (n - 2) x (n - 2) Gram matrix
-    subComputation := wittDecomp(transpose(orthoComp)*A*orthoComp);
+    subComputation := WittDecomp(transpose(orthoComp)*A*orthoComp);
     
     -- subComputation_0 gives number of hyperbolic forms in (n - 2) x (n - 2) subform  
     -- 1+ subComputation_0 is the number of hyperbolic forms in A
@@ -420,28 +420,28 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
             );
             
 	-- Number of hyperbolic forms is the number of positive and negative entries
-        wittIndexRR := min(posEntries,negEntries);
+        WittIndexRR := min(posEntries,negEntries);
     	
 	-- Make an empty matrix and string to add output to
 	simplifiedFormRR := matrix(k,{{}});
 	outputStringRR := "";
 	
 	-- Add hyperbolic forms to output
-	for i in 1..(wittIndexRR) do(
+	for i in 1..(WittIndexRR) do(
 	    simplifiedFormRR = safeBlockSum(simplifiedFormRR,H);
             );
 	
-    if wittIndexRR == 1 then(
+    if WittIndexRR == 1 then(
         outputStringRR = outputStringRR | "H";
     );
 
-	if wittIndexRR > 1 then(
-	    outputStringRR = outputStringRR | toString(wittIndexRR) | "H";
+	if WittIndexRR > 1 then(
+	    outputStringRR = outputStringRR | toString(WittIndexRR) | "H";
 	    );
 	
 	-- Look at what's left over
-	posEntries = posEntries - wittIndexRR;
-	negEntries = negEntries - wittIndexRR;
+	posEntries = posEntries - WittIndexRR;
+	negEntries = negEntries - WittIndexRR;
 	
 	-- Build the anisotropic part
 	anisotropicPart := safeBlockSum(matrix(mutableIdentity(k,posEntries)),((-1)*matrix(mutableIdentity(k,negEntries))));
@@ -513,17 +513,17 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
 	    outputStringGFSquare := "";	    
 	    
 	    -- Number of hyperbolic forms
-            wittIndexGFSquare := floor(numSquares/2) + floor(numNonSquares/2);
+            WittIndexGFSquare := floor(numSquares/2) + floor(numNonSquares/2);
 	    
 	    -- If there are hyperbolic forms add them to the matrix and string
-        if wittIndexGFSquare == 1 then(
+        if WittIndexGFSquare == 1 then(
         outputStringGFSquare = outputStringGFSquare | "H";
         simplifiedFormGFSquare = H;
         );
 
-	    if wittIndexGFSquare > 1 then(
-		outputStringGFSquare = outputStringGFSquare | toString(wittIndexGFSquare) | "H";
-		for i in 1..(wittIndexGFSquare) do(
+	    if WittIndexGFSquare > 1 then(
+		outputStringGFSquare = outputStringGFSquare | toString(WittIndexGFSquare) | "H";
+		for i in 1..(WittIndexGFSquare) do(
 		    simplifiedFormGFSquare = safeBlockSum(simplifiedFormGFSquare,H);
 		    );
 		);
@@ -554,25 +554,25 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
 	       
 	       
 	       -- Number of hyperbolic forms
-	       wittIndexGFNonSquare := min(numSquares,numNonSquares);	       
+	       WittIndexGFNonSquare := min(numSquares,numNonSquares);	       
 	       
 	       -- Look at any remaining squares or nonsquares. One of these must be zero
-	       numSquares = numSquares - wittIndexGFNonSquare;
-	       numNonSquares = numNonSquares - wittIndexGFNonSquare;
+	       numSquares = numSquares - WittIndexGFNonSquare;
+	       numNonSquares = numNonSquares - WittIndexGFNonSquare;
 	       
 	       
 	       -- Add on hyperbolic part
-           if wittIndexGFNonSquare == 1 then(
+           if WittIndexGFNonSquare == 1 then(
            simplifiedFormGFNonSquare = H;
            outputStringGFNonSquare = outputStringGFNonSquare | "H";
            );
 
-	       if wittIndexGFNonSquare > 1 then(
-		   for i in 1..(wittIndexGFNonSquare) do(
+	       if WittIndexGFNonSquare > 1 then(
+		   for i in 1..(WittIndexGFNonSquare) do(
 		       simplifiedFormGFNonSquare = safeBlockSum(simplifiedFormGFNonSquare, H);
 		       
 		       );
-		   outputStringGFNonSquare = outputStringGFNonSquare | toString(wittIndexGFNonSquare) | "H";
+		   outputStringGFNonSquare = outputStringGFNonSquare | toString(WittIndexGFNonSquare) | "H";
 		   
 		   );
 	       
@@ -619,7 +619,7 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
         outputStringQQ := "";
 	
 	-- Get number of confirmed hyperbolic forms and remainder from WittDecomp
-	(numHypForms,B) := wittDecomp(A);
+	(numHypForms,B) := WittDecomp(A);
 	
 	-- Add any hyperbolic forms if they exist
     if numHypForms == 1 then(

@@ -3,10 +3,10 @@
 -- Over k = R, the real symbol is 1 if either a or b is positive, and -1 if they are both negative.
 -- See Serre, III Theorem 1
 
-hilbertSymbolReal = method()
-hilbertSymbolReal (QQ, QQ) := (ZZ) => (a, b) -> (
-    if (a==0) then (error "first argument to hilbertSymbolReal must be nonzero");
-    if (b==0) then (error "second argument to hilbertSymbolReal must be nonzero");
+HilbertSymbolReal = method()
+HilbertSymbolReal (QQ, QQ) := (ZZ) => (a, b) -> (
+    if (a==0) then (error "first argument to HilbertSymbolReal must be nonzero");
+    if (b==0) then (error "second argument to HilbertSymbolReal must be nonzero");
     if (a < 0 and b < 0) then (
 	return -1;
 	)
@@ -17,30 +17,30 @@ hilbertSymbolReal (QQ, QQ) := (ZZ) => (a, b) -> (
 	);
     );
 
-hilbertSymbolReal (QQ, ZZ) := (ZZ) => (a,b) -> (
+HilbertSymbolReal (QQ, ZZ) := (ZZ) => (a,b) -> (
     b1 := b/1;
-    return hilbertSymbolReal(a, b1);
+    return HilbertSymbolReal(a, b1);
     );
 
-hilbertSymbolReal (ZZ, QQ) := (ZZ) => (a,b) -> (
+HilbertSymbolReal (ZZ, QQ) := (ZZ) => (a,b) -> (
     a1 := a/1;
-    return hilbertSymbolReal(a1, b);
+    return HilbertSymbolReal(a1, b);
     );
 
-hilbertSymbolReal (ZZ, ZZ) := (ZZ) => (a,b) -> (
+HilbertSymbolReal (ZZ, ZZ) := (ZZ) => (a,b) -> (
     a1:= a/1;
     b1:= b/1;
-    return hilbertSymbolReal(a1, b1);
+    return HilbertSymbolReal(a1, b1);
     );
 
 
 -- Input: Any integers a and b and a prime p. The integers a and b are considered as elements of QQ_p.
 -- Output: The Hilbert symbol (a,b)_p following Serre III Theorem 1
 
-hilbertSymbol = method()
-hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
-    if (a==0 or b==0) then error "first two arguments to hilbertSymbol must be nonzero";
-    if (not isPrime(p)) then error "third argument of hilbertSymbol must be a prime";
+HilbertSymbol = method()
+HilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
+    if (a==0 or b==0) then error "first two arguments to HilbertSymbol must be nonzero";
+    if (not isPrime(p)) then error "third argument of HilbertSymbol must be a prime";
     
     alpha := padicValuation(a,p);
     beta := padicValuation(b,p);
@@ -114,10 +114,10 @@ hilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
 --     return hilb;	
 -- );
 
-hilbertSymbol (QQ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
+HilbertSymbol (QQ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
  
 -- if a, b are rational numbers with denominators,  one can multiply by square of denominator to 
--- get a', b' integers.  Then evaluate hilbertSymbol (a', b', p);
+-- get a', b' integers.  Then evaluate HilbertSymbol (a', b', p);
     
     if not liftable(a, ZZ) then (
 	a1 := numerator a;
@@ -133,15 +133,15 @@ hilbertSymbol (QQ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
     
     a = sub(a,ZZ);
     b = sub(b,ZZ);
-    return hilbertSymbol(a,b,p);
+    return HilbertSymbol(a,b,p);
     );
 
-hilbertSymbol (ZZ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
+HilbertSymbol (ZZ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
     a1:=a/1;
-    return hilbertSymbol(a1,b, p);    
+    return HilbertSymbol(a1,b, p);    
    );
 
-hilbertSymbol (QQ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
+HilbertSymbol (QQ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
    b1:=b/1;
-   return hilbertSymbol(a, b1, p);    
+   return HilbertSymbol(a, b1, p);    
    );

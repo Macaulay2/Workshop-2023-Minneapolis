@@ -68,7 +68,7 @@ export{
     --BuildingForms.m2
     "diagonalClass",
     "hyperbolicForm",
-    "pfisterForm",
+    "PfisterForm",
     
     --SimplifiedRepresentatives.m2
     "diagonalForm",
@@ -78,14 +78,14 @@ export{
     "integralDiagonalRep",
     
     --HilbertSymbols.m2
-    "hilbertSymbol",
-    "hilbertSymbolReal",
+    "HilbertSymbol",
+    "HilbertSymbolReal",
     
     --GWInvariants.m2
     "signature",
     "integralDiscriminant",
     "relevantPrimes",
-    "hasseWittInvariant",
+    "HasseWittInvariant",
 
     --LocalGlobalDegrees.m2
     "globalA1Degree",
@@ -105,11 +105,11 @@ export{
     "anisotropicDimensionQp",
     "anisotropicDimensionQQ",
     "anisotropicDimension",
-    "wittIndex",
+    "WittIndex",
     
     --Decomposition.m2
     "anisotropicPart",
-    "wittDecomp",
+    "WittDecomp",
     "qQanisotropicDimension2",
     "sumDecomposition",
     "sumDecompositionString",
@@ -288,7 +288,7 @@ T1 = QQ[z_1..z_2];
 f1 = {(z_1-1)*z_1*z_2, (3/5)*z_1^2 - (17/3)*z_2^2};
 f1GD = globalA1Degree(f1);
 f1GDmat = f1GD.matrix;
-assert(wittDecomp(f1GDmat)==(3,0));
+assert(WittDecomp(f1GDmat)==(3,0));
 q=ideal {z_1,z_2};
 r=ideal {z_1-1,z_2^2-(9/85)};
 f1LDq= localA1Degree(f1,q);
@@ -303,12 +303,12 @@ T2 = QQ[w];
 f2 = {w^4 + w^3 - w^2 - w};
 f2GD= globalA1Degree(f2);
 f2GDmat = f2GD.matrix;
-assert(wittDecomp(f2GDmat)==(2,0));
+assert(WittDecomp(f2GDmat)==(2,0));
 
 p=ideal {w+1};
 f2LDp = localA1Degree(f2, p);
 f2LDpmat = f2LDp.matrix;
-assert(wittDecomp(f2LDpmat)==(1,0));
+assert(WittDecomp(f2LDpmat)==(1,0));
 s=ideal{w-1};
 f2LDs = localA1Degree(f2, s);
 t=ideal{w};
@@ -321,7 +321,7 @@ assert(gwIsomorphic(f2LDsum, f2GD));
 -- Test 7
 TEST ///
 twoH = hyperbolicForm(GF(17),4);
-P = pfisterForm(GF(17),(2,3));
+P = PfisterForm(GF(17),(2,3));
 assert(gwIsomorphic(P,twoH));
 ///
 
@@ -428,10 +428,10 @@ assert(squareSymbol(64,8) == -1);
 -- Test 20
 TEST ///
 B=matrix(QQ,{{0/1,1},{1,0}});
-assert((wittDecomp(congruenceDiagonalize(B)))_0 == 1);
+assert((WittDecomp(congruenceDiagonalize(B)))_0 == 1);
 P=matrix(QQ,{{0/1, 5,1},{2,2,1},{0,0,1}});
 A=matrix(QQ,{{1/1,0,0},{0,-1,0},{0,0,1}});
-assert((wittDecomp(congruenceDiagonalize(P*A*transpose(P))))_0 == 1);
+assert((WittDecomp(congruenceDiagonalize(P*A*transpose(P))))_0 == 1);
 ///
 
 
@@ -562,9 +562,9 @@ assert(signature(M4) == -3);
 
 assert(integralDiscriminant(M1)==-5405);
 assert(relevantPrimes(M1) == {23, 5, 47} );
-assert(hasseWittInvariant(M1, 5) == -1);
-assert(hasseWittInvariant(M1, 23) == 1);
-assert(hasseWittInvariant(M1, 47) == -1);
+assert(HasseWittInvariant(M1, 5) == -1);
+assert(HasseWittInvariant(M1, 23) == 1);
+assert(HasseWittInvariant(M1, 47) == -1);
 ///
 
 -- Test for hilbertSymbols
@@ -572,25 +572,25 @@ assert(hasseWittInvariant(M1, 47) == -1);
 
 TEST ///
 
-a = hilbertSymbol(100, 7, 3);
+a = HilbertSymbol(100, 7, 3);
 assert(a==1);
 
-b = hilbertSymbol(100/121, 7/169, 3);
+b = HilbertSymbol(100/121, 7/169, 3);
 assert(b==1);
 
-assert(hilbertSymbol(5, 1/9, 7)==1);
-assert(hilbertSymbol(1/9, 5, 7)==1);
+assert(HilbertSymbol(5, 1/9, 7)==1);
+assert(HilbertSymbol(1/9, 5, 7)==1);
 
-assert(hilbertSymbol(3, 11, 3)==-1);
-assert(hilbertSymbol(3, 11, 2)==-1);
-assert(hilbertSymbol(-3, -11, 2)==1);
-assert(hilbertSymbol(-5, 11, 2) == -1);
+assert(HilbertSymbol(3, 11, 3)==-1);
+assert(HilbertSymbol(3, 11, 2)==-1);
+assert(HilbertSymbol(-3, -11, 2)==1);
+assert(HilbertSymbol(-5, 11, 2) == -1);
 
 
-assert(hilbertSymbolReal(-3/1, 5)==1);
-assert(hilbertSymbolReal(-3, -5/1)==-1);
-assert(hilbertSymbolReal(-3/1, -5)==-1);
-assert(hilbertSymbolReal(3, 5)==1);
+assert(HilbertSymbolReal(-3/1, 5)==1);
+assert(HilbertSymbolReal(-3, -5/1)==-1);
+assert(HilbertSymbolReal(-3/1, -5)==-1);
+assert(HilbertSymbolReal(3, 5)==1);
 ///
 
 

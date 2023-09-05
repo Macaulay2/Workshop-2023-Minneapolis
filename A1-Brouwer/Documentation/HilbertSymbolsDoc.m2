@@ -1,7 +1,7 @@
 document{
-    Key => {hilbertSymbol, (hilbertSymbol, ZZ, ZZ, ZZ),  (hilbertSymbol, QQ, QQ, ZZ),  (hilbertSymbol, ZZ, QQ, ZZ),  (hilbertSymbol, QQ, ZZ, ZZ)},
+    Key => {HilbertSymbol, (HilbertSymbol, ZZ, ZZ, ZZ),  (HilbertSymbol, QQ, QQ, ZZ),  (HilbertSymbol, ZZ, QQ, ZZ),  (HilbertSymbol, QQ, ZZ, ZZ)},
     Headline => "Computes the Hilbert symbol of two integers or rational numbers at a prime",
-    Usage => "hilbertSymbol(a,b,p)",
+    Usage => "HilbertSymbol(a,b,p)",
     Inputs => {
 	QQ => "a" => {"Any integer or rational number, considered as an element of ", TEX///$\mathbb{Q}_p$///, "."},
 	QQ => "b" => {"Any integer or rational number, considered as an element of ", TEX///$\mathbb{Q}_p$///, "."},
@@ -14,7 +14,7 @@ document{
     PARA{TEX///$(a,b)_p = \begin{cases} 1 & z^2 = ax^2 + by^2 \text{ has a nonzero solution in } K^3 \\ -1 & \text{otherwise.} \end{cases}$///},
     PARA{"Consider the following example, where we observe that ", TEX///$z^2 = 2x^2 + y^2$///," does admit nonzero solutions mod 7, in particular ", TEX///$(x,y,z) = (1,0,3)$///, ":"},
     EXAMPLE lines///
-    hilbertSymbol(2,1,7)
+    HilbertSymbol(2,1,7)
     ///,
     PARA{"Computing Hasse-Witt invariants is a key step in classifying symmetric bilinear forms over the rational numbers, and in particular certifying their ", TO2(isIsotropic, "(an)isotropy"), "."},
     PARA{EM "Citations:"},
@@ -26,9 +26,9 @@ document{
 }
 
 document{
-    Key => {hilbertSymbolReal, (hilbertSymbolReal, QQ, QQ),  (hilbertSymbolReal, ZZ, ZZ),  (hilbertSymbolReal, ZZ, QQ),  (hilbertSymbolReal, QQ, ZZ)},
+    Key => {HilbertSymbolReal, (HilbertSymbolReal, QQ, QQ),  (HilbertSymbolReal, ZZ, ZZ),  (HilbertSymbolReal, ZZ, QQ),  (HilbertSymbolReal, QQ, ZZ)},
     Headline => "Computes the Hilbert symbol of two rational numbers over the reals",
-    Usage => "hilbertSymbolReal(a,b,p)",
+    Usage => "HilbertSymbolReal(a,b,p)",
     Inputs => {
 	QQ => "a" => {"Any non-zero integer or rational number, considered as an element of ", TEX///$\mathbb{Q}_p$///, "."},
 	QQ => "b" => {"Any non-zero integer or rational number, considered as an element of ", TEX///$\mathbb{Q}_p$///, "."},
@@ -41,7 +41,7 @@ document{
     PARA{TEX///$(a,b)_{\mathbb{R}}$///," will equal 1 unless both ",TEX///$a,\,b$///," are negative."},
     PARA{"Consider the example, that ",TEX///$z^2=-3x^2-2y^2/3$///," does not admit a non-zero solution. Thus:"}, 
      EXAMPLE lines///
-    hilbertSymbolReal(-3,-2/3)=-1
+    HilbertSymbolReal(-3,-2/3) == -1
     ///,
     PARA{"Computing Hasse-Witt invariants is a key step in classifying symmetric bilinear forms over the rational numbers, and in particular certifying their ", TO2(isIsotropic, "(an)isotropy"), "."},
     PARA{EM "Citations:"},

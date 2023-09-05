@@ -30,8 +30,8 @@ isHyperbolicQp (GrothendieckWittClass, ZZ) := Boolean => (beta, p) ->(
 	m := sub(rankForm/2,ZZ);
 	
 	-- The Hasse-Witt invariant of mH:
-	HasseWittHyperbolicForm := (hilbertSymbol(-1,-1,p))^(m*(m - 1)/2);
-	HasseWittBeta := hasseWittInvariant(beta,p);
+	HasseWittHyperbolicForm := (HilbertSymbol(-1,-1,p))^(m*(m - 1)/2);
+	HasseWittBeta := HasseWittInvariant(beta,p);
 	return (HasseWittHyperbolicForm == HasseWittBeta)
 	);
     );
@@ -169,7 +169,7 @@ isotropicDimension (GrothendieckWittClass) := ZZ -> (alpha) -> (
 -- Input: A Grothendieck-Witt class beta in GW(k), where k is the complex numbers, the real, the rationals or a finite field
 -- Output: An integer, the rank of the totally isotropic part of beta
 
-wittIndex = method()
-wittIndex (GrothendieckWittClass) := ZZ -> (alpha) -> (
+WittIndex = method()
+WittIndex (GrothendieckWittClass) := ZZ -> (alpha) -> (
     return isotropicDimension(alpha)
     );

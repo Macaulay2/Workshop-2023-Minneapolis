@@ -101,20 +101,20 @@ hyperbolicForm(InexactFieldFamily,ZZ) := GrothendieckWittClass => (kk,n) -> (
 -- Input: A field k, and a list of elements a_1, ... , a_n of k
 -- Output: The Pfister form <<a_1,...,a_n>>
 
-pfisterForm = method()
-pfisterForm(Ring,RingElement) := GrothendieckWittClass => (kk,a) -> (
+PfisterForm = method()
+PfisterForm(Ring,RingElement) := GrothendieckWittClass => (kk,a) -> (
     return diagonalClass(kk,(1,(-1)*a))
     );
 
-pfisterForm(Ring,ZZ) := GrothendieckWittClass => (kk,a) -> (
+PfisterForm(Ring,ZZ) := GrothendieckWittClass => (kk,a) -> (
     return diagonalClass(kk,(1,(-1)*a))
     );
 
-pfisterForm(Ring,QQ) := GrothendieckWittClass => (kk,a) -> (
+PfisterForm(Ring,QQ) := GrothendieckWittClass => (kk,a) -> (
     return diagonalClass(kk,(1,(-1)*a))
     );
 
-pfisterForm(Ring,Sequence) := GrothendieckWittClass => (kk,L) -> (
+PfisterForm(Ring,Sequence) := GrothendieckWittClass => (kk,L) -> (
     -- Get the length of the input sequence
     n := #L;
     if n == 0 then error "list is empty";
@@ -135,19 +135,19 @@ pfisterForm(Ring,Sequence) := GrothendieckWittClass => (kk,L) -> (
     return outputForm
    )
 
-pfisterForm(InexactFieldFamily,RingElement) := GrothendieckWittClass => (kk,a) -> (
+PfisterForm(InexactFieldFamily,RingElement) := GrothendieckWittClass => (kk,a) -> (
     return diagonalClass(kk,(1,(-1)*a))
     );
 
-pfisterForm(InexactFieldFamily,ZZ) := GrothendieckWittClass => (kk,a) -> (
+PfisterForm(InexactFieldFamily,ZZ) := GrothendieckWittClass => (kk,a) -> (
     return diagonalClass(kk,(1,(-1)*a))
     );
 
-pfisterForm(InexactFieldFamily,QQ) := GrothendieckWittClass => (kk,a) -> (
+PfisterForm(InexactFieldFamily,QQ) := GrothendieckWittClass => (kk,a) -> (
     return diagonalClass(kk,(1,(-1)*a))
     );
 
-pfisterForm(InexactFieldFamily,Sequence) := GrothendieckWittClass => (kk,L) -> (
+PfisterForm(InexactFieldFamily,Sequence) := GrothendieckWittClass => (kk,L) -> (
     -- Get the length of the input sequence
     n := #L;
     if n == 0 then error "list is empty";

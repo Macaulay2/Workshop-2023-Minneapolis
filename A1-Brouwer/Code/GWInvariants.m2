@@ -143,7 +143,7 @@ relevantPrimes (GrothendieckWittClass) := List => (beta) -> (
 
 -- Two Q forms over Q_p are isomorphic if they have same rank, same discriminant, and same Hasse-Witt invariant   
 
-hasseWittInvariant = method()
+HasseWittInvariant = method()
 
 -- epsilonHilbert computes the epsilon function for a diagonal quadratic form over Q_p
 -- Function requires the list of the diagonal elements of the quadratic form, to be integers
@@ -151,7 +151,7 @@ hasseWittInvariant = method()
 -- Input:  A list of the diagonal elements (f_i) for the quadratic form, assumed to be integers, and a prime p
 -- Output: The HasseWittInvariant function for the quadratic form (f_i) for Q_p
 
-hasseWittInvariant (List, ZZ) := ZZ => (L,p) -> (
+HasseWittInvariant (List, ZZ) := ZZ => (L,p) -> (
        a := 1;
        len := #L;
        
@@ -166,17 +166,17 @@ hasseWittInvariant (List, ZZ) := ZZ => (L,p) -> (
 	   );
        for i from 0 to len - 2 do (
        	   for j from i + 1 to len - 1 do (
-	       a = a * hilbertSymbol(f_i, f_j, p);
+	       a = a * HilbertSymbol(f_i, f_j, p);
 	       );
 	   );
        
        return a;
     );
 
-hasseWittInvariant(GrothendieckWittClass, ZZ) := ZZ => (beta,p) -> (
+HasseWittInvariant(GrothendieckWittClass, ZZ) := ZZ => (beta,p) -> (
     kk := baseField beta;
     if not (kk === QQ) then error "method is only implemented over the rationals";
     if not isPrime(p) then error "second argument must be a prime number";
-    return hasseWittInvariant(diagonalEntries(integralDiagonalRep(beta)),p)
+    return HasseWittInvariant(diagonalEntries(integralDiagonalRep(beta)),p)
     
     )
