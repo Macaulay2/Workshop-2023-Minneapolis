@@ -161,6 +161,12 @@ socleSummandsSemigroup(Ideal, ZZ) := o -> (I,n) -> (
     )
 
 
+burchIdeal = I ->(
+    R := ring I;
+    mm := ideal gens R;
+    (mm*I):(I:mm)
+    )
+
 isBurch = method()
 isBurch Ideal := I -> (
     R := ring I;
@@ -524,9 +530,9 @@ betti res(coker vars R, LengthLimit => 10)
 uninstallPackage "MonomialOrbits"
 installPackage "MonomialOrbits"
 
-peek loadedFiles
-p
+
 debug needsPackage "MonomialOrbits"
+viewHelp orbitRepresentatives
 code methods orbitRepresentatives
 S = ZZ/101[a..c]
 code methods toLis
@@ -539,13 +545,25 @@ use S
 I = trim ideal (x^2,x*y,y*z,z^2,z*u,u^2,u*v,v*w,w^2,
 x*z+a*z*w-u*w,z*w+x*u+(a-2)*u*w)
 betti res I
+
 elapsedTime socleSummandsSemigroup(I, 8)
 
 --$x^2,xy,yz,z^2,zu,u^2,uv,$ $vw,w^2$ and the two quadratic polynomials
 --$xz+\alpha zw-uw$  and $zw+xu+(\alpha-2)uw$. In this
 
 
+uninstallPackage "SocleSummands"
+debug installPackage "SocleSummands"
+
+k = ZZ/32003
+S = k[x,y,z,u,v,w]
+orbitRepresentatives(S, toList(3: 4)|toList(5:3))
+toList(3:4)
+uninstallPackage "MonomialOrbits"
+installPackage "MonomialOrbits"
 R = S/I
+sub(burchIdeal I, R)
+
 betti res (coker vars R, LengthLimit => 8, DegreeLimit => 4)
 
 
