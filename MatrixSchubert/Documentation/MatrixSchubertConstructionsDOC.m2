@@ -22,9 +22,6 @@ doc ///
 	    HREF("https://sites.math.washington.edu/~billey/classes/schubert.library/fulton.essential.set.pdf",
 		EM "Flags, Schubert polynomials, degeneracy loci, and determinantal formulas"),
 	    " , Duke Math J. 65 (1992): 381-420."},
-	    {"[Kle23] Patricia Klein, ",
-	    HREF("https://arxiv.org/abs/2008.01717", EM "Diagonal degenerations of matrix Schubert varieties"),
-	    " , to appear in Algebraic Combinatorics."},
             {"[KM05] Allen Knutson and Ezra Miller, ",
             HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
             " , Annals of Mathematics (2005): 1245-1318."},
@@ -94,7 +91,7 @@ doc ///
 	    Schubert determinantal Ideal is @TO schubDetIdeal@.
 	    The input is a permutation in the form of a list.
 	    This package contains functions for investigating the rank matrix,
-	    the empty boxes of the Rothe diagram, and the essential boxes of the Rothe diagram
+	    the Rothe diagram, and the essential cells of the Rothe diagram
 	    as defined by Fulton in [Ful92].
 	Example
 	    p = {2,1,6,3,5,4};
@@ -111,9 +108,9 @@ doc ///
 	    # ((trim I)_*)
 	Text
 	    This package also contains methods for investigating antidiagonal initial ideals
-	    of Schubert determinantal ideals and their associated Stanley-Reisner rings,
+	    of Schubert determinantal ideals and their associated Stanley-Reisner complexes,
 	    which are a kind of subword complex.
-	    Antidiagonal initial ideals and subword complexes were investigated in [KM04] and [KM05].
+	    Antidiagonal initial ideals and subword complexes were studied in [KM04] and [KM05].
 	Example
 	    antiDiagInit p
 	    subwordComplex p
@@ -171,7 +168,7 @@ doc ///
             }@
 	Text
 	    The general method for defining the ideal of an ASM variety is @TO schubDetIdeal@.
-	    The input is can be an alternating sign matrix or a partial alternating sign matrix,
+	    The input can be an alternating sign matrix or a partial alternating sign matrix,
 	    which always define the same ideal as some other ASM by results in [Wei17].
 	    This package contains functions for checking if a matrix is a partial ASM,
 	    extending a partial ASM to an ASM, and computing the rank matrix for an ASM.
@@ -181,7 +178,7 @@ doc ///
 	    A' = partialASMToASM A
 	Text
 	    This package contains functions for investigating the rank matrix,
-	    the empty boxes of the Rothe diagram, and the essential boxes of the Rothe diagram
+	    the Rothe diagram, and the essential cells of the Rothe diagram
 	    of a partial ASM as defined by Fulton in [Ful92] and Weigandt in [Wei17].
 	Example
 	    rotheDiagram A
@@ -216,8 +213,9 @@ doc ///
 	Text
 	    Finally, this package contains functions for investigating homological invariants of ASM ideals
 	    efficiently by computing the associated invariants for their antidiagonal initial ideals,
-	    which are known to be squarefree by [Wei17] and therefore the extremal Betti numbers
-	    (such as the regularity and projective dimension) coincide by [CV20].
+	    which are known to be squarefree by [Wei17]. Therefore the extremal Betti numbers
+	    (which encode regularity, depth, and projective dimension) of ASM ideals coincide 
+	    with those of their antidiagonal initical ideals by [CV20].
 	Example
 	    time schubReg A
 	    time regularity comodule I 
@@ -255,8 +253,8 @@ doc ///
     	Text
 	    By work of Knutson and Miller [KM05] and Weigandt [Wei17],
 	    the Fulton generators form a Grobner basis for an ASM ideal with respect to any antidiagonal term order.
-	    However, the Grobner bases for ASM ideals with respect to other term orders, especially diagonal ones, 
-	    remain largely mysterious, though their study was initiated for matrix Schuber varieties by Klein and Weigandt [KW21].
+	    However, the Grobner bases for ASM ideals with respect to other term orders, including diagonal ones, 
+	    remain largely mysterious.
         Text
 	    @UL {
 	    {"[CV20] Aldo Conca and Matteo Varbaro, ",
@@ -267,10 +265,13 @@ doc ///
 	    " , Advances in Mathematics 398 (2022): 108228."},
 	    {"[Kle23] Patricia Klein, ",
 	    HREF("https://arxiv.org/abs/2008.01717", EM "Diagonal degenerations of matrix Schubert varieties"),
-	    " , to appear in Algebraic Combinatorics."},	
+	    " , Algebraic Combinatorics 6 (2023) no. 4, 1073-1094."},	
             {"[KM05] Allen Knutson and Ezra Miller, ",
             HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
             " , Annals of Mathematics (2005): 1245-1318."},
+	    {"[Knu09] Allen Knutson, ",
+            HREF("https://arxiv.org/abs/0911.4941", EM "Frobenius splitting, point-counting, and degeneration"),
+            " , arxiv preprint 0911.4941."},
 	    {"[KW21] Patricia Klein and Anna Weigandt, ",
 	    HREF("https://arxiv.org/abs/2108.08370", EM "Bumpless pipe dreams encode Grobner geometry of Schubert polynomials"),
 	    " , arxiv preprint 2108.08370."},
@@ -280,7 +281,7 @@ doc ///
             }@
 	Text
 	    Given a permutation or a partial ASM, one may compute its antidiagonal initial ideal.
-	    By [KM05] and [Wei17], the Fulton generators form a Grobner basis for any ASM ideal with respect to
+	    By [KM05] and [Wei17] or [Knu09], the Fulton generators form a Grobner basis for any ASM ideal with respect to
 	    any antidiagonal term order.
         Example
 	    w = {2,1,4,3,6,5};
@@ -386,7 +387,7 @@ doc ///
 	    Moreover, this package contains functionality for checking whether
 	    a permutation avoids a set of patterns.
 	    For instance, @TO isCDG@ checkes whether a permutation is
-	    Conca-De Negri-Gorla (or CDG); @TO isVexillary@ checks whether a permutation
+	    CDG; @TO isVexillary@ checks whether a permutation
 	    is 2143-avoiding; and @TO isCartwrightSturmfels@ checks whether
 	    a permutation is Cartwright-Sturmfels.
 	Example
@@ -756,11 +757,11 @@ doc ///
     Headline
         Diagonal initial ideal of an ASM ideal with respect to revlex, ordering variables from NW corner 
     Usage
-    	diagRevLexInit(w)
-	diagRevLexInit(M)
+    	diagRevLexInit w
+	diagRevLexInit A
     Inputs
         w:List
-            or {\tt M} is a @TO Matrix@    
+            or {\tt A} is a @TO Matrix@    
     Outputs
     	:MonomialIdeal 
     Description
@@ -781,7 +782,7 @@ doc ///
     Headline
         to find the subword complex associated to w (i.e. SR-ideal of antiDiagInit)
     Usage
-        subwordComplex(w)
+        subwordComplex w
     Inputs
         w:List
     Outputs
@@ -991,7 +992,7 @@ doc ///
     Headline
         whether a matrix is the canonical rank table of some partial ASM
     Usage
-        isMinRankTable(T)
+        isMinRankTable T
     Inputs
         T:Matrix
     Outputs

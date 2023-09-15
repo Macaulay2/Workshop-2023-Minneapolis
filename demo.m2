@@ -23,7 +23,7 @@ viewHelp "MatrixSchubert"
 
 --Example from weekend worksheet
 v = {2,1,6,3,5,4}
-I = schubertDetIdeal v;
+I = schubDetIdeal v;
 netList I_*
 netList augmentedRotheDiagram v
 essentialBoxes v
