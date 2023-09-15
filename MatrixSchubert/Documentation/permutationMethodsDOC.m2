@@ -117,7 +117,7 @@ doc ///
 	 Given a permutation in 1-line notation returns the inverse of the permutation in 1-line notation.
 	Example
     	    w = {2,5,4,1,3}
-	    inverseOf(w)   
+	    inverseOf w
 ///
 
 doc ///
@@ -134,12 +134,12 @@ doc ///
     	Text
 	    Given an integer n, returns the permutation {n,n-1,...2,1}.
 	Example
-    	    longestPerm(7)
+    	    longestPerm 7
 ///
 
 doc ///
     Key
-	    (toOneLineNotation, List, ZZ)
+        (toOneLineNotation, List, ZZ)
         toOneLineNotation
     Headline
     	rewrites a transposition in 1-line notation
@@ -264,14 +264,23 @@ doc ///
         (isCartwrightSturmfels, List)
         isCartwrightSturmfels
     Headline
-        whether a permutation is CartwrightSturmfels
+        whether a permutation is Cartwright-Sturmfels
     Usage
-        isCartwrightSturmfels(perm)
+        isCartwrightSturmfels w
     Inputs
-        perm:List
+        w:List
     Description
         Text
-            This is filler text.
+            Given a permutation in 1-line notation, checks if the permutation is Cartwright-Sturmfels.  By the work [CDG22], the matrix
+	    Schubert variety X_w is Cartwright-Sturmfels if and only if w avoid all of the patterns 
+	    {12543, 13254, 13524, 13542, 21543, 125364, 125634, 215364, 215634, 315264, 315624, 315642.}
+	    
+        Example
+            w = {7,2,5,8,1,3,6,4}
+            isCartwrightSturmfels w
+
+            v = {1,6,9,2,4,7,3,5,8}
+            isCartwrightSturmfels v
 ///
 
 doc ///
