@@ -314,7 +314,7 @@ WittDecomp (Matrix) := (ZZ,Matrix) => (A) -> (
     
     -- If solution is found for a rank 2 form, then the form is purely hyperbolic
     if ((n == 2) and  (det(A) == 0))then (error "Matrix singular, run WittDecompGeneral instead" );
-    if (n == 2) then (return (1,matrix(k,{{}})));
+    if (n == 2) then (return (1,diagonalMatrix(k,{})));
 
     -- If found a solution, record it as row matrix z. Then find vector y such that < z,y > <>0.  
     -- z and y then generate a hyberbolic plane. 
@@ -423,12 +423,12 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
         WittIndexRR := min(posEntries,negEntries);
     	
 	-- Make an empty matrix and string to add output to
-	simplifiedFormRR := matrix(k,{{}});
+	simplifiedFormRR := diagonalMatrix(k,{});
 	outputStringRR := "";
 	
 	-- Add hyperbolic forms to output
 	for i in 1..(WittIndexRR) do(
-	    simplifiedFormRR = safeBlockSum(simplifiedFormRR,H);
+	    simplifiedFormRR = simplifiedFormRR ++ H;
             );
 	
     if WittIndexRR == 1 then(
@@ -444,10 +444,10 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
 	negEntries = negEntries - WittIndexRR;
 	
 	-- Build the anisotropic part
-	anisotropicPart := safeBlockSum(matrix(mutableIdentity(k,posEntries)),((-1)*matrix(mutableIdentity(k,negEntries))));
+	anisotropicPart := matrix(mutableIdentity(k,posEntries)) ++ ((-1)*matrix(mutableIdentity(k,negEntries)));
 	
 	-- Add on (safely) the anisotropic part
-	simplifiedFormRR = safeBlockSum(simplifiedFormRR,anisotropicPart);
+	simplifiedFormRR = simplifiedFormRR ++ anisotropicPart;
 	
 	-- Amend the string output with anisotropic info
 	if posEntries == 1 then(
@@ -509,7 +509,7 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
 	if legendreBoolean(sub(-1,k)) then(
 	    
 	    -- Set up output matrix and string
-	    simplifiedFormGFSquare := matrix(k,{{}});
+	    simplifiedFormGFSquare := diagonalMatrix(k,{});
 	    outputStringGFSquare := "";	    
 	    
 	    -- Number of hyperbolic forms
@@ -524,19 +524,19 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
 	    if WittIndexGFSquare > 1 then(
 		outputStringGFSquare = outputStringGFSquare | toString(WittIndexGFSquare) | "H";
 		for i in 1..(WittIndexGFSquare) do(
-		    simplifiedFormGFSquare = safeBlockSum(simplifiedFormGFSquare,H);
+		    simplifiedFormGFSquare = simplifiedFormGFSquare ++ H;
 		    );
 		);
 	    
 	    -- There will be at most one extra square or one extra nonsquare left over	
 	    if odd numSquares then(
 		outputStringGFSquare = outputStringGFSquare | " + <1>";		
-		simplifiedFormGFSquare = safeBlockSum(simplifiedFormGFSquare ,matrix(k,{{1}}));		
+		simplifiedFormGFSquare = simplifiedFormGFSquare ++ matrix(k,{{1}});		
 		);
 	    
 	    if odd numNonSquares then(
 		outputStringGFSquare = outputStringGFSquare | " + <" | toString(nonSquareRepresentative) | ">";		
-		simplifiedFormGFSquare = safeBlockSum(simplifiedFormGFSquare,((-1)*matrix(k,{{nonSquareRepresentative}})));
+		simplifiedFormGFSquare = simplifiedFormGFSquare ++ ((-1)*matrix(k,{{nonSquareRepresentative}}));
 		
 		);
 		
@@ -549,7 +549,7 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
 	   if not legendreBoolean(sub(-1,k)) then (
 	      	            
 	       -- Set up output matrix and string
-	       simplifiedFormGFNonSquare := matrix(k,{{}});
+	       simplifiedFormGFNonSquare := diagonalMatrix(k,{});
 	       outputStringGFNonSquare := "";
 	       
 	       
@@ -569,7 +569,7 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
 
 	       if WittIndexGFNonSquare > 1 then(
 		   for i in 1..(WittIndexGFNonSquare) do(
-		       simplifiedFormGFNonSquare = safeBlockSum(simplifiedFormGFNonSquare, H);
+		       simplifiedFormGFNonSquare = simplifiedFormGFNonSquare ++ H;
 		       
 		       );
 		   outputStringGFNonSquare = outputStringGFNonSquare | toString(WittIndexGFNonSquare) | "H";
@@ -578,19 +578,19 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
 	       
 	       -- Add any anisotropic part
            if numSquares == 1 then(
-           simplifiedFormGFNonSquare = safeBlockSum(simplifiedFormGFNonSquare, matrix(mutableIdentity(k,numSquares)));
+           simplifiedFormGFNonSquare = simplifiedFormGFNonSquare ++ matrix(mutableIdentity(k,numSquares));
 		   outputStringGFNonSquare = outputStringGFNonSquare | " + " | "<1>";
            );
 	       if numSquares > 1 then(
-		   simplifiedFormGFNonSquare = safeBlockSum(simplifiedFormGFNonSquare, matrix(mutableIdentity(k,numSquares)));
+		   simplifiedFormGFNonSquare = simplifiedFormGFNonSquare ++ matrix(mutableIdentity(k,numSquares));
 		   outputStringGFNonSquare = outputStringGFNonSquare | " + " | toString(numSquares) | "<1>";
 		   );
 		   if numNonSquares == 1 then(
-		   simplifiedFormGFNonSquare = safeBlockSum(simplifiedFormGFNonSquare, ((-1)*matrix(mutableIdentity(k,numNonSquares))));
+		   simplifiedFormGFNonSquare = simplifiedFormGFNonSquare ++ ((-1)*matrix(mutableIdentity(k,numNonSquares)));
 		   outputStringGFNonSquare = outputStringGFNonSquare | " + " |  "<-1>";
 		   );
 	       if numNonSquares > 1 then(
-		   simplifiedFormGFNonSquare = safeBlockSum(simplifiedFormGFNonSquare, ((-1)*matrix(mutableIdentity(k,numNonSquares))));
+		   simplifiedFormGFNonSquare = simplifiedFormGFNonSquare ++ ((-1)*matrix(mutableIdentity(k,numNonSquares)));
 		   outputStringGFNonSquare = outputStringGFNonSquare | " + " | toString(numNonSquares) | "<-1>";
 		   );
 	       
@@ -615,7 +615,7 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
     -- We're making the number field case a catch-all case now
 --    if member(QQ, k.baseRings) and (isField(k)) then(
 	-- Set up output form and matrix
-	simplifiedFormQQ := matrix(k,{{}});
+	simplifiedFormQQ := diagonalMatrix(k,{});
         outputStringQQ := "";
 	
 	-- Get number of confirmed hyperbolic forms and remainder from WittDecomp
@@ -629,7 +629,7 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
 	if numHypForms > 1 then(
 	    for i in 1..(numHypForms) do(
 		
-		simplifiedFormQQ = safeBlockSum(simplifiedFormQQ, H);
+		simplifiedFormQQ = simplifiedFormQQ ++ H;
 		outputStringQQ = outputStringQQ | toString(numHypForms) | "H + potentially anisotropic part";
 		
 		);
@@ -639,7 +639,7 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
 	    outputStringQQ = outputStringQQ | " potentially anisotropic part";
 	    
 	    );
-	 simplifiedFormQQ = safeBlockSum(simplifiedFormQQ, B);
+	 simplifiedFormQQ = simplifiedFormQQ ++ B;
 	 
 	 return (gwClass(simplifiedFormQQ),outputStringQQ)
 		

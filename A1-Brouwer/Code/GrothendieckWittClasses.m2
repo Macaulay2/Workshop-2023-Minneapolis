@@ -71,12 +71,12 @@ gwAdd(GrothendieckWittClass, GrothendieckWittClass) := GrothendieckWittClass => 
     if instance(Kb, GaloisField) and instance(Kg, GaloisField) then (
 	-- Returns an error if the underlying fields of the two classes beta and gamma are different
 	if not Kb.order == Kg.order  then error "Error: these classes have different underlying fields";
-	return gwClass(safeBlockSum(beta.matrix, substitute(gamma.matrix,Kb)))
+	return gwClass(beta.matrix ++ substitute(gamma.matrix,Kb))
 	);
     
     -- remaining cases
     if not Kb === Kg then error "Error: these classes have different underlying fields";
-    	return gwClass(safeBlockSum(beta.matrix, gamma.matrix))
+    	return gwClass(beta.matrix ++ gamma.matrix)
     )
 
 -- Input: Two Grothendieck-Witt classes beta and gamma

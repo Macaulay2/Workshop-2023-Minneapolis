@@ -75,9 +75,9 @@ hyperbolicForm(Ring,ZZ) := GrothendieckWittClass => (kk,n) -> (
 	if odd n then error "inputted rank is odd";
 	H := matrix(kk,{{1,0},{0,-1}});
     	k := sub(n/2,ZZ);
-    	outputMatrix := matrix(kk,{{}});
+    	outputMatrix := diagonalMatrix(kk,{});
     	for i from 0 to k - 1 do(
-	    outputMatrix = safeBlockSum(outputMatrix, H);
+	    outputMatrix = outputMatrix ++ H;
 	    );
         return gwClass(outputMatrix)
     )
@@ -91,9 +91,9 @@ hyperbolicForm(InexactFieldFamily,ZZ) := GrothendieckWittClass => (kk,n) -> (
 	if odd n then error "inputted rank is odd";
 	H := matrix(kk,{{1,0},{0,-1}});
     	k := sub(n/2,ZZ);
-    	outputMatrix := matrix(kk,{{}});
+    	outputMatrix := diagonalMatrix(kk,{});
     	for i from 0 to k - 1 do(
-	    outputMatrix = safeBlockSum(outputMatrix, H);
+	    outputMatrix = outputMatrix ++ H;
 	    );
         return gwClass(outputMatrix)
     )
