@@ -11,14 +11,43 @@ GrothendieckWittClass.synonym = "Grothendieck Witt Class"
 
 gwClass = method()
 gwClass (Matrix) := GrothendieckWittClass => M -> (
-  new GrothendieckWittClass from {
-      symbol matrix => M,
-      symbol cache => new CacheTable
-      }
-  )
+    if (givesGWclass(M)) then (
+        new GrothendieckWittClass from {
+            symbol matrix => M,
+            symbol cache => new CacheTable
+            }
+        )
+    else (
+        error "gwClass called on a matrix that does not represent a nondegenerate quadratic form over a field";
+        )
+    )
 
 -- This allows us to extract the matrix from a class
 matrix GrothendieckWittClass := Matrix => beta -> beta.matrix
+
+-- Check whether a matrix gives a GrothendieckWittClass
+givesGWclass = method()
+givesGWclass Matrix := Boolean => M -> (
+    
+    -- Returns false if a matrix isn't symmetric
+    --	  Note that this will also return false if a matrix isn't square,
+    --	      so we don't need another check for that.
+    if not isSquareAndSymmetric(M) then (
+	return false;
+	);
+    
+    -- Returns false if the matrix represents a degenerate quadratic form
+    if isDegenerate(M) then (
+	return false;
+        );
+    
+    -- Returns false if the matrix isn't defined over a field
+    if not isField ring M then (
+	return false;
+	);
+
+    true
+    );
 
 -- Check if a constructed class is well-defined
 isWellDefined GrothendieckWittClass := Boolean => beta -> (

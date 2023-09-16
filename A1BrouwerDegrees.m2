@@ -262,13 +262,11 @@ A = gwAdd(beta, gamma);
 B = gwMultiply(beta, gamma);
 assert(A.matrix === matrix(QQ, {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 2}, {0, 0, 2, 5}}));
 assert(B.matrix === matrix(QQ, {{1, 2, 0, 0}, {2, 5, 0, 0}, {0, 0, 1, 2}, {0, 0, 2, 5}}));
----non well-defined GW-classes
+--matrices that do not give GW classes
 M'=matrix(ZZ, {{1, 0}, {0, 1}});
 N'=matrix(QQ, {{1, 1}, {1, 1}});
-theta=gwClass(M');
-sigma=gwClass(N');
-assert(isWellDefined(theta) === false);
-assert(isWellDefined(sigma) === false);
+assert(givesGWclass(M') === false);
+assert(givesGWclass(N') === false);
 ///
 
 
@@ -438,12 +436,12 @@ assert((WittDecomp(congruenceDiagonalize(P*A*transpose(P))))_0 == 1);
 -- Test for gwClass
 -- Test 21
 TEST ///
-M = matrix(ZZ,{{1,0,0},{0,1,0},{0,0,1}});
+--M = matrix(ZZ,{{1,0,0},{0,1,0},{0,0,1}});
 M1 = matrix(QQ,{{1/1,0,0},{0,1,0},{0,0,1}});
 M2 = matrix(QQ,{{1/1,24/10,0},{24/10,-5,0},{0,0,69}});
 M3 = matrix(GF(7),{{1,0,0},{0,2,0},{0,0,-3}});
 
-assert(class(gwClass(M)) === GrothendieckWittClass);
+--assert(class(gwClass(M)) === GrothendieckWittClass);
 assert(class(gwClass(M1)) === GrothendieckWittClass);
 assert(class(gwClass(M2)) === GrothendieckWittClass);
 assert(class(gwClass(M3)) === GrothendieckWittClass);

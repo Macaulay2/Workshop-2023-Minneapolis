@@ -39,6 +39,11 @@ isDegenerate (Matrix) := Boolean => M ->(
     det(M) == 0
     )
 
+isNondegenerate = method()
+isNondegenerate (Matrix) := Boolean => M ->(
+    not isDegenerate(M)
+    )
+
 -- Input: A matrix
 -- Output: True if the matrix is upper-left triangular, meaning that all the entries below the main antidiagonal are zero; false otherwise
 
