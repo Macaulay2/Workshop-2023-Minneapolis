@@ -47,7 +47,7 @@ givesGWclass Matrix := Boolean => M -> (
 	);
 
     true
-    );
+    )
 
 -- Check if a constructed class is well-defined
 isWellDefined GrothendieckWittClass := Boolean => beta -> (

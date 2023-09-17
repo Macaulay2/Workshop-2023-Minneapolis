@@ -408,16 +408,8 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
     
     -- If the field is R, look at the sign of elements along the diagonal
     if (k === RR or instance(k,RealField)) then(
-        posEntries := 0; --for loop counts the number of positive diagonal entries of diagA
-        negEntries := 0; --for loop counts the number of negative diagonal entries
-	for i from 0 to (n-1) do(
-            if A_(i,i)>0 then(
-                posEntries=posEntries+1;
-            	);
-            if A_(i,i)<0 then(
-                negEntries=negEntries+1;
-            	);
-            );
+        posEntries := numPosDiagEntries(A);
+        negEntries := numNegDiagEntries(A);
             
 	-- Number of hyperbolic forms is the number of positive and negative entries
         WittIndexRR := min(posEntries,negEntries);
@@ -431,9 +423,9 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
 	    simplifiedFormRR = simplifiedFormRR ++ H;
             );
 	
-    if WittIndexRR == 1 then(
-        outputStringRR = outputStringRR | "H";
-    );
+        if WittIndexRR == 1 then(
+            outputStringRR = outputStringRR | "H";
+            );
 
 	if WittIndexRR > 1 then(
 	    outputStringRR = outputStringRR | toString(WittIndexRR) | "H";
