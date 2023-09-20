@@ -17,23 +17,23 @@ doc ///
             @UL {
 	    {"[CV20] Aldo Conca and Matteo Varbaro, ",
 	    HREF("https://arxiv.org/abs/1805.11923", EM "Square-free Grobner degenerations"),
-	    " , Inventiones mathematicae, 221(3), pp.713-730."},
+	    ", Inventiones mathematicae, 221(3), pp.713-730."},
 	    {"[Ful92] William Fulton, ",
 	    HREF("https://sites.math.washington.edu/~billey/classes/schubert.library/fulton.essential.set.pdf",
 		EM "Flags, Schubert polynomials, degeneracy loci, and determinantal formulas"),
-	    " , Duke Math J. 65 (1992): 381-420."},
+	    ", Duke Math J. 65 (1992): 381-420."},
             {"[KM05] Allen Knutson and Ezra Miller, ",
             HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
-            " , Annals of Mathematics (2005): 1245-1318."},
+            ", Annals of Mathematics (2005): 1245-1318."},
 	    {"[KW21] Patricia Klein and Anna Weigandt, ",
 	    HREF("https://arxiv.org/abs/2108.08370", EM "Bumpless pipe dreams encode Grobner geometry of Schubert polynomials"),
-	    " , arxiv preprint 2108.08370."},
+	    ", arxiv preprint 2108.08370."},
             {"[PSW21] Oliver Pechenik, David Speyer, and Anna Weigandt, ",
             HREF("https://arxiv.org/abs/2111.10681", EM "Castelnuovo-Mumford regularity of matrix Schubert varieties"),
-            " , arxiv preprint 2111.10681."},
+            ", arxiv preprint 2111.10681."},
             {"[Wei17] Anna Weigandt, ",
             HREF("https://arxiv.org/abs/1708.07236", EM "Prism tableaux for alternating sign matrix varieties"),
-            " , arXiv preprint 1708.07236."}
+            ", arXiv preprint 1708.07236."}
             }@  
         Text
             @SUBSECTION "Contributors"@
