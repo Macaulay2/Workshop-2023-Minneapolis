@@ -10,7 +10,7 @@ doc ///
         w:List
     Description
         Text
-            Given a list of length n, checks if the entries of the permutation are the integers from 1 to n.
+            Given a list of length $n$, checks if the entries of the permutation are the integers from 1 to $n$.
         Example
             w = {5,3,4,6,1,2}
             isPerm(w)
@@ -31,7 +31,7 @@ doc ///
         w:List
     Description
         Text
-            Given a permutation in 1-line notation, produces the permutation matrix with 1's in location (i,w_i).
+            Given a permutation in 1-line notation, produces the permutation matrix with 1's in location $(i,w_i)$.
         Example
             w = {7,2,5,8,1,3,6,4}
             permToMatrix w
@@ -52,7 +52,7 @@ doc ///
         w:List
     Description
         Text
-            Given a non-identity permutation in 1-line notation, finds the location of its last descent, i.e., the greatest i so that w_(i+1)<w_i
+            Given a non-identity permutation in 1-line notation, finds the location of its last descent, i.e., the greatest $i$ so that $w_(i+1)<w_i$.
         Example
             w = {7,2,5,8,1,3,6,4}
             lastDescent w
@@ -73,7 +73,7 @@ doc ///
         w:List
     Description
         Text
-            Given a non-identity permutation in 1-line notation, finds the location of its first descent, i.e., the least i so that w_(i+1)<w_i
+            Given a non-identity permutation in 1-line notation, finds the location of its first descent, i.e., the least $i$ so that $w_(i+1)<w_i$.
         Example
             w = {7,2,5,8,1,3,6,4}
             lastDescent(w)
@@ -132,7 +132,7 @@ doc ///
     	n:ZZ
     Description
     	Text
-	    Given an integer n, returns the permutation {n,n-1,...2,1}.
+	    Given an integer $n$, returns the permutation $\{n,n-1,...2,1\}$.
 	Example
     	    longestPerm 7
 ///
@@ -172,8 +172,8 @@ doc ///
         v:List
     Description
         Text
-            Computes the composition of two permutations, u and v, as u*v.
-            Note that the permutations must be written as a list in 1-line notation and must both be permutations of (the same) n letters.
+            Computes the composition of two permutations, $u$ and $v$, as $u*v$.
+            Note that the permutations must be written as a list in 1-line notation and must both be permutations of (the same) $n$ letters.
         Example
             u = {2,3,4,1}
             v = {4,3,2,1}
@@ -194,7 +194,7 @@ doc ///
         (isPatternAvoiding, List, List)
         isPatternAvoiding
     Headline
-        whether a permutation avoids certain pattersn, e.g. 2143-avoiding or 312- and 231-avoiding
+        whether a permutation avoids certain pattersn, e.g. $2143$-avoiding or $312$- and $231$-avoiding
     Usage
         isPatternAvoiding(w, pattern)
     Inputs
@@ -202,9 +202,9 @@ doc ///
         pattern:List
     Description
         Text
-            Given a permutation, checks if the permutation is pattern-avoiding, e.g. 2143-avoiding or 1432-avoiding.
-            For example, a permutation w is 2143-avoiding if there does not exist indices i < j < k < l
-            such that w_j < w_i < w_l < w_k.
+            Given a permutation, checks if the permutation is pattern-avoiding, e.g. $2143$-avoiding or $1432$-avoiding.
+            For example, a permutation $w$ is $2143$-avoiding if there does not exist indices $i < j < k < l$
+            such that $w_j < w_i < w_l < w_k$.
         Example
             w = {7,2,5,8,1,3,6,4}
             pattern2143 = {2,1,4,3}
@@ -228,9 +228,9 @@ doc ///
         w:List
     Description
         Text
-            Given a permutation in 1-line notation, checks if the permutation is vexillary, i.e. 2143-avoiding.
-            A permutation w is 2143-avoiding if there do not exist indices i < j < k < l
-            such that w_j < w_i < w_l < w_k.
+            Given a permutation in 1-line notation, checks if the permutation is vexillary, i.e. $2143$-avoiding.
+            A permutation $w$ is $2143$-avoiding if there do not exist indices $i < j < k < l$
+            such that $w_j < w_i < w_l < w_k$.
         Example
             w = {7,2,5,8,1,3,6,4}
             isVexillary w
@@ -271,9 +271,9 @@ doc ///
         w:List
     Description
         Text
-            Given a permutation in 1-line notation, checks if the permutation is Cartwright-Sturmfels.  By the work [CDG22], the matrix
-	    Schubert variety X_w is Cartwright-Sturmfels if and only if w avoid all of the patterns 
-	    {12543, 13254, 13524, 13542, 21543, 125364, 125634, 215364, 215634, 315264, 315624, 315642.}
+            Given a permutation in 1-line notation, checks if the permutation is Cartwright-Sturmfels.  By [CDG22], the matrix
+	    Schubert variety $X_w$ is Cartwright-Sturmfels if and only if $w$ avoid all of the patterns 
+	    $\{12543, 13254, 13524, 13542, 21543, 125364, 125634, 215364, 215634, 315264, 315624, 315642\}$.
 	    
 	     @UL {
             {"[CDG22] A. Conca, E. De Negri, and E. Gorla, ",
@@ -301,7 +301,23 @@ doc ///
         perm:List
     Description
         Text
-            This is filler text.
+            Given a permutation in 1-line notation, checks if the permutation is CDG.  We say that a permutation $w$ is CDG 
+	    if a certain modification (see [Kle23] for precise description) of the Fulton generators of the Schubert determinantal
+	    ideal $I_w$ form a diagonal Grobner basis.  By [Kle23], $w$ CDG if and only if $w$ avoid all of the patterns 
+	    $\{13254, 21543, 214635, 215364, 215634, 241635, 315264, 4261735\}$.
+	    
+	     @UL {
+            {"[Kle23] P. Klein, ",
+            HREF("https://arxiv.org/abs/2008.01717", EM "Diagonal degenerations of matrix Schubert varieties"),
+            ", Algebr. Comb. 6 (2023), no. 4, 1073-1094."}
+            }@
+	    
+        Example
+            w = {7,2,5,8,1,3,6,4}
+            isCDG w
+
+            v = {1,6,9,2,4,7,3,5,8}
+            isCDG v
 ///
 
 doc ///
