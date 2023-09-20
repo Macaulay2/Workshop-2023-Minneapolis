@@ -83,9 +83,9 @@ export{
     "composePerms",    	       	    --documented ++
     "isPatternAvoiding",    	    --documented ++
     "isVexillary",    	      	    --documented ++
-    "avoidsAllPatterns",	    -- CHECK DOC
-    "isCartwrightSturmfels",	    -- CHECK DOC
-    "isCDG",	    	    	    -- CHECK DOC
+    "avoidsAllPatterns",	    --documented ++
+    "isCartwrightSturmfels",	    --documented ++
+    "isCDG",	    	    	    --documented ++
     "rajCode",	      	      	    --documented ++
     "rajIndex",        	       	    --documented ++
     "grothendieckPoly",	       	    -- CHECK DOC

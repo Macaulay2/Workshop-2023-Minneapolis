@@ -139,6 +139,21 @@ doc ///
 
 doc ///
     Key
+	(getOneReducedWord, List)
+        getOneReducedWord
+    Headline
+        given a permutation in 1-line notation, finds one reduced word
+    Usage
+        getOneReducedWord w
+    Inputs
+    	w:List
+    Description
+    	Text
+	    This is a stub.
+///
+
+doc ///
+    Key
         (toOneLineNotation, List, ZZ)
         toOneLineNotation
     Headline
@@ -412,3 +427,22 @@ doc ///
             This is a stub
 ///
 
+doc ///
+    Key 
+        pipeDreams
+    Headline
+        tmp 
+    Description
+        Text
+            This is a stub
+///
+
+doc ///
+    Key 
+        pipeDreamsNonReduced
+    Headline
+        tmp 
+    Description
+        Text
+            This is a stub
+///
