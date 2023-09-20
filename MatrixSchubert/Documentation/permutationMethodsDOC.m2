@@ -275,6 +275,12 @@ doc ///
 	    Schubert variety X_w is Cartwright-Sturmfels if and only if w avoid all of the patterns 
 	    {12543, 13254, 13524, 13542, 21543, 125364, 125634, 215364, 215634, 315264, 315624, 315642.}
 	    
+	     @UL {
+            {"[CDG22] A. Conca, E. De Negri, and E. Gorla, ",
+            HREF("https://arxiv.org/abs/2108.10115", EM "Radical generic initial ideals"),
+            ", Vietnam J. Math. 50 (2022), no. 3, 807-827."}
+            }@
+	    
         Example
             w = {7,2,5,8,1,3,6,4}
             isCartwrightSturmfels w
