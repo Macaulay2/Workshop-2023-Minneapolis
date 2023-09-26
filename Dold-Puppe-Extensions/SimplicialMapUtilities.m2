@@ -117,21 +117,23 @@ faceMapi = (n,i,C) -> (
     -- Instead of first passing to matrices
     -- and then saving the creation of the matrix option till the very end
     -- Are we running till maxK? or until maxK+1?
+    local maxK;
+    local preMat;
     if i==0 then (
-	maxK := min(length C,n);
+	maxK = min(length C,n);
 	promoteFaceMapZerotoComplex(faceMapZero(n,maxK),C)
 	)
     else if i==n then (
-	maxK := min(length C,n-1);
-	preMat := fold(directSum,for k from 0 to maxK list (
+	maxK = min(length C,n-1);
+	preMat = fold(directSum,for k from 0 to maxK list (
 	    promoteMaptoComplex(faceMapnk(n,k),k,C)
     	    -- Notice that we only pass in k at most n-1, so the check for k==n in faceMapi isn't needed
 	    )); 
 	preMat | map(target preMat,C_n,0) 
 	)
     else (
-	maxK := min(length C,n-1);
-    	preMat := fold(directSum,for k from 0 to maxK list (
+	maxK = min(length C,n-1);
+    	preMat = fold(directSum,for k from 0 to maxK list (
 	     promoteMaptoComplex(faceMapik(n,k,i),k,C)
 	    )); 
 	preMat | map(target preMat,C_n,0) 

@@ -268,8 +268,9 @@ map(SimplicialModule, SimplicialModule, HashTable) := SimplicialModuleMap => opt
              error "expected integer degree";
     (lo,hi) := (0,topDegree tar);
     maps' := hashTable for k in keys maps list (
+    	local f;
         if instance(k, Sequence) then (
-        f := maps#k;
+        f = maps#k;
         -- note: we use != instead of =!= in the next 2 tests,
         -- since we want to ignore any term order differences
 	--print(k);
@@ -283,7 +284,7 @@ map(SimplicialModule, SimplicialModule, HashTable) := SimplicialModuleMap => opt
         if first k < lo or first k > hi then continue else (k,f)
 	)
        else (
-	    f := maps#k;
+	    f = maps#k;
         -- note: we use != instead of =!= in the next 2 tests,
         -- since we want to ignore any term order differences
 	--print(k);
@@ -381,7 +382,8 @@ SimplicialModule.directSum = args -> (
 	D.cache.components = toList args;
 	return D;
 	);
-    D := if allComplexes then  simplicialModule(directSum for i in args list i.complex,faceHashM,S.topDegree)
+    local D;
+    D = if allComplexes then  simplicialModule(directSum for i in args list i.complex,faceHashM,S.topDegree)
     else simplicialModule(LM,faceHashM,S.topDegree);
     D.cache.components = toList args;
     D    
@@ -749,6 +751,7 @@ isCommutative SimplicialModuleMap := Boolean => f -> (
 isCommutativeCached = method()
 isCommutativeCached ComplexMap := Boolean => f -> f.cache.?isCommutative and f.cache.isCommutative
 
+-*
 isComplexMorphism = method(TypicalValue => Boolean)
 isComplexMorphism ComplexMap := (f) -> (
     if debugLevel > 0 and degree f =!= 0 then (
@@ -757,7 +760,7 @@ isComplexMorphism ComplexMap := (f) -> (
         );
     degree f === 0 and isCommutative f
     )
-
+*-
 --------------------------------------------------------------------
 -- tensor products of simplicial maps ------------------------------
 --------------------------------------------------------------------
@@ -826,6 +829,8 @@ SimplicialModuleMap ** Complex := SimplicialModuleMap => (f,C) -> (f**id_C)
 
 
 kernel SimplicialModuleMap := SimplicialModule => opts -> f -> (
+    -- Initialize output as a local
+    local result;
     -- f : B --> C
     B := source f;
     modules := hashTable for i from 0 to B.topDegree list i => kernel f_i;
@@ -841,15 +846,17 @@ kernel SimplicialModuleMap := SimplicialModule => opts -> f -> (
 	    b2 := map(target b1,source inducedMaps#(i_0+1),inducedMaps#(i_0+1));
 	    (b1) // b2
 	    );
-	result :=  simplicialModule(modules,facemaps,degenmaps,B.topDegree);
+	result =  simplicialModule(modules,facemaps,degenmaps,B.topDegree);
 	result.cache.kernel = f;
 	return result;
 	);
-    result := simplicialModule(modules,facemaps,B.topDegree);
+    result = simplicialModule(modules,facemaps,B.topDegree);
     result.cache.kernel = f;
     result
     )
 cokernel SimplicialModuleMap := SimplicialModule => f -> (
+    -- Initialize output as local
+    local result;
     -- f : B --> C
     C := target f;
     deg := degree f;
@@ -861,17 +868,18 @@ cokernel SimplicialModuleMap := SimplicialModule => f -> (
 	degenmaps = hashTable for i in keys (C.ss.map) list i => (
 	    map(modules#(i_0+1), modules#(i_0), matrix C.ss_i)
                 );
-	    result :=  simplicialModule(modules,facemaps,degenmaps,C.topDegree);
+	    result =  simplicialModule(modules,facemaps,degenmaps,C.topDegree);
 	    result.cache.cokernel = f;
 	    return result;
 	    );
-    result := simplicialModule(modules,facemaps,C.topDegree);
+    result = simplicialModule(modules,facemaps,C.topDegree);
     result.cache.cokernel = f;
     result
     )
 
 image SimplicialModuleMap := SimplicialModule => f -> (
     -- f : B --> C
+    local result;
     B := source f;
     C := target f;
     deg := degree f;
@@ -888,17 +896,18 @@ image SimplicialModuleMap := SimplicialModule => f -> (
 	    b2 := map(target b1,source inducedMaps#(i_0+1),inducedMaps#(i_0+1));
 	    (b1) // b2
 	    );
-	result :=  simplicialModule(modules,facemaps,degenmaps,C.topDegree);
+	result =  simplicialModule(modules,facemaps,degenmaps,C.topDegree);
 	result.cache.image = f;
 	return result;
 	);
-    result := simplicialModule(modules,facemaps,C.topDegree);
+    result = simplicialModule(modules,facemaps,C.topDegree);
     result.cache.image = f;
     result
     )
 
 coimage SimplicialModuleMap := SimplicialModule => f -> (
-    -- f : B --> C
+    -- f : B: --> C
+    local result;
     B := source f;
     modules = hashTable for i from 0 to B.topDegree list i => coimage f_(i);
     facemaps = hashTable for i in keys (B.dd.map) list i => (
@@ -908,11 +917,11 @@ coimage SimplicialModuleMap := SimplicialModule => f -> (
 	degenmaps = hashTable for i in keys (B.ss.map) list i => (
 	    map(modules#(i_0+1), modules#(i_0), matrix B.ss_i)
                 );
-	    result :=  simplicialModule(modules,facemaps,degenmaps,B.topDegree);
+	    result =  simplicialModule(modules,facemaps,degenmaps,B.topDegree);
 	    result.cache.coimage = f;
 	    return result;
 	    );
-    result := simplicialModule(modules,facemaps,B.topDegree);
+    result = simplicialModule(modules,facemaps,B.topDegree);
     result.cache.coimage = f;
     result
     )
