@@ -9,7 +9,7 @@ doc ///
     Key
         MatrixSchubert
     Headline
-        a package for investigating matrix Schubert varieties and ASM varieties
+        matrix Schubert varieties and ASM varieties
     Description
         Text
             This package provides functions for constructing and investigating matrix Schubert varieties. Many of the functions in this package can take as input either a permutation matrix in 1-line notation, or an alternating sign matrix.
