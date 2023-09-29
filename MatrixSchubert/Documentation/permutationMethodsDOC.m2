@@ -209,7 +209,7 @@ doc ///
         (isPatternAvoiding, List, List)
         isPatternAvoiding
     Headline
-        whether a permutation avoids certain pattersn, e.g. $2143$-avoiding or $312$- and $231$-avoiding
+        whether a permutation avoids certain patterns, e.g. $2143$-avoiding or $312$- and $231$-avoiding
     Usage
         isPatternAvoiding(w, pattern)
     Inputs

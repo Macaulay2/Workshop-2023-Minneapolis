@@ -9,7 +9,7 @@ doc ///
     Key
         MatrixSchubert
     Headline
-        a package for investigating matrix Schubert varieties and ASM varieties
+        matrix Schubert varieties and ASM varieties
     Description
         Text
             This package provides functions for constructing and investigating matrix Schubert varieties. Many of the functions in this package can take as input either a permutation matrix in 1-line notation, or an alternating sign matrix.
@@ -383,7 +383,7 @@ doc ///
 	Text
 	    Moreover, this package contains functionality for checking whether
 	    a permutation avoids a set of patterns.
-	    For instance, @TO isCDG@ checkes whether a permutation is
+	    For instance, @TO isCDG@ checks whether a permutation is
 	    CDG; @TO isVexillary@ checks whether a permutation
 	    is 2143-avoiding; and @TO isCartwrightSturmfels@ checks whether
 	    a permutation is Cartwright-Sturmfels.
@@ -659,7 +659,7 @@ doc ///
     	:Ideal
     Description
         Text
-            Given a permutation in 1-line notation or, more generally, a partial alternating sign matrix, outputs the associated alternating sign matrix ideal (which is called a Schubert determinantal ideal in the case of a permutation).  (The convention throughout this package is that the permuation matrix of a pemutation w has 1's in positions (i,w(i)).)
+            Given a permutation in 1-line notation or, more generally, a partial alternating sign matrix, outputs the associated alternating sign matrix ideal (which is called a Schubert determinantal ideal in the case of a permutation).  (The convention throughout this package is that the permutation matrix of a pemutation w has 1's in positions (i,w(i)).)
 	    
 	    This function computes over the coefficient field of rational numbers unless an alternative is specified.
         Example

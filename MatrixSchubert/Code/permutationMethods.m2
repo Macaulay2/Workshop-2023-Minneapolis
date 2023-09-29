@@ -55,9 +55,9 @@ lastDescent List := ZZ => (w) -> (
     if isIdentity(w) then error ("Expecting a non-identity permutation.");
     n := #w;
    
-    ans := -1;
-    scan (reverse (0..n-2), i -> if w_i > w_(i+1) then (ans = i+1; break));
-    ans
+    result := -1;
+    scan (reverse (0..n-2), i -> if w_i > w_(i+1) then (result = i+1; break));
+    result
 )
 
 -----------------------------------------------------------
@@ -73,9 +73,9 @@ firstDescent List := ZZ => (w) -> (
     if isIdentity(w) then error ("Expecting a non-identity permutation.");
     n := #w;
    
-    ans := -1;
-    scan ((0..n-2), i-> if w_i > w_(i+1) then (ans = i+1; break));
-    ans
+    result := -1;
+    scan ((0..n-2), i-> if w_i > w_(i+1) then (result = i+1; break));
+    result
 )
 
 -----------------------------------------------------------
@@ -470,9 +470,9 @@ pipeDreams (List) := List => (w)->(
         )
 
 netPD = method()
-netPD (List) := List => (D)->(ans := concatenate(D_0);
-    scan(#D-1, i->(ans = ans || concatenate(D_(i+1))));
-    ans)
+netPD (List) := List => (D)->(result := concatenate(D_0);
+    scan(#D-1, i->(result = result || concatenate(D_(i+1))));
+    result)
 
 
 permsAfterTopRowNonReduced = (w, ro) -> (
