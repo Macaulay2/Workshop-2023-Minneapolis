@@ -391,30 +391,58 @@ doc ///
     Key 
         grothendieckPoly
     Headline
-        tmp 
+        computes the Grothendieck polynomial of a permutation 
+    Usage
+        grothendieckPoly w
+    Inputs
+        w:List
     Description
         Text
-            This is a stub
+            Given a permutation in 1-line notation, finds its Grothenieck polynomial.  Two algorithms are impliemented: DividedDifference (which is the default) and PipeDream.
+	    
+	Example
+	    w = {2,1,4,3}
+	    grothendieckPoly w
+	    grothendieckPoly (w,Algorithm=>"PipeDream")
+	    
 ///
 
 doc ///
     Key 
         schubertPoly
     Headline
-        tmp 
+        computes the (singe) Schubert polynomial of a permutation 
+    Usage
+        schubertPoly w
+    Inputs
+        w:List
     Description
         Text
-            This is a stub
+            Given a permutation in 1-line notation, finds its (single) Schubert polynomial.  Two algorithms are impliemented: DividedDifference (which is the default) and Transition
+	    (which makes use of the transition equations for Schubert polynomials).
+	 Example 
+	    w = {2,1,5,4,3}
+	    schubertPoly w
+	    schubertPoly (w,Algorithm=>"Transition")
 ///
 
 doc ///
     Key 
         doubleSchubertPoly
     Headline
-        tmp 
+        computes the double Schubert polynomial of a permutation 
+    Usage
+        doubleSchubertPoly w
+    Inputs
+        w:List
     Description
         Text
-            This is a stub
+            Given a permutation in 1-line notation, finds its double Schubert polynomial.  Two algorithms are impliemented: DividedDifference (which is the default) and Transition
+	    (which makes use of the transition equations for double Schubert polynomials).
+	 Example 
+	    w = {2,1,5,4,3}
+	    doubleSchubertPoly w
+	    doubleSchubertPoly (w,Algorithm=>"Transition")
 ///
 
 doc ///

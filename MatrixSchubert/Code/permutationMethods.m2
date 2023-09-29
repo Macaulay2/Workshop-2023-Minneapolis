@@ -327,7 +327,7 @@ rajIndex List := ZZ => (w) -> (
 ----------------------------
 grothendieckPoly = method(Options=>{Algorithm=>"DividedDifference"})
 grothendieckPoly(List) := opts -> w -> (
-    if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
+    if not(isPerm w) then error("The input must be a permutation in one-line notation.");
     if opts.Algorithm == "Degree" then (
         I := schubDetIdeal w;
         R := ring I;
@@ -359,7 +359,7 @@ schubertPolyHelper = method(Options=>{Double=>false})
 schubertPolyHelper(List, PolynomialRing) := opts -> (w, Q) -> (
     isDouble := opts.Double;
     n := #w;
-    if not (isPerm w) then error ("The input must be a permutation matrix.");
+    if not (isPerm w) then error ("The input must be a permutation in one-line notation.");
     if (isIdentity w) then return 1;
     r := lastDescent(w) - 1;
     s := -1;
@@ -406,7 +406,7 @@ dividedDifference (RingElement, ZZ) := opts-> (f,i) -> (
         (f-sf) // (Q_(i-1)-Q_i)
     else if opts.Operator == "Grothendieck" then
         dividedDifference((1-Q_i)*f,i)
-    else error("Invalid option for Operator.")
+    else error("Invalid option for operator.")
     )
 
 
@@ -424,7 +424,7 @@ polyByDividedDifference (List, PolynomialRing) := opts -> (w, Q) -> (
             polys := apply(reverse redword, i-> (curpoly=dividedDifference(curpoly,i); curpoly))
 	else if opts.PolyType == "Grothendieck" then
 	    polys = apply(reverse redword, i-> (curpoly=dividedDifference(curpoly,i, Operator=>"Grothendieck"); curpoly))
-	else error ("Invalid option for PolyType.");
+	else error ("Invalid option for this polynomial type.");
 	polys#(#polys-1)
     )
     )
