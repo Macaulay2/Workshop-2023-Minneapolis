@@ -522,7 +522,23 @@ weight = (D, R) -> (
 	R_i^ (sum(apply(D#i, t-> if t=="+" then 1 else 0)))
 	))
     
-    ) 
+    )
+
+ASMToMonotoneTriangle = method()
+ASMToMonotoneTriangle (Matrix) := List => (A) -> (
+    -- adding a zero row to the top of the ASM and then calculating the cumulative sums of the rows yields the monotone triangle
+    indicatorVectors := accumulate(plus, toList(numColumns A:0), {toList(numColumns A:0)} | entries A);
+    selectedSubsets := apply(indicatorVectors, indicatorVector -> positions(indicatorVector, i -> i != 0));
+    apply(selectedSubsets, I -> if #I == 0 then I else I / (i -> i+1)) -- change to 1-index notation
+)
+
+MonotoneTriangleToASM = method()
+MonotoneTriangleToASM (List) := Matrix => (M) -> (
+    -- calcutating pairwise differences of indicator vectors given from the monotone triangle yields the rows of the ASM
+    reindexedM := apply(M, I -> if #I == 0 then I else I / (i -> i-1)); -- change to 0-index notation
+    indicatorVectors := apply(reindexedM, I -> if #I == 0 then toList(#reindexedM-1:0) else apply(#reindexedM-1, i -> if member(i,I) then 1 else 0));
+    matrix apply(indicatorVectors_{1..#indicatorVectors-1}, indicatorVectors_{0..#indicatorVectors-2}, difference)
+)
 
 end;
 

@@ -83,7 +83,7 @@ export{
     "composePerms",    	       	    --documented ++
     "isPatternAvoiding",    	    --documented ++
     "isVexillary",    	      	    --documented ++
-    "avoidsAllPatterns",	    --documented ++
+    "avoidsAllPatterns",	        --documented ++
     "isCartwrightSturmfels",	    --documented ++
     "isCDG",	    	    	    --documented ++
     "rajCode",	      	      	    --documented ++
@@ -98,9 +98,11 @@ export{
     "pipeDreams",    	     	    -- ??
     "pipeDreamsNonReduced",    	    -- ??
     "netPD",	    	    	    -- ??
+    "ASMToMonotoneTriangle",        --documented ++
+    "MonotoneTriangleToASM",        --documented ++
 
 --MatrixSchubertInvariants.m2    
-    "schubReg",    	            --documented ++
+    "schubReg",    	                --documented ++
     "schubCodim",           	    --documented ++
     "KPolynomialASM",	     	    -- ??
     "isSchubertCM",    	       	    --documented ++
@@ -110,7 +112,7 @@ export{
     "ASMRandomList",	    	    --ADD EX TO DOC
     "cohenMacaulayASMsList",	    --ADD EX TO DOC
     "nonCohenMacaulayASMsList",	    --ADD EX TO DOC
-    "initialIdealsList"    	    --ADD EX TO DOC
+    "initialIdealsList"    	        --ADD EX TO DOC
 }
     
 ------------------------------------------------------------------------------

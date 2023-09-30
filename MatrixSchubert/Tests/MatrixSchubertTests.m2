@@ -334,3 +334,15 @@ expected = {5,0,1,4,2}
 
 assert all (#L, i -> schubReg L#i == expected#i)
 ///
+
+TEST ///
+-- bijections between ASMs and monotone triangles
+-- example from introduction of Hamaker-Reiner
+A = matrix{{0,1,0,0,0,0},{0,0,0,1,0,0},{1,-1,1,-1,0,1},{0,0,0,1,0,0},{0,1,0,-1,1,0},{0,0,0,1,0,0}}
+M = {{}, {2}, {2, 4}, {1, 3, 6}, {1, 3, 4, 6}, {1, 2, 3, 5, 6}, {1, 2, 3, 4, 5, 6}}
+
+assert(ASMToMonotoneTriangle A == M)
+assert(MonotoneTriangleToASM M == A)
+assert(ASMToMonotoneTriangle MonotoneTriangleToASM M == M)    -- inverse operations
+assert(MonotoneTriangleToASM ASMToMonotoneTriangle A == A)    -- inverse operations
+///

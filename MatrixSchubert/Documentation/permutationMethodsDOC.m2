@@ -474,3 +474,47 @@ doc ///
         Text
             This is a stub
 ///
+
+doc ///
+    Key 
+        ASMToMonotoneTriangle
+    Headline
+        converts an ASM to a monotone triangle
+    Usage
+        ASMToMonotoneTriangle A
+    Inputs
+        A:Matrix
+    Description
+        Text
+            Converts an alternating sign matrix (ASM) to a monotone triangle according to the bijection described in [HR].
+            More precisely, suppose $A$ is an ASM.
+            The unique monotone triangle $T=(T_0,\hdots,T_n)$ corresponding to $A$ is given by $T_m = \sum_{i=1}^m A_m $, where $A_m$ denotes the $m$th row of $A$.
+            See [HR] for more details.
+
+            @UL {{"[HR]: Z. Hamaker and V. Reiner, \"Weak Order and Descents for Monotone Triangles\" (see ", arXiv "1809.10571", ")."},}@
+        Example
+            A = matrix{{0,1,0,0,0,0},{0,0,0,1,0,0},{1,-1,1,-1,0,1},{0,0,0,1,0,0},{0,1,0,-1,1,0},{0,0,0,1,0,0}}
+            ASMToMonotoneTriangle A
+///
+
+doc ///
+    Key 
+        MonotoneTriangleToASM
+    Headline
+        converts a monotone triangle to an ASM
+    Usage
+        MonotoneTriangleToASM M
+    Inputs
+        M:List
+    Description
+        Text
+            Converts an monotone triangle to an alternating sign matrix (ASM) according to the bijection described in [HR].
+            More precisely, suppose $T=(T_0,\hdots,T_n)$ is an ASM.
+            The unique ASM $A$ corresponding to $T$ is given by $A_m = \mathbb{1}_{T_m} - \mathbb{1}_{T_{m-1}}$, where $A_m$ denotes the $m$th row of $A$.
+            See [HR] for more details.
+
+            @UL {{"[HR]: Z. Hamaker and V. Reiner, \"Weak Order and Descents for Monotone Triangles\" (see ", arXiv "1809.10571", ")."},}@
+        Example
+            M = {{}, {2}, {2, 4}, {1, 3, 6}, {1, 3, 4, 6}, {1, 2, 3, 5, 6}, {1, 2, 3, 4, 5, 6}}
+            MonotoneTriangleToASM M
+///
