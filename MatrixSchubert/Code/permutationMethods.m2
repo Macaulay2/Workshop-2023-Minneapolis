@@ -153,6 +153,7 @@ getOneReducedWord List := List => (w) -> (
 ------------------------------------
 --INPUT: A transposition in cycle notation, and the n for which to regard perm 
 --       as an element of S_n
+--       OR a permutation matrix
 --OUTPUT: the transposition in one-line notation
 --TODO: docs and tests
 ------------------------------------
@@ -160,6 +161,11 @@ toOneLineNotation = method()
 toOneLineNotation (List, ZZ) := List => (perm, maxIdx) -> (
     switch(perm_0-1, perm_1-1, toList(1..maxIdx))
 )
+toOneLineNotation (Matrix) := List => (P) -> (
+     nonzeroIndices := flatten for j from 0 to (numColumns P - 1) list positions(flatten entries P^{j}, i -> i != 0);
+     nonzeroIndices / (i -> i+1)
+)
+
 
 ------------------------------------
 --INPUT: An index (i,j)
