@@ -163,6 +163,8 @@ doc ///
     Inputs
     	perm:List
         maxIdx:ZZ
+    Outputs
+        :List
     Description
     	Text
     	    Converts a transposition $(a,b)$ to 1-line notation.
@@ -185,6 +187,8 @@ doc ///
     Inputs
         u:List
         v:List
+    Outputs
+        :List
     Description
         Text
             Computes the composition of two permutations, $u$ and $v$, as $u*v$.
@@ -215,6 +219,8 @@ doc ///
     Inputs
         w:List
         pattern:List
+    Outputs
+        :Boolean
     Description
         Text
             Given a permutation, checks if the permutation is pattern-avoiding, e.g. $2143$-avoiding or $1432$-avoiding.
@@ -241,6 +247,8 @@ doc ///
         isVexillary w 
     Inputs
         w:List
+    Outputs
+        :Boolean
     Description
         Text
             Given a permutation in 1-line notation, checks if the permutation is vexillary, i.e. $2143$-avoiding.
@@ -265,6 +273,8 @@ doc ///
     Inputs
         perm:List
         patterns:List
+    Outputs
+        :Boolean
     Description
         Text
             Given a permutation in one-line notation, and a list of patterns checks if the permutation avoids every pattern.
@@ -284,6 +294,8 @@ doc ///
         isCartwrightSturmfels w
     Inputs
         w:List
+    Outputs
+        :Boolean
     Description
         Text
             Given a permutation in 1-line notation, checks if the permutation is Cartwright-Sturmfels.  By [CDG22], the matrix
@@ -314,6 +326,8 @@ doc ///
         isCDG(perm)
     Inputs
         perm:List
+    Outputs
+        :Boolean
     Description
         Text
             Given a permutation in 1-line notation, checks if the permutation is CDG.  We say that a permutation $w$ is CDG 
@@ -484,6 +498,8 @@ doc ///
         ASMToMonotoneTriangle A
     Inputs
         A:Matrix
+    Outputs
+        :List
     Description
         Text
             Converts an alternating sign matrix (ASM) to a monotone triangle according to the bijection described in [HR].
@@ -506,6 +522,8 @@ doc ///
         MonotoneTriangleToASM M
     Inputs
         M:List
+    Outputs
+        :Matrix
     Description
         Text
             Converts an monotone triangle to an alternating sign matrix (ASM) according to the bijection described in [HR].

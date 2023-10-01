@@ -46,7 +46,7 @@ export{
     "rankTable",    	     	    --documented ++  
     "rotheDiagram",    	       	    --documented ++  
     "augmentedRotheDiagram",	    --documented ++
-    "essentialSet",	     	    --documented ++
+    "essentialSet",	     	        --documented ++
     "augmentedEssentialSet",        --documented ++
     "schubDetIdeal",	       	    --documented ++
     "fultonGens",    	     	    --documented ++
@@ -56,7 +56,7 @@ export{
     "subwordComplex",	     	    --documented ++
     "entrywiseMinRankTable",	    --documented ++
     "entrywiseMaxRankTable",	    --documented ++
-    "schubDecomposition",	    --documented ++
+    "schubDecomposition",	        --documented ++
     "permOverASM",                  --documented ++
     "isIntersectionSchubIdeals",    --documented ++
     "isASMIdeal",    	     	    --documented ++	 
