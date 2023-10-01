@@ -117,4 +117,10 @@ assert(getPermFromASM getASM schubDetIdeal I == w );
 --ASM--
 --???
 
+--ASMToMonotoneTriangle--
+assert(ASMToMonotoneTriangle(I) == {{},{1},{1,2},{1,2,3},{1,2,3,4}})
+
+--MonotoneTriangleToASM--
+assert(MonotoneTriangleToASM({{},{1},{1,2},{1,2,3},{1,2,3,4}}) == I)
+
 ///
