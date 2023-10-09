@@ -95,8 +95,8 @@ export{
     "PolyType",	       	       	    -- ??
     "Operator",	       	       	    -- ??
     "Double",	     	     	    -- ??
-    "pipeDreams",    	     	    -- ??
-    "pipeDreamsNonReduced",    	    -- ??
+    "pipeDreams",    	     	    -- CHECK DOC
+    "pipeDreamsNonReduced",    	    -- CHECK DOC
     "netPD",	    	    	    -- ??
     "ASMToMonotoneTriangle",        --documented ++
     "MonotoneTriangleToASM",        --documented ++
