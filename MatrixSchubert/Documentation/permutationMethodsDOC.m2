@@ -174,6 +174,27 @@ doc ///
             perm = {2,4}
             maxIdx = 5
             toOneLineNotation(perm, maxIdx)
+    SeeAlso
+        (toOneLineNotation, Matrix)
+///
+doc ///
+    Key 
+        (toOneLineNotation, Matrix)
+    Headline 
+        converts a permutation to one line notation
+    Usage
+        toOneLIneNotation(A)
+    Inputs 
+        A:Matrix
+    Outputs
+        :List
+    Description
+        Text
+            Given a permutation matrix, return the corresponding permutation in 1-line notation.
+        Example
+            toOneLineNotation(matrix{{0,1,0},{1,0,0},{0,0,1}})
+    SeeAlso
+        (toOneLineNotation, List, ZZ)
 ///
 
 doc ///
@@ -403,6 +424,7 @@ doc ///
 
 doc ///
     Key 
+        (grothendieckPoly, List)
         grothendieckPoly
     Headline
         computes the Grothendieck polynomial of a permutation 
@@ -423,6 +445,7 @@ doc ///
 
 doc ///
     Key 
+        (schubertPoly, List)
         schubertPoly
     Headline
         computes the (singe) Schubert polynomial of a permutation 
@@ -442,6 +465,7 @@ doc ///
 
 doc ///
     Key 
+        (doubleSchubertPoly, List)
         doubleSchubertPoly
     Headline
         computes the double Schubert polynomial of a permutation 
@@ -451,12 +475,10 @@ doc ///
         w:List
     Description
         Text
-            Given a permutation in 1-line notation, finds its double Schubert polynomial.  Two algorithms are impliemented: DividedDifference (which is the default) and Transition
-	    (which makes use of the transition equations for double Schubert polynomials).
-	 Example 
-	    w = {2,1,5,4,3}
-	    doubleSchubertPoly w
-	    doubleSchubertPoly (w,Algorithm=>"Transition")
+            Given a permutation in 1-line notation, finds its double Schubert polynomial. This is implemented via the transition equations for double Schubert polynomials
+        Example 
+            w = {2,1,5,4,3}
+            doubleSchubertPoly w
 ///
 
 doc ///
@@ -511,6 +533,7 @@ doc ///
 
 doc ///
     Key 
+        (ASMToMonotoneTriangle, Matrix)
         ASMToMonotoneTriangle
     Headline
         converts an ASM to a monotone triangle
@@ -535,6 +558,7 @@ doc ///
 
 doc ///
     Key 
+        (MonotoneTriangleToASM, List)
         MonotoneTriangleToASM
     Headline
         converts a monotone triangle to an ASM
