@@ -24,7 +24,7 @@ newPackage(
             HomePage=> "https://www.mit.edu/~lyuyuan/"}, 
 	{Name => "Joseph McDonough",
 	    Email => "mcdo1248@umn.edu",
-	    HomePage=> ""}
+	    HomePage=> "https://jmcdonough98.github.io/"}
     },
     Headline => "functions for investigating ASM and matrix Schubert varieties",
     PackageExports => {
@@ -97,14 +97,14 @@ export{
     "Double",	     	     	    -- ??
     "pipeDreams",    	     	    -- CHECK DOC
     "pipeDreamsNonReduced",    	    -- CHECK DOC
-    "netPD",	    	    	    -- ??
+    "netPD",	    	    	    -- CHECK DOC
     "ASMToMonotoneTriangle",        --documented ++
     "MonotoneTriangleToASM",        --documented ++
 
 --MatrixSchubertInvariants.m2    
     "schubReg",    	                --documented ++
     "schubCodim",           	    --documented ++
-    "KPolynomialASM",	     	    -- ??
+    "KPolynomialASM",	     	    -- CHECK DOC
     "isSchubertCM",    	       	    --documented ++
 
 --Lists.m2

@@ -533,6 +533,26 @@ doc ///
 
 doc ///
     Key 
+        (netPD, List)
+        netPD
+    Headline
+        printing utility for pipe dreams 
+    Usage
+        netPD(P)
+    Inputs
+        P:List 
+    Outputs
+        :List
+    Description
+        Text
+            Given a pipe dream, print it in a more readable format
+        Example
+            P = (pipeDreams {1,4,3,2})_0
+            netPD P
+///
+
+doc ///
+    Key 
         (ASMToMonotoneTriangle, Matrix)
         ASMToMonotoneTriangle
     Headline

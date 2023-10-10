@@ -85,6 +85,26 @@ doc ///
             isSchubertCM(w)
 ///
 
+doc ///
+    Key 
+        (KPolynomialASM, Matrix)
+        KPolynomialASM
+    Headline
+        compute the K Polynomial of an ASM variety
+    Usage
+        KPolynomialASM(A)
+    Inputs 
+        A:Matrix
+    -- Outputs
+        -- :PolynomialRing --Not sure what to put here, PolynomialRing makes the compiler angry
+    Description
+        Text
+            Given a partial ASM $A$, compute the K Polynomial of its corresponding Ideal, defined as the numerator of its Hilbert series. The multi-degree variables are indexed along rows.
+        Example
+            A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}};
+            KPolynomialASM(A)
+///
+
 
 -- doc ///
 --     Key
