@@ -76,10 +76,10 @@ doc ///
             Given a non-identity permutation in 1-line notation, finds the location of its first descent, i.e., the least $i$ so that $w_(i+1)<w_i$.
         Example
             w = {7,2,5,8,1,3,6,4}
-            lastDescent(w)
+            firstDescent(w)
 
             v = {1,6,9,2,4,7,3,5,8}
-            lastDescent(v)
+            firstDescent(v)
 ///
 
 doc ///
@@ -353,7 +353,7 @@ doc ///
         Text
             Given a permutation in 1-line notation, checks if the permutation is CDG.  We say that a permutation $w$ is CDG 
 	    if a certain modification (see [Kle23] for precise description) of the Fulton generators of the Schubert determinantal
-	    ideal $I_w$ form a diagonal Grobner basis.  By [Kle23], $w$ CDG if and only if $w$ avoid all of the patterns 
+	    ideal $I_w$ form a diagonal Grobner basis.  By [Kle23], $w$ satisfies the CDG property if and only if $w$ avoid all of the patterns 
 	    $\{13254, 21543, 214635, 215364, 215634, 241635, 315264, 4261735\}$.
 	    
 	     @UL {
@@ -457,7 +457,8 @@ doc ///
         Text
             Given a permutation in 1-line notation, finds its (single) Schubert polynomial.  Two algorithms are impliemented: DividedDifference (which is the default) and Transition
 	    (which makes use of the transition equations for Schubert polynomials).
-	 Example 
+	    
+        Example 
 	    w = {2,1,5,4,3}
 	    schubertPoly w
 	    schubertPoly (w,Algorithm=>"Transition")
@@ -475,7 +476,7 @@ doc ///
         w:List
     Description
         Text
-            Given a permutation in 1-line notation, finds its double Schubert polynomial. This is implemented via the transition equations for double Schubert polynomials
+            Given a permutation in 1-line notation, finds its double Schubert polynomial. This is implemented via the transition equations for double Schubert polynomials.
         Example 
             w = {2,1,5,4,3}
             doubleSchubertPoly w
@@ -545,7 +546,7 @@ doc ///
         :List
     Description
         Text
-            Given a pipe dream, print it in a more readable format
+            Given a pipe dream, print it in a more readable format.
         Example
             P = (pipeDreams {1,4,3,2})_0
             netPD P

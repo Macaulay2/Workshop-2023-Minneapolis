@@ -17,7 +17,7 @@ newPackage(
             Email => "pjklein@tamu.edu", 
             HomePage => "https://patriciajklein.github.io/"},
 	{Name => "Adam LaClair",
-	    Email => "alaclair@purdue.edu ",
+	    Email => "alaclair@purdue.edu",
 	    HomePage=> "https://sites.google.com/view/adamlaclair/home"},
         {Name => "Yuyuan Luo",
             Email => "lyuyuan@mit.edu",

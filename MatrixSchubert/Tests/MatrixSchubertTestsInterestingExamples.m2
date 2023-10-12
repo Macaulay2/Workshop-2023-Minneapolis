@@ -69,7 +69,7 @@ assert(toExternalString L_9 == "z_(1,5)*z_(2,4)*z_(3,3)*z_(4,2)");
 ///
 
 TEST ///
---rankMatrix--
+--rankTable--
 w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
@@ -378,29 +378,33 @@ assert(toExternalString L_4 == "z_(2,2)*z_(3,1)" );
 assert(toExternalString L_5 == "z_(1,3)*z_(2,4)*z_(3,1)*z_(4,2)" );
 assert(toExternalString L_6 == "z_(1,4)*z_(2,2)^2*z_(3,3)*z_(4,1)" );
 
--*
---from Ayah: I don't understand this test.
-----Why should one expect this diagonal ideal to be squarefree?
+
 L = diagRevLexInit PI; 
-assert(numgens L == 13);
-assert(toExternalString L_0 == "z_(1,2)" );
-assert(toExternalString L_1 == "z_(1,1)" );
-assert(toExternalString L_2 == "z_(1,3)*z_(2,2)" );
-assert(toExternalString L_3 == "z_(2,1)" );
-assert(toExternalString L_4 == "z_(2,2)*z_(3,1)" );
-assert(toExternalString L_5 == "z_(1,5)*z_(2,4)*z_(3,3)*z_(4,2)");
-assert(toExternalString L_6 == "z_(1,5)*z_(2,4)*z_(3,1)*z_(4,2)");
-assert(toExternalString L_7 == "z_(1,3)*z_(2,4)*z_(3,1)*z_(4,2)");
-assert(toExternalString L_8 == "z_(1,5)*z_(2,3)*z_(3,1)*z_(4,2)");
-assert(toExternalString L_9 == "z_(1,5)*z_(2,4)*z_(3,3)*z_(4,1)");
-assert(toExternalString L_10 == "z_(1,5)*z_(2,2)^2*z_(3,3)*z_(4,1)");
-assert(toExternalString L_11 == "z_(1,4)*z_(2,2)^2*z_(3,3)*z_(4,1)");
-assert(toExternalString L_12 == "z_(1,5)*z_(2,4)*z_(2,2)*z_(3,2)*z_(4,1)");
-*-
+assert(numgens L == 17);
+assert(toExternalString L_0 == "z_(1,2)");
+assert(toExternalString L_1 == "z_(1,1)");
+assert(toExternalString L_2 == "z_(1,3)*z_(2,2)");
+assert(toExternalString L_3 == "z_(2,1)");
+assert(toExternalString L_4 == "z_(2,2)*z_(3,1)");
+assert(toExternalString L_5 == "z_(1,4)*z_(2,2)*z_(3,3)*z_(4,5)");
+assert(toExternalString L_6 == "z_(1,3)^2*z_(2,4)*z_(3,2)*z_(4,5)");
+assert(toExternalString L_7 == "z_(1,3)*z_(2,4)*z_(3,1)*z_(4,5)");
+assert(toExternalString L_8 == "z_(1,4)*z_(2,5)*z_(3,1)*z_(4,2)");
+assert(toExternalString L_9 == "z_(1,3)*z_(2,5)*z_(3,1)*z_(4,2)");
+assert(toExternalString L_10 == "z_(1,3)*z_(2,4)*z_(3,1)*z_(4,2)");
+assert(toExternalString L_11 == "z_(1,4)*z_(2,3)*z_(2,2)*z_(3,5)*z_(4,1)");
+assert(toExternalString L_12 == "z_(1,4)*z_(2,2)^2*z_(3,5)*z_(4,1)");
+assert(toExternalString L_13 == "z_(1,5)*z_(2,2)^2*z_(3,3)*z_(4,1)");
+assert(toExternalString L_14 == "z_(1,4)*z_(2,2)^2*z_(3,3)*z_(4,1)");
+assert(toExternalString L_15 == "z_(1,5)*z_(2,3)*z_(2,2)*z_(3,4)*z_(3,3)*z_(4,5)*z_(4,1)");
+assert(toExternalString L_16 == "z_(1,4)*z_(1,3)*z_(2,4)*z_(2,3)*z_(3,5)*z_(3,2)*z_(4,5)*z_(4,1)");
 ///
 
 --subwordComplex--
---added to other file
+TEST ///
+F = facets subwordComplex({4,3,2,1});
+assert(toExternalString(F) == "{z_(1,4)*z_(2,3)*z_(2,4)*z_(3,2)*z_(3,3)*z_(3,4)*z_(4,1)*z_(4,2)*z_(4,3)*z_(4,4)}")
+///
 
 --entrywiseMinRankTable--
 --Example in other file.
@@ -416,7 +420,7 @@ PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
 assert(flatten schubDecomposition schubDetIdeal w == w)
 assert(schubDecomposition schubDetIdeal I == {{3, 5, 1, 2, 4}, {5, 2, 3, 1, 4}, {4, 2, 5, 1, 3}, {3, 4, 1, 5, 2}, {4, 2, 3, 5, 1}})
---PI buggy.
+assert(schubDecomposition schubDetIdeal PI == {{3, 6, 1, 2, 4, 5}, {6, 2, 3, 1, 4, 5}, {4, 2, 6, 1, 3, 5}, {3, 4, 1, 6, 2, 5}, {4, 2, 3, 6, 1, 5}})
 ///
 
 TEST ///

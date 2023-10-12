@@ -6,14 +6,8 @@
 
 --Testing functions in MatrixSchubertConstructions--
 
---detailed test for isPartialASM function
 TEST ///
--*
-  restart
-  needsPackage "MatrixSchubert"
-*-
-  
---all should be true
+--isPartialASM
 L = {
     matrix{{1}},
     matrix{{1,0},{0,1}},
@@ -49,12 +43,9 @@ assert( apply(T, isPartialASM) == toList (#T:false))
 ///
 
 TEST ///
---Example 2.1 in Weigandt "Prism Tableaux for ASMs"
-A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}};
-assert(isPartialASM A)
-assert(sort essentialSet(A) == {(1,3),(2,1),(3,2)})
+---partialASMToASM
+assert(partialASMToASM matrix{{0,0,1,0},{1,0,-1,0},{0,0,0,0}} == matrix{{0,0,1,0,0,0},{1,0,-1,0,1,0},{0,0,0,0,0,1},{0,1,0,0,0,0},{0,0,1,0,0,0},{0,0,0,1,0,0}})
 ///
-
 
 TEST ///
 --antiDiagInit
@@ -71,14 +62,6 @@ TEST ///
 --rankTable
 assert(rankTable({1,3,2}) == matrix{{1, 1, 1}, {1, 1, 2}, {1, 2, 3}});
 assert(rankTable(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}) == matrix{{0, 0, 0, 1}, {0, 1, 1, 2}, {1, 1, 2, 3}, {1, 2, 3, 4}});
- 
-///
-
-
-TEST ///
--- rotheDiagram
-
-assert(partialASMToASM matrix{{0,0,1,0},{1,0,-1,0},{0,0,0,0}} == matrix{{0,0,1,0,0,0},{1,0,-1,0,1,0},{0,0,0,0,0,1},{0,1,0,0,0,0},{0,0,1,0,0,0},{0,0,0,1,0,0}})
 ///
 
 TEST ///
@@ -96,6 +79,13 @@ assert(sort augmentedRotheDiagram matrix{{0,1,0},{1,-1,1},{0,1,0}} == sort{((1,1
 assert (sort augmentedRotheDiagram matrix {{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}} == sort {((1,1),0),((1,2),0),((4,3),2),((3,3),2)})
 ///
 
+TEST ///
+--essentialSet
+--Example 2.1 in Weigandt "Prism Tableaux for ASMs"
+A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}};
+assert(isPartialASM A)
+assert(sort essentialSet(A) == {(1,3),(2,1),(3,2)})
+///
 
 TEST ///
 -- essentialSet
@@ -119,9 +109,9 @@ assert(augmentedEssentialSet(matrix {{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0
 ///
 
 
---test for schubDetIdeal
 --TODO: make more complicated tests
 TEST ///
+--schubDetIdeal
 --Example 15.4 from Miller-Sturmfels
 I = schubDetIdeal({1,2,3});
 assert(I == ideal(0_(ring I)));
@@ -140,7 +130,7 @@ assert(I == ideal((ring I)_0 * (ring I)_4 - (ring I)_1 * (ring I)_3));
 ///
 
 TEST ///
-
+--fultonGens
 L = fultonGens matrix{{0,1,0},{1,-1,1},{0,1,0}};
 assert(toExternalString L_0 == "z_(1,1)")
 assert(toExternalString L_1 == "-z_(1,2)*z_(2,1)+z_(1,1)*z_(2,2)")
@@ -165,6 +155,25 @@ assert(toExternalString L_14 == "-z_(2,3)*z_(3,2)+z_(2,2)*z_(3,3)");
 
 ///
 
+TEST ///
+-- entrywiseMinRankTable
+assert(entrywiseMinRankTable(({{4,3,1,2},{2,4,3,1}} / permToMatrix)) == matrix{{0, 0, 0, 1}, {0, 0, 1, 2}, {0, 1, 2, 3}, {1, 2, 3, 4}});
+///
+
+
+TEST ///
+-- entrywiseMaxRankTable
+assert(entrywiseMaxRankTable(({{4,3,1,2},{2,4,3,1}} / permToMatrix)) == matrix{{0, 1, 1, 1}, {0, 1, 1, 2}, {1, 1, 2, 3}, {1, 2, 3, 4}});
+///
+
+TEST ///
+-- isASMUnion
+assert isASMUnion {{1}}
+assert isASMUnion {{4,3,2,1}}
+assert not isASMUnion {{2,1,3,4},{4,2,3,1}}
+assert isASMUnion {{3,1,2},{2,3,1}}
+assert isASMUnion {{4,1,3,2},{3,4,1,2},{2,4,3,1}}
+///
 
 TEST ///
 -- isMinRankTable
@@ -195,42 +204,6 @@ TEST///
 Am = matrix {{1,0,0},{0,23,24},{23,24,25}}
 A = matrix {{0,0,0},{0,1,1},{1,2,2}}
 assert(rankTableFromMatrix(Am) == A)
-
-///
-
-TEST ///
--- getPermFromASM
-L = {
-    matrix{{1,0,0,0}},
-    matrix{{1,0},{0,0}},
-    matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}},
-    matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}},
-    matrix{{0,1,0,0},{1,0,0,0},{0,0,1,0},{0,0,0,1}}
-}
-Lc = {{},{},{},{},{2,1,3,4}}
-assert all (#L, i -> getPermFromASM L_i == Lc_i)
-///
-
-
-TEST ///
--- isASMUnion
-assert isASMUnion {{1}}
-assert isASMUnion {{4,3,2,1}}
-assert not isASMUnion {{2,1,3,4},{4,2,3,1}}
-assert isASMUnion {{3,1,2},{2,3,1}}
-assert isASMUnion {{4,1,3,2},{3,4,1,2},{2,4,3,1}}
-///
-
-
-TEST ///
--- entrywiseMinRankTable
-assert(entrywiseMinRankTable(({{4,3,1,2},{2,4,3,1}} / permToMatrix)) == matrix{{0, 0, 0, 1}, {0, 0, 1, 2}, {0, 1, 2, 3}, {1, 2, 3, 4}});
-///
-
-
-TEST ///
--- entrywiseMaxRankTable
-assert(entrywiseMaxRankTable(({{4,3,1,2},{2,4,3,1}} / permToMatrix)) == matrix{{0, 1, 1, 1}, {0, 1, 1, 2}, {1, 1, 2, 3}, {1, 2, 3, 4}});
 ///
 
 TEST ///
@@ -248,6 +221,18 @@ R=ring I;
 assert(I==ideal(R_0,R_1,R_3));
 ///
 
+TEST ///
+-- getPermFromASM
+L = {
+    matrix{{1,0,0,0}},
+    matrix{{1,0},{0,0}},
+    matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}},
+    matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}},
+    matrix{{0,1,0,0},{1,0,0,0},{0,0,1,0},{0,0,0,1}}
+}
+Lc = {{},{},{},{},{2,1,3,4}}
+assert all (#L, i -> getPermFromASM L_i == Lc_i)
+///
 
 -*
 --NOTE: it would be nice to keep this test, but it would also be nice to not 

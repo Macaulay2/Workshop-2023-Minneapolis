@@ -63,13 +63,13 @@ assert(testIdealPerm == monomialIdeal(0_(ring testIdealPerm)));
 assert(testIdealMat == monomialIdeal(0_(ring testIdealMat)));
 
 --subwordComplex--
-assert(# facets subwordComplex w == 1)
+assert(toExternalString facets subwordComplex w == "{z_(1,1)*z_(1,2)*z_(1,3)*z_(1,4)*z_(2,1)*z_(2,2)*z_(2,3)*z_(2,4)*z_(3,1)*z_(3,2)*z_(3,3)*z_(3,4)*z_(4,1)*z_(4,2)*z_(4,3)*z_(4,4)}")
 
---entrywiseMin--
---Examples in other file
+--entrywiseMinRankTable--
+assert(entrywiseMinRankTable {I} == matrix{{1, 1, 1, 1}, {1, 2, 2, 2}, {1, 2, 3, 3}, {1, 2, 3, 4}})
 
---entryWiseMax--
---Examples in other file
+--entrywiseMaxRankTable--
+assert(entrywiseMaxRankTable {I} == matrix{{1, 1, 1, 1}, {1, 2, 2, 2}, {1, 2, 3, 3}, {1, 2, 3, 4}})
 
 --schubDecomposition--
 testIdealPerm = schubDetIdeal(w);

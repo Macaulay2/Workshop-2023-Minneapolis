@@ -764,7 +764,7 @@ doc ///
     Description
         Text
             Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal of the corresponding ASM ideal or Schubert determinantal ideal with respect to reverse lexicographic order, 
-	    where the variables are ordered reading from left-to-right and top-to-bottom (starting in the northwest corne).
+	    where the variables are ordered reading from left-to-right and top-to-bottom (starting in the northwest corner).
 	    
 	    This function computes over the coefficient field of rational numbers unless an alternative is specified.
 	Example
@@ -996,7 +996,7 @@ doc ///
         :Boolean
     Description
         Text
-            Checks whether {\tt T} is a the canonical rank table of some partial ASM.  These are the rank tables that are constructed in Section 1 of [Wei] and from which the partial ASM can be determined using equation (21) of the same.
+            Checks whether {\tt T} is a the canonical rank table of some partial ASM.  These are the rank tables that are constructed in Section 1 of [Wei] and from which the partial ASM can be determined using equation (21) of the same paper.
         
 	    @UL {{"[Wei]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},}@
 	    
