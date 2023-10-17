@@ -20,7 +20,7 @@ schubReg List := ZZ => w -> (
 schubReg Matrix := ZZ => A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     --Check if Matrix is permutation matrix, and if it is, use rajindex formula
-    w := getPermFromASM(A);
+    w := toOneLineNotation(A);
     if not (w == {}) then return rajIndex(w) - permLength(w);
     --Otherwise compute regularity of its antidiagonal initial ideal
     I := antiDiagInit A;

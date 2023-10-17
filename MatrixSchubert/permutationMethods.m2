@@ -163,7 +163,9 @@ toOneLineNotation (List, ZZ) := List => (perm, maxIdx) -> (
 )
 toOneLineNotation (Matrix) := List => (P) -> (
      nonzeroIndices := flatten for j from 0 to (numColumns P - 1) list positions(flatten entries P^{j}, i -> i != 0);
-     nonzeroIndices / (i -> i+1)
+     w := nonzeroIndices / (i -> i+1);
+     if isPerm w then return w;
+     if not (isPerm w) then return {};
 )
 
 
@@ -538,20 +540,4 @@ MonotoneTriangleToASM (List) := Matrix => (M) -> (
     reindexedM := apply(M, I -> if #I == 0 then I else I / (i -> i-1)); -- change to 0-index notation
     indicatorVectors := apply(reindexedM, I -> if #I == 0 then toList(#reindexedM-1:0) else apply(#reindexedM-1, i -> if member(i,I) then 1 else 0));
     matrix apply(indicatorVectors_{1..#indicatorVectors-1}, indicatorVectors_{0..#indicatorVectors-2}, difference)
-)
-
-end;
-
----
---Temporarily putting a test here
----
-perms = apply(permutations(6), p-> apply(p, i->i+1));
-scan(perms, p-> (
- gp1 = grothendieckPoly(p);
- gp2 = grothendieckPoly(p, Algorithm=>"PipeDream");
- R1 = ring gp1;
- R2 = ring gp2;
- phi = map(R2,R1,R2_*);
- if (gp2 != phi(gp1)) then print(p)
- )
 )

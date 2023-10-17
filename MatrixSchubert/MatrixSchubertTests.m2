@@ -4,8 +4,6 @@
 -------------------------
 -------------------------
 
---Testing functions in MatrixSchubertConstructions--
-
 TEST ///
 --isPartialASM
 L = {
@@ -221,38 +219,6 @@ R=ring I;
 assert(I==ideal(R_0,R_1,R_3));
 ///
 
-TEST ///
--- getPermFromASM
-L = {
-    matrix{{1,0,0,0}},
-    matrix{{1,0},{0,0}},
-    matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}},
-    matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}},
-    matrix{{0,1,0,0},{1,0,0,0},{0,0,1,0},{0,0,0,1}}
-}
-Lc = {{},{},{},{},{2,1,3,4}}
-assert all (#L, i -> getPermFromASM L_i == Lc_i)
-///
-
--*
---NOTE: it would be nice to keep this test, but it would also be nice to not 
---      have to export it as well
-TEST ///
---indexOfVariable
-R = QQ[x_1..x_5]
-assert(indexOfVariable x_1 == 1)
-
-R = QQ[x_1..x_3,y_3..y_5]
-assert(indexOfVariable y_4 == 4)
-
-R = QQ[x_(1,1)..x_(4,4)]
-assert(indexOfVariable x_(2,3) == (2,3))
-
-R = QQ[x_{1,1}..x_{4,4}]
-assert(indexOfVariable x_{2,3} == {2,3})
-///
-*-
-
 --Testing Permutation Functions--
 
 TEST ///
@@ -433,23 +399,10 @@ assert(getASM schubDetIdeal I == I );
 assert(isMinRankTable rankTable w == true );
 assert(isMinRankTable rankTable I == true );
 
---rankTableToASM--
---Examples in other file
-
---rankTableFromMatrix--
---Examples in other file
-
---schubIntersect--
---Examples in other file
-
---schubAdd--
---Examples in other file
 
 --getPermFromASM
-assert(getPermFromASM getASM schubDetIdeal I == w );
+assert(toOneLineNotation getASM schubDetIdeal I == w );
 
---ASM--
---???
 
 --ASMToMonotoneTriangle--
 assert(ASMToMonotoneTriangle(I) == {{},{1},{1,2},{1,2,3},{1,2,3,4}})
@@ -872,11 +825,6 @@ F = facets subwordComplex({4,3,2,1});
 assert(toExternalString(F) == "{z_(1,4)*z_(2,3)*z_(2,4)*z_(3,2)*z_(3,3)*z_(3,4)*z_(4,1)*z_(4,2)*z_(4,3)*z_(4,4)}")
 ///
 
---entrywiseMinRankTable--
---Example in other file.
-
---entrywiseMaxRankTable--
---Example in other file.
 
 TEST ///
 --schubDecomposition--
@@ -921,9 +869,6 @@ assert(isASMIdeal schubDetIdeal PI == true);
 ///
 
 
---isASMUnion--
---Examples in other file
-
 TEST ///
 --getASM--
 w = {2,1,6,3,5,4};
@@ -957,25 +902,14 @@ assert(rankTableToASM rankTable I == I);
 assert(rankTableToASM rankTable PI == PI);
 ///
 
-
---rankTableFromMatrix--
---Examples in other file
-
---schubIntersect--
---Examples in other file
-
---schubAdd--
---Examples in other file
-
 TEST ///
---getPermFromASM
 w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-assert(getPermFromASM getASM schubDetIdeal w == w );
-assert(getPermFromASM getASM schubDetIdeal I == {} );
-assert(getPermFromASM getASM schubDetIdeal PI == {});
+assert(toOneLineNotation getASM schubDetIdeal w == w );
+assert(toOneLineNotation getASM schubDetIdeal I == {} );
+assert(toOneLineNotation getASM schubDetIdeal PI == {});
 ///
 
 

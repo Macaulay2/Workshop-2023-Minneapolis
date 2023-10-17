@@ -238,7 +238,7 @@ doc ///
 		TO (schubReg, Matrix),
 		TO (schubCodim, Matrix),
 		TO (permOverASM, Matrix),
-		TO (getPermFromASM, Matrix)
+		TO (toOneLineNotation, Matrix)
 		}@
 ///
 doc ///
@@ -1105,6 +1105,7 @@ doc ///
             schubAdd {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}}
 ///
 
+-*
 doc ///
     Key
         (getPermFromASM, Matrix)
@@ -1130,5 +1131,5 @@ doc ///
             A = matrix {{0,1,0,0},{1,0,0,0},{0,0,1,0},{0,0,0,1}}
             getPermFromASM A
 ///
-
+*-
 

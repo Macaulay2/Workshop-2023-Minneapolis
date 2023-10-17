@@ -137,6 +137,7 @@ doc ///
     	    longestPerm 7
 ///
 
+-*
 doc ///
     Key
 	(getOneReducedWord, List)
@@ -151,6 +152,7 @@ doc ///
     	Text
 	    This is a stub.
 ///
+*-
 
 doc ///
     Key

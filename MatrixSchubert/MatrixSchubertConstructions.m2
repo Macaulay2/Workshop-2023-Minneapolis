@@ -792,6 +792,7 @@ schubAdd List := Ideal => (L) -> (
    --otherwise returns the empty permutation
 -- TODO: tests and documentation
 --------------------------------------------
+-*
 getPermFromASM = method()
 getPermFromASM Matrix := List => (A) -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
@@ -813,3 +814,4 @@ getPermFromASM Matrix := List => (A) -> (
     if (isPerm(w) == true) then return w
     else return {};
 );
+*-

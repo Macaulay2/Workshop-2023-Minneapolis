@@ -67,7 +67,7 @@ export{
     "rankTableFromMatrix",    	    --documented ++
     "schubIntersect",	     	    --documented ++
     "schubAdd",	       	       	    --documented ++
-    "getPermFromASM",	       	    --documented ++
+--    "getPermFromASM",	       	    --documented ++
     "ASM",    	      	      	    -- ??
     
  --permutationMethods.m2   
