@@ -1,3 +1,5 @@
+
+
 ------------------------------
 -- INPUT: an integer n between 1 and 7
 -- OUTPUT: a list of matrices containing all ASMs of size n
@@ -5,7 +7,7 @@
 ASMFullList = method()
 ASMFullList ZZ := List => (n) -> (
     if (n < 1 or n > 7) then error("There is no available list for this n.");
-    filename := concatenate("./MatrixSchubert/ASMData/full/", toString n, ".txt");
+    filename := concatenate(currentFileDirectory, "MatrixSchubert/ASMData/full/", toString n, ".txt");
     listOfMatrices := apply(lines get filename, i -> matrix value i);
     listOfMatrices
 );

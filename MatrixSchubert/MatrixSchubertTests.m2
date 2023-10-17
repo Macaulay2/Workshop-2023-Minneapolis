@@ -985,3 +985,7 @@ TEST ///
 ///
 
 --NEED TESTS FOR isSchubCM
+
+TEST ///
+assert(#ASMFullList(1) == 1);
+///
