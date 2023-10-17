@@ -140,9 +140,7 @@ load "./MatrixSchubert/Documentation/listsDOC.m2"
 -- **TESTS** --
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
-load "./MatrixSchubert/Tests/MatrixSchubertTests.m2"
-load "./MatrixSchubert/Tests/MatrixSchubertTestsIdentity.m2"
-load "./MatrixSchubert/Tests/MatrixSchubertTestsInterestingExamples.m2"
+load "./MatrixSchubert/MatrixSchubertTests.m2"
 
 end---------------------------------------------------------------------------     
 
