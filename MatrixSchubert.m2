@@ -107,7 +107,7 @@ export{
     "KPolynomialASM",	     	    -- CHECK DOC
     "isSchubCM",    	       	    --documented ++
 
---Lists.m2
+--ASM_Lists.m2
     "ASMFullList",    	      	    --ADD EX TO DOC
     "ASMRandomList",	    	    --ADD EX TO DOC
     "cohenMacaulayASMsList",	    --ADD EX TO DOC
@@ -120,21 +120,20 @@ export{
 -- **CODE** --
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
-load "./MatrixSchubert/Code/helpers.m2"
-load "./MatrixSchubert/Code/permutationMethods.m2"
-load "./MatrixSchubert/Code/MatrixSchubertConstructions.m2"
-load "./MatrixSchubert/Code/MatrixSchubertInvariants.m2"
-load "./MatrixSchubert/Code/lists.m2"
+load "./MatrixSchubert/permutationMethods.m2"
+load "./MatrixSchubert/MatrixSchubertConstructions.m2"
+load "./MatrixSchubert/MatrixSchubertInvariants.m2"
+load "./MatrixSchubert/ASM_Lists.m2"
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 -- **DOCUMENTATION** --
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 beginDocumentation ()    
-load "./MatrixSchubert/Documentation/permutationMethodsDOC.m2"
-load "./MatrixSchubert/Documentation/MatrixSchubertConstructionsDOC.m2"
-load "./MatrixSchubert/Documentation/MatrixSchubertInvariantsDOC.m2"
-load "./MatrixSchubert/Documentation/listsDOC.m2"
+load "./MatrixSchubert/permutationMethodsDOC.m2"
+load "./MatrixSchubert/MatrixSchubertConstructionsDOC.m2"
+load "./MatrixSchubert/MatrixSchubertInvariantsDOC.m2"
+load "./MatrixSchubert/ASM_ListsDOC.m2"
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 -- **TESTS** --
