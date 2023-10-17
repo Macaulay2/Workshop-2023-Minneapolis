@@ -78,7 +78,7 @@ export{
     "permLength",    	     	    --documented ++
     "inverseOf",             	    --documented (check)
     "longestPerm",    	      	    --documented (check)
-    "getOneReducedWord",    	    -- ??
+ --   "getOneReducedWord",    	    -- ??
     "toOneLineNotation",    	    --documented ++
     "composePerms",    	       	    --documented ++
     "isPatternAvoiding",    	    --documented ++
@@ -105,7 +105,7 @@ export{
     "schubReg",    	                --documented ++
     "schubCodim",           	    --documented ++
     "KPolynomialASM",	     	    -- CHECK DOC
-    "isSchubertCM",    	       	    --documented ++
+    "isSchubCM",    	       	    --documented ++
 
 --Lists.m2
     "ASMFullList",    	      	    --ADD EX TO DOC
@@ -185,4 +185,3 @@ restart
 needsPackage "MatrixSchubert"
 elapsedTime check "MatrixSchubert"
 viewHelp "MatrixSchubert"
-

@@ -58,14 +58,14 @@ doc ///
 
 doc ///
     Key
-    	(isSchubertCM, Matrix)
-    	(isSchubertCM, List)
-    	isSchubertCM
+    	(isSchubCM, Matrix)
+    	(isSchubCM, List)
+    	isSchubCM
     Headline
     	whether an ASM variety is Cohen-Macaulay
     Usage
-    	isSchubertCM(A)
-    	isSchubertCM(w)
+    	isSchubCM(A)
+    	isSchubCM(w)
     Inputs
 	A:Matrix
 		or {\tt w} is a @TO List@
@@ -80,9 +80,9 @@ doc ///
 	    of Fulton says $R/I_w$ is always Cohen-Macaulay.
         Example
             A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}
-	    isSchubertCM(A)
+	    isSchubCM(A)
 	    w = {1,3,2}
-            isSchubertCM(w)
+            isSchubCM(w)
 ///
 
 doc ///

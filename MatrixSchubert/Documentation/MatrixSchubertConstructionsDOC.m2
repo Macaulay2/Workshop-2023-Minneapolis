@@ -371,7 +371,6 @@ doc ///
 	    lastDescent v
 	    firstDescent v
 	    inverseOf v
-	    #(getOneReducedWord v) == permLength v
 	Text
 	    This package also allows one to quickly compute certain combinatorial polynomials
 	    associated to a permutation, such as the (double) Schubert polynomial and the
@@ -412,7 +411,6 @@ doc ///
 		TO (permLength, List),
 		TO (inverseOf, List),
 		TO (longestPerm, ZZ),
-		TO (getOneReducedWord, List),
 		TO (toOneLineNotation, List, ZZ),
 		TO (composePerms, List, List),
 		TO (isPatternAvoiding, List, List),
