@@ -3,14 +3,15 @@ doc ///
         (ASMFullList, ZZ)
         ASMFullList
     Headline
-        provides a list of all ASMs of a certain size
+        lists all ASMs of a fixed size
     Usage
         ASMFullList(n)
     Inputs
         n:ZZ
     Description
         Text
-            For $1 \leq n \leq 7$, a full list of all ASMs of size $n$ comes with the package.
+            For $1 \leq n \leq 7$, outputs the full list of $n \times n$ alternating sign matrices,
+	    including permutation matrices.
 ///
 
 doc ///
@@ -18,7 +19,7 @@ doc ///
         (ASMRandomList, ZZ,ZZ)
         ASMRandomList
     Headline
-        provides a list of some random ASMs of a certain size
+        lists random ASMs of a fixed size
     Usage
         ASMFullList(n,m)
     Inputs
@@ -26,7 +27,7 @@ doc ///
         m:ZZ
     Description
         Text
-            For $1 \leq n \leq 7$, a list of $m$ random ASMs of size $n$ is outputted.
+            For $1 \leq n \leq 7$, this function lists $m$ random $n\times n$ alternating sign matrices.
 ///
 
 doc ///
@@ -34,15 +35,16 @@ doc ///
         (cohenMacaulayASMsList, ZZ)
         cohenMacaulayASMsList
     Headline
-        provides a list of all Cohen-Macaulay ASMs which are not permutation matrices of a certain size
+        lists all Cohen-Macaulay ASMs of a fixed size which are not permutation matrices
     Usage
         cohenMacaulayASMsList(n)
     Inputs
         n:ZZ
     Description
         Text
-            For $1 \leq n \leq 6$, a list of all Cohen-Macaulay ASMs which are not permutation matrices of size $n$ comes with the package.
-	    It is known by Fulton [Ful92] that the permutation matrices have Cohen-Macaulay Schubert determinantal ideals.
+            For $1 \leq n \leq 6$, this function lists all $n\times n$ alternating sign matrices $A$ which are \textbf{not} permutation matrices
+	    such that the corresponding ASM variety is Cohen-Macaulay.
+	    By a theorem of Fulton [Ful92], permutation matrices always have Cohen-Macaulay Schubert determinantal ideals.
 	    
 	    @UL {
 	    {"[Ful92] William Fulton, ",
@@ -57,14 +59,15 @@ doc ///
         (nonCohenMacaulayASMsList, ZZ)
         nonCohenMacaulayASMsList
     Headline
-        provides a list of all non-Cohen-Macaulay ASMs of a certain size
+        lists all non-Cohen-Macaulay ASMs of a fixed size
     Usage
         nonCohenMacaulayASMsList(n)
     Inputs
         n:ZZ
     Description
         Text
-            For $1 \leq n \leq 6$, a list of all non-Cohen-Macaulay ASMs of size $n$ comes with the package.
+            For $1 \leq n \leq 6$, this function lists all ASMs of size $n$ such that the corresponding ASM variety
+	    is \textbf{not} Cohen-Macaulay.
 ///
 
 doc ///
@@ -72,12 +75,12 @@ doc ///
         (initialIdealsList, ZZ)
         initialIdealsList
     Headline
-        provides a list of all initial ideals of ASMs of a certain size
+        lists all antidiagonal initial ideals of ASMs of a fixed size
     Usage
         initialIdealsList(n)
     Inputs
         n:ZZ
     Description
         Text
-            For $3 \leq n \leq 6$, a list of all initial ideals of ASMs of size $n$ comes with the package.
+            For $3 \leq n \leq 6$, this function lists all antidiagonal initial ideals for ASMs of size $n$.
 ///

@@ -4,6 +4,7 @@
 -- INPUT: an integer n between 1 and 7
 -- OUTPUT: a list of matrices containing all ASMs of size n
 ------------------------------
+
 ASMFullList = method()
 ASMFullList ZZ := List => (n) -> (
     if (n < 1 or n > 7) then error("There is no available list for this n.");
@@ -11,6 +12,7 @@ ASMFullList ZZ := List => (n) -> (
     listOfMatrices := apply(lines get filename, i -> matrix value i);
     listOfMatrices
 );
+
 
 ------------------------------
 -- INPUT: an integer n between 1 and 7 for the size of ASMs, and an integer m for number of random ASMs.
