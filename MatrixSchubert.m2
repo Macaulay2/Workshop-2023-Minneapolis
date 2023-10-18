@@ -28,7 +28,6 @@ newPackage(
     },
     Headline => "functions for investigating ASM and matrix Schubert varieties",
     PackageExports => {
-        "Depth",
         "SimplicialComplexes",
         "SimplicialDecomposability",
         "Posets",

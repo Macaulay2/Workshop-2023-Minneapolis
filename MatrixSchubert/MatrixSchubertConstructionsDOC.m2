@@ -482,6 +482,8 @@ doc ///
         (antiDiagInit, List)
         (antiDiagInit, Matrix)
         antiDiagInit
+	[antiDiagInit, CoefficientRing]
+	[antiDiagInit, Variable]
     Headline
         compute the (unique) antidiagonal initial ideal of an ASM ideal
     Usage
@@ -490,6 +492,8 @@ doc ///
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
+        CoefficientRing => Ring
+	Variable => Symbol
     Outputs
     	:MonomialIdeal
     Description
@@ -512,7 +516,7 @@ doc ///
            
         Example
             antiDiagInit({1,3,2},CoefficientRing=>ZZ/3001)
-            antiDiagInit(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+            antiDiagInit(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}, Variable => t)
 ///
 
 doc ///
@@ -645,6 +649,8 @@ doc ///
         (schubDetIdeal, List)
         (schubDetIdeal, Matrix)
         schubDetIdeal
+	[schubDetIdeal, CoefficientRing]
+	[schubDetIdeal, Variable]
     Headline
         compute an alternating sign matrix ideal (for example, a Schubert determinantal ideal)
     Usage
@@ -662,7 +668,7 @@ doc ///
 	    This function computes over the coefficient field of rational numbers unless an alternative is specified.
         Example
             schubDetIdeal({1,3,2},CoefficientRing=>ZZ/3001)
-            schubDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+            schubDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}, Variable => y)
 
 ///
 
@@ -672,6 +678,8 @@ doc ///
         (fultonGens, List)
         (fultonGens, Matrix)
         fultonGens
+	[fultonGens, CoefficientRing]
+	[fultonGens, Variable]
     Headline
         compute the Fulton generators of an ASM ideal (for example, a Schubert determinantal ideal)
     Usage
@@ -680,14 +688,16 @@ doc ///
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
+        CoefficientRing => Ring
+	Variable => Symbol
     Outputs
     	:List
     Description
         Text
             Given a partial alternating sign matrix or permutation in 1-line notation, returns the list of Fulton generators for the corresponding Schubert determinantal ideal or, more generally, ASM ideal.
         Example 
-            netList fultonGens {2,5,4,1,3}
-            netList fultonGens matrix{{0,1,0},{1,-1,1},{0,1,0}}
+            netList fultonGens({2,5,4,1,3}, CoefficientRing => ZZ/101)
+            netList fultonGens(matrix{{0,1,0},{1,-1,1},{0,1,0}}, Variable => a)
 ///
 
 doc ///
@@ -695,6 +705,8 @@ doc ///
     	(diagLexInitSE, List)
 	(diagLexInitSE, Matrix)
         diagLexInitSE
+        [diagLexInitSE, CoefficientRing]
+	[diagLexInitSE, Variable]
     Headline
         Diagonal initial ideal of an ASM ideal with respect to lex, starting from SE corner
     Usage
@@ -703,6 +715,8 @@ doc ///
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
+	CoefficientRing => Ring
+	Variable => Symbol
     Outputs
     	:MonomialIdeal
     Description
@@ -713,7 +727,7 @@ doc ///
 	    This function computes over the coefficient field of rational numbers unless an alternative is specified.
 	Example
 	    diagLexInitSE({1,3,2},CoefficientRing=>ZZ/3001)
-            diagLexInitSE(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
+            diagLexInitSE(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}, Variable => c)
 ///
 
 
@@ -722,6 +736,8 @@ doc ///
         (diagLexInitNW, List)
 	(diagLexInitNW, Matrix)
 	diagLexInitNW
+	[diagLexInitNW, CoefficientRing]
+	[diagLexInitNW, Variable]
     Headline
         Diagonal initial ideal of an ASM ideal with respect to lex, starting from NW corner
     Usage
@@ -729,7 +745,9 @@ doc ///
 	diagLexInitNW A
     Inputs
         w:List
-            or {\tt A} is a @TO Matrix@  
+            or {\tt A} is a @TO Matrix@
+        CoefficientRing => Ring
+	Variable => Symbol  
     Outputs
     	:MonomialIdeal  
     Description
@@ -1112,32 +1130,3 @@ doc ///
             schubAdd {{3,2,1,4}, {2,1,4,3}}
             schubAdd {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}}
 ///
-
--*
-doc ///
-    Key
-        (getPermFromASM, Matrix)
-        getPermFromASM
-    Headline
-        returns permutation associated to perumation matrix 
-    Usage
-        getPermFromASM A
-    Inputs
-        A:Matrix
-    Outputs
-        :List
-    Description
-        Text
-	    When {\tt A} is a permutation matrix, returns the corresponding permutation. Otherwise, returns the empty permutation.
-        Example
-            A = matrix {{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}
-            getPermFromASM A
-	    
-	    A = matrix{{1,0},{0,0}}
-    	    getPermFromASM A
-	    
-            A = matrix {{0,1,0,0},{1,0,0,0},{0,0,1,0},{0,0,0,1}}
-            getPermFromASM A
-///
-*-
-

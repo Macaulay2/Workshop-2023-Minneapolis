@@ -116,8 +116,8 @@ doc ///
     	Text
 	 Given a permutation in 1-line notation returns the inverse of the permutation in 1-line notation.
 	Example
-    	    w = {2,5,4,1,3}
-	    inverseOf w
+    	 w = {2,5,4,1,3}
+	 inverseOf w
 ///
 
 doc ///
@@ -428,12 +428,16 @@ doc ///
     Key 
         (grothendieckPoly, List)
         grothendieckPoly
+	[grothendieckPoly, Algorithm]
+	Algorithm
     Headline
         computes the Grothendieck polynomial of a permutation 
     Usage
         grothendieckPoly w
     Inputs
         w:List
+	Algorithm => String
+	    algorithm "PipeDream" also available
     Description
         Text
             Given a permutation in 1-line notation, finds its Grothenieck polynomial.  Two algorithms are impliemented: DividedDifference (which is the default) and PipeDream.
@@ -449,8 +453,7 @@ doc ///
     Key 
         (schubertPoly, List)
         schubertPoly
-	[schubertPoly,Algorithm]
-	Algorithm
+	[schubertPoly, Algorithm]
     Headline
         computes the (singe) Schubert polynomial of a permutation 
     Usage
