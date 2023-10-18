@@ -66,9 +66,7 @@ export{
     "rankTableFromMatrix",    	    --documented ++
     "schubIntersect",	     	    --documented ++
     "schubAdd",	       	       	    --documented ++
---    "getPermFromASM",	       	    --documented ++
---    "ASM",    	      	      	    -- ??
-    
+   
  --permutationMethods.m2   
     "isPerm",	     	     	    --documented ++
     "permToMatrix",    	       	    --documented ++
@@ -77,7 +75,6 @@ export{
     "permLength",    	     	    --documented ++
     "inverseOf",             	    --documented (check)
     "longestPerm",    	      	    --documented (check)
- --   "getOneReducedWord",    	    -- ??
     "toOneLineNotation",    	    --documented ++
     "composePerms",    	       	    --documented ++
     "isPatternAvoiding",    	    --documented ++
@@ -90,10 +87,6 @@ export{
     "grothendieckPoly",	       	    -- CHECK DOC
     "schubertPoly",    	       	    -- CHECK DOC
     "doubleSchubertPoly",           -- CHECK DOC
---    "dividedDifference",    	    -- CHECK DOC
---    "PolyType",	       	       	    -- ??
---    "Operator",	       	       	    -- ??
---    "Double",	     	     	    -- ??
     "pipeDreams",    	     	    -- CHECK DOC
     "pipeDreamsNonReduced",    	    -- CHECK DOC
     "netPD",	    	    	    -- CHECK DOC
@@ -152,12 +145,6 @@ end---------------------------------------------------------------------------
 -- **SCRATCH SPACE** --
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
-
-
----------------------
---Ayah's sandbox
----------------------
-
 
 ------------------------------------
 --Development Section

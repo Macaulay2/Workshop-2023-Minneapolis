@@ -455,7 +455,7 @@ doc ///
         (schubertPoly, List)
 	[schubertPoly, Algorithm]
     Headline
-        computes the (singe) Schubert polynomial of a permutation 
+        computes the Schubert polynomial of a permutation 
     Usage
         schubertPoly w
     Inputs
@@ -594,7 +594,7 @@ doc ///
             @UL {{"[HR]: Z. Hamaker and V. Reiner, \"Weak Order and Descents for Monotone Triangles\" (see ", arXiv "1809.10571", ")."},}@
         Example
             A = matrix{{0,1,0,0,0,0},{0,0,0,1,0,0},{1,-1,1,-1,0,1},{0,0,0,1,0,0},{0,1,0,-1,1,0},{0,0,0,1,0,0}}
-            ASMToMonotoneTriangle A
+            netList ASMToMonotoneTriangle A
 ///
 
 doc ///

@@ -2,7 +2,7 @@
 
 -- It contains Macaulay2 code and is automatically run every time you open
 -- a pull request or push a new commit to a project branch on the GitHub
--- respository, unless you add the string "[skip ci]" to the commit message.
+-- repository, unless you add the string "[skip ci]" to the commit message.
 
 -- If you have the software Docker installed and would like to run the same
 -- tests locally or run M2 inside a container, use one of these commands from

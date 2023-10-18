@@ -768,7 +768,9 @@ schubIntersect = method()
 schubIntersect List := Ideal => (L) -> (
     if (#L == 0) then error("Please enter a nonempty list.");
     ll := L / schubDetIdeal;
-    intersect apply(ll, J -> sub(J, vars ring ll#0))
+    numVars := apply(ll, i-> #((ring i)_*));
+    Q := ring ll_(position(numVars, i-> i == max numVars));
+    intersect apply(ll, J -> sub(J, Q))
 );
 
 --------------------------------------------

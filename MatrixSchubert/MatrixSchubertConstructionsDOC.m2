@@ -98,11 +98,15 @@ doc ///
 	    netList fultonGens p	    
 	Text
 	    The default presentation given by @TO schubDetIdeal@ is given by the Fulton generators of the ideal.
-	    In order to access the minimal generating set, use @TO trim@.
+	    In order to access a minimal generating set, use @TO trim@.
 	Example
 	    I = schubDetIdeal p;
 	    # (I_*)
 	    # ((trim I)_*)
+	Text
+	    After creating a Schubert determinantal ideal, the permutation associated to it is stored in its cache table.
+	Example
+	    peek I.cache
 	Text
 	    This package also contains methods for investigating antidiagonal initial ideals
 	    of Schubert determinantal ideals and their associated Stanley-Reisner complexes,
@@ -184,11 +188,15 @@ doc ///
 	    netList fultonGens A	    
 	Text
 	    The default presentation given by @TO schubDetIdeal@ is given by the Fulton generators of the ideal.
-	    In order to access the minimal generating set, use @TO trim@.
+	    In order to access a minimal generating set, use @TO trim@.
 	Example
 	    I = schubDetIdeal A;
 	    # (I_*)
 	    # ((trim I)_*)
+	Text
+	    After creating an ASM ideal, the corresponding ASM is stored in the cache table.
+	Example
+	    peek I.cache
 	Text
 	    This package also contains methods for investigating initial ideals of ASM ideals.
 	Example
@@ -202,11 +210,20 @@ doc ///
 	Text
 	    Given a list of partial ASMs, this package also contains functions for intersecting and adding
 	    the ASM ideals associated to the list of partial ASMs.
+	    The function @TO schubAdd@ automatically stores the ASM associated to this new ideal
+	    in its cache table.
 	Example
 	    B = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
-	    L = {A', B} -- a list of 2 partial ASMs
-	    schubAdd L
-	    schubIntersect L
+	    L = {A, B} -- a list of 2 partial ASMs
+	    J = schubAdd L
+	    peek J.cache
+	    K = schubIntersect L
+	Text
+	    Given an ideal, we can obtain the ASM corresponding to that ideal using @TO getASM@.
+	    Once we do this, that ASM is stored in the ideal's cache table for easy access.
+	Example
+    	    getASM K
+	    peek K.cache
 	Text
 	    Finally, this package contains functions for investigating homological invariants of ASM ideals
 	    efficiently by computing the associated invariants for their antidiagonal initial ideals,
@@ -214,8 +231,8 @@ doc ///
 	    (which encode regularity, depth, and projective dimension) of ASM ideals coincide 
 	    with those of their antidiagonal initical ideals by [CV20].
 	Example
-	    time schubReg A
-	    time regularity comodule I 
+	    time schubReg B
+	    time regularity comodule schubDetIdeal B
 	Text
 	    @SUBSECTION "Functions for investigating ASM varieties"@
 	Text
@@ -281,10 +298,10 @@ doc ///
 	    By [KM05] and [Wei17] or [Knu09], the Fulton generators form a Grobner basis for any ASM ideal with respect to
 	    any antidiagonal term order.
         Example
-	    w = {2,1,4,3,6,5};
+	    w = {2,4,5,1,3};
 	    I = schubDetIdeal w;
 	    inI = antiDiagInit w;
-	    netList transpose {inI_*, I_*}
+	    (netList sort inI_*, netList sort (trim I)_*)
 	Text
 	    In particular, by work of Conca and Varbaro [CV21], we know that the extremal Betti numbers (such as regularity
 	    and projective dimension) of an ASM ideal and its antidiagonal initial ideal must coincide because the antidiagonal initial ideal is squarefree.
@@ -314,17 +331,18 @@ doc ///
 	    one which uses lex and orders the variables diagonaly reading from the northwest corner @TO diagLexInitNW@,
 	    and one which uses revlex on the variables diagonally reading from the northwest corner @TO diagRevLexInit@.
 	Text
-	    In our running example, the two lex diagonal orders give two distinct initial ideals which are not squarefree.
+	    Two diagonal term orders may give two distinct initial ideals which are not squarefree.
 	Example
-	    diagLexInitSE w
+	    v = {2,1,4,3,6,5}
+	    diagLexInitSE v
 	    netList (decompose oo)
-	    diagLexInitNW w
+	    diagLexInitNW v
 	    netList (decompose oo)
 	Text
-	    For this running example, diagRevLexInit and diagLexInitSE give the same initial ideal.
+	    In this case, @TO diagRevLexInit@ and @TO diagLexInitSE@ give the same initial ideal.
 	    It is unknown if this is the case in general.
 	Example
-	    diagRevLexInit w
+	    diagRevLexInit v
 	Text
 	    @SUBSECTION "Functions for studying initial ideals of ASM ideals"@
 	Text
@@ -376,9 +394,10 @@ doc ///
 	    associated to a permutation, such as the (double) Schubert polynomial and the
 	    Grothendieck polynomial.
 	Example
-	    schubertPoly v
-	    doubleSchubertPoly v
-	    grothendieckPoly v
+	    u = {3,1,4,2}
+	    schubertPoly u
+	    doubleSchubertPoly u
+	    grothendieckPoly u
 	Text
 	    Moreover, this package contains functionality for checking whether
 	    a permutation avoids a set of patterns.
@@ -396,7 +415,6 @@ doc ///
 	    Finally, this package contains functionality for studying
 	    both reduced and nonreduced pipe dreams of a permutation.
 	Example
-	    u = {3,1,4,2};
 	    decompose antiDiagInit u
 	    apply(pipeDreams u, i -> netList i)	    
 	    apply(pipeDreamsNonReduced u, i-> netList i)
