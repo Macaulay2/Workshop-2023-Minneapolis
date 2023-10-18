@@ -431,8 +431,8 @@ doc ///
 
 doc ///
     Key
-        (isPartialASM, Matrix)
         isPartialASM
+        (isPartialASM, Matrix)
     Headline
         whether a matrix is a partial alternating sign matrix
     Usage
@@ -457,8 +457,8 @@ doc ///
 
 doc ///
     Key
-        (partialASMToASM, Matrix)
         partialASMToASM
+        (partialASMToASM, Matrix)
     Headline
         extend a partial alternating sign matrix to an alternating sign matrix
     Usage
@@ -479,9 +479,9 @@ doc ///
 
 doc ///
     Key
-        (antiDiagInit, List)
-        (antiDiagInit, Matrix)
         antiDiagInit
+	(antiDiagInit, List)
+        (antiDiagInit, Matrix)
 	[antiDiagInit, CoefficientRing]
 	[antiDiagInit, Variable]
     Headline
@@ -521,9 +521,9 @@ doc ///
 
 doc ///
     Key
+        rankTable
         (rankTable, List)
         (rankTable, Matrix)
-        rankTable
     Headline
         compute a table of rank conditions that determines a Schubert determinantal ideal or, more generally, an alternating sign matrix ideal.
     Usage
@@ -544,9 +544,9 @@ doc ///
 
 doc ///
     Key
+        rotheDiagram
         (rotheDiagram, List)
         (rotheDiagram, Matrix)
-        rotheDiagram
     Headline
         find the Rothe diagram of a partial alternating sign matrix
     Usage
@@ -571,9 +571,9 @@ doc ///
 
 doc ///
     Key
+        augmentedRotheDiagram
         (augmentedRotheDiagram, List)
         (augmentedRotheDiagram, Matrix)
-        augmentedRotheDiagram
     Headline
         find the Rothe diagram of a partial alternating sign matrix together with the rank table determining the alternating sign matrix variety
     Usage
@@ -597,9 +597,9 @@ doc ///
 
 doc ///
     Key
+        essentialSet
         (essentialSet, List)
         (essentialSet, Matrix)
-        essentialSet
     Headline
         compute the essential set in the Rothe Diagram for a partial alternating sign matrix or a permutation.
     Usage
@@ -620,9 +620,9 @@ doc ///
 
 doc ///
     Key
+        augmentedEssentialSet
         (augmentedEssentialSet, List)
         (augmentedEssentialSet, Matrix)
-        augmentedEssentialSet
     Headline
         find the essential set of a partial alternating sign matrix or a permutation together with the rank conditions determining the alternating sign matrix variety
     Usage
@@ -646,9 +646,9 @@ doc ///
 
 doc ///
     Key
+        schubDetIdeal
         (schubDetIdeal, List)
         (schubDetIdeal, Matrix)
-        schubDetIdeal
 	[schubDetIdeal, CoefficientRing]
 	[schubDetIdeal, Variable]
     Headline
@@ -675,9 +675,9 @@ doc ///
 
 doc ///
     Key 
+        fultonGens
         (fultonGens, List)
         (fultonGens, Matrix)
-        fultonGens
 	[fultonGens, CoefficientRing]
 	[fultonGens, Variable]
     Headline
@@ -702,9 +702,9 @@ doc ///
 
 doc ///
     Key 
+        diagLexInitSE
     	(diagLexInitSE, List)
 	(diagLexInitSE, Matrix)
-        diagLexInitSE
         [diagLexInitSE, CoefficientRing]
 	[diagLexInitSE, Variable]
     Headline
@@ -733,9 +733,9 @@ doc ///
 
 doc ///
     Key 
+	diagLexInitNW
         (diagLexInitNW, List)
 	(diagLexInitNW, Matrix)
-	diagLexInitNW
 	[diagLexInitNW, CoefficientRing]
 	[diagLexInitNW, Variable]
     Headline
@@ -764,9 +764,9 @@ doc ///
 
 doc ///
     Key 
+        diagRevLexInit
     	(diagRevLexInit, List)
 	(diagRevLexInit, Matrix)
-        diagRevLexInit
 	[diagRevLexInit, CoefficientRing]
 	[diagRevLexInit, Variable]
 	CoefficientRing
@@ -796,10 +796,10 @@ doc ///
 
 doc ///
     Key
+        subwordComplex    
         (subwordComplex, List)
-        subwordComplex
     Headline
-        to find the subword complex associated to w (i.e. SR-ideal of antiDiagInit)
+        to find the subword complex associated to w
     Usage
         subwordComplex w
     Inputs
@@ -815,8 +815,8 @@ doc ///
 
 doc ///
     Key
-        (entrywiseMinRankTable, List)
         entrywiseMinRankTable
+        (entrywiseMinRankTable, List)
     Headline
         compute the entrywise minimum rank table of a list of ASMs
     Usage
@@ -836,8 +836,8 @@ doc ///
 
 doc ///
     Key
-        (entrywiseMaxRankTable, List)
         entrywiseMaxRankTable
+        (entrywiseMaxRankTable, List)
     Headline
         compute the entrywise maximum rank table of a list of ASMs
     Usage
@@ -858,9 +858,9 @@ doc ///
 
 doc ///
     Key
+        schubDecomposition
         (schubDecomposition, Ideal)
 	(schubDecomposition, Matrix)
-        schubDecomposition
     Headline
         finds the decomposition of an ASM ideal into Schubert determinantal ideals
     Usage
@@ -887,8 +887,8 @@ doc ///
 
 doc ///
     Key
+        permOverASM    
         (permOverASM, Matrix)
-        permOverASM
     Headline
         finds the permutation set of an alternating sign matrix
     Usage
@@ -907,8 +907,8 @@ doc ///
 
 doc ///
     Key
-        (isIntersectionSchubIdeals, Ideal)
         isIntersectionSchubIdeals
+        (isIntersectionSchubIdeals, Ideal)
     Headline
         whether an ideal is the intersection of Schubert determinantal ideals
     Usage
@@ -940,8 +940,8 @@ doc ///
 
 doc ///
     Key
-        (isASMIdeal, Ideal)
         isASMIdeal
+        (isASMIdeal, Ideal)
     Headline
         whether an ideal is an ASM ideal
     Usage
@@ -964,8 +964,8 @@ doc ///
 
 doc ///
     Key
-        (isASMUnion, List)
         isASMUnion
+        (isASMUnion, List)
     Headline
         whether the union of matrix Schubert varieties is an ASM variety 
     Usage
@@ -986,8 +986,8 @@ doc ///
 
 doc ///
     Key
-        (getASM, Ideal)
         getASM
+        (getASM, Ideal)
     Headline
         get the ASM of an ideal (if it exists)
     Usage
@@ -1008,8 +1008,8 @@ doc ///
 
 doc ///
     Key
-        (isMinRankTable, Matrix)
         isMinRankTable
+        (isMinRankTable, Matrix)
     Headline
         whether a matrix is the canonical rank table of some partial ASM
     Usage
@@ -1034,8 +1034,8 @@ doc ///
 
 doc ///
     Key
-        (rankTableToASM, Matrix)
         rankTableToASM
+        (rankTableToASM, Matrix)
     Headline
         to find the ASM associated to a given rank table
     Usage
@@ -1059,8 +1059,8 @@ doc ///
 
 doc ///
     Key
-        (rankTableFromMatrix, Matrix)
         rankTableFromMatrix
+        (rankTableFromMatrix, Matrix)
     Headline
         to find the minimal rank table from an arbitrary square integer matrix
     Usage
@@ -1082,8 +1082,8 @@ doc ///
 
 doc /// 
     Key
-        (schubIntersect, List)
         schubIntersect
+        (schubIntersect, List)
     Headline
         compute the intersection of ASM ideals
     Usage 
@@ -1103,8 +1103,8 @@ doc ///
 
 doc ///
     Key
-        (schubAdd, List)
         schubAdd
+        (schubAdd, List)
     Headline
         compute the sum of ASM ideals
     Usage 

@@ -1,9 +1,9 @@
 
 doc ///
     Key
+        schubReg
         (schubReg, List)
 	(schubReg, Matrix)
-        schubReg
     Headline
         compute the Castelnuovo-Mumford regularity of the quotient by a Schubert determinantal ideal or ASM ideal
     Usage
@@ -36,9 +36,9 @@ doc ///
 
 doc ///
     Key
+        schubCodim
         (schubCodim, List)
         (schubCodim, Matrix)
-        schubCodim
     Headline
         compute the codimension (i.e., height) of a Schubert determinantal ideal or ASM ideal
     Usage
@@ -58,9 +58,9 @@ doc ///
 
 doc ///
     Key
+    	isSchubCM
     	(isSchubCM, Matrix)
     	(isSchubCM, List)
-    	isSchubCM
     Headline
     	whether an ASM variety is Cohen-Macaulay
     Usage
@@ -87,8 +87,8 @@ doc ///
 
 doc ///
     Key 
-        (KPolynomialASM, Matrix)
         KPolynomialASM
+        (KPolynomialASM, Matrix)
     Headline
         compute the K Polynomial of an ASM variety
     Usage

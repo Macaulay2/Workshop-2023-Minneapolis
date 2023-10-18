@@ -1,7 +1,7 @@
 doc ///
     Key
-        (ASMFullList, ZZ)
         ASMFullList
+        (ASMFullList, ZZ)
     Headline
         lists all ASMs of a fixed size
     Usage
@@ -16,8 +16,8 @@ doc ///
 
 doc ///
     Key
-        (ASMRandomList, ZZ,ZZ)
         ASMRandomList
+        (ASMRandomList, ZZ,ZZ)
     Headline
         lists random ASMs of a fixed size
     Usage
@@ -32,8 +32,8 @@ doc ///
 
 doc ///
     Key
-        (cohenMacaulayASMsList, ZZ)
         cohenMacaulayASMsList
+        (cohenMacaulayASMsList, ZZ)
     Headline
         lists all Cohen-Macaulay ASMs of a fixed size which are not permutation matrices
     Usage
@@ -56,8 +56,8 @@ doc ///
 
 doc ///
     Key
-        (nonCohenMacaulayASMsList, ZZ)
         nonCohenMacaulayASMsList
+        (nonCohenMacaulayASMsList, ZZ)
     Headline
         lists all non-Cohen-Macaulay ASMs of a fixed size
     Usage
@@ -72,8 +72,8 @@ doc ///
 
 doc ///
     Key
-        (initialIdealsList, ZZ)
         initialIdealsList
+        (initialIdealsList, ZZ)
     Headline
         lists all antidiagonal initial ideals of ASMs of a fixed size
     Usage

@@ -1,7 +1,7 @@
 doc ///
     Key
-        (isPerm, List)
         isPerm
+        (isPerm, List)
     Headline
         whether a list is a permutation in 1-line notation
     Usage
@@ -21,8 +21,8 @@ doc ///
 
 doc ///
     Key
-        (permToMatrix, List)
         permToMatrix
+        (permToMatrix, List)
     Headline
        converts a permutation in 1-line notation into a permutation matrix
     Usage
@@ -42,8 +42,8 @@ doc ///
 
 doc ///
     Key
-        (lastDescent, List)
         lastDescent
+        (lastDescent, List)
     Headline
        finds the location of the last descent of a permutation
     Usage
@@ -63,8 +63,8 @@ doc ///
 
 doc ///
     Key
-        (firstDescent, List)
         firstDescent
+        (firstDescent, List)
     Headline
        finds the location of the first descent of a permutation
     Usage
@@ -84,8 +84,8 @@ doc ///
 
 doc ///
     Key
-	(permLength, List)
         permLength
+	(permLength, List)
     Headline
     	to find the length of a permutation in 1-line notation.
     Usage
@@ -104,8 +104,8 @@ doc ///
 
 doc ///
     Key
-	(inverseOf, List)
         inverseOf
+	(inverseOf, List)
     Headline
     	to return the inverse of a permutation in 1-line notation.
     Usage
@@ -122,8 +122,8 @@ doc ///
 
 doc ///
     Key
-	(longestPerm, ZZ)
         longestPerm
+	(longestPerm, ZZ)
     Headline
     	to return the longest permutation of length n
     Usage
@@ -156,8 +156,8 @@ doc ///
 
 doc ///
     Key
-        (toOneLineNotation, List, ZZ)
         toOneLineNotation
+        (toOneLineNotation, List, ZZ)
     Headline
     	rewrites a transposition in 1-line notation
     Usage
@@ -201,8 +201,8 @@ doc ///
 
 doc ///
     Key
-        (composePerms, List, List)
         composePerms
+        (composePerms, List, List)
     Headline
         computes the composition of two permutations
     Usage
@@ -233,8 +233,8 @@ doc ///
 
 doc ///
     Key
-        (isPatternAvoiding, List, List)
         isPatternAvoiding
+        (isPatternAvoiding, List, List)
     Headline
         whether a permutation avoids certain patterns, e.g. $2143$-avoiding or $312$- and $231$-avoiding
     Usage
@@ -262,8 +262,8 @@ doc ///
 
 doc ///
     Key
-        (isVexillary, List)
         isVexillary
+        (isVexillary, List)
     Headline
         whether a permutation is vexillary, i.e. 2143-avoiding
     Usage
@@ -287,8 +287,8 @@ doc ///
 
 doc ///
     Key
-        (avoidsAllPatterns, List, List)
         avoidsAllPatterns
+        (avoidsAllPatterns, List, List)
     Headline
         whether a permutation avoids all of the given patterns
     Usage
@@ -309,8 +309,8 @@ doc ///
 
 doc ///
     Key
-        (isCartwrightSturmfels, List)
         isCartwrightSturmfels
+        (isCartwrightSturmfels, List)
     Headline
         whether a permutation is Cartwright-Sturmfels
     Usage
@@ -341,8 +341,8 @@ doc ///
 
 doc ///
     Key
-        (isCDG, List)
         isCDG
+        (isCDG, List)
     Headline
         whether a permutation is CDG
     Usage
@@ -374,8 +374,8 @@ doc ///
 
 doc ///
     Key
-        (rajCode, List)
         rajCode
+        (rajCode, List)
     Headline
       finds the Rajchgot code of a permutation
     Usage
@@ -398,8 +398,8 @@ doc ///
 
 doc ///
     Key
+        rajIndex 
         (rajIndex, List)
-        rajIndex
     Headline
       finds the Rajchgot index of a permutation
     Usage
@@ -426,8 +426,8 @@ doc ///
 
 doc ///
     Key 
-        (grothendieckPoly, List)
         grothendieckPoly
+        (grothendieckPoly, List)
 	[grothendieckPoly, Algorithm]
 	Algorithm
     Headline
@@ -451,8 +451,8 @@ doc ///
 
 doc ///
     Key 
-        (schubertPoly, List)
         schubertPoly
+        (schubertPoly, List)
 	[schubertPoly, Algorithm]
     Headline
         computes the (singe) Schubert polynomial of a permutation 
@@ -475,8 +475,8 @@ doc ///
 
 doc ///
     Key 
-        (doubleSchubertPoly, List)
         doubleSchubertPoly
+        (doubleSchubertPoly, List)
     Headline
         computes the double Schubert polynomial of a permutation 
     Usage
@@ -514,8 +514,8 @@ doc ///
 
 doc ///
     Key 
-        (pipeDreams, List)
         pipeDreams
+        (pipeDreams, List)
     Headline
         computes the set of reduced pipe dreams corresponding to a permutation
     Usage 
@@ -534,8 +534,8 @@ doc ///
 
 doc ///
     Key 
-        (pipeDreamsNonReduced, List)
         pipeDreamsNonReduced
+        (pipeDreamsNonReduced, List)
     Headline
         computes the set of all pipe dreams corresponding to a permutation
     Usage 
@@ -554,8 +554,8 @@ doc ///
 
 doc ///
     Key 
-        (netPD, List)
         netPD
+        (netPD, List)
     Headline
         printing utility for pipe dreams 
     Usage
@@ -574,8 +574,8 @@ doc ///
 
 doc ///
     Key 
-        (ASMToMonotoneTriangle, Matrix)
         ASMToMonotoneTriangle
+        (ASMToMonotoneTriangle, Matrix)
     Headline
         converts an ASM to a monotone triangle
     Usage
@@ -599,8 +599,8 @@ doc ///
 
 doc ///
     Key 
-        (MonotoneTriangleToASM, List)
         MonotoneTriangleToASM
+        (MonotoneTriangleToASM, List)
     Headline
         converts a monotone triangle to an ASM
     Usage
