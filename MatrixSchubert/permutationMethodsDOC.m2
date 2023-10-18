@@ -440,8 +440,8 @@ doc ///
 	    
 	Example
 	    w = {2,1,4,3}
-	    grothendieckPoly w
-	    grothendieckPoly (w,Algorithm=>"PipeDream")
+	    time grothendieckPoly w
+	    time grothendieckPoly (w,Algorithm=>"PipeDream")
 	    
 ///
 
@@ -449,12 +449,16 @@ doc ///
     Key 
         (schubertPoly, List)
         schubertPoly
+	[schubertPoly,Algorithm]
+	Algorithm
     Headline
         computes the (singe) Schubert polynomial of a permutation 
     Usage
         schubertPoly w
     Inputs
         w:List
+	Algorithm => String
+	    algorithm "Transition" also available
     Description
         Text
             Given a permutation in 1-line notation, finds its (single) Schubert polynomial.  Two algorithms are impliemented: DividedDifference (which is the default) and Transition
@@ -483,16 +487,27 @@ doc ///
             w = {2,1,5,4,3}
             doubleSchubertPoly w
 ///
-
+-*
 doc ///
     Key 
         dividedDifference
+	(dividedDifference, RingElement, ZZ)
+	[dividedDifference, Operator]
+	Operator
     Headline
-        tmp 
+        the divided Difference operator of a polynomial
+    Usage
+    	dividedDifference(f,n)
+    Inputs
+    	f:RingElement
+	    a polynomial in $n$ variables
+	n:ZZ
+	Operator =>  
     Description
         Text
             This is a stub
 ///
+*-
 
 doc ///
     Key 

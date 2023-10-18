@@ -336,7 +336,7 @@ rajIndex List := ZZ => (w) -> (
 grothendieckPoly = method(Options=>{Algorithm=>"DividedDifference"})
 grothendieckPoly(List) := opts -> w -> (
     if not(isPerm w) then error("The input must be a permutation in one-line notation.");
-    if opts.Algorithm == "Degree" then (
+-*    if opts.Algorithm == "Degree" then (
         I := schubDetIdeal w;
         R := ring I;
         kk := coefficientRing R;
@@ -344,11 +344,11 @@ grothendieckPoly(List) := opts -> w -> (
         degs := splice apply(possibleDegs, i->#w:i);
         Q := kk[R_*, Degrees => degs];
         numerator hilbertSeries sub(I,Q)
-    )
-    else if opts.Algorithm == "DividedDifference" then (
+    )*- --Ayah: this requires a change of coordinates, and anyway it's always less efficient
+    if opts.Algorithm == "DividedDifference" then (
         n := #w;
         x := local x;
-        Q = QQ[x_1..x_n];
+        Q := QQ[x_1..x_n];
         polyByDividedDifference(w, Q, PolyType => "Grothendieck")        	
     )
     else if opts.Algorithm == "PipeDream" then (
@@ -499,7 +499,7 @@ permsAfterTopRowNonReduced = (w, ro) -> (
     )
 
 pipeDreamsNonReduced = method()
-pipeDreamsNonReduced (List) := List => (w) -> (
+pipeDreamsNonReduced (List) := List => w -> (
     if (w=={1})
         then {{"/"}}
 	else flatten apply(possibleTopRows(w), ro->(

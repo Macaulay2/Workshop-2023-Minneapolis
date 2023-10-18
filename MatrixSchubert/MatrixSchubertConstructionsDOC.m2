@@ -749,6 +749,10 @@ doc ///
     	(diagRevLexInit, List)
 	(diagRevLexInit, Matrix)
         diagRevLexInit
+	[diagRevLexInit, CoefficientRing]
+	[diagRevLexInit, Variable]
+	CoefficientRing
+	Variable
     Headline
         Diagonal initial ideal of an ASM ideal with respect to revlex, ordering variables from NW corner 
     Usage
@@ -756,7 +760,9 @@ doc ///
 	diagRevLexInit A
     Inputs
         w:List
-            or {\tt A} is a @TO Matrix@    
+            or {\tt A} is a @TO Matrix@
+	CoefficientRing => Ring
+	Variable => Symbol    
     Outputs
     	:MonomialIdeal 
     Description
@@ -835,6 +841,7 @@ doc ///
 doc ///
     Key
         (schubDecomposition, Ideal)
+	(schubDecomposition, Matrix)
         schubDecomposition
     Headline
         finds the decomposition of an ASM ideal into Schubert determinantal ideals
@@ -842,6 +849,7 @@ doc ///
         schubDecomposition I
     Inputs
         I:Ideal
+	    or {\tt A} is a @TO Matrix@
     Outputs
     	:List
     Description

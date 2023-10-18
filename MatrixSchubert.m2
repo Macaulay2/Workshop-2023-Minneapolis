@@ -68,7 +68,7 @@ export{
     "schubIntersect",	     	    --documented ++
     "schubAdd",	       	       	    --documented ++
 --    "getPermFromASM",	       	    --documented ++
-    "ASM",    	      	      	    -- ??
+--    "ASM",    	      	      	    -- ??
     
  --permutationMethods.m2   
     "isPerm",	     	     	    --documented ++
@@ -91,10 +91,10 @@ export{
     "grothendieckPoly",	       	    -- CHECK DOC
     "schubertPoly",    	       	    -- CHECK DOC
     "doubleSchubertPoly",           -- CHECK DOC
-    "dividedDifference",    	    -- CHECK DOC
-    "PolyType",	       	       	    -- ??
-    "Operator",	       	       	    -- ??
-    "Double",	     	     	    -- ??
+--    "dividedDifference",    	    -- CHECK DOC
+--    "PolyType",	       	       	    -- ??
+--    "Operator",	       	       	    -- ??
+--    "Double",	     	     	    -- ??
     "pipeDreams",    	     	    -- CHECK DOC
     "pipeDreamsNonReduced",    	    -- CHECK DOC
     "netPD",	    	    	    -- CHECK DOC
@@ -114,7 +114,12 @@ export{
     "nonCohenMacaulayASMsList",	    --ADD EX TO DOC
     "initialIdealsList"    	        --ADD EX TO DOC
 }
-    
+
+--keys used for Schubert/Grothendieck polynomials
+protect PolyType
+protect Double
+protect Operator
+protect ASM
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 -- **CODE** --
@@ -154,21 +159,6 @@ end---------------------------------------------------------------------------
 --Ayah's sandbox
 ---------------------
 
-restart
-uninstallPackage "MatrixSchubert"
-restart
-installPackage "MatrixSchubert"
-restart
-needsPackage "MatrixSchubert"
-initialIdealsList 3
-
-    n = 3
-    if (n < 3 or n > 6) then error("There is no available list for this n.");
-    filename = concatenate("./MatrixSchubert/ASMData/antiDiagIniIdeal/ideals", toString n, ".txt");
-    z = getSymbol "z";
-    S = QQ(monoid[z_(1,1)..z_(n,n)]);
-    listOfIdeals = apply(lines get filename, i -> (use S; value i))
-    listOfIdeals
 
 ------------------------------------
 --Development Section
