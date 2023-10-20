@@ -1,3 +1,12 @@
+restart
+installPackage("A1BrouwerDegrees", RerunExamples=>true)
+viewHelp A1BrouwerDegrees
+
+
+M = matrix(GF(13),{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
+    beta = gwClass(M);
+    sumDecompositionString(beta)
+
 
 restart
 installPackage("A1BrouwerDegrees")

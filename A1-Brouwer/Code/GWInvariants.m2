@@ -9,7 +9,7 @@
 numNonzeroDiagEntries = method()
 numNonzeroDiagEntries (Matrix) := (Matrix) => (A) -> (
     if not isDiagonal(A) then(
-        error "input of numNonzeroDiagEntries must be diagonal";
+        A = congruenceDiagonalize(A);
         );
     nonzeroDiagEntries := 0;
     for i from 0 to (numRows(A)-1) do (
@@ -27,7 +27,7 @@ numNonzeroDiagEntries (Matrix) := (Matrix) => (A) -> (
 numPosDiagEntries = method()
 numPosDiagEntries (Matrix) := (Matrix) => (A) -> (
     if not isDiagonal(A) then(
-        error "input of numPosDiagEntries must be diagonal";
+        A = congruenceDiagonalize(A);
         );
     k := ring A;
     if not (k === RR or instance(k,RealField) or k === QQ) then(
@@ -49,7 +49,7 @@ numPosDiagEntries (Matrix) := (Matrix) => (A) -> (
 numNegDiagEntries = method()
 numNegDiagEntries (Matrix) := (Matrix) => (A) -> (
     if not isDiagonal(A) then(
-        error "input of numNegDiagEntries must be diagonal";
+        A = congruenceDiagonalize(A);
         );
     k := ring A;
     if not (k === RR or instance(k,RealField) or k === QQ) then(
