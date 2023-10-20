@@ -71,6 +71,14 @@ padicValuation (ZZ, ZZ) := (ZZ) => (n, p) -> (
     return a;
     );
 
+-- Input: A rational number q and a prime number p
+-- Output: the p-adic valuation of q
+
+padicValuationQQ = method()
+padicValuationQQ = (QQ, ZZ) := (ZZ) => (q,p) -(
+    return padicValuation(numerator(q)) - padicValuation(denominator(q));
+)
+
 -- Input: An element a of a finite field
 -- Output: True if a is a square, false otherwise
 
