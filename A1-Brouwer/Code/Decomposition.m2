@@ -286,14 +286,17 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
     w := WittIndex(beta);
     
     if w > 0 then(
-	outputString = outputString | toString(sub(w/2,ZZ)) | "H + ";
+	outputString = outputString | toString(sub(w/2,ZZ)) | "H";
 	);
     
     hyperbolicPart := hyperbolicForm(kk,w);
     alpha := anisotropicPart(beta);
     
     if numRows(alpha.matrix) > 0 then(
-	outputString = outputString | "<" | toString(diagonalEntries(alpha)) | ">";
+        D := diagonalEntries(alpha);
+        for i from 0 to (length(D)-1) do (
+	    outputString = outputString | "+ <" | toString(D_i) | ">";
+    )
 	);
     
     -- Return a simplified form of beta
