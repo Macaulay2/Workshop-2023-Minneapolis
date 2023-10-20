@@ -39,8 +39,8 @@ document{
     }
 
 document{
-    Key => {(padicValuation, ZZ, ZZ), padicValuation},
-    Headline => "p-adic valuation of a rational number",
+    Key => {(padicValuation, ZZ, ZZ), (padicValuation, QQ, ZZ), padicValuation},
+    Headline => "p-adic valuation of a rational number or integer",
     Usage => "padicValuation(a, p)",
     Inputs => {
 	ZZ => "a" => {"A non-zero rational number in ", TEX///$\mathbb{Q}_p$///, "."},
@@ -50,7 +50,7 @@ document{
 	ZZ => {"An integer ", TEX///$n$///, " where ",TEX///$a=p^n u$///, " and ", TEX///$u$///," is a unit in ", TEX///$\mathbb{Z}_p$///},
         },
     EXAMPLE lines///
-    a = 363;
+    a = 363/7;
     padicValuation(a, 11)
     ///,
     }

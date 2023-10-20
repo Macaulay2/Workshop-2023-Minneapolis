@@ -48,15 +48,11 @@ export{
     "squarefreePart",
     "legendreBoolean",
     "localAlgebraBasis",
-    "primeFactors",
     "padicValuation",
-    "squareSymbol",
+    "isPadicSquare",
 
     --MatrixMethods.m2
     "congruenceDiagonalize",
-    "congruenceDiagonalizeSimplify",
-    "nondegenerateDimension",
-    "nondegeneratePartDiagonal",
     
     --GrothendieckWittClasses.m2    
     "GrothendieckWittClass",
@@ -73,7 +69,6 @@ export{
     
     --SimplifiedRepresentatives.m2
     "diagonalForm",
-    "diagonalFormNoSimplify",
     "diagonalFormSimplify",
     "diagonalEntries",
     "integralDiagonalRep",
@@ -97,14 +92,12 @@ export{
     "gwIsomorphic",
     
     --Isotropy.m2
-    --"isIsotropicQp",
     "isIsotropic",
     "isAnisotropic",
 
     --AnisotropicDimension.m2
     "isHyperbolicQp",
     "anisotropicDimensionQp",
-    "anisotropicDimensionQQ",
     "anisotropicDimension",
     "isotropicDimension",
     "WittIndex",

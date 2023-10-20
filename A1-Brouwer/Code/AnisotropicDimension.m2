@@ -19,8 +19,11 @@ isHyperbolicQp (GrothendieckWittClass, ZZ) := Boolean => (beta, p) ->(
     -- Odd rank forms are not hyperbolic
     if odd rankForm then return false; 
     
-    -- Hyperbolic forms don't have square discriminants
-    d := integralDiscriminant(beta);
+    -- Hyperbolic forms always have square discriminants
+    -- Note that Koprowski and Czogala are using a different, signed definition of the discriminant
+    d := (-1)^(rankForm*(rankForm-1)/2) *integralDiscriminant(beta);
+    
+    -- If this discriminant is not a square in Q_p then return false
     if (isPadicSquare(d,p)==false) then return false;
     
     -- At this stage, the rank and discriminant of our beta agrees with that of a hyperbolic form,

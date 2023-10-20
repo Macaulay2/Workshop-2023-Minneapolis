@@ -7,6 +7,7 @@ isHyperbolicQp(beta,2)
 integralDiscriminant(beta)
 isPadicSquare(-1,2)
 
+isPadicSquare(-1,7)
 
 
 restart

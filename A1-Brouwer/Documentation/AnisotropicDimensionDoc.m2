@@ -18,29 +18,29 @@ document{
     SeeAlso => {"anisotropicDimensionQQ", "anisotropicDimension"}   
 }
 
-document{
-    Key => {(anisotropicDimensionQQ, GrothendieckWittClass), anisotropicDimensionQQ},
-    Headline => "Returns the anisotropic dimension of a symmetric bilinear form over the rationals",
-    Usage => "anisotropicDimensionQQ(beta)",
-    Inputs => {
-	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(\mathbb{Q})$///, ". "},
-	},
-    Outputs => {
-        ZZ => {"The rank of the anisotropic part of ", TEX///$\beta$///, "."},
-	},
-    PARA{"This is an implementation of [KC18, Algorithm 9] in Macaulay2. Using ", TO2(anisotropicDimensionQp,"anisotropicDimensionQp"), " and  ", TO2(signature,"signature"), " we can understand the anisotropic dimension of ", TEX///$\beta$///, " at all its relevant completions. The anisotropic dimension over ", TEX///$\mathbb{Q}$///, " is then computed as the maximum of the anisotropic dimensions over all completions."},
-    PARA{EM "Citations:"},
-    UL{
+-- document{
+--     Key => {(anisotropicDimensionQQ, GrothendieckWittClass), anisotropicDimensionQQ},
+--     Headline => "Returns the anisotropic dimension of a symmetric bilinear form over the rationals",
+--     Usage => "anisotropicDimensionQQ(beta)",
+--     Inputs => {
+-- 	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(\mathbb{Q})$///, ". "},
+-- 	},
+--     Outputs => {
+--         ZZ => {"The rank of the anisotropic part of ", TEX///$\beta$///, "."},
+-- 	},
+--     PARA{"This is an implementation of [KC18, Algorithm 9] in Macaulay2. Using ", TO2(anisotropicDimensionQp,"anisotropicDimensionQp"), " and  ", TO2(signature,"signature"), " we can understand the anisotropic dimension of ", TEX///$\beta$///, " at all its relevant completions. The anisotropic dimension over ", TEX///$\mathbb{Q}$///, " is then computed as the maximum of the anisotropic dimensions over all completions."},
+--     PARA{EM "Citations:"},
+--     UL{
 	
-	{"[KC18] P. Koprowski, A. Czogala, ", EM "Computing with quadratic forms over number fields,", " Journal of Symbolic Computation, 2018."},
-    },
-    SeeAlso => {"anisotropicDimensionQp", "anisotropicDimension"}   
-}
+-- 	{"[KC18] P. Koprowski, A. Czogala, ", EM "Computing with quadratic forms over number fields,", " Journal of Symbolic Computation, 2018."},
+--     },
+--     SeeAlso => {"anisotropicDimensionQp", "anisotropicDimension"}   
+-- }
 
 
 
 document{
-    Key => {(anisotropicDimension, GrothendieckWittClass), anisotropicDimension},
+    Key => {(anisotropicDimension, GrothendieckWittClass), (anisotropicDimension, Matrix), anisotropicDimension},
     Headline => "Returns the anisotropic dimension of a symmetric bilinear form",
     Usage => "anisotropicDimension(beta)",
     Inputs => {

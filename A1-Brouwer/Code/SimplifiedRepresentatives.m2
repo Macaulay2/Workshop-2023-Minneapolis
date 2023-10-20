@@ -49,15 +49,6 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
     return gwClass(diagonalFormOfBetaMatrix) 
     );
 
--- Input: A GrothendieckWittClass
--- Output: A diagonalized form of the GrothendieckWittClass, with no squares stripped out
-
--- Diagonalizes a Grothendieck--Witt class
-diagonalFormNoSimplify = method()
-diagonalFormNoSimplify (GrothendieckWittClass) := (GrothendieckWittClass) => (alpha) -> (
-    return gwClass(congruenceDiagonalize(alpha.matrix));
-    )
-
 -- Input: A GrothendieckWittClass over QQ, RR, CC, or a finite field of characteristic not 2
 -- Output: A diagonalized form of the GrothendieckWittClass, with squares stripped out
 

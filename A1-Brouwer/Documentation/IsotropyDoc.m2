@@ -1,5 +1,5 @@
 document{
-    Key => {(isIsotropic, GrothendieckWittClass), isIsotropic},
+    Key => {(isIsotropic, GrothendieckWittClass), (isIsotropic, Matrix), isIsotropic},
     Headline => "Determines whether a Grothendieck-Witt class is isotropic",
     Usage => "isIsotropic(beta)",
     Inputs => {
@@ -45,7 +45,7 @@ document{
 
 
 document{
-    Key => {(isAnisotropic, GrothendieckWittClass), isAnisotropic},
+    Key => {(isAnisotropic, GrothendieckWittClass), (isAnisotropic, Matrix), isAnisotropic},
     Headline => "Determines whether a Grothendieck-Witt class is anisotropic",
     Usage => "isAnisotropic(beta)",
     Inputs => {

@@ -35,7 +35,7 @@ document{
 }
 
 document{
-    Key => {(HasseWittInvariant, GrothendieckWittClass, ZZ), HasseWittInvariant},
+    Key => {(HasseWittInvariant, GrothendieckWittClass, ZZ), (HasseWittInvariant, List, ZZ), HasseWittInvariant},
     Headline => "outputs the Hasse-Witt invariant for a prime p for the quadratic form of the Grothendieck-Witt class",
     Usage => "HasseWittInvariant(beta, p)",
     Inputs => {
