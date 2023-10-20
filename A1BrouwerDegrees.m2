@@ -255,11 +255,6 @@ A = gwAdd(beta, gamma);
 B = gwMultiply(beta, gamma);
 assert(A.matrix === matrix(QQ, {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 2}, {0, 0, 2, 5}}));
 assert(B.matrix === matrix(QQ, {{1, 2, 0, 0}, {2, 5, 0, 0}, {0, 0, 1, 2}, {0, 0, 2, 5}}));
---matrices that do not give GW classes
-M'=matrix(ZZ, {{1, 0}, {0, 1}});
-N'=matrix(QQ, {{1, 1}, {1, 1}});
-assert(givesGWclass(M') === false);
-assert(givesGWclass(N') === false);
 ///
 
 
@@ -278,8 +273,7 @@ TEST ///
 T1 = QQ[z_1..z_2];
 f1 = {(z_1-1)*z_1*z_2, (3/5)*z_1^2 - (17/3)*z_2^2};
 f1GD = globalA1Degree(f1);
-f1GDmat = f1GD.matrix;
-assert(WittDecomp(f1GDmat)==(3,0));
+assert(isotropicDimension(f1GD)/2 == 3);
 q=ideal {z_1,z_2};
 r=ideal {z_1-1,z_2^2-(9/85)};
 f1LDq= localA1Degree(f1,q);
@@ -293,13 +287,11 @@ TEST ///
 T2 = QQ[w];
 f2 = {w^4 + w^3 - w^2 - w};
 f2GD= globalA1Degree(f2);
-f2GDmat = f2GD.matrix;
-assert(WittDecomp(f2GDmat)==(2,0));
+assert(isotropicDimension(f2GD)/2 == 2);
 
 p=ideal {w+1};
 f2LDp = localA1Degree(f2, p);
-f2LDpmat = f2LDp.matrix;
-assert(WittDecomp(f2LDpmat)==(1,0));
+assert(isotropicDimension(f2LDp)/2 == 1);
 s=ideal{w-1};
 f2LDs = localA1Degree(f2, s);
 t=ideal{w};
@@ -394,40 +386,27 @@ G1 = gwClass(M1);
 assert((integralDiagonalRep(G1)).matrix == M2);
 ///
 
--- Test for prime factors
--- Test 17
-TEST ///
-assert(primeFactors(17) == {17});
-assert(primeFactors(120) == {2, 3, 5});
-///
 
 -- Test for p-adic valuation
--- Test 18
+-- Test 17
 TEST ///
 assert(padicValuation(27,3) == 3);
 ///
 
--- Test for squareSymbol
--- Test 19
-TEST ///
-assert(squareSymbol(27,3) == 0);
-assert(squareSymbol(64,2) == 1);
-assert(squareSymbol(64,8) == -1);
-///
-
 -- Test for congruenceDiagonalize
--- Test 20
+-- Test 18
 TEST ///
 B=matrix(QQ,{{0/1,1},{1,0}});
-assert((WittDecomp(congruenceDiagonalize(B)))_0 == 1);
+eta = gwClass(B)
+assert(isotropicDimension(eta)/2 == 1);
 P=matrix(QQ,{{0/1, 5,1},{2,2,1},{0,0,1}});
 A=matrix(QQ,{{1/1,0,0},{0,-1,0},{0,0,1}});
-assert((WittDecomp(congruenceDiagonalize(P*A*transpose(P))))_0 == 1);
+assert(isotropicDimension(gwClass(congruenceDiagonalize(P*A*transpose(P))))/2 == 1);
 ///
 
 
 -- Test for gwClass
--- Test 21
+-- Test 19
 TEST ///
 --M = matrix(ZZ,{{1,0,0},{0,1,0},{0,0,1}});
 M1 = matrix(QQ,{{1/1,0,0},{0,1,0},{0,0,1}});
@@ -441,7 +420,7 @@ assert(class(gwClass(M3)) === GrothendieckWittClass);
 ///
 
 -- Test for baseField
--- Test 22
+-- Test 20
 TEST ///
 M = gwClass(matrix(QQ,{{1/1,0,0},{0,2,3},{0,3,1}}));
 M1 = gwClass(matrix(RR,{{1.0,24/10,-2.41},{24/10,-5,0},{-2.41,0,69}}));
@@ -455,7 +434,7 @@ assert(toString(baseField(M3)) === toString(GF(7)));
 ///
 
 -- Test for gwAdd
--- Test 23
+-- Test 21
 TEST ///
 M1 = gwClass(matrix(QQ, {{1/1,0,-3},{0,23,0},{-3,0,-2/5}}));
 M2 = gwClass(matrix(QQ, {{0,1/2,0},{1/2,5/9,0},{0,0,1}}));
@@ -475,13 +454,13 @@ assert(gwAdd(H1,H2) === H3);
 ///
 
 -- Test for gwMultiply
--- Test 24
+-- Test 22
 TEST ///
 assert(true);
 ///
 
 -- Test for isIsotropic/isAnisotropic
--- Test 25 (OK)
+-- Test 23 (OK)
 
 TEST ///
 A1=matrix(QQ, {{0, 1/1},{1/1, 0}});
@@ -505,7 +484,7 @@ assert(isIsotropic(A1)===true);
 ///
 
 --Test for isIsomorphicFormQ
--- Test 26
+-- Test 24
 
 TEST ///
 B1=matrix(QQ, {{1/1, -2/1, 4/1}, {-2/1, 2/1, 0}, {4/1, 0, -7/1}});
@@ -520,7 +499,7 @@ assert(isIsomorphicFormQ(gwClass(B1), gwClass(B3))===true);
 
 
 --Test for gwIsomorphic
---Test 27 (OK)
+--Test 25 (OK)
 
 TEST ///
 D1=matrix(QQ, {{1/1, -2/1, 4/1}, {-2/1, 2/1, 0}, {4/1, 0, -7/1}});
@@ -538,7 +517,7 @@ assert(gwIsomorphic(gwClass(C3), gwClass(C4))===true);
 ///
 
 -- Test for GWinvariants
--- Test 28
+-- Test 26
 
 TEST ///
 M1 = gwClass(matrix(QQ, {{1/1,0,-3},{0,23,0},{-3,0,-2/5}}));
@@ -559,7 +538,7 @@ assert(HasseWittInvariant(M1, 47) == -1);
 ///
 
 -- Test for hilbertSymbols
--- Test 29
+-- Test 27
 
 TEST ///
 
