@@ -50,7 +50,7 @@ document{
 	ZZ => {"An integer ", TEX///$n$///, " where ",TEX///$a=p^n u$///, " and ", TEX///$u$///," is a unit in ", TEX///$\mathbb{Z}_p$///},
         },
     EXAMPLE lines///
-    a = 363/7;
+    a = 363;
     padicValuation(a, 11)
     ///,
     }

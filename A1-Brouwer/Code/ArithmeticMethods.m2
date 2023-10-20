@@ -73,8 +73,7 @@ padicValuation (ZZ, ZZ) := (ZZ) => (n, p) -> (
 
 -- Input: A rational number q and a prime number p
 -- Output: the p-adic valuation of q
-padicValuationQQ = method()
-padicValuationQQ = (QQ, ZZ) := (ZZ) => (q, p) -> (
+padicValuation (QQ, ZZ) := (ZZ) => (q, p) -> (
     num := numerator(q);
     denom := denominator(q);
     return (padicValuation(num,p) - padicValuation(denom,p));

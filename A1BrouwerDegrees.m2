@@ -8,8 +8,8 @@ newPackage(
 	 Email=>"nborisov@sas.upenn.edu",
 	 HomePage=>"https://www.math.upenn.edu/people/nikita-borisov"},
         {Name=>"Thomas Brazelton",
-	 Email=>"tbraz@math.upenn.edu",
-	 HomePage=>"https://www2.math.upenn.edu/~tbraz/"},
+	 Email=>"brazelton@math.harvard.edu",
+	 HomePage=>"https://tbrazel.github.io/"},
         {Name=>"Frenly Espino",
 	 Email=>"frenly@sas.upenn.edu",
 	 HomePage=>"https://www.math.upenn.edu/people/frenly-espino"},
@@ -106,12 +106,11 @@ export{
     "anisotropicDimensionQp",
     "anisotropicDimensionQQ",
     "anisotropicDimension",
+    "isotropicDimension",
     "WittIndex",
     
     --Decomposition.m2
     "anisotropicPart",
-    "WittDecomp",
-    "qQanisotropicDimension2",
     "sumDecomposition",
     "sumDecompositionString",
     }

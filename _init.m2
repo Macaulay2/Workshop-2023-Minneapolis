@@ -1,6 +1,52 @@
+
 restart
 installPackage("A1BrouwerDegrees")
+check A1BrouwerDegrees
+
+
+alpha = diagonalClass(RR,(1,-1,4,5))
+WittIndex(alpha)
+sumDecomposition(alpha)
+sumDecompositionString(alpha)
+
+
 beta = diagonalClass(QQ,(2,3))
+WittIndex(beta)
+sumDecomposition(beta)
+sumDecompositionString(beta)
+
+
+anisotropicDimension(beta)
+isotropicDimension(beta)
+
+
+WittIndex(beta)
+anisotropicDimensionQp(beta,3)
+anisotropicDimensionQp(beta,2)
+
+
+alpha = diagonalClass(QQ,(1,-1,4,5))
+anisotropicDimension(alpha)
+isotropicDimension(alpha)
+
+    n := numRows(alpha.matrix);
+n - anisotropicDimension(alpha)
+
+anisotropicDimension(alpha)
+isotropicDimension(alpha)
+
+
+WittIndex(alpha)
+
+anisotropicPart(beta)
+
+
+
+
+alpha2 = diagonalClass(GF(7),(1,-1,4,5))
+anisotropicPart(alpha2)
+
+
 anisotropicDimension(beta)
 anisotropicDimensionQp(beta,2)
 anisotropicDimensionQp(beta,3)

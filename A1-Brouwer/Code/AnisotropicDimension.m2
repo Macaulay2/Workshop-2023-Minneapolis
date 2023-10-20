@@ -21,7 +21,7 @@ isHyperbolicQp (GrothendieckWittClass, ZZ) := Boolean => (beta, p) ->(
     
     -- Hyperbolic forms don't have square discriminants
     d := integralDiscriminant(beta);
-    if isPadicSquare(d,p) then return false;
+    if (isPadicSquare(d,p)==false) then return false;
     
     -- At this stage, the rank and discriminant of our beta agrees with that of a hyperbolic form,
     -- so by e.g. Lam V.3.25 it suffices to check if their Hasse-Witt invariants agree
@@ -68,7 +68,7 @@ anisotropicDimensionQp (GrothendieckWittClass, ZZ) := ZZ => (beta, p) ->(
 	
 	c := (-1)^(rankForm*(rankForm+1)/2) * integralDiscriminant(beta);
 	
-	gamma := gwAdd(beta, gwClass(matrix(QQ,{{c}})));
+	gamma := gwAdd(beta, diagonalClass(QQ,(c)));
 	
 	if isHyperbolicQp(gamma,p) then return 1;
 	
@@ -151,7 +151,7 @@ anisotropicDimension (Matrix) := (ZZ) => (A) -> (
         )
     -- We should never get here
     else error "Problem with base field"
-    )
+    );
 
 anisotropicDimension (GrothendieckWittClass) := (ZZ) => (alpha) -> (
     return(anisotropicDimension(alpha.matrix));
@@ -161,15 +161,16 @@ anisotropicDimension (GrothendieckWittClass) := (ZZ) => (alpha) -> (
 -- Output:  An integer, the rank of the isotropic part of beta
 
 isotropicDimension = method()
-isotropicDimension (GrothendieckWittClass) := ZZ -> (alpha) -> (
+isotropicDimension (GrothendieckWittClass) := (ZZ) => (alpha) -> (
     n := numRows(alpha.matrix);
-    return (n - anisotropicDimension(alpha))
+    return n - anisotropicDimension(alpha);
     );
+
 
 -- Input: A Grothendieck-Witt class beta in GW(k), where k is the complex numbers, the real, the rationals or a finite field
 -- Output: An integer, the rank of the totally isotropic part of beta
 
 WittIndex = method()
-WittIndex (GrothendieckWittClass) := ZZ -> (alpha) -> (
-    return isotropicDimension(alpha)
+WittIndex (GrothendieckWittClass) := (ZZ) => (alpha) -> (
+    return isotropicDimension(alpha);
     );
