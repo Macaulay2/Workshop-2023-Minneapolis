@@ -45,6 +45,8 @@ document{
     Outputs => {
         ZZ => {"The Hasse-Witt invariant for ", TEX///$\beta$///," for the prime ",TEX///$p$///},
 	},
+    PARA{"The ", EM "Hasse-Witt invariant", " of a diagonal form ", TEX///$\langle a_1,\ldots,a_n\rangle$///, " over a field ", TEX///$K$///, " is defined to be the product ", TEX///$\prod_{i<j} \left((a_i,a_j)_p \right)$///, " where ", TEX///$(-,-)_p$///, " is the ", TO2(HilbertSymbol,"Hilbert symbol"), "."},
+    PARA{"The Hasse-Witt invariant of a form will be equal to 1 for almost all primes. In particular after diagonalizing a form ", TEX///$\beta \cong \left\langle a_1,\ldots,a_n\right\rangle$///, " then the Hasse-Witt invariant at a prime ", TEX///$p$///, " will be 1 automatically if ", TEX///$p\nmid a_i$///, " for all ", TEX///$i$///, ". Thus we only have to compute the invariant at ", TO2(relevantPrimes, "primes dividing diagonal entries"),  "."},
     EXAMPLE lines ///
     beta = gwClass(matrix(QQ,{{1,4,7},{4,3,-1},{7,-1,5}}));
     HasseWittInvariant(beta, 7)
@@ -63,7 +65,7 @@ document{
     Outputs => {
         List => {"A finite list of primes ", TEX///$(p_1,\ldots,p_r)$///, " for which the Hasse-Witt invariants ", TEX///$\phi_p(\beta)$///," may be nontrivial."},
 	},
-    PARA{"It is a classical result that the ", TO2(HasseWittInvariant,"Hasse-Witt invariants"), " of a quadratic form are equal to 1 for all but finitely many primes (see e.g. [S73, IV Section 3.3]. As the Hasse-Witt invariants are computed as a product of ", TO2(HilbertSymbol,"Hilbert Symbols") , " of the pairwise entries appearing on a diagonalization of the symbol, it suffices to consider primes dividing diagonal entries."},
+    PARA{"It is a classical result that the ", TO2(HasseWittInvariant,"Hasse-Witt invariants"), " of a quadratic form are equal to 1 for all but finitely many primes (see e.g. [S73, IV Section 3.3]. As the Hasse-Witt invariants are computed as a product of ", TO2(HilbertSymbol,"Hilbert symbols") , " of the pairwise entries appearing on a diagonalization of the symbol, it suffices to consider primes dividing diagonal entries."},
    EXAMPLE lines ///
    beta = diagonalClass(QQ,(6,7,22));
    relevantPrimes(beta)

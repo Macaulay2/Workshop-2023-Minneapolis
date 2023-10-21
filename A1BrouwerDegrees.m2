@@ -44,12 +44,12 @@ newPackage(
 
 
 export{
+
     -- ArithmeticMethods.m2
-    "squarefreePart",
-    "legendreBoolean",
+    -- "squarefreePart",
+    -- "legendreBoolean",
     "localAlgebraBasis",
     "padicValuation",
-    "isPadicSquare",
 
     --MatrixMethods.m2
     "congruenceDiagonalize",
@@ -57,7 +57,6 @@ export{
     --GrothendieckWittClasses.m2    
     "GrothendieckWittClass",
     "baseField",
-    "givesGWclass",
     "gwClass",
     "gwAdd",
     "gwMultiply",
@@ -88,7 +87,6 @@ export{
     "localA1Degree",
     
     --IsomorphismOfForms.m2
-    "isIsomorphicFormQ",
     "gwIsomorphic",
     
     --Isotropy.m2
@@ -96,7 +94,6 @@ export{
     "isAnisotropic",
 
     --AnisotropicDimension.m2
-    "isHyperbolicQp",
     "anisotropicDimensionQp",
     "anisotropicDimension",
     "isotropicDimension",
@@ -159,7 +156,9 @@ beginDocumentation()
 
 document{
     Key => A1BrouwerDegrees,
-    Headline => "A package for running A1-Brouwer degree computations in Macaulay2",
+    Headline => "for working with A1-Brouwer degree computations",
+    PARA{"This package is intended computing and manipulating ", TO2(localA1Degree,"local"), " and ", TO2(globalA1Degree,"global"), " ", TEX///$\mathbb{A}^1$///, EM "-Brouwer degrees."," Global Brouwer degrees are non-degenerate symmetric bilinear forms valued in the Grothendieck-Witt ring of a field ", TEX///$\text{GW}(k)$///, "."},
+    PARA{"In order to simplify the forms produced, this package produces invariants of symmetric bilinear forms, including their ", TO2(WittIndex,"Witt indices"), ", their ", TO2(integralDiscriminant,"discriminants"), ", and their ", TO2(HasseWittInvariant, "Hasse Witt invariants"), ". Quadratic forms can furthermore be ", TO2(sumDecomposition,"decomposed"), " into their isotropic and ", TO2(anisotropicPart,"anisotropic parts"), ". Finally, and perhaps most crucially, we can certify whether two symmetric bilinear forms are ", TO2(gwIsomorphic,"isomorphic") , " in the Grothendieck-Witt ring."},
     }
 
 undocumented {

@@ -46,7 +46,7 @@ document {
 	EXAMPLE lines ///
 	    	beta.matrix
 		///,
-        PARA{"The base field which the form ", TT "beta", " is implicitly defined over can be recovered with the ", TT "baseField", " method."},
+        PARA{"The base field which the form ", TEX///$\beta$///, " is implicitly defined over can be recovered with the ", TO2(baseField,"baseField"), " method."},
 	EXAMPLE lines ///
 	    	baseField beta
 		///,

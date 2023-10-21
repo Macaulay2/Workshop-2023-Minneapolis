@@ -63,7 +63,7 @@ document {
 
 
 document {
-    Key => {(anisotropicPart, GrothendieckWittClass), anisotropicPart},
+    Key => {(anisotropicPart, GrothendieckWittClass), (anisotropicPart, Matrix), anisotropicPart},
     Headline => "returns the anisotropic part of a Grothendieck Witt class",
     Usage => "anisotropicPart(beta)",
     Inputs => {

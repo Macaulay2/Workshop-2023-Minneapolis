@@ -9,7 +9,7 @@ document{
     Outputs => {
         ZZ => {"The rank of the anisotropic part of ", TEX///$\beta$///, " over ", TEX///$\mathbb{Q}_p$///, "."},
 	},
-    PARA{"This is an implementation of [KC18, Algorithm 8] in Macaulay2, which certifies anisotropy of rational forms over the ", TEX///$p$///,"-adics. Note that any form of rank ", TEX///$\ge 5$///, " is always isotropic, so this method will return 0, 1, 2, 3, or 4."},
+    PARA{"This is an implementation of [KC18, Algorithm 8] in Macaulay2, which computes the anisotropic dimension of rational forms over the ", TEX///$p$///,"-adics. Note that any form of rank ", TEX///$\ge 5$///, " is always isotropic, so this method will return 0, 1, 2, 3, or 4."},
     PARA{EM "Citations:"},
     UL{
 	
@@ -50,6 +50,7 @@ document{
         ZZ => {"The rank of the anisotropic part of ", TEX///$\beta$///, "."},
 	},
     PARA{"By Witt decomposition, any form decomposes uniquely as ", TEX///$\beta \cong k \mathbb{H} \oplus \beta_a$///," where the form ", TEX///$\beta_a$///," is anisotropic. The rank of ", TEX///$\beta_a$///, " is called the ", EM "anisotropic dimension", " of ", TEX///$\beta$///, "."},
+    PARA{"The anisotropic dimension of a form defined over the rationals is the maximum of the ", TO2(anisotropicDimensionQp,"anistropic dimension at each of the completions"), " of ", TEX///$\mathbb{Q}$///, "."},
     SeeAlso => {"WittIndex", "anisotropicDimensionQp", "anisotropicDimension"}   
 }
 

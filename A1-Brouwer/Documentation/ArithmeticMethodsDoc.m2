@@ -68,7 +68,7 @@ document {
 	    List => {"a list of basis elements of the local k-algebra ", TEX///$Q_p(f)$/// }
 	    },
 	PARA {"Given an endomorphism of affine space, ", TEX///$f=(f_1,\dots ,f_n)$///,
-			", given as a list of polynomials called ", TT "L", " and the prime ideal of an isolated zero, this command returns a list of basis elements of the local k-algebra ", TEX///$Q_p(f)$///, " by computing a normal basis for ", TEX///$(I:(I:p^{\infty}))}$///, " (vis. [S02, Proposition 2.5])."},
+			", given as a list of polynomials called ", TT "L", " and the prime ideal of an isolated zero, this command returns a list of basis elements of the local k-algebra ", TEX///$Q_p(f)$///, " by computing a normal basis for ", TEX///$(I:(I:p^{\infty}))$///, " (vis. [S02, Proposition 2.5])."},
 	EXAMPLE lines ///
 		 QQ[x,y];
 		 f = {x^2+1-y,y};
