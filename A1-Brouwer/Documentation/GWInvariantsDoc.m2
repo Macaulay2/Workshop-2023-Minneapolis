@@ -50,3 +50,27 @@ document{
     HasseWittInvariant(beta, 7)
     ///,
 }
+
+
+
+document{
+    Key => {(relevantPrimes, GrothendieckWittClass), relevantPrimes},
+    Headline => "outputs a list of primes at which the Hasse-Witt invariants of a symmetric bilinear form may be non-trivial",
+    Usage => "relevantPrimes(beta)",
+    Inputs => {
+	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(\mathbb{Q})$///, "."},
+	},
+    Outputs => {
+        List => {"A finite list of primes ", TEX///$(p_1,\ldots,p_r)$///, " for which the Hasse-Witt invariants ", TEX///$\phi_p(\beta)$///," may be nontrivial."},
+	},
+    PARA{"It is a classical result that the ", TO2(HasseWittInvariant,"Hasse-Witt invariants"), " of a quadratic form are equal to 1 for all but finitely many primes (see e.g. [S73, IV Section 3.3]. As the Hasse-Witt invariants are computed as a product of ", TO2(HilbertSymbol,"Hilbert Symbols") , " of the pairwise entries appearing on a diagonalization of the symbol, it suffices to consider primes dividing diagonal entries."},
+   EXAMPLE lines ///
+   beta = diagonalClass(QQ,(6,7,22));
+   relevantPrimes(beta)
+   ///,
+   PARA{EM "Citations:"},
+    UL{
+	
+	{"[S73] J.P. Serre, ", EM "A course in arithmetic,", " Springer-Verlag, 1973."},
+    },
+}

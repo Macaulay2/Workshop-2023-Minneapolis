@@ -17,8 +17,31 @@ document {
 	EXAMPLE lines///
 	beta.cache.diagonalForm
 	///,
-	SeeAlso => {"congruenceDiagonalize","diagonalEntries"}
+	SeeAlso => {"congruenceDiagonalize","diagonalEntries","diagonalFormSimplify"}
 	}
+    
+
+document {
+    Key => {(diagonalFormSimplify, GrothendieckWittClass), diagonalFormSimplify},
+	Headline => "produces a diagonalized form for any Grothendieck-Witt class, with simplified terms on the diagonal",
+	Usage => "diagonalFormSimplify(beta)",
+	Inputs => {
+	    GrothendieckWittClass => "beta" => {"any class in ", TEX///$\text{GW}(k)$///," where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field."}
+	    },
+	Outputs => {
+	    GrothendieckWittClass => {"a form isomorphic to ", TEX///$\beta$///, " with a diagonal Gram matrix"}
+	    },
+	PARA {"This is the same method as ", TO2(diagonalForm,"diagonalForm")," but will go a step further to reduce square classes appearing on the diagonal entries of a matrix."},
+	EXAMPLE lines ///
+	beta = gwClass(matrix(QQ,{{0,4},{4,9}}));
+	diagonalForm(beta)
+	diagonalFormSimplify(beta)
+	///,
+	SeeAlso => {"diagonalForm"}
+	}    
+    
+    
+
 
 document {
     Key => {(diagonalEntries, GrothendieckWittClass), diagonalEntries},

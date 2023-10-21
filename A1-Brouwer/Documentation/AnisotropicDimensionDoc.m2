@@ -53,6 +53,21 @@ document{
     SeeAlso => {"WittIndex", "anisotropicDimensionQp", "anisotropicDimension"}   
 }
 
+
+document{
+    Key => {(isotropicDimension, GrothendieckWittClass), isotropicDimension},
+    Headline => "Returns the isotropic dimension of a symmetric bilinear form",
+    Usage => "isotropicDimension(beta)",
+    Inputs => {
+	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(k)$///, " where ", TEX///$k$///, " is the complex numbers, reals, rationals, or a finite field."},
+	},
+    Outputs => {
+        ZZ => {"The rank of the isotropic part of ", TEX///$\beta$///, "."},
+	},
+    PARA{"Does the same thing as ", TO2(WittIndex,"WittIndex"), "."},
+    SeeAlso => {"WittIndex", "anisotropicDimension"}   
+}
+
 document{
     Key => {(WittIndex, GrothendieckWittClass), WittIndex},
     Headline => "Returns the Witt index of a symmetric bilinear form",

@@ -1,5 +1,3 @@
-
-
 document {
     Key => {(sumDecomposition, GrothendieckWittClass), sumDecomposition},
     Headline => "produces a simplified diagonal representative of a Grothendieck Witt class",
@@ -64,4 +62,25 @@ document {
 }
 
 
-    
+document {
+    Key => {(anisotropicPart, GrothendieckWittClass), anisotropicPart},
+    Headline => "returns the anisotropic part of a Grothendieck Witt class",
+    Usage => "anisotropicPart(beta)",
+    Inputs => {
+        GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over a field ", TEX///$k$///, "."},
+    },
+    Outputs => { 
+	GrothendieckWittClass => {"the anisotropic part of ", TEX///$\beta$///},
+    },
+    PARA {"Given a form ", TEX///$\beta$///, " we may compute its anisotropic part inductively by reference to its ", TO2(anisotropicDimension,"anisotropic dimension"), ". Over the complex numbers and the reals this is trivial, and over finite fields it is a fairly routine computation, however over the rationals some more sophisticated algorithms are needed from the literature. For this methods we implement algorithms developed for number fields by Koprowski and Rothkegel [KR23]. Note also that a Chinese Remainder Theorem method is needed in reducing from anisotropic dimension three as in [KR23, Algorithm 7], so we import one from the ", TT "Parametrization", " package."},
+    EXAMPLE lines ///
+    alpha = diagonalClass(QQ,(3,-3,2,5,1,-9));
+    anisotropicPart(alpha)
+    ///,
+    PARA{EM "Citations:"},
+    UL{
+	
+	{"[KR23] P. Koprowski and B. Rothkegel, ", EM "The anisotropic part of a quadratic form over a number field,", " Journal of Symbolic Computatoin, 2023."},
+	},
+    SeeAlso => {"anisotropicDimension", "WittIndex"},
+}

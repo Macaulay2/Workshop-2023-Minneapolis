@@ -23,7 +23,6 @@ qQanisotropicDimension4 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 -- Output: A form < a > so that q + < -a > has anisotropic dimension 2
 
 -- Note: This is Koprowski/Rothkegel's Algorithm 7 in the case of QQ
-
 qQanisotropicDimension3 = method()
 qQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
     d := integralDiscriminant(beta);
@@ -40,7 +39,7 @@ qQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 	    );
 	if even padicValuation(d,p) then(
 	    L2 = append(L2,p^2);
-	    S2 = append(L2,p)
+	    S2 = append(S2,p)
 	    );
 	);
     
@@ -49,7 +48,7 @@ qQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     alpha := chineseRemainder(S1 | S2, L1 |L2);
     a := squarefreePart(alpha);
     
-    return gwClass(QQ,{{a}});
+    return diagonalClass(QQ,a);
 
     );
 
@@ -178,18 +177,16 @@ qQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -
     while d>=4 do(
 	d = anisotropicDimension(beta);
 	outputForm = gwAdd(outputForm,qQanisotropicDimension4(beta));
-	alpha = (qQanisotropicDimension4(beta).matrix)_(0,0);
+	alpha = ((qQanisotropicDimension4(beta)).matrix)_(0,0);
 	
 	beta = gwAdd(beta, diagonalClass(QQ,((-1)*alpha)));
-	
 	);
     
     if d==3 then(
 	outputForm = gwAdd(outputForm,qQanisotropicDimension3(beta));
-	alpha = (qQanisotropicDimension3(beta).matrix)_(0,0);
+	alpha = ((qQanisotropicDimension3(beta)).matrix)_(0,0);
 	
 	beta = gwAdd(beta, diagonalClass(QQ,((-1)*alpha)));
-	
 	);
     
     if d==2 then(
