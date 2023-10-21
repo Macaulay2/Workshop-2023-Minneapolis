@@ -15,7 +15,7 @@ document{
 	
 	{"[KC18] P. Koprowski, A. Czogala, ", EM "Computing with quadratic forms over number fields,", " Journal of Symbolic Computation, 2018."},
     },
-    SeeAlso => {"anisotropicDimensionQQ", "anisotropicDimension"}   
+    SeeAlso => {"anisotropicDimension"}   
 }
 
 -- document{
@@ -79,8 +79,15 @@ document{
     Outputs => {
         ZZ => {"The rank of the totally isotropic part of ", TEX///$\beta$///, "."},
 	},
-    PARA{"By Witt decomposition, any form decomposes uniquely as ", TEX///$\beta \cong k \mathbb{H} \oplus \beta_a$///," where the form ", TEX///$\beta_a$///," is anisotropic. The integer ", TEX///$2k$///, " is called the ", EM "Witt index", " of ", TEX///$\beta$///, "."},
-    SeeAlso => {"anisotropicDimension", "anisotropicDimensionQp", "anisotropicDimension"}   
+    PARA{"By Witt decomposition, any form decomposes uniquely as ", TEX///$\beta \cong k \mathbb{H} \oplus \beta_a$///," where the form ", TEX///$\beta_a$///," is anisotropic. The integer ", TEX///$k$///, " is called the ", EM "Witt index", " of ", TEX///$\beta$///, ". See for instance [L05, I.4.3]."},
+    
+        PARA{EM "Citations:"},
+    UL{
+	
+	{"[L05] T.Y. Lam, ", EM "Introduction to quadratic forms over fields,", " American Mathematical Society, 2005."},
+    },
+    
+    SeeAlso => {"isotropicDimension", "anisotropicDimension", "anisotropicDimensionQp"}   
 }
 
 

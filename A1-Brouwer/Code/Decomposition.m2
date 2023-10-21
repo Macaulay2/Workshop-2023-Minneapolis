@@ -279,8 +279,8 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
     outputString := "";
     
     
-    -- Get Witt index of beta and construct its isotropic and anistropic parts
-    w := WittIndex(beta);
+    -- Get isotropic dimension of beta and construct its isotropic and anistropic parts
+    w := isotropicDimension(beta);
     
     if w > 0 then(
 	outputString = outputString | toString(sub(w/2,ZZ)) | "H";

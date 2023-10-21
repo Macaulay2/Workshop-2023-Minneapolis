@@ -177,5 +177,5 @@ isotropicDimension (GrothendieckWittClass) := (ZZ) => (alpha) -> (
 
 WittIndex = method()
 WittIndex (GrothendieckWittClass) := (ZZ) => (alpha) -> (
-    return isotropicDimension(alpha);
+    return isotropicDimension(alpha)/2;
     );
