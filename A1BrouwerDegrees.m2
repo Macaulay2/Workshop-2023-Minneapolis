@@ -272,7 +272,7 @@ TEST ///
 T1 = QQ[z_1..z_2];
 f1 = {(z_1-1)*z_1*z_2, (3/5)*z_1^2 - (17/3)*z_2^2};
 f1GD = globalA1Degree(f1);
-assert(isotropicDimension(f1GD)/2 == 3);
+assert(WittIndex(f1GD) == 3);
 q=ideal {z_1,z_2};
 r=ideal {z_1-1,z_2^2-(9/85)};
 f1LDq= localA1Degree(f1,q);
@@ -283,14 +283,14 @@ assert(gwIsomorphic(f1LDsum, f1GD));
 
 -- Test 6 (OK)
 TEST ///
-T2 = QQ[w];
+T2 = GF(17)[w];
 f2 = {w^4 + w^3 - w^2 - w};
 f2GD= globalA1Degree(f2);
-assert(isotropicDimension(f2GD)/2 == 2);
+assert(WittIndex(f2GD) == 2);
 
 p=ideal {w+1};
 f2LDp = localA1Degree(f2, p);
-assert(isotropicDimension(f2LDp)/2 == 1);
+assert(WittIndex(f2LDp) == 1);
 s=ideal{w-1};
 f2LDs = localA1Degree(f2, s);
 t=ideal{w};
@@ -397,10 +397,10 @@ assert(padicValuation(27,3) == 3);
 TEST ///
 B=matrix(QQ,{{0/1,1},{1,0}});
 eta = gwClass(B)
-assert(isotropicDimension(eta)/2 == 1);
+assert(WittIndex(eta) == 1);
 P=matrix(QQ,{{0/1, 5,1},{2,2,1},{0,0,1}});
 A=matrix(QQ,{{1/1,0,0},{0,-1,0},{0,0,1}});
-assert(isotropicDimension(gwClass(congruenceDiagonalize(P*A*transpose(P))))/2 == 1);
+assert(WittIndex(gwClass(congruenceDiagonalize(P*A*transpose(P)))) == 1);
 ///
 
 
