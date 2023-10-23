@@ -1,5 +1,5 @@
 document {
-    Key => {(globalA1Degree, List), globalA1Degree},
+    Key => {globalA1Degree, (globalA1Degree, List)},
     Headline => "Computes a global A1-Brouwer degree of a list of n polynomials in n variables over a field k",
     Usage => "globalA1Degree(L)",
     Inputs => {
@@ -55,7 +55,7 @@ document {
     }
 
 document {
-    Key => {(localA1Degree, List, Ideal), localA1Degree},
+    Key => {localA1Degree, (localA1Degree, List, Ideal)},
     Headline => "Computes a local A1-Brouwer degree of a list of n polynomials in n variables over a field k at a prime ideal in the zero locus",
     Usage => "locallA1Degree(L,p)",
     Inputs => {

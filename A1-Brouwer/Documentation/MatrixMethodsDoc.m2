@@ -1,5 +1,5 @@
 document {
-	Key => {(congruenceDiagonalize, Matrix), congruenceDiagonalize},
+	Key => {congruenceDiagonalize, (congruenceDiagonalize, Matrix)},
 	Headline => "diagonalizing a symmetric matrix via congruence",
 	Usage => "congruenceDiagonalize(M)",
 	Inputs => {

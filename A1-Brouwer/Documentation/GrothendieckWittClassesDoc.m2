@@ -27,7 +27,7 @@ document{
     }
 
 document {
-    Key => {(gwClass, Matrix), gwClass},
+    Key => {gwClass, (gwClass, Matrix)},
 	Headline => "Grothendieck Witt class of a symmetric matrix",
 	Usage => "gwClass(M)",
 	Inputs => {
@@ -55,7 +55,7 @@ document {
         }
 
 document {
-    Key => {(baseField, GrothendieckWittClass), baseField},
+    Key => {baseField, (baseField, GrothendieckWittClass)},
 	Headline => "base field of a Grothendieck Witt class",
 	Usage => "baseField(beta)",
 	Inputs => {
@@ -75,7 +75,7 @@ document {
 
 
 document {
-    Key => {(gwAdd, GrothendieckWittClass, GrothendieckWittClass), gwAdd},
+    Key => {gwAdd, (gwAdd, GrothendieckWittClass, GrothendieckWittClass)},
     Headline => "The direct sum of two Grothendieck-Witt classes",     
     Usage => "gwAdd(beta, gamma)",
 	Inputs => {
@@ -97,7 +97,7 @@ document {
 }
 
 document {
-    Key => {(gwMultiply, GrothendieckWittClass, GrothendieckWittClass), gwMultiply},
+    Key => {gwMultiply, (gwMultiply, GrothendieckWittClass, GrothendieckWittClass)},
     Headline => "The tensor product of two Grothendieck-Witt classes",     
 	Usage => "gwMultiply(beta, gamma)",
 	Inputs => {

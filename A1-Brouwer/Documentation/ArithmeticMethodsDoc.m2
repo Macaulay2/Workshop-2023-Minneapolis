@@ -39,7 +39,7 @@
 --     }
 
 document{
-    Key => {(padicValuation, ZZ, ZZ), (padicValuation, QQ, ZZ), padicValuation},
+    Key => {padicValuation, (padicValuation, ZZ, ZZ), (padicValuation, QQ, ZZ)},
     Headline => "p-adic valuation of a rational number or integer",
     Usage => "padicValuation(a, p)",
     Inputs => {
@@ -57,7 +57,7 @@ document{
 
 
 document {
-    Key => {(localAlgebraBasis, List, Ideal), localAlgebraBasis},
+    Key => {localAlgebraBasis, (localAlgebraBasis, List, Ideal)},
 	Headline => "produces a basis for a local finitely generated algebra over a field k",
 	Usage => "localAlgebraBasis(L,p)",
 	Inputs => {

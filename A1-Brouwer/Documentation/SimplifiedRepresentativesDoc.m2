@@ -1,5 +1,5 @@
 document {
-    Key => {(diagonalForm, GrothendieckWittClass), diagonalForm},
+    Key => {diagonalForm, (diagonalForm, GrothendieckWittClass)},
 	Headline => "produces a diagonalized form for any Grothendieck-Witt class",
 	Usage => "diagonalForm(beta)",
 	Inputs => {
@@ -22,7 +22,7 @@ document {
     
 
 document {
-    Key => {(diagonalFormSimplify, GrothendieckWittClass), diagonalFormSimplify},
+    Key => {diagonalFormSimplify, (diagonalFormSimplify, GrothendieckWittClass)},
 	Headline => "produces a diagonalized form for any Grothendieck-Witt class, with simplified terms on the diagonal",
 	Usage => "diagonalFormSimplify(beta)",
 	Inputs => {
@@ -44,7 +44,7 @@ document {
 
 
 document {
-    Key => {(diagonalEntries, GrothendieckWittClass), diagonalEntries},
+    Key => {diagonalEntries, (diagonalEntries, GrothendieckWittClass)},
 	Headline => "extracts a list of diagonal entries for a GrothendieckWittClass",
 	Usage => "diagonalEntries(beta)",
 	Inputs => {
@@ -67,7 +67,7 @@ document {
 	}
 
 document {
-    Key => {(integralDiagonalRep, GrothendieckWittClass), integralDiagonalRep},
+    Key => {integralDiagonalRep, (integralDiagonalRep, GrothendieckWittClass)},
 	Headline => "given a rational symmetric bilinear form, outputs a diagonal representative with integral entries",
 	Usage => "integralDiagonalRep(beta)",
 	Inputs => {

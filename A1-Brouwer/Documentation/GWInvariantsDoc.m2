@@ -1,5 +1,5 @@
 document{
-    Key => {(signature, GrothendieckWittClass), signature},
+    Key => {signature, (signature, GrothendieckWittClass)},
     Headline => "Outputs the signature of a symmetric bilinear form over the real or rational numbers",
     Usage => "signature(beta)",
     Inputs => {
@@ -18,7 +18,7 @@ document{
     }
 
 document{
-    Key => {(integralDiscriminant, GrothendieckWittClass), integralDiscriminant},
+    Key => {integralDiscriminant, (integralDiscriminant, GrothendieckWittClass)},
     Headline => "outputs an integral discriminant for a rational symmetric bilinear form",
     Usage => "integralDiscriminant(beta)",
     Inputs => {
@@ -35,7 +35,7 @@ document{
 }
 
 document{
-    Key => {(HasseWittInvariant, GrothendieckWittClass, ZZ), (HasseWittInvariant, List, ZZ), HasseWittInvariant},
+    Key => {HasseWittInvariant, (HasseWittInvariant, GrothendieckWittClass, ZZ), (HasseWittInvariant, List, ZZ)},
     Headline => "outputs the Hasse-Witt invariant for a prime p for the quadratic form of the Grothendieck-Witt class",
     Usage => "HasseWittInvariant(beta, p)",
     Inputs => {
@@ -56,7 +56,7 @@ document{
 
 
 document{
-    Key => {(relevantPrimes, GrothendieckWittClass), relevantPrimes},
+    Key => {relevantPrimes, (relevantPrimes, GrothendieckWittClass)},
     Headline => "outputs a list of primes at which the Hasse-Witt invariants of a symmetric bilinear form may be non-trivial",
     Usage => "relevantPrimes(beta)",
     Inputs => {

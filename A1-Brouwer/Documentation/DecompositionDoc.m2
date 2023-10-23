@@ -1,5 +1,5 @@
 document {
-    Key => {(sumDecomposition, GrothendieckWittClass), sumDecomposition},
+    Key => {sumDecomposition, (sumDecomposition, GrothendieckWittClass)},
     Headline => "produces a simplified diagonal representative of a Grothendieck Witt class",
     Usage => "sumDecomposition(beta)",
     Inputs => {
@@ -30,7 +30,7 @@ document {
 }
 
 document {
-    Key => {(sumDecompositionString, GrothendieckWittClass), sumDecompositionString},
+    Key => {sumDecompositionString, (sumDecompositionString, GrothendieckWittClass)},
     Headline => "produces a simplified diagonal representative of a Grothendieck Witt class",
     Usage => "sumDecompositionString(beta)",
     Inputs => {
@@ -63,7 +63,7 @@ document {
 
 
 document {
-    Key => {(anisotropicPart, GrothendieckWittClass), (anisotropicPart, Matrix), anisotropicPart},
+    Key => {anisotropicPart, (anisotropicPart, GrothendieckWittClass), (anisotropicPart, Matrix)},
     Headline => "returns the anisotropic part of a Grothendieck Witt class",
     Usage => "anisotropicPart(beta)",
     Inputs => {

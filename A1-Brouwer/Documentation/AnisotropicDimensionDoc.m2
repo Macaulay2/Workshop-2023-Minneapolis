@@ -1,5 +1,5 @@
 document{
-    Key => {(anisotropicDimensionQp, GrothendieckWittClass, ZZ), anisotropicDimensionQp},
+    Key => {anisotropicDimensionQp, (anisotropicDimensionQp, GrothendieckWittClass, ZZ)},
     Headline => "Returns the anisotropic dimension of a rational symmetric bilinear form over the p-adics",
     Usage => "anisotropicDimensionQp(beta, p)",
     Inputs => {
@@ -40,7 +40,7 @@ document{
 
 
 document{
-    Key => {(anisotropicDimension, GrothendieckWittClass), (anisotropicDimension, Matrix), anisotropicDimension},
+    Key => {anisotropicDimension, (anisotropicDimension, GrothendieckWittClass), (anisotropicDimension, Matrix)},
     Headline => "Returns the anisotropic dimension of a symmetric bilinear form",
     Usage => "anisotropicDimension(beta)",
     Inputs => {
@@ -56,7 +56,7 @@ document{
 
 
 document{
-    Key => {(isotropicDimension, GrothendieckWittClass), isotropicDimension},
+    Key => {isotropicDimension, (isotropicDimension, GrothendieckWittClass)},
     Headline => "Returns the isotropic dimension of a symmetric bilinear form",
     Usage => "isotropicDimension(beta)",
     Inputs => {
@@ -70,7 +70,7 @@ document{
 }
 
 document{
-    Key => {(WittIndex, GrothendieckWittClass), WittIndex},
+    Key => {WittIndex, (WittIndex, GrothendieckWittClass)},
     Headline => "Returns the Witt index of a symmetric bilinear form",
     Usage => "WittIndex(beta)",
     Inputs => {
