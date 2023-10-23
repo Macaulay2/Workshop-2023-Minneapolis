@@ -62,13 +62,13 @@ export{
     "gwMultiply",
     
     --BuildingForms.m2
-    "diagonalClass",
+    "diagonalForm",
     "hyperbolicForm",
     "PfisterForm",
     
     --SimplifiedRepresentatives.m2
-    "diagonalForm",
-    "diagonalFormSimplify",
+    "diagonalClass",
+    "diagonalClassSimplify",
     "diagonalEntries",
     "integralDiagonalRep",
     
@@ -218,7 +218,7 @@ TEST ///
 print("diagonal form testing");
 M1=matrix(RR, {{0, 1}, {1, 0}});
 G1=gwClass(M1);
-M2=diagonalForm(G1);
+M2=diagonalClass(G1);
 assert(M2.matrix===matrix(RR, {{1, 0}, {0, -1}}));
 ///
 
@@ -226,17 +226,17 @@ assert(M2.matrix===matrix(RR, {{1, 0}, {0, -1}}));
 TEST ///
 M3=matrix(CC, {{1, 2, 3}, {2, 4, 5}, {3, 5, 7}});
 G2=gwClass(M3);
-M4=diagonalForm(G2);
+M4=diagonalClass(G2);
 assert(M4.matrix===matrix(CC, {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}));
 -- Ensure the cache is populated
--- assert(G2.cache.?diagonalForm)
+-- assert(G2.cache.?diagonalClass)
 ///
 
 --Test 2
 TEST ///
 M3=matrix(QQ, {{1, 2, 3}, {2, 4, 5}, {3, 5, 7}});
 G2=gwClass(M3);
-M4=diagonalForm(G2);
+M4=diagonalClass(G2);
 assert(M4.matrix===matrix(QQ,{{1, 0, 0}, {0, -2, 0}, {0, 0, 1/2}}));
 ///
 
@@ -310,7 +310,7 @@ assert(gwIsomorphic(P,twoH));
 -- Test 8
 TEST ///
 H = hyperbolicForm(RR);
-A = diagonalClass(RR,(1,-1));
+A = diagonalForm(RR,(1,-1));
 B = gwClass(matrix(RR,{{0,1},{1,0}}));
 assert(gwIsomorphic(H,A));
 assert(gwIsomorphic(H,B));
@@ -332,13 +332,13 @@ p = ideal(x^2+1,y);
 assert(localAlgebraBasis(f,p) == {1,x}); 
 ///
 
--- Tests for diagonalForm and diagonalEntries
+-- Tests for diagonalClass and diagonalEntries
 -- Test 11
 TEST ///
 M1 = matrix(CC,{{1,0,0},{0,2,0},{0,0,-3}});
 M2 = matrix(CC,{{1,0,0},{0,1,0},{0,0,1}});
 G = gwClass(M1);
-assert((diagonalForm(G)).matrix == M2);
+assert((diagonalClass(G)).matrix == M2);
 assert(diagonalEntries(G) == {1,1,1});
 
 ///
@@ -348,7 +348,7 @@ TEST ///
 M1 = matrix(RR,{{1,0,0},{0,2,0},{0,0,-3}});
 M2 = matrix(RR,{{1,0,0},{0,1,0},{0,0,-1}});
 G = gwClass(M1);
-assert((diagonalForm(G)).matrix == M2);
+assert((diagonalClass(G)).matrix == M2);
 assert(diagonalEntries(G) == {1,1,-1});
 ///
 
@@ -356,7 +356,7 @@ assert(diagonalEntries(G) == {1,1,-1});
 TEST ///
 M = matrix(QQ,{{1,0,0},{0,2,0},{0,0,-3}});
 G = gwClass(M);
-assert((diagonalForm(G)).matrix == M);
+assert((diagonalClass(G)).matrix == M);
 assert(diagonalEntries(G) == {1,2,-3})
 ///
     
@@ -364,7 +364,7 @@ assert(diagonalEntries(G) == {1,2,-3})
 TEST ///
 M = matrix(GF(5),{{1,0,0},{0,2,0},{0,0,-3}});
 G = gwClass(M);
-assert((diagonalForm(G)).matrix == M);
+assert((diagonalClass(G)).matrix == M);
 assert(diagonalEntries(G) == {1,2,-3});
 ///
 
@@ -372,7 +372,7 @@ assert(diagonalEntries(G) == {1,2,-3});
 TEST ///
 M = matrix(GF(7),{{1,0,0},{0,2,0},{0,0,-3}});
 G = gwClass(M);
-assert((diagonalForm(G)).matrix == M);
+assert((diagonalClass(G)).matrix == M);
 assert(diagonalEntries(G) == {1,2,-3});
 ///
 
