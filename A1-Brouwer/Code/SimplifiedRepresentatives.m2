@@ -5,11 +5,11 @@
 -- Input: A Grothendieck-Witt class beta
 -- Output: A diagonalized form of beta
 
-diagonalForm = method()
-diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
+diagonalClass = method()
+diagonalClass (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
         
-    -- Check if the diagonalForm has already been computed, if so recall it from the cache
-    if beta.cache.?diagonalForm then return beta.cache.diagonalForm;
+    -- Check if the diagonalClass has already been computed, if so recall it from the cache
+    if beta.cache.?diagonalClass then return beta.cache.diagonalClass;
     
     -- Number of rows of beta
     n := numRows(beta.matrix);
@@ -19,7 +19,7 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
 	identityMat := matrix(mutableIdentity(CC,n));
 	
 	-- Cache the answer before returning
-	beta.cache.diagonalForm = gwClass(identityMat);
+	beta.cache.diagonalClass = gwClass(identityMat);
 	return gwClass(identityMat)
 	);
     
@@ -36,24 +36,24 @@ diagonalForm (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
 		L = append(L,-1);
 		);
 	    );
-	return diagonalClass(RR,L);
+	return diagonalForm(RR,L);
 	
 	);
     
     -- Otherwise just run congruenceDiagonalize
     betaMatrix := beta.matrix;
-    diagonalFormOfBetaMatrix := congruenceDiagonalize(betaMatrix);
+    diagonalClassOfBetaMatrix := congruenceDiagonalize(betaMatrix);
     
     -- The diagonal form gets cached in the GWclass type
-    beta.cache.diagonalForm = gwClass(diagonalFormOfBetaMatrix);
-    return gwClass(diagonalFormOfBetaMatrix) 
+    beta.cache.diagonalClass = gwClass(diagonalClassOfBetaMatrix);
+    return gwClass(diagonalClassOfBetaMatrix) 
     );
 
 -- Input: A GrothendieckWittClass over QQ, RR, CC, or a finite field of characteristic not 2
 -- Output: A diagonalized form of the GrothendieckWittClass, with squares stripped out
 
-diagonalFormSimplify = method()
-diagonalFormSimplify (GrothendieckWittClass) := (GrothendieckWittClass) => (alpha) -> (
+diagonalClassSimplify = method()
+diagonalClassSimplify (GrothendieckWittClass) := (GrothendieckWittClass) => (alpha) -> (
     return gwClass(congruenceDiagonalizeSimplify(alpha.matrix));
     )
 
@@ -63,7 +63,7 @@ diagonalFormSimplify (GrothendieckWittClass) := (GrothendieckWittClass) => (alph
 diagonalEntries = method()
 diagonalEntries (GrothendieckWittClass) := (List) => (beta) -> (
     
-    betaDiagonal := diagonalForm(beta);
+    betaDiagonal := diagonalClass(beta);
     M := betaDiagonal.matrix;
     L := {};
     n := numRows M;
@@ -85,12 +85,12 @@ integralDiagonalRep (GrothendieckWittClass) := (GrothendieckWittClass) => (beta)
     L := diagonalEntries(beta);
     n := #L;
     
-    -- diagonalClass takes a sequence as an input
+    -- diagonalForm takes a sequence as an input
     integralDiagonalEntries := ();
     for i from 0 to (n-1) do(
 	integralDiagonalEntries = append(integralDiagonalEntries, squarefreePart(L_i))
 	);
-    gamma := diagonalClass(QQ,integralDiagonalEntries);
+    gamma := diagonalForm(QQ,integralDiagonalEntries);
     return gamma
     );
     

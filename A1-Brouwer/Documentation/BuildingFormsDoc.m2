@@ -1,8 +1,8 @@
 document {
-    Key => {diagonalClass, (diagonalClass, Ring, RingElement), (diagonalClass,Ring,ZZ),(diagonalClass,Ring,QQ),(diagonalClass,Ring,Sequence), (diagonalClass,InexactFieldFamily,RingElement), (diagonalClass,InexactFieldFamily,ZZ), (diagonalClass,InexactFieldFamily,QQ),(diagonalClass,InexactFieldFamily,Sequence)},
+    Key => {diagonalForm, (diagonalForm, Ring, RingElement), (diagonalForm,Ring,ZZ),(diagonalForm,Ring,QQ),(diagonalForm,Ring,Sequence), (diagonalForm,InexactFieldFamily,RingElement), (diagonalForm,InexactFieldFamily,ZZ), (diagonalForm,InexactFieldFamily,QQ),(diagonalForm,InexactFieldFamily,Sequence)},
     Headline => "the Grothendieck-Witt class of a diagonal form",     
-	Usage => "diagonalClass(k,a)
-	          diagonalClass(k,L)",
+	Usage => "diagonalForm(k,a)
+	          diagonalForm(k,L)",
 	Inputs => {
 	    Ring => "k" => {"a field"},
 	    RingElement => "a" => {"any element ", TEX///$a\in k$///},
@@ -13,14 +13,14 @@ document {
 	    },
 	PARA {"Given a sequence of elements ", TEX///$a_1,\ldots,a_n \in k$///, " we can form the diagonal form ", TEX///$\langle a_1,\ldots,a_n\rangle$///, " defined to be the block sum of each of the rank one forms ", TEX///$\langle a_i \rangle \colon k \times k \to k$///, " ", TEX///$(x,y) \mapsto a_i xy$///, "."},
 	EXAMPLE lines ///
-    	    	 diagonalClass(QQ,(3,5,7))
+    	    	 diagonalForm(QQ,(3,5,7))
 	 	 ///,
 	PARA{"Inputting a ring element, an integer, or a rational instead of a sequence will produce a rank one form instead. For instance:"},
 	EXAMPLE lines ///
-	diagonalClass(GF(29),5/13)
-	diagonalClass(RR,2)
+	diagonalForm(GF(29),5/13)
+	diagonalForm(RR,2)
 	///,
-    SeeAlso => {"diagonalForm", "congruenceDiagonalize", "diagonalEntries"}
+    SeeAlso => {"diagonalClass", "congruenceDiagonalize", "diagonalEntries"}
 }
 
 document {

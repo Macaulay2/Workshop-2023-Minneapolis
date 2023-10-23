@@ -48,7 +48,7 @@ qQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     alpha := chineseRemainder(S1 | S2, L1 |L2);
     a := squarefreePart(alpha);
     
-    return diagonalClass(QQ,a);
+    return diagonalForm(QQ,a);
 
     );
 
@@ -151,7 +151,7 @@ qQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
     for j from 0 to (r-1) do(
 	alpha = alpha * ((L_j)^(sub(X_(j,0),ZZ)));
 	);
-    return diagonalClass(QQ,(alpha, -alpha*d))
+    return diagonalForm(QQ,(alpha, -alpha*d))
     
    );
 
@@ -170,7 +170,7 @@ qQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -
     if n == d then(return beta);
     
     -- Initialize an empty quadratic form
-    outputForm := diagonalClass(QQ,());
+    outputForm := diagonalForm(QQ,());
     alpha := 1;
     
     
@@ -179,14 +179,14 @@ qQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -
 	outputForm = gwAdd(outputForm,qQanisotropicDimension4(beta));
 	alpha = ((qQanisotropicDimension4(beta)).matrix)_(0,0);
 	
-	beta = gwAdd(beta, diagonalClass(QQ,((-1)*alpha)));
+	beta = gwAdd(beta, diagonalForm(QQ,((-1)*alpha)));
 	);
     
     if d==3 then(
 	outputForm = gwAdd(outputForm,qQanisotropicDimension3(beta));
 	alpha = ((qQanisotropicDimension3(beta)).matrix)_(0,0);
 	
-	beta = gwAdd(beta, diagonalClass(QQ,((-1)*alpha)));
+	beta = gwAdd(beta, diagonalForm(QQ,((-1)*alpha)));
 	);
     
     if d==2 then(
@@ -194,7 +194,7 @@ qQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -
        );
     
     if d==1 then(
-	outputForm = gwAdd(outputForm, diagonalClass(QQ,(integralDiscriminant(beta))));
+	outputForm = gwAdd(outputForm, diagonalForm(QQ,(integralDiscriminant(beta))));
 	);
     
     return outputForm;
@@ -305,7 +305,7 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
 
 sumDecomposition = method()
 sumDecomposition (GrothendieckWittClass) := (GrothendieckWittClass) => beta -> (
-    beta.cache.diagonalForm = (sumDecompositionVerbose(beta))_0;
+    beta.cache.diagonalClass = (sumDecompositionVerbose(beta))_0;
     return (sumDecompositionVerbose(beta))_0
 );
 

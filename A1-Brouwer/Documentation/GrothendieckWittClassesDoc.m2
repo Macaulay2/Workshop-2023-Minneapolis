@@ -15,15 +15,15 @@ document{
     beta.matrix
     baseField(beta)
     ///,
-    PARA{"For computational purposes, it is often desirable to diagonalize a Gram matrix. Any symmetric bilinear form admits a diagonal Gram matrix representative by ", EM "Sylvester's law of inertia", ", and this is implemented via the ", TO2(diagonalForm, "diagonalForm"), " method."},
+    PARA{"For computational purposes, it is often desirable to diagonalize a Gram matrix. Any symmetric bilinear form admits a diagonal Gram matrix representative by ", EM "Sylvester's law of inertia", ", and this is implemented via the ", TO2(diagonalClass, "diagonalClass"), " method."},
     EXAMPLE lines///
-    diagonalForm(beta)
+    diagonalClass(beta)
     ///,
     PARA{"Once a form has been diagonalized, it is recorded in the cache for ", TT "GrothendieckWittClass", " and can therefore be quickly recovered."},
     EXAMPLE lines///
-    beta.cache.diagonalForm
+    beta.cache.diagonalClass
     ///,
-    SeeAlso => {"gwClass","diagonalForm","baseField"},
+    SeeAlso => {"gwClass","diagonalClass","baseField"},
     }
 
 document {

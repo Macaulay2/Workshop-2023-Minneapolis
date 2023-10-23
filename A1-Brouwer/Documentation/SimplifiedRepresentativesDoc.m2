@@ -1,7 +1,7 @@
 document {
-    Key => {diagonalForm, (diagonalForm, GrothendieckWittClass)},
+    Key => {diagonalClass, (diagonalClass, GrothendieckWittClass)},
 	Headline => "produces a diagonalized form for any Grothendieck-Witt class",
-	Usage => "diagonalForm(beta)",
+	Usage => "diagonalClass(beta)",
 	Inputs => {
 	    GrothendieckWittClass => "beta" => {"any class in ", TEX///$\text{GW}(k)$///," where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field."}
 	    },
@@ -11,33 +11,33 @@ document {
 	PARA {"Given a symmetric bilinear form, this method calls the ", TO2(congruenceDiagonalize,"congruenceDiagonalize"), " command in order to produce a diagonal symmetric bilinear form isomorphic to ", TEX///$\beta$///, "."},
 	EXAMPLE lines ///
 	beta = gwClass(matrix(QQ,{{0,0,2},{0,2,0},{2,0,0}}));
-	diagonalForm(beta)
+	diagonalClass(beta)
         ///,
 	PARA{"Note that the  ", TO2(GrothendieckWittClass, "GrothendieckWittClass"), " type caches diagonal versions of a form once they've been computed. We can recover this quickly in the following way."},
 	EXAMPLE lines///
-	beta.cache.diagonalForm
+	beta.cache.diagonalClass
 	///,
-	SeeAlso => {"congruenceDiagonalize","diagonalEntries","diagonalFormSimplify"}
+	SeeAlso => {"congruenceDiagonalize","diagonalEntries","diagonalClassSimplify"}
 	}
     
 
 document {
-    Key => {diagonalFormSimplify, (diagonalFormSimplify, GrothendieckWittClass)},
+    Key => {diagonalClassSimplify, (diagonalClassSimplify, GrothendieckWittClass)},
 	Headline => "produces a diagonalized form for any Grothendieck-Witt class, with simplified terms on the diagonal",
-	Usage => "diagonalFormSimplify(beta)",
+	Usage => "diagonalClassSimplify(beta)",
 	Inputs => {
 	    GrothendieckWittClass => "beta" => {"any class in ", TEX///$\text{GW}(k)$///," where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field."}
 	    },
 	Outputs => {
 	    GrothendieckWittClass => {"a form isomorphic to ", TEX///$\beta$///, " with a diagonal Gram matrix"}
 	    },
-	PARA {"This is the same method as ", TO2(diagonalForm,"diagonalForm")," but will go a step further to reduce square classes appearing on the diagonal entries of a matrix."},
+	PARA {"This is the same method as ", TO2(diagonalClass,"diagonalClass")," but will go a step further to reduce square classes appearing on the diagonal entries of a matrix."},
 	EXAMPLE lines ///
 	beta = gwClass(matrix(QQ,{{0,4},{4,9}}));
-	diagonalForm(beta)
-	diagonalFormSimplify(beta)
+	diagonalClass(beta)
+	diagonalClassSimplify(beta)
 	///,
-	SeeAlso => {"diagonalForm"}
+	SeeAlso => {"diagonalClass"}
 	}    
     
     
@@ -63,7 +63,7 @@ document {
 	gamma = gwClass(matrix(RR,{{0,0,1},{0,1,0},{1,0,0}}))
 	diagonalEntries gamma
 	///,
-	SeeAlso => {"diagonalForm", "congruenceDiagonalize"}
+	SeeAlso => {"diagonalClass", "congruenceDiagonalize"}
 	}
 
 document {
@@ -81,6 +81,6 @@ document {
 	beta = gwClass(M);
 	integralDiagonalRep(beta)
         ///,
-	SeeAlso => {"diagonalForm", "diagonalEntries", "congruenceDiagonalize"}
+	SeeAlso => {"diagonalClass", "diagonalEntries", "congruenceDiagonalize"}
 	}
 
