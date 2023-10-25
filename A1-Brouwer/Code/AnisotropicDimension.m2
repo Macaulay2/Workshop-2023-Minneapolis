@@ -115,7 +115,7 @@ anisotropicDimensionQQ (GrothendieckWittClass) := ZZ => (beta) -> (
     return max ListOfLocalAnistropicDimensions;
     );
 
--- Input: A Grothendieck-Witt class beta in GW(k), where k is the complex numbers, the real, the rationals or a finite field
+-- Input: A symmetric matrix representing a quadratic form or a GrothendieckWittClass; over QQ, RR, CC, or a finite field of characteristic not 2
 -- Output: An integer, the rank of the anisotropic part of beta
 
 anisotropicDimension = method()
@@ -125,9 +125,9 @@ anisotropicDimension (Matrix) := (ZZ) => (A) -> (
     if not (k === CC or instance(k,ComplexField) or k === RR or instance(k,RealField) or k === QQ or (instance(k, GaloisField) and k.char != 2)) then (
         error "Base field not supported; only implemented over QQ, RR, CC, and finite fields of characteristic not 2";
         );
-    -- Ensure underlying matrix is symmetric
+    -- Ensure matrix is symmetric
     if (transpose(A) != A) then (
-        error "Underlying matrix is not symmetric";
+        error "Matrix is not symmetric";
 	);
     diagA := congruenceDiagonalize(A);
     -- Over CC, the anisotropic dimension is 0 or 1 depending on the parity of number of nonzero diagonal entries
@@ -162,20 +162,12 @@ anisotropicDimension (GrothendieckWittClass) := (ZZ) => (alpha) -> (
     return(anisotropicDimension(alpha.matrix));
     );
 
--- Input: A Grothendieck-Witt class beta in GW(k), where k is the complex numbers, the real, the rationals or a finite field
--- Output:  An integer, the rank of the isotropic part of beta
 
-isotropicDimension = method()
-isotropicDimension (GrothendieckWittClass) := (ZZ) => (alpha) -> (
-    n := numRows(alpha.matrix);
-    return n - anisotropicDimension(alpha);
-    );
-
-
--- Input: A Grothendieck-Witt class beta in GW(k), where k is the complex numbers, the real, the rationals or a finite field
--- Output: An integer, the rank of the totally isotropic part of beta
+-- Input: A Grothendieck-Witt class alpha in GW(k), where k is the complex numbers, the real, the rationals or a finite field of characteristic not 2
+-- Output: An integer, the rank of the totally isotropic part of alpha
 
 WittIndex = method()
 WittIndex (GrothendieckWittClass) := (ZZ) => (alpha) -> (
-    return isotropicDimension(alpha)/2;
+    n := numRows(alpha.matrix);
+    return (n - anisotropicDimension(alpha))/2;
     );

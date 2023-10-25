@@ -4,8 +4,8 @@
 
 -- Note: This is Koprowski/Rothkegel's Algorithm 5 in the case of QQ
 
-qQanisotropicDimension4 = method()
-qQanisotropicDimension4 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
+QQanisotropicDimension4 = method()
+QQanisotropicDimension4 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
     if not (anisotropicDimensionQQ(beta) >= 4) then error "anisotropic dimension of inputted form is not >=4";
     
     -- If the signature is non-negative then return <1>
@@ -23,8 +23,8 @@ qQanisotropicDimension4 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 -- Output: A form < a > so that q + < -a > has anisotropic dimension 2
 
 -- Note: This is Koprowski/Rothkegel's Algorithm 7 in the case of QQ
-qQanisotropicDimension3 = method()
-qQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
+QQanisotropicDimension3 = method()
+QQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
     d := integralDiscriminant(beta);
     
     -- Build lists of primes where the p-adic valuation of the discriminant is even or is odd
@@ -54,8 +54,8 @@ qQanisotropicDimension3 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 
 -- Constructs the anisotropic part of a form with anisotropic dimension 2
 -- 
-qQanisotropicDimension2 = method()
-qQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
+QQanisotropicDimension2 = method()
+QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => beta ->(
     n := numRows beta.matrix;
 
     -- Shortcut: if the form has anisotropic dimension 2 and the form is dimension 2, return the form itself
@@ -159,8 +159,8 @@ qQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 
 -- Input: Any form over QQ
 -- Output: Its anisotropic part
-qQanisotropicPart = method()
-qQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
+QQanisotropicPart = method()
+QQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
     beta = integralDiagonalRep(beta);
     
     n := numRows(beta.matrix);
@@ -176,21 +176,21 @@ qQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -
     
     while d>=4 do(
 	d = anisotropicDimension(beta);
-	outputForm = gwAdd(outputForm,qQanisotropicDimension4(beta));
-	alpha = ((qQanisotropicDimension4(beta)).matrix)_(0,0);
+	outputForm = gwAdd(outputForm,QQanisotropicDimension4(beta));
+	alpha = ((QQanisotropicDimension4(beta)).matrix)_(0,0);
 	
 	beta = gwAdd(beta, diagonalForm(QQ,((-1)*alpha)));
 	);
     
     if d==3 then(
-	outputForm = gwAdd(outputForm,qQanisotropicDimension3(beta));
-	alpha = ((qQanisotropicDimension3(beta)).matrix)_(0,0);
+	outputForm = gwAdd(outputForm,QQanisotropicDimension3(beta));
+	alpha = ((QQanisotropicDimension3(beta)).matrix)_(0,0);
 	
 	beta = gwAdd(beta, diagonalForm(QQ,((-1)*alpha)));
 	);
     
     if d==2 then(
-       outputForm = gwAdd(outputForm, qQanisotropicDimension2(beta));
+       outputForm = gwAdd(outputForm, QQanisotropicDimension2(beta));
        );
     
     if d==1 then(
@@ -242,7 +242,7 @@ anisotropicPart (Matrix) := (Matrix) => (A) -> (
         )
     -- Over QQ, call anisotropicPartQQ
     else if (k === QQ) then (
-        return (qQanisotropicPart(gwClass(nondegeneratePartDiagonal(A)))).matrix;
+        return (QQanisotropicPart(gwClass(nondegeneratePartDiagonal(A)))).matrix;
         )
     -- Over a finite field, if the anisotropic dimension is 1, then the form is either <1> or <e>, where e is any nonsquare representative, and if the anisotropic dimension is 2 then the form is <1,-e>
     else if (instance(k, GaloisField) and k.char != 2) then (
@@ -269,7 +269,7 @@ anisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (alpha) ->
 -- Simplifying a form
 ---------------------------------------
 
--- Input: A Grothendieck-Witt class beta over a field k
+-- Input: A Grothendieck-Witt class beta over a field kk
 -- Output: A simplified diagonal representative of beta
 sumDecompositionVerbose = method()
 sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, String) => beta ->(
@@ -280,13 +280,13 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
     
     
     -- Get isotropic dimension of beta and construct its isotropic and anistropic parts
-    w := isotropicDimension(beta);
+    w := WittIndex(beta);
     
     if w > 0 then(
-	outputString = outputString | toString(sub(w/2,ZZ)) | "H";
+	outputString = outputString | toString(sub(w,ZZ)) | "H";
 	);
     
-    hyperbolicPart := hyperbolicForm(kk,w);
+    hyperbolicPart := hyperbolicForm(kk,2*w);
     alpha := anisotropicPart(beta);
     
     if numRows(alpha.matrix) > 0 then(

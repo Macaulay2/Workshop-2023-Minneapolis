@@ -3,7 +3,7 @@
 -- Producing new forms
 -----------------------
 
--- Input: A field k, and a list of elements a_1, ... , a_n of k
+-- Input: A field kk, and a list of elements a_1, ... , a_n of kk
 -- Output: The diagonal form <a_1,...,a_n> 
 
 diagonalForm = method()
@@ -61,7 +61,7 @@ diagonalForm(InexactFieldFamily, Sequence) := GrothendieckWittClass => (kk,L) ->
     return gwClass(matrix(A))
     )
 
--- Input: A field k
+-- Input: A field kk
 -- Output: An even number, giving an optional rank n for a totally hyperbolic form
 
 hyperbolicForm = method()
@@ -98,7 +98,7 @@ hyperbolicForm(InexactFieldFamily,ZZ) := GrothendieckWittClass => (kk,n) -> (
         return gwClass(outputMatrix)
     )
 
--- Input: A field k, and a list of elements a_1, ... , a_n of k
+-- Input: A field kk, and a list of elements a_1, ... , a_n of kk
 -- Output: The Pfister form <<a_1,...,a_n>>
 
 PfisterForm = method()

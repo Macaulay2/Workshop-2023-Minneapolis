@@ -3,7 +3,7 @@
 ---------------------------------------
 
 -- Input: A diagonal matrix
--- Output: The number of nonzero entries on its diagonal
+-- Output: The number of nonzero entries on the diagonal of a diagonal matrix to which it is congruent
 -- Note: numNonzeroDiagEntries is *not* included as a method in the A1BrowerDegrees package
 
 numNonzeroDiagEntries = method()
@@ -21,7 +21,7 @@ numNonzeroDiagEntries (Matrix) := (Matrix) => (A) -> (
     )
 
 -- Input: A diagonal matrix over QQ or RR
--- Output: The number of positive entries on its diagonal
+-- Output: The number of positive entries on the diagonal of a diagonal matrix to which it is congruent
 -- Note: numPosDiagEntries is *not* included as a method in the A1BrowerDegrees package
 
 numPosDiagEntries = method()
@@ -43,7 +43,7 @@ numPosDiagEntries (Matrix) := (Matrix) => (A) -> (
     )
 
 -- Input: A diagonal matrix over QQ or RR
--- Output: The number of positive entries on its diagonal
+-- Output: The number of positive entries on the diagonal of a diagonal matrix to which it is congruent
 -- Note: numPosDiagEntries is *not* included as a method in the A1BrowerDegrees package
 
 numNegDiagEntries = method()
@@ -65,21 +65,21 @@ numNegDiagEntries (Matrix) := (Matrix) => (A) -> (
     )
 
 -- Input: A Grothendieck-Witt class beta defined over QQ or RR
--- Output: The number of positive entries in its diagonalization
+-- Output: The number of positive entries on the diagonal of a diagonal matrix representing the Grothendieck-Witt class
 -- Note:  numPosEntries is *not* included as a method in the A1BrowerDegrees package
 
 numPosEntries = method()
 numPosEntries (GrothendieckWittClass) := ZZ => beta ->(
-    return(numPosDiagEntries(congruenceDiagonalize(beta.matrix)));
+    return(numPosDiagEntries(beta.matrix));
     );
 
 -- Input: A Grothendieck-Witt class beta defined over QQ or RR
--- Output: The number of negative entries in its diagonalization
+-- Output: The number of negative entries on the diagonal of a diagonal matrix representing the Grothendieck-Witt class
 -- Note:  numNegEntries is *not* included as a method in the A1BrowerDegrees package
 
 numNegEntries = method()
 numNegEntries (GrothendieckWittClass) := ZZ => beta ->(
-    return(numNegDiagEntries(congruenceDiagonalize(beta.matrix)));
+    return(numNegDiagEntries(beta.matrix));
     );
 
 -- Input: A Grothendieck-Witt class beta defined over QQ or RR

@@ -46,8 +46,6 @@ newPackage(
 export{
 
     -- ArithmeticMethods.m2
-    -- "squarefreePart",
-    -- "legendreBoolean",
     "localAlgebraBasis",
     "padicValuation",
 
@@ -68,7 +66,6 @@ export{
     
     --SimplifiedRepresentatives.m2
     "diagonalClass",
-    "diagonalClassSimplify",
     "diagonalEntries",
     "integralDiagonalRep",
     
@@ -96,7 +93,6 @@ export{
     --AnisotropicDimension.m2
     "anisotropicDimensionQp",
     "anisotropicDimension",
-    "isotropicDimension",
     "WittIndex",
     
     --Decomposition.m2
@@ -237,7 +233,7 @@ TEST ///
 M3=matrix(QQ, {{1, 2, 3}, {2, 4, 5}, {3, 5, 7}});
 G2=gwClass(M3);
 M4=diagonalClass(G2);
-assert(M4.matrix===matrix(QQ,{{1, 0, 0}, {0, -2, 0}, {0, 0, 1/2}}));
+assert(M4.matrix===matrix(QQ,{{1, 0, 0}, {0, -2, 0}, {0, 0, 2}}));
 ///
 
 -- gwTypeTest.m2
@@ -339,7 +335,7 @@ M1 = matrix(CC,{{1,0,0},{0,2,0},{0,0,-3}});
 M2 = matrix(CC,{{1,0,0},{0,1,0},{0,0,1}});
 G = gwClass(M1);
 assert((diagonalClass(G)).matrix == M2);
-assert(diagonalEntries(G) == {1,1,1});
+assert(diagonalEntries(G) == {1,2,-3});
 
 ///
 
@@ -349,7 +345,7 @@ M1 = matrix(RR,{{1,0,0},{0,2,0},{0,0,-3}});
 M2 = matrix(RR,{{1,0,0},{0,1,0},{0,0,-1}});
 G = gwClass(M1);
 assert((diagonalClass(G)).matrix == M2);
-assert(diagonalEntries(G) == {1,1,-1});
+assert(diagonalEntries(G) == {1,2,-3});
 ///
 
 -- Test 13
@@ -370,9 +366,11 @@ assert(diagonalEntries(G) == {1,2,-3});
 
 -- Test 15
 TEST ///
-M = matrix(GF(7),{{1,0,0},{0,2,0},{0,0,-3}});
-G = gwClass(M);
-assert((diagonalClass(G)).matrix == M);
+kk = GF(7);
+M1 = matrix(kk,{{1,0,0},{0,2,0},{0,0,-3}});
+M2 = matrix(kk,{{1,0,0},{0,1,0},{0,0,1}});
+G = gwClass(M1);
+assert((diagonalClass(G)).matrix == M2);
 assert(diagonalEntries(G) == {1,2,-3});
 ///
 

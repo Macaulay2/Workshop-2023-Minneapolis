@@ -2,7 +2,7 @@
 -- Arithmetic operations
 ------------------------
 
--- Input: A rational number
+-- Input: A rational number or an integer
 -- Output: Smallest magnitude integer in its square class
 
 squarefreePart = method()
@@ -34,7 +34,7 @@ squarefreePart (ZZ) := (ZZ) => (n) -> (
         );
     )
 
--- Input: An integer n
+-- Input: An integer or rational number n
 -- Output: A list of prime factors of n
 
 primeFactors = method()
@@ -55,7 +55,7 @@ primeFactors (QQ) := List => (n) -> (
     )
 
 -- Input: An integer n and a prime number p
--- Output: The highest non-negative integer r so that p^r | n
+-- Output: The p-adic valuation of n
 
 padicValuation = method()
 padicValuation (ZZ, ZZ) := (ZZ) => (n, p) -> (

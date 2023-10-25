@@ -56,20 +56,6 @@ document{
 
 
 document{
-    Key => {isotropicDimension, (isotropicDimension, GrothendieckWittClass)},
-    Headline => "Returns the isotropic dimension of a symmetric bilinear form",
-    Usage => "isotropicDimension(beta)",
-    Inputs => {
-	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(k)$///, " where ", TEX///$k$///, " is the complex numbers, reals, rationals, or a finite field."},
-	},
-    Outputs => {
-        ZZ => {"The rank of the isotropic part of ", TEX///$\beta$///, "."},
-	},
-    PARA{"Does the same thing as ", TO2(WittIndex,"WittIndex"), "."},
-    SeeAlso => {"WittIndex", "anisotropicDimension"}   
-}
-
-document{
     Key => {WittIndex, (WittIndex, GrothendieckWittClass)},
     Headline => "Returns the Witt index of a symmetric bilinear form",
     Usage => "WittIndex(beta)",
@@ -87,7 +73,7 @@ document{
 	{"[L05] T.Y. Lam, ", EM "Introduction to quadratic forms over fields,", " American Mathematical Society, 2005."},
     },
     
-    SeeAlso => {"isotropicDimension", "anisotropicDimension", "anisotropicDimensionQp"}   
+    SeeAlso => {"anisotropicDimension", "anisotropicDimensionQp"}   
 }
 
 

@@ -1,6 +1,6 @@
 
--- Input: Two Grothendieck-Witt classes alpha and beta over QQ
--- Output: Boolean checking if alpha and beta are isomorphic
+-- Input: Two Grothendieck-Witt classes or symmetric matrices representing quadratic forms over QQ
+-- Output: Boolean checking whether the Grothendieck-Witt classes/quadratic forms are isomorphic
 
 isIsomorphicFormQ = method()
 isIsomorphicFormQ (GrothendieckWittClass, GrothendieckWittClass) := Boolean => (alpha, beta) -> (
@@ -37,68 +37,12 @@ isIsomorphicFormQ (Matrix, Matrix) := Boolean => (M,N) -> (
     return isIsomorphicFormQ(gwClass(M),gwClass(N));
     );
 
--- Input: Two Grothendieck-Witt classes alpha and beta
+-- Input: Two Grothendieck-Witt classes alpha and beta, defined over CC, RR, QQ, or a finite field of characteristic not 2
 -- Output: Boolean checking if alpha and beta are the same
 
 gwIsomorphic = method()
 gwIsomorphic (GrothendieckWittClass,GrothendieckWittClass) := (Boolean) => (alpha,beta) -> (
-    k1 := baseField(alpha);
-    k2 := baseField(beta);
-    -- Ensure both base fields are supported
-    if not (k1 === CC or instance(k1,ComplexField) or k1 === RR or instance(k1,RealField) or k1 === QQ or (instance(k1, GaloisField) and k1.char != 2)) then (
-        error "Base field not supported; only implemented over QQ, RR, CC, and finite fields of characteristic not 2";
-        );
-    if not (k2 === CC or instance(k2,ComplexField) or k2 === RR or instance(k2,RealField) or k2 === QQ or (instance(k1, GaloisField) and k1.char != 2)) then (
-        error "Base field not supported; only implemented over QQ, RR, CC, and finite fields of characteristic not 2";
-        );
-    
-    A:=alpha.matrix;
-    B:=beta.matrix;
-    
-    -- Ensure both underlying matrices are symmetric
-    if not isSquareAndSymmetric(A) then error "Underlying matrix is not symmetric";
-    if not isSquareAndSymmetric(B) then error "Underlying matrix is not symmetric";
-    
-    diagA := congruenceDiagonalize(A);
-    diagB := congruenceDiagonalize(B);
-    
-    -----------------------------------
-    -- Complex numbers
-    -----------------------------------
-    
-    -- Over CC, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of nonzero entries
-    if (k1 === CC or instance(k1,ComplexField)) and (k2 === CC or instance(k2,ComplexField)) then (
-        return ((numRows(A) == numRows(B)) and (numNonzeroDiagEntries(diagA) == numNonzeroDiagEntries(diagB)));
-        )
-    
-    -----------------------------------
-    -- Real numbers
-    -----------------------------------
-    
-    -- Over RR, diagonal forms are equivalent if and only if they have the same number of positive, negative, and zero entries
-    else if ((k1 === RR or instance(k1,RealField)) and (k2 === RR or instance(k2,RealField))) then (
-        return ((numRows(A) == numRows(B)) and (signature(alpha) == signature(beta)));
-        )
-    
-    -----------------------------------
-    -- Rational numbers
-    -----------------------------------
-    
-    -- Over QQ, call isIsomorphicFormQ, which checks equivalence over all completions
-    else if ((k1 === QQ) and (k2 === QQ)) then (
-        return isIsomorphicFormQ(alpha,beta);
-        )
-    
-    -----------------------------------
-    -- Finite fields
-    -----------------------------------
-    
-    -- Over a finite field, diagonal forms over spaces of the same dimension are equivalent if and only if they have the same number of nonzero entries and the product of these nonzero entries is in the same square class
-    else if (instance(k1, GaloisField) and instance(k2, GaloisField) and k1.char !=2 and k2.char != 2 and k1.order == k2.order) then (
-        return ((numRows(A) == numRows(B)) and (numNonzeroDiagEntries(diagA) == numNonzeroDiagEntries(diagB)) and (legendreBoolean(det(nondegeneratePartDiagonal(A))) == legendreBoolean(sub(det(nondegeneratePartDiagonal(B)),k1))));
-        )
-    -- If we get here, the base fields are not isomorphic
-    else error "Base fields are not isomorphic"
+    return(isIsometricForm(alpha.matrix,beta.matrix));
     )
 
 -- Input: Two symmetric bilinear forms represented as matrices
@@ -147,7 +91,7 @@ isIsometricForm (Matrix,Matrix) := (Boolean) => (A,B) -> (
     
     -- Over QQ, if spaces have same dimension and nondegenerate parts have same dimension, then call isIsomorphicFormQ, which checks equivalence over all completions
     else if ((k1 === QQ) and (k2 === QQ)) then (
-        return ((numRows(A) == numRows(B)) and (numRows(nondegeneratePartDiagonal(A)) == numRows(nondegeneratePartDiagonal(B))) and (isIsomorphicFormQ(gwClass(nondegeneratePartDiagonal(A)),gwClass(nondegeneratePartDiagonal(B)))));
+        return ((numRows(A) == numRows(B)) and (numRows(nondegeneratePartDiagonal(A)) == numRows(nondegeneratePartDiagonal(B))) and (isIsomorphicFormQ(nondegeneratePartDiagonal(A),nondegeneratePartDiagonal(B))));
         )
     
     -----------------------------------

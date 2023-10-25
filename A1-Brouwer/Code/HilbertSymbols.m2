@@ -73,47 +73,6 @@ HilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
     
     );
 
-
-    
--- -- Given (a,b,p) integers, with a,b considered as p-adic numbers and p a prime, returns the Hilbert symbol (a,b)_p
--- HilbertSymbol = method()
--- HilbertSymbol (ZZ, ZZ, ZZ) := (ZZ) => (a, b, p) -> (
---     -- When p is odd, the Hilbert symbol (a,b)_p can be expressed by a formula using Legendre symbols
---     -- or equivalently, be defined, by the following condition.  
---     if (odd p) then (
--- 	if (squareSymbol(a, p)==1 or squareSymbol(b, p)==1 or 
--- 	    squareSymbol(-1*a*b, p) ==1 or
--- 	    (squareSymbol(a,p)*squareSymbol(b,p)==1)) then (
--- 		hilb:=1;
--- 		)
--- 	else (
--- 	    hilb=-1;
--- 	    );
--- 	)
---      else (
--- 	 e1:=PadicValuation(a, p);
--- 	 u:=sub(a/p^e1,ZZ);
--- 	 e2:=PadicValuation(b, p);
--- 	 b1:=sub(b/p^e2, ZZ);
--- 	 c1:= (u-1)/2;
--- 	 c2:= (b1-1)/2;
--- 	 d1:= (u^2-1)/8;
--- 	 d2:= (b1^2-1)/8;
-	 
-	 
--- 	 d:= c1*c2+e1*d2+e2*d1;
-	  
--- 	 -- when p=2, the Hilbert symbol (a,b)_2 equals (-1)^d
--- 	 if (even sub(d,ZZ)) then (
--- 	     return 1;
--- 	     )
--- 	 else (
--- 	     return -1;
--- 	     );
--- 	 	    );
---     return hilb;	
--- );
-
 HilbertSymbol (QQ, QQ, ZZ) := (ZZ) => (a, b, p) -> (
  
 -- if a, b are rational numbers with denominators,  one can multiply by square of denominator to 

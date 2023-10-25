@@ -2,19 +2,6 @@
 -- Matrix manipulations
 -----------------------
 
--- Input: Two matrices
--- Output: The block sum of possibly empty matrices
-
--- Note: The block sum "++" of a zero matrix with something else outputs the wrong thing.
--- This internal method allows us to call block sums of possibly empty matrices.
-
---safeBlockSum = method()
---safeBlockSum (Matrix, Matrix) := Matrix => (A,B) -> (
---    if numColumns A == 0 then return B;
---    if numColumns B == 0 then return A;    
---    return A ++ B 
---    )
-
 -- Input: A matrix
 -- Output: True if the matrix is a square; false otherwise
 

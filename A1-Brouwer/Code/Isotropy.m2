@@ -1,6 +1,6 @@
 
--- Input: A matrix
--- Output: Boolean returning if a symmetric bilinear form is anisotropic
+-- Input: A matrix representing a symmetric bilinear form over QQ, RR, CC, or a finite field of characteristic not 2
+-- Output: Boolean returning whether the symmetric bilinear form is anisotropic
 	
 isAnisotropic = method()
 isAnisotropic (Matrix) := (Boolean) => (A) -> (
@@ -10,26 +10,26 @@ isAnisotropic (Matrix) := (Boolean) => (A) -> (
         error "Base field not supported; only implemented over QQ, RR, CC, and finite fields of characteristic not 2";
         );
     n := numRows(A);
-    return (n == anisotropicDimension(A))
+    return (n == anisotropicDimension(A));
     )
 
--- Input: A Grothendieck-Witt class alpha
--- Output: Boolean returning if a symmetric bilinear form is anisotropic
+-- Input: A Grothendieck-Witt class alpha over QQ, RR, CC, or a finite field of characteristic not 2
+-- Output: Boolean returning whether alpha is anisotropic
 
 isAnisotropic (GrothendieckWittClass) := (Boolean) => (alpha) -> (
-    return (isAnisotropic(alpha.matrix))
+    return (isAnisotropic(alpha.matrix));
     )
 
--- Input: A matrix
--- Output: Boolean returning if a symmetric bilinear form is isotropic	
+-- Input: A matrix representing a symmetric bilinear form over QQ, RR, CC, or a finite field of characteristic not 2
+-- Output: Boolean returning whether the symmetric bilinear form is isotropic	
 
 isIsotropic = method()
 isIsotropic (Matrix) := (Boolean) => (A) -> (
     return (not isAnisotropic(A));
     )
 
--- Input: A Grothendieck-Witt class alpha
--- Output: Boolean returning if a symmetric bilinear form is isotropic
+-- Input: A Grothendieck-Witt class alpha over QQ, RR, CC, or a finite field of characteristic not 2
+-- Output: Boolean returning whether alpha is isotropic
 
 isIsotropic (GrothendieckWittClass) := (Boolean) => (alpha) -> (
     return (not isAnisotropic(alpha));
