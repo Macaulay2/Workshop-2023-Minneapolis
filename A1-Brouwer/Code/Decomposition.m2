@@ -161,7 +161,7 @@ QQanisotropicDimension2 (GrothendieckWittClass) := (GrothendieckWittClass) => be
 -- Output: Its anisotropic part
 QQanisotropicPart = method()
 QQanisotropicPart (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
-    beta = integralDiagonalRep(beta);
+    beta = diagonalClass(beta);
     
     n := numRows(beta.matrix);
     d := anisotropicDimension(beta);
@@ -283,7 +283,7 @@ sumDecompositionVerbose (GrothendieckWittClass) := (GrothendieckWittClass, Strin
     w := WittIndex(beta);
     
     if w > 0 then(
-	outputString = outputString | toString(sub(w,ZZ)) | "H";
+	outputString = outputString | toString(w) | "H";
 	);
     
     hyperbolicPart := hyperbolicForm(kk,2*w);

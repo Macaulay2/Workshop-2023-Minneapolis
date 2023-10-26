@@ -107,7 +107,7 @@ integralDiscriminant (GrothendieckWittClass) := (ZZ) => (beta) -> (
     if (not (kk === QQ)) then (error "GrothendieckWittClass is not over QQ");
     
     -- Take an integral diagonal representative for beta
-    gamma := integralDiagonalRep(beta);
+    gamma := diagonalClass(beta);
     G := gamma.matrix;
     
     discrimForm:= 1;
@@ -128,7 +128,7 @@ relevantPrimes (GrothendieckWittClass) := List => (beta) -> (
     kk:= ring B;
     
     -- Take a diagonal integral representative of the form
-    gamma := integralDiagonalRep(beta);
+    gamma := diagonalClass(beta);
     D := diagonalEntries(gamma);
     
     L := {};
@@ -177,6 +177,6 @@ HasseWittInvariant(GrothendieckWittClass, ZZ) := ZZ => (beta,p) -> (
     kk := baseField beta;
     if not (kk === QQ) then error "method is only implemented over the rationals";
     if not isPrime(p) then error "second argument must be a prime number";
-    return HasseWittInvariant(diagonalEntries(integralDiagonalRep(beta)),p)
+    return HasseWittInvariant(diagonalEntries(diagonalClass(beta)),p)
     
     )

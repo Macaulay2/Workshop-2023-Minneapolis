@@ -8,16 +8,17 @@ document {
 	Outputs => {
 	    GrothendieckWittClass => {"a form isomorphic to ", TEX///$\beta$///, " with a diagonal Gram matrix"}
 	    },
-	PARA {"Given a symmetric bilinear form, this method calls the ", TO2(congruenceDiagonalizeSimplify,"congruenceDiagonalizeSimplify"), " command in order to produce a diagonal symmetric bilinear form isomorphic to ", TEX///$\beta$///, ", with reduced square classes appearing as the diagonal entries."},
+	PARA {"Given a symmetric bilinear form, this method calls the ", TO2(congruenceDiagonalize,"congruenceDiagonalize"), " command in order to produce a diagonal symmetric bilinear form isomorphic to ", TEX///$\beta$///, ", with reduced square classes appearing as the diagonal entries."},
 	EXAMPLE lines ///
-	beta = gwClass(matrix(QQ,{{0,4},{4,9}}));
+	M = matrix(QQ,{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
+	beta = gwClass(M);
 	diagonalClass(beta)
 	///,
 	PARA{"Note that the  ", TO2(GrothendieckWittClass, "GrothendieckWittClass"), " type caches diagonal versions of a form once they've been computed. We can recover this quickly in the following way."},
 	EXAMPLE lines///
 	beta.cache.diagonalClass
 	///,
-	SeeAlso => {"congruenceDiagonalizeSimplify"}
+	SeeAlso => {"congruenceDiagonalize"}
 	}    
 
 
@@ -42,23 +43,5 @@ document {
 	diagonalEntries gamma
 	///,
 	SeeAlso => {"diagonalClass", "congruenceDiagonalize"}
-	}
-
-document {
-    Key => {integralDiagonalRep, (integralDiagonalRep, GrothendieckWittClass)},
-	Headline => "given a rational symmetric bilinear form, outputs a diagonal representative with integral entries",
-	Usage => "integralDiagonalRep(beta)",
-	Inputs => {
-	    GrothendieckWittClass => "beta" => {"any class in ", TEX///$\text{GW}(\mathbb{Q})$///,"."}
-	    },
-	Outputs => {
-	    GrothendieckWittClass => {"a form ", TEX///$\langle a_1,\ldots,a_n\rangle$///, " isomorphic to ", TEX///$\beta$///, " with each ", TEX///$a_i \in \mathbb{Z}$///, "."}
-	    },
-	EXAMPLE lines ///
-	M = matrix(QQ,{{9,1,7,4},{1,10,3,2},{7,3,6,7},{4,2,7,5}});
-	beta = gwClass(M);
-	integralDiagonalRep(beta)
-        ///,
-	SeeAlso => {"diagonalClass", "diagonalEntries", "congruenceDiagonalize"}
 	}
 

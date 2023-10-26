@@ -67,7 +67,6 @@ export{
     --SimplifiedRepresentatives.m2
     "diagonalClass",
     "diagonalEntries",
-    "integralDiagonalRep",
     
     --HilbertSymbols.m2
     "HilbertSymbol",
@@ -374,13 +373,12 @@ assert((diagonalClass(G)).matrix == M2);
 assert(diagonalEntries(G) == {1,2,-3});
 ///
 
--- Tests for integralDiagonalRep
 -- Test 16
 TEST ///
 M1 = matrix(QQ,{{18,0,0},{0,125/9,0},{0,0,-8/75}});
 M2 = matrix(QQ,{{2,0,0},{0,5,0},{0,0,-6}});
 G1 = gwClass(M1);
-assert((integralDiagonalRep(G1)).matrix == M2);
+assert((diagonalClass(G1)).matrix == M2);
 ///
 
 

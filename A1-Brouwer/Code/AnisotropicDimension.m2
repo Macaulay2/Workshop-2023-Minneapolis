@@ -169,5 +169,5 @@ anisotropicDimension (GrothendieckWittClass) := (ZZ) => (alpha) -> (
 WittIndex = method()
 WittIndex (GrothendieckWittClass) := (ZZ) => (alpha) -> (
     n := numRows(alpha.matrix);
-    return (n - anisotropicDimension(alpha))/2;
+    return sub((n - anisotropicDimension(alpha))/2,ZZ);
     );

@@ -19,7 +19,7 @@ diagonalClass (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
     );
 
 -- Input: A Grothendieck-Witt class beta
--- Output: The diagonal entries of beta.matrix as a list
+-- Output: The diagonal entries of a diagonal matrix representing beta as a list
 
 diagonalEntries = method()
 diagonalEntries (GrothendieckWittClass) := (List) => (beta) -> (
@@ -32,26 +32,6 @@ diagonalEntries (GrothendieckWittClass) := (List) => (beta) -> (
 	L = append(L, M_(i,i));
 	);
     return L
-    );
-
--- Input: A Grothendieck-Witt class beta over QQ
--- Output: A diagonal form with integral entries
-
-integralDiagonalRep = method()
-integralDiagonalRep (GrothendieckWittClass) := (GrothendieckWittClass) => (beta) -> (
-    kk := baseField beta;
-    if not (kk === QQ) then error "method is only implemented over the rationals";
-    
-    L := diagonalEntries(beta);
-    n := #L;
-    
-    -- diagonalForm takes a sequence as an input
-    integralDiagonalEntries := ();
-    for i from 0 to (n-1) do(
-	integralDiagonalEntries = append(integralDiagonalEntries, squarefreePart(L_i))
-	);
-    gamma := diagonalForm(QQ,integralDiagonalEntries);
-    return gamma
     );
     
     
