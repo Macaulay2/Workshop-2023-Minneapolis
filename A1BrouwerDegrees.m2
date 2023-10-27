@@ -239,7 +239,7 @@ assert(M4.matrix===matrix(QQ,{{1, 0, 0}, {0, -2, 0}, {0, 0, 2}}));
 -- Test 3
 TEST ///
 M = matrix(QQ,{{1,0},{0,1}});
-N = matrix(QQ, {{1, 2}, {2, 5}})
+N = matrix(QQ, {{1, 2}, {2, 5}});
 beta = gwClass(M);
 gamma = gwClass(N);
 assert(baseField(beta) === QQ)

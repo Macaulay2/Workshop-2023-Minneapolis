@@ -11,10 +11,15 @@ GrothendieckWittClass.synonym = "Grothendieck Witt Class"
 
 gwClass = method()
 gwClass (Matrix) := GrothendieckWittClass => M -> (
+   if (isWellDefined(M)) then (
         new GrothendieckWittClass from {
             symbol matrix => M,
             symbol cache => new CacheTable
             }
+        )
+    else (
+        error "gwClass called on a matrix that does not represent a nondegenerate symmetric bilinear form over a field of characteristic not 2";
+        )
     )
 
 -- This allows us to extract the matrix from a class
@@ -22,21 +27,33 @@ matrix GrothendieckWittClass := Matrix => beta -> beta.matrix
 
 
 
--- Check if a constructed class is well-defined
-isWellDefined GrothendieckWittClass := Boolean => beta -> (
+-- Check whether a matrix defines a nondegenerate symmeteric bilinear form
+isWellDefined (Matrix) := Boolean => M -> (
     
     -- Returns false if a matrix isn't symmetric
     --	  Note that this will also return false if a matrix isn't square,
     --	      so we don't need another check for that.
-    if not isSquareAndSymmetric(beta.matrix) then(
+    if not isSquareAndSymmetric(M) then(
 	<< "-- Defining matrix is not symmetric" << endl;
-	return false
+	return false;
+	);
+
+    -- Returns false if the matrix represents a degenerate form
+    if isDegenerate(M) then (
+	<< "-- Defining matrix is degenerate" << endl;
+	return false;
+        );
+
+    -- Returns false if the matrix isn't defined over a field
+    if not isField ring M then (
+	<< "-- Matrix is not defined over a field" << endl;
+	return false;
 	);
     
     -- Returns false if a matrix is defined over a field of characteristic two
-    if char ring beta.matrix == 2 then(
+    if char ring M == 2 then(
 	<< "-- Package does not support base fields of characteristic two" <<endl;
-	return false
+	return false;
 	);
     
     true);
@@ -46,7 +63,7 @@ isWellDefined GrothendieckWittClass := Boolean => beta -> (
 
 baseField = method()
 baseField GrothendieckWittClass := Ring => beta -> (
-    if(isWellDefined(beta) === true) then (ring beta.matrix)
+    ring beta.matrix
     )
 
 -- Input: Two Grothendieck-Witt classes beta and gamma
