@@ -31,12 +31,16 @@ document {
     ///,
     PARA{"The rank of this form is three, as cubics over the complex numbers have three roots counted with multiplicity. This form has signature one, which indicates that when the cubic intersects the ", TEX///$x$///, "-axis, when the three points of intersection are counted with a sign corresponding to a right hand rule, the sum equals one."},
     
-    PARA{"The global ", TEX///$\mathbb{A}^1$///, "-Brouwer degree can be computed as a sum over the ", TO2(localA1Degree,"local degrees"), " at the points in the zero locus of the morphism. In the previous example, we see that ", TEX///$V(f)$///, " consists of three points on the affine line. We can compute local degrees at all of these:"},
+    PARA{"The global ", TEX///$\mathbb{A}^1$///, "-Brouwer degree can be computed as a sum over the ", TO2(localA1Degree,"local degrees"), " at the points in the zero locus of the morphism. In the previous example, we see that ", TEX///$V(f)$///, " consists of three points on the affine line. We can compute local degrees at all of these and verify that the local degrees sum to the global degree:"},
     EXAMPLE lines///
     QQ[x,y];
     f = {x^3 - x^2 - y, y};
     point1 = ideal{x-1, y};
-    localA1Degree(f,point1)
+    point2 = ideal{x, y};
+    globalA1Degree(f);
+    localA1Degree(f,point1);
+    localA1Degree(f,point2);
+    gwIsomorphic(globalA1Degree(f), gwAdd(localA1Degree(f,point1), localA1Degree(f,point2)));
     ///,
     
     PARA{EM "Citations:"},
