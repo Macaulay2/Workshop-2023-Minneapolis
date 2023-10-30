@@ -44,7 +44,7 @@ newPackage(
 
 
 export{
-
+    
     -- ArithmeticMethods.m2
     "localAlgebraBasis",
     "padicValuation",
@@ -97,7 +97,8 @@ export{
     --Decomposition.m2
     "anisotropicPart",
     "sumDecomposition",
-    "sumDecompositionString",
+    "sumDecompositionString"
+    
     }
 
 -- Basic arithmetic, p-adic, and commutative algebra operations we will use
