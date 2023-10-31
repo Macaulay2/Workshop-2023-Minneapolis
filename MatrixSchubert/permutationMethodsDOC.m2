@@ -355,7 +355,7 @@ doc ///
         Text
             Given a permutation in 1-line notation, checks if the permutation is CDG.  We say that a permutation $w$ is CDG 
 	    if a certain modification (see [Kle23] for precise description) of the Fulton generators of the Schubert determinantal
-	    ideal $I_w$ form a diagonal Grobner basis.  By [Kle23], $w$ satisfies the CDG property if and only if $w$ avoid all of the patterns 
+	    ideal $I_w$ form a diagonal Gröbner basis.  By [Kle23], $w$ satisfies the CDG property if and only if $w$ avoid all of the patterns 
 	    $\{13254, 21543, 214635, 215364, 215634, 241635, 315264, 4261735\}$.
 	    
 	     @UL {

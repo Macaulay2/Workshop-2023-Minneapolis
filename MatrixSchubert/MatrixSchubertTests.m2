@@ -371,11 +371,11 @@ assert(entrywiseMinRankTable {I} == matrix{{1, 1, 1, 1}, {1, 2, 2, 2}, {1, 2, 3,
 --entrywiseMaxRankTable--
 assert(entrywiseMaxRankTable {I} == matrix{{1, 1, 1, 1}, {1, 2, 2, 2}, {1, 2, 3, 3}, {1, 2, 3, 4}})
 
---schubDecomposition--
+--schubDecompose--
 testIdealPerm = schubDetIdeal(w);
 testIdealMat = schubDetIdeal(I);
-assert(schubDecomposition schubDetIdeal w == {{1, 2, 3, 4}})
-assert(schubDecomposition schubDetIdeal I == {{1, 2, 3, 4}})
+assert(schubDecompose schubDetIdeal w == {{1, 2, 3, 4}})
+assert(schubDecompose schubDetIdeal I == {{1, 2, 3, 4}})
 
 --permOverASM--
 assert(permOverASM I == {{1, 2, 3, 4}})
@@ -827,14 +827,14 @@ assert(toExternalString(F) == "{z_(1,4)*z_(2,3)*z_(2,4)*z_(3,2)*z_(3,3)*z_(3,4)*
 
 
 TEST ///
---schubDecomposition--
+--schubDecompose--
 w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-assert(flatten schubDecomposition schubDetIdeal w == w)
-assert(schubDecomposition schubDetIdeal I == {{3, 5, 1, 2, 4}, {5, 2, 3, 1, 4}, {4, 2, 5, 1, 3}, {3, 4, 1, 5, 2}, {4, 2, 3, 5, 1}})
-assert(schubDecomposition schubDetIdeal PI == {{3, 6, 1, 2, 4, 5}, {6, 2, 3, 1, 4, 5}, {4, 2, 6, 1, 3, 5}, {3, 4, 1, 6, 2, 5}, {4, 2, 3, 6, 1, 5}})
+assert(flatten schubDecompose schubDetIdeal w == w)
+assert(schubDecompose schubDetIdeal I == {{3, 5, 1, 2, 4}, {5, 2, 3, 1, 4}, {4, 2, 5, 1, 3}, {3, 4, 1, 5, 2}, {4, 2, 3, 5, 1}})
+assert(schubDecompose schubDetIdeal PI == {{3, 6, 1, 2, 4, 5}, {6, 2, 3, 1, 4, 5}, {4, 2, 6, 1, 3, 5}, {3, 4, 1, 6, 2, 5}, {4, 2, 3, 6, 1, 5}})
 ///
 
 TEST ///

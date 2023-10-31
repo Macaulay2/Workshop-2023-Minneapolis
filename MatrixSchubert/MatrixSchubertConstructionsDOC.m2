@@ -200,10 +200,10 @@ doc ///
 	    antiDiagInit A
 	Text
 	    Every ASM ideal can be written as the intersection of Schubert determinantal ideals.
-	    The function @TO schubDecomposition@ outputs the list of permutations that index the
+	    The function @TO schubDecompose@ outputs the list of permutations that index the
 	     prime components of the ASM variety associated to A.
 	Example
-	    schubDecomposition I
+	    schubDecompose I
 	Text
 	    Given a list of partial ASMs, this package also contains functions for intersecting and adding
 	    the ASM ideals associated to the list of ASMs or partial ASMs. Every sum of ASM ideals (equivalently, 
@@ -890,13 +890,13 @@ doc ///
 
 doc ///
     Key
-        schubDecomposition
-        (schubDecomposition, Ideal)
-	(schubDecomposition, Matrix)
+        schubDecompose
+        (schubDecompose, Ideal)
+	(schubDecompose, Matrix)
     Headline
         finds the decomposition of an ASM ideal into Schubert determinantal ideals
     Usage
-        schubDecomposition I
+        schubDecompose I
     Inputs
         I:Ideal
 	    or {\tt A} is a @TO Matrix@
@@ -909,12 +909,12 @@ doc ///
 	Example
 	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
 	    J = schubDetIdeal A;
-	    netList schubDecomposition J
+	    netList schubDecompose J
 	Text
 	    If the ASM ideal for an ASM $A$ has not het been computed, one may also give the ASM $A$ as input.
 	Example
 	    A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}};
-	    netList schubDecomposition A	    
+	    netList schubDecompose A	    
 ///
 
 doc ///
@@ -931,7 +931,7 @@ doc ///
     	:List    	
     Description
         Text
-            Given an alternating sign matrix $A$, this routine computes Perm$(A) = \{w \in S_n \mid A \leq w$, and $v \in S_n$ with $A \leq v \leq w$ implies $ v=w\}$ (where $\leq$ is in (strong) Bruhat order).  This computation is performed by taking the antidiagonal initial ideal determined by $A$ and extracting the permutations indexing its components via schubDecomposition.
+            Given an alternating sign matrix $A$, this routine computes Perm$(A) = \{w \in S_n \mid A \leq w$, and $v \in S_n$ with $A \leq v \leq w$ implies $ v=w\}$ (where $\leq$ is in (strong) Bruhat order).  This computation is performed by taking the antidiagonal initial ideal determined by $A$ and extracting the permutations indexing its components via schubDecompose.
 	Example 
 	    A = matrix{{0,1,0,0},{0,0,1,0},{1,-1,0,1},{0,1,0,0}}
 	    permOverASM A
@@ -984,7 +984,7 @@ doc ///
     	:Boolean
     Description
         Text
-            Every ASM ideal can be written as an intersection of Schubert determinantal ideals.  Given an ideal $I$, this function first uses schubDecomposition to find the set of permutations that must index the minimal primes of $I$ if indeed $I$ is an ASM ideal. Then $I$ is an ASM ideal if and only if $I=I_A$ for the ASM $A$ whose rank table is the determined by taking entrywise maxima (using entrywiseMaxRankTable) in the rank tables of the permutations found by schubDecomposition.
+            Every ASM ideal can be written as an intersection of Schubert determinantal ideals.  Given an ideal $I$, this function first uses schubDecompose to find the set of permutations that must index the minimal primes of $I$ if indeed $I$ is an ASM ideal. Then $I$ is an ASM ideal if and only if $I=I_A$ for the ASM $A$ whose rank table is the determined by taking entrywise maxima (using entrywiseMaxRankTable) in the rank tables of the permutations found by schubDecompose.
 	
 	    When this function returns true, it also stores the ASM $A$ so that $I=I_A$.  The matrix $A$ can then be accessed using getASM.
 	Example

@@ -535,9 +535,9 @@ monomialRank (RingElement, ZZ) := ZZ => (mon, maxIdx) -> (
 --TODO: docs and tests
 -------------------------------------------
 
-schubDecomposition = method()
+schubDecompose = method()
 
-schubDecomposition Ideal := List => I -> (
+schubDecompose Ideal := List => I -> (
     if I == 0 then (
         return {toList (1..floor sqrt numgens ring I)};
     );
@@ -561,11 +561,11 @@ schubDecomposition Ideal := List => I -> (
     unique cycleDecomp
 )
 
-schubDecomposition Matrix := List => A -> (
+schubDecompose Matrix := List => A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix.");
     A' := partialASMToASM A;
     I := schubDetIdeal A';
-    schubDecomposition I
+    schubDecompose I
     )
 
 -------------------------------------------
@@ -573,13 +573,13 @@ schubDecomposition Matrix := List => A -> (
 --OUTPUT: the smallest permutations bigger than A in Bruhat order
 --TODO: docs and tests
 --TODO: input validation/type checking
---NOTE: This assumes that schubDecomposition is allowed to take in something other than an ASM ideal.  Adjust if schubDecompsition is changed.
+--NOTE: This assumes that schubDecompose is allowed to take in something other than an ASM ideal.  Adjust if schubDecompose is changed.
 -------------------------------------------
 permOverASM = method()
 permOverASM Matrix := List => A -> (
     if not(isPartialASM(A)) then error("The input must be a partial alternating sign matrix.");
     I := antiDiagInit A;
-    schubDecomposition I
+    schubDecompose I
     )
 
 -------------------------------------------
@@ -592,7 +592,7 @@ isIntersectionSchubIdeals = method()
 isIntersectionSchubIdeals Ideal := Boolean => I -> (
     isIntersection := true;
     if (I == radical(I)) then {
-        schubDecomp := apply(schubDecomposition I, i-> schubDetIdeal(i, CoefficientRing => coefficientRing(ring I)));
+        schubDecomp := apply(schubDecompose I, i-> schubDetIdeal(i, CoefficientRing => coefficientRing(ring I)));
 	Q := ring schubDecomp_0;
         isIntersection = sub(I,Q) == intersect apply(schubDecomp, J -> sub(J,Q));
     }
@@ -611,7 +611,7 @@ isIntersectionSchubIdeals Ideal := Boolean => I -> (
 isASMIdeal = method()
 isASMIdeal Ideal := Boolean => (I) -> (
     isASM := true;
-    schubDecomp := schubDecomposition I;
+    schubDecomp := schubDecompose I;
     primeComps := schubDecomp / schubDetIdeal;
     Q := ring primeComps_0;
     intersectCheck := intersect(apply(primeComps, J-> sub(J,Q)));
