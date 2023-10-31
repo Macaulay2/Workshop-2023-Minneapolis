@@ -377,8 +377,8 @@ testIdealMat = schubDetIdeal(I);
 assert(schubDecompose schubDetIdeal w == {{1, 2, 3, 4}})
 assert(schubDecompose schubDetIdeal I == {{1, 2, 3, 4}})
 
---permOverASM--
-assert(permOverASM I == {{1, 2, 3, 4}})
+-permSetOfASM--
+assert(permSetOfASM I == {{1, 2, 3, 4}})
 
 --isIntersectionSchubIdeals--
 assert(isIntersectionSchubIdeals schubDetIdeal w == true );
@@ -838,12 +838,12 @@ assert(schubDecompose schubDetIdeal PI == {{3, 6, 1, 2, 4, 5}, {6, 2, 3, 1, 4, 5
 ///
 
 TEST ///
---permOverASM--
+--permSetOfASM--
 w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-assert(permOverASM I == {{3, 5, 1, 2, 4}, {5, 2, 3, 1, 4}, {4, 2, 5, 1, 3}, {3, 4, 1, 5, 2}, {4, 2, 3, 5, 1}})
+assert(permSetOfASM I == {{3, 5, 1, 2, 4}, {5, 2, 3, 1, 4}, {4, 2, 5, 1, 3}, {3, 4, 1, 5, 2}, {4, 2, 3, 5, 1}})
 ///
 
 TEST ///

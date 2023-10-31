@@ -575,8 +575,8 @@ schubDecompose Matrix := List => A -> (
 --TODO: input validation/type checking
 --NOTE: This assumes that schubDecompose is allowed to take in something other than an ASM ideal.  Adjust if schubDecompose is changed.
 -------------------------------------------
-permOverASM = method()
-permOverASM Matrix := List => A -> (
+permSetOfASM = method()
+permSetOfASM Matrix := List => A -> (
     if not(isPartialASM(A)) then error("The input must be a partial alternating sign matrix.");
     I := antiDiagInit A;
     schubDecompose I
@@ -643,7 +643,7 @@ isASMUnion List := Boolean => (L) -> (
     rkTable := entrywiseMaxRankTable (L / permToMatrix);
     if not isMinRankTable rkTable then return false; -- might be redundant, is the entrywise max rank table of a list of *permutations* always a min rank table?
     A := rankTableToASM rkTable;
-    set L === set permOverASM A
+    set L === set permSetOfASM A
 )
 
 -------------------------------------------

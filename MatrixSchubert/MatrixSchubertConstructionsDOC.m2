@@ -255,7 +255,7 @@ doc ///
 		TO (schubAdd, List),
 		TO (schubReg, Matrix),
 		TO (schubCodim, Matrix),
-		TO (permOverASM, Matrix),
+		TO (permSetOfASM, Matrix),
 		TO (toOneLineNotation, Matrix)
 		}@
 ///
@@ -919,12 +919,12 @@ doc ///
 
 doc ///
     Key
-        permOverASM    
-        (permOverASM, Matrix)
+        permSetOfASM    
+        (permSetOfASM, Matrix)
     Headline
         finds the permutation set of an alternating sign matrix
     Usage
-        permOverASM A
+        permSetOfASM A
     Inputs
         A:Matrix
     Outputs
@@ -934,7 +934,7 @@ doc ///
             Given an alternating sign matrix $A$, this routine computes Perm$(A) = \{w \in S_n \mid A \leq w$, and $v \in S_n$ with $A \leq v \leq w$ implies $ v=w\}$ (where $\leq$ is in (strong) Bruhat order).  This computation is performed by taking the antidiagonal initial ideal determined by $A$ and extracting the permutations indexing its components via schubDecompose.
 	Example 
 	    A = matrix{{0,1,0,0},{0,0,1,0},{1,-1,0,1},{0,1,0,0}}
-	    permOverASM A
+	    permSetOfASM A
 ///
 
 doc ///
@@ -1008,7 +1008,7 @@ doc ///
     	:Boolean    
     Description
         Text
-            Given a list of permutations in 1-line notation, check whether the union of their matrix schubert varieties is an ASM variety. This function uses entrywiseMaxRankTable to construct the rank table that is the entrywise maximum of the rank tables of the input permutations. It then constructs an ASM $A$ from that rank table and uses permOverASM to check if the permutation set of $A$ is equal to the input list of permutations.
+            Given a list of permutations in 1-line notation, check whether the union of their matrix schubert varieties is an ASM variety. This function uses entrywiseMaxRankTable to construct the rank table that is the entrywise maximum of the rank tables of the input permutations. It then constructs an ASM $A$ from that rank table and uses permSetOfASM to check if the permutation set of $A$ is equal to the input list of permutations.
         
 	    If the union of the matrix Schubert varieties of the input list of permutations is an ASM variety, it must be the ASM variety considered by this algorithm.
 	Example 

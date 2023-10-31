@@ -56,7 +56,7 @@ export{
     "entrywiseMinRankTable",	    --documented ++
     "entrywiseMaxRankTable",	    --documented ++
     "schubDecompose",	        --documented ++
-    "permOverASM",                  --documented ++
+    "permSetOfASM",                  --documented ++
     "isIntersectionSchubIdeals",    --documented ++
     "isASMIdeal",    	     	    --documented ++	 
     "isASMUnion",    	     	    --documented ++
