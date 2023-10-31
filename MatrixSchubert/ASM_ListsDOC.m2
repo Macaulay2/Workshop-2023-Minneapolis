@@ -5,7 +5,7 @@ doc ///
     Headline
         lists all ASMs of a fixed size
     Usage
-        ASMFullList(n)
+        ASMFullList n
     Inputs
         n:ZZ
     Description
@@ -37,7 +37,7 @@ doc ///
     Headline
         lists all Cohen-Macaulay ASMs of a fixed size which are not permutation matrices
     Usage
-        cohenMacaulayASMsList(n)
+        cohenMacaulayASMsList n
     Inputs
         n:ZZ
     Description
@@ -61,7 +61,7 @@ doc ///
     Headline
         lists all non-Cohen-Macaulay ASMs of a fixed size
     Usage
-        nonCohenMacaulayASMsList(n)
+        nonCohenMacaulayASMsList n
     Inputs
         n:ZZ
     Description
@@ -77,7 +77,7 @@ doc ///
     Headline
         lists all antidiagonal initial ideals of ASMs of a fixed size
     Usage
-        initialIdealsList(n)
+        initialIdealsList n
     Inputs
         n:ZZ
     Description
