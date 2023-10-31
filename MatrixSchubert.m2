@@ -48,6 +48,7 @@ export{
     "essentialSet",	     	        --documented ++
     "augmentedEssentialSet",        --documented ++
     "schubDetIdeal",	       	    --documented ++
+    "schubertDeterminantalIdeal" => "schubDetIdeal",
     "fultonGens",    	     	    --documented ++
     "diagLexInitSE",   	      	    --documented ++
     "diagLexInitNW",	    	    --documented ++
@@ -56,8 +57,11 @@ export{
     "entrywiseMinRankTable",	    --documented ++
     "entrywiseMaxRankTable",	    --documented ++
     "schubDecompose",	        --documented ++
+    "schubertDecompose" => "schubDecompose",
     "permSetOfASM",                  --documented ++
+    "permutationSetofASM" => "permSetOfASM",
     "isIntersectionSchubIdeals",    --documented ++
+    "isIntersectionOfSchubertDeterminantalIdeals" => "isIntersectionSchubIdeals",
     "isASMIdeal",    	     	    --documented ++	 
     "isASMUnion",    	     	    --documented ++
     "getASM",	     	     	    --documented ++
@@ -65,39 +69,57 @@ export{
     "rankTableToASM",	     	    --documented ++
     "rankTableFromMatrix",    	    --documented ++
     "schubIntersect",	     	    --documented ++
+    "schubertIntersect" => "schubIntersect",
     "schubAdd",	       	       	    --documented ++
+     "schubertAdd" => "schubAdd",
    
  --permutationMethods.m2   
     "isPerm",	     	     	    --documented ++
+     "isPermutation" => "isPerm",
     "permToMatrix",    	       	    --documented ++
+     "permutationToMatrix" => "permToMatrix",
     "lastDescent",    	      	    --documented ++
     "firstDescent",    	       	    --documented ++
     "permLength",    	     	    --documented ++
+     "permutationLength" => "permLength",
     "inverseOf",             	    --documented (check)
     "longestPerm",    	      	    --documented (check)
+     "longestPermutation" => "longestPerm",
     "toOneLineNotation",    	    --documented ++
     "composePerms",    	       	    --documented ++
+     "composePermutations" => "composePerms",
     "isPatternAvoiding",    	    --documented ++
     "isVexillary",    	      	    --documented ++
     "avoidsAllPatterns",	        --documented ++
     "isCartwrightSturmfels",	    --documented ++
     "isCDG",	    	    	    --documented ++
     "rajcode",	      	      	    --documented ++
+    "rajchgotCode" => "rajcode",
     "rajIndex",        	       	    --documented ++
+    "rajchgotIndex" => "rajIndex",
     "grothendieckPoly",	       	    -- CHECK DOC
+    "grothendiechPolynomial" => "grothendieckPoly",
     "schubertPoly",    	       	    -- CHECK DOC
+    "schubertPolynomial" => "schubertPoly",
+    "schubPoly" => "schubertPoly",
     "doubleSchubertPoly",           -- CHECK DOC
+    "doubleSchubertPolynomial" => "doubleSchubertPoly",
+    "doubleSchubPoly" => "doubleSchubertPoly",
     "pipeDreams",    	     	    -- CHECK DOC
     "pipeDreamsNonReduced",    	    -- CHECK DOC
     "netPD",	    	    	    -- CHECK DOC
+    "netPipeDream" => "netPD",
     "ASMToMonotoneTriangle",        --documented ++
     "MonotoneTriangleToASM",        --documented ++
 
 --MatrixSchubertInvariants.m2    
     "schubReg",    	                --documented ++
+    "schubertRegularity" => "schubReg",
     "schubCodim",           	    --documented ++
+    "schubertCodim" => "schubCodim",
     "KPolynomialASM",	     	    -- CHECK DOC
     "isSchubCM",    	       	    --documented ++
+    "isSchubertCM" => "isSchubCM",
 
 --ASM_Lists.m2
     "ASMFullList",    	      	    --ADD EX TO DOC
