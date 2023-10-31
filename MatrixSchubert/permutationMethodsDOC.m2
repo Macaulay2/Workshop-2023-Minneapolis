@@ -374,12 +374,12 @@ doc ///
 
 doc ///
     Key
-        rajCode
-        (rajCode, List)
+        rajcode
+        (rajcode, List)
     Headline
       finds the Rajchgot code of a permutation
     Usage
-        rajCode w
+        rajcode w
     Inputs
         w:List
     Description
@@ -390,10 +390,10 @@ doc ///
 	    
         Example
             w = {7,2,5,8,1,3,6,4}
-	    rajCode w
+	    rajcode w
 	    
             v = {1,6,9,2,4,7,3,5,8}
-            rajCode v
+            rajcode v
 ///
 
 doc ///

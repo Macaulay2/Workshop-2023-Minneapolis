@@ -450,7 +450,7 @@ doc ///
 		TO (avoidsAllPatterns, List, List),
 		TO (isCartwrightSturmfels, List),
 		TO (isCDG, List),
-		TO (rajCode, List),
+		TO (rajcode, List),
 		TO (rajIndex, List),
 		TO (grothendieckPoly,List),
 		TO (schubertPoly, List),
@@ -594,9 +594,9 @@ doc ///
             Given a permutation in 1-line notation or a partial alternating sign matrix returns the Rothe diagram.
         Example
             w = {2,5,4,1,3}
-            rotheDiagram(w)
+            rotheDiagram w
             A = matrix{{0,1,0},{1,-1,0},{0,0,0}}
-            rotheDiagram(A)
+            rotheDiagram A
 
 	    
 ///

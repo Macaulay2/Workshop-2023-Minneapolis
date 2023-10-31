@@ -7,11 +7,11 @@ doc ///
     Headline
         compute the Castelnuovo-Mumford regularity of the quotient by a Schubert determinantal ideal or ASM ideal
     Usage
-        schubReg(w)
-        schubReg(M)
+        schubReg w
+        schubReg A
     Inputs
         w:List
-            or {\tt M} is a @TO Matrix@
+            or {\tt A} is a @TO Matrix@
     Description
         Text
             Given a partial alternating sign matrix or a permutation in 1-line notation, computes the Castelnuovo-Mumford regularity of the quotient by the corresponding alternating sign matrix ideal or Schubert determinantal ideal.  In the case of a permutation in 1-line notation, computes the Castelnuovo-Mumford regularity of the corresponding Schubert determinantal ideal by implementing Theorem 1.1 of 
@@ -28,9 +28,9 @@ doc ///
 	    
         Example
             w = {2,3,5,1,4}
-            schubReg(w)
+            schubReg w
             A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
-            schubReg(A)
+            schubReg A
 ///
 
 
@@ -42,17 +42,17 @@ doc ///
     Headline
         compute the codimension (i.e., height) of a Schubert determinantal ideal or ASM ideal
     Usage
-        schubCodim(w)
-        schubCodim(M)
+        schubCodim w
+        schubCodim A
     Inputs
         w:List
-	        or {\tt M} is a @TO Matrix@
+	        or {\tt A} is a @TO Matrix@
     Description
         Text
             Given a partial alternating sign matrix or a permutation in 1-line notation, outputs the codimension of the corresponding alternating sign matrix ideal or Schubert determinantal ideal.
         Example
-            schubCodim(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}})
-            schubCodim({1,3,2})
+            schubCodim matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}
+            schubCodim {1,3,2}
 ///
 
 
@@ -64,8 +64,8 @@ doc ///
     Headline
     	whether an ASM variety is Cohen-Macaulay
     Usage
-    	isSchubCM(A)
-    	isSchubCM(w)
+    	isSchubCM A
+    	isSchubCM w
     Inputs
 	A:Matrix
 		or {\tt w} is a @TO List@
@@ -80,9 +80,9 @@ doc ///
 	    of Fulton says $R/I_w$ is always Cohen-Macaulay.
         Example
             A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}
-	    isSchubCM(A)
+	    isSchubCM A
 	    w = {1,3,2}
-            isSchubCM(w)
+            isSchubCM w
 ///
 
 doc ///
@@ -92,7 +92,7 @@ doc ///
     Headline
         compute the K Polynomial of an ASM variety
     Usage
-        KPolynomialASM(A)
+        KPolynomialASM A
     Inputs 
         A:Matrix
     -- Outputs
@@ -102,7 +102,7 @@ doc ///
             Given a partial ASM $A$, compute the K Polynomial of its corresponding Ideal, defined as the numerator of its Hilbert series. The multi-degree variables are indexed along rows.
         Example
             A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}};
-            KPolynomialASM(A)
+            KPolynomialASM A
 ///
 
 

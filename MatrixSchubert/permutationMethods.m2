@@ -306,11 +306,11 @@ longestIncrSeq (ZZ,ZZ,List) := List => memoize ((preVal,prevSZ,w) -> (
 ))
 
 ------------------------------------------
---INPUT: rajCode, takes a permutation in one line notation
---OUTPUT: returns the rajCode of the permutation
+--INPUT: rajcode, takes a permutation in one line notation
+--OUTPUT: returns the rajcode of the permutation
 ------------------------------------------
-rajCode = method()
-rajCode List := ZZ => (w) -> (
+rajcode = method()
+rajcode List := ZZ => (w) -> (
     if not (isPerm w) then error ("Expecting a permutation.");
     rajCodeVec := {};
     for k from 0 to #w-1 do (
@@ -326,7 +326,7 @@ rajCode List := ZZ => (w) -> (
 rajIndex = method()
 rajIndex List := ZZ => (w) -> ( 
     if not (isPerm w) then error ("Expecting a permutation.");
-    return sum rajCode w;
+    return sum rajcode w;
 )
 
 ----------------------------

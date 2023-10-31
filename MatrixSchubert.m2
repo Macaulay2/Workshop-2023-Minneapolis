@@ -82,7 +82,7 @@ export{
     "avoidsAllPatterns",	        --documented ++
     "isCartwrightSturmfels",	    --documented ++
     "isCDG",	    	    	    --documented ++
-    "rajCode",	      	      	    --documented ++
+    "rajcode",	      	      	    --documented ++
     "rajIndex",        	       	    --documented ++
     "grothendieckPoly",	       	    -- CHECK DOC
     "schubertPoly",    	       	    -- CHECK DOC
