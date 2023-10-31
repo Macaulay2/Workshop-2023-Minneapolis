@@ -323,7 +323,7 @@ doc ///
 	    # pipeDreams w == # (decompose inI)
 	Text
 	    To read off an associated prime of the antidiagonal initial ideal from a pipe dream,
-	    one reads off the + tiles from the grid. When there is a + in location (i,j), then $x_{i,j}$ 
+	    one reads off the + tiles from the grid. When there is a + in location (i,j), then $z_{i,j}$ 
 	    is a generator of the associated prime in question.
 	Example
 	    netList ((pipeDreams w)_0)
@@ -332,11 +332,12 @@ doc ///
 	    Initial ideals of Schubert determinantal ideals and ASM ideals under diagonal term orders are must less well understood. 
 	    They have been studied in [KMY09],[HPW22], [Kle23], and  [KW21].
 	    This package provides functionality for investigating three diagonal term orders:
-	    One which uses lex and orders the variables diagonally reading from the southeast corner @TO diagLexInitSE@,
-	    one which uses lex and orders the variables diagonaly reading from the northwest corner @TO diagLexInitNW@,
-	    and one which uses revlex on the variables diagonally reading from the northwest corner @TO diagRevLexInit@.
+	    One which uses lex and orders the variables reading right-to-left across rows starting from the southeast corner @TO diagLexInitSE@,
+	    one which uses lex and orders the variables reading left-to-right across rows starting from the northwest corner @TO diagLexInitNW@,
+	    and one which uses revlex and orders the variables smallest to largest reading left-to-right across rows starting from the 
+	    southwest corner @TO diagRevLexInit@.
 	Text
-	    Two diagonal term orders may give two distinct initial ideals which are not squarefree.
+	    Two diagonal term orders may give two distinct initial ideals.
 	Example
 	    v = {2,1,4,3,6,5}
 	    diagLexInitSE v
@@ -344,7 +345,7 @@ doc ///
 	    diagLexInitNW v
 	    netList (decompose oo)
 	Text
-	    In this case, @TO diagRevLexInit@ and @TO diagLexInitSE@ give the same initial ideal.
+	    In this example, @TO diagRevLexInit@ and @TO diagLexInitSE@ give the same initial ideal.
 	    It is unknown if this is the case in general.
 	Example
 	    diagRevLexInit v
