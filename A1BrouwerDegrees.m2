@@ -32,7 +32,7 @@ newPackage(
 	 Email=>"gong@bowdoin.edu",
 	 HomePage=>"https://wgabrielong.github.io/"}
 	},
-    Headline=>"TODO",
+    Headline=>"for working with A1-Brouwer degree computations",
     PackageImports=>{
 	"Parametrization",
 	"RealRoots",
