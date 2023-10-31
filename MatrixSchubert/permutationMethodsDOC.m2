@@ -13,7 +13,7 @@ doc ///
             Given a list of length $n$, checks if the entries of the permutation are the integers from 1 to $n$.
         Example
             w = {5,3,4,6,1,2}
-            isPerm(w)
+            isPerm w
 
             v = {4,3,2}
             isPerm v
@@ -52,7 +52,7 @@ doc ///
         w:List
     Description
         Text
-            Given a non-identity permutation in 1-line notation, finds the location of its last descent, i.e., the greatest $i$ so that $w_(i+1)<w_i$.
+            Given a non-identity permutation in 1-line notation, finds the location of its last descent, i.e., the greatest $i$ so that $w_{i+1}<w_i$.
         Example
             w = {7,2,5,8,1,3,6,4}
             lastDescent w
@@ -73,13 +73,13 @@ doc ///
         w:List
     Description
         Text
-            Given a non-identity permutation in 1-line notation, finds the location of its first descent, i.e., the least $i$ so that $w_(i+1)<w_i$.
+            Given a non-identity permutation in 1-line notation, finds the location of its first descent, i.e., the least $i$ so that $w_{i+1}<w_i$.
         Example
             w = {7,2,5,8,1,3,6,4}
-            firstDescent(w)
+            firstDescent w
 
             v = {1,6,9,2,4,7,3,5,8}
-            firstDescent(v)
+            firstDescent v
 ///
 
 doc ///
@@ -559,7 +559,7 @@ doc ///
     Headline
         printing utility for pipe dreams 
     Usage
-        netPD(P)
+        netPD P
     Inputs
         P:List 
     Outputs
