@@ -818,7 +818,7 @@ doc ///
     Description
         Text
             Given a partial alternating sign matrix or a permutation in 1-line notation, return the diagonal initial ideal of the corresponding ASM ideal or Schubert determinantal ideal with respect to reverse lexicographic order, 
-	    where the variables are ordered reading from left-to-right and top-to-bottom (starting in the northwest corner).
+	    where the variables are ordered smallest to largest by reading from rows left-to-right and ordering rows from bottom-to-top (starting in the southwest corner).
 	    
 	    This function computes over the coefficient field of rational numbers unless an alternative is specified.
 	Example
