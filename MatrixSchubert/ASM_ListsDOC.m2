@@ -42,7 +42,7 @@ doc ///
         n:ZZ
     Description
         Text
-            For $1 \leq n \leq 6$, this function lists all $n\times n$ alternating sign matrices $A$ which are \textbf{not} permutation matrices
+            For $1 \leq n \leq 6$, this function lists all $n\times n$ alternating sign matrices $A$ which are not permutation matrices
 	    such that the corresponding ASM variety is Cohen-Macaulay.
 	    By a theorem of Fulton [Ful92], permutation matrices always have Cohen-Macaulay Schubert determinantal ideals.
 	    
@@ -67,7 +67,7 @@ doc ///
     Description
         Text
             For $1 \leq n \leq 6$, this function lists all ASMs of size $n$ such that the corresponding ASM variety
-	    is \textbf{not} Cohen-Macaulay.
+	    is not Cohen-Macaulay.
 ///
 
 doc ///
