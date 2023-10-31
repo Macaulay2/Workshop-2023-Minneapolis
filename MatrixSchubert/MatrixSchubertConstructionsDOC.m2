@@ -12,7 +12,7 @@ doc ///
         matrix Schubert varieties and ASM varieties
     Description
         Text
-            This package provides functions for constructing and investigating matrix Schubert varieties. Many of the functions in this package can take as input either a permutation matrix in 1-line notation, or an alternating sign matrix.
+            This package provides functions for constructing and investigating matrix Schubert varieties. Many of the functions in this package can take as input either a permutation in 1-line notation, or an alternating sign matrix.
         Text
             @UL {
 	    {"[CV20] Aldo Conca and Matteo Varbaro, ",
@@ -76,9 +76,6 @@ doc ///
             {"[KM05] Allen Knutson and Ezra Miller, ",
             HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
             " , Annals of Mathematics (2005): 1245-1318."},
-	    {"[KM04] Allen Knutson and Ezra Miller",
-	    HREF("https://arxiv.org/abs/math/0309259", EM "Subword complexes in Coxeter groups"),
-	    " , Advances in Mathematics 184.1 (2004): 161-176."},
             {"[PSW21] Oliver Pechenik, David Speyer, and Anna Weigandt, ",
             HREF("https://arxiv.org/abs/2111.10681", EM "Castelnuovo-Mumford regularity of matrix Schubert varieties"),
             " , arxiv preprint 2111.10681."}
@@ -110,8 +107,9 @@ doc ///
 	Text
 	    This package also contains methods for investigating antidiagonal initial ideals
 	    of Schubert determinantal ideals and their associated Stanley-Reisner complexes,
-	    which are a kind of subword complex.
-	    Antidiagonal initial ideals and subword complexes were studied in [KM04] and [KM05].
+	    which are a kind of subword complex. Subword complexes were introduced in [KM05] 
+	    in the study of antidiagonal initial ideal of Schubert determinantal ideals
+	    and their relation to Schubert polynomials.
 	Example
 	    antiDiagInit p
 	    subwordComplex p
@@ -124,7 +122,7 @@ doc ///
 	    schubIntersect L
 	Text
 	    Finally, this package contains functions for investigating homological invariants of matrix Schubert
-	    varieties efficiently through combinatorial algorithms produced in recent work by [PSW21].
+	    varieties efficiently through combinatorial algorithms produced in [PSW21].
 	Example
 	    time schubReg p
 	    time regularity comodule I 
@@ -155,9 +153,9 @@ doc ///
         basic functions for alternating sign matrix ideals
     Description
     	Text
-	    Alternating sign matrix varieties were introduced by Weigandt [Wei17] as a generalization of
-	    matrix Schubert varieties. This package contains functions for investigating homological aspects
-	    of ASM varieties and their defining ideals.
+	    Alternating sign matrix (ASM) varieties were introduced by Weigandt [Wei17]. ASM varieties  generalize
+	    matrix Schubert varieties. This package contains functions for investigating ASM varieties and 
+	    their defining ideals.
         Text
             @UL {
 	    {"[CV20] Aldo Conca and Matteo Varbaro, ",
