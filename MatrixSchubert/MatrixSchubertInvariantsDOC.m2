@@ -23,7 +23,7 @@ doc ///
 	    In the case of a partial permutation, computes the regularity using the antidiagonal initial ideal, a valid strategy in light of 
 	    
 	     @UL {
-                {"Aldo Conca and Matteo Varbaro, ", EM "Square-free Groebner degenerations, ", arXiv  "1805.11923", ", ", "Invent. Math. 221 (2020), no. 3, 713–730."}
+                {"Aldo Conca and Matteo Varbaro, ", EM "Square-free Gröbner degenerations, ", arXiv  "1805.11923", ", ", "Invent. Math. 221 (2020), no. 3, 713–730."}
             }@
 	    
         Example
