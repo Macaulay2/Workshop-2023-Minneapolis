@@ -468,7 +468,7 @@ doc ///
     Headline
         whether a matrix is a partial alternating sign matrix
     Usage
-        isPartialASM(M)
+        isPartialASM M
     Inputs
         M:Matrix
     Outputs
@@ -494,7 +494,7 @@ doc ///
     Headline
         extend a partial alternating sign matrix to an alternating sign matrix
     Usage
-        partialASMToASM(A)
+        partialASMToASM A
     Inputs
         A:Matrix
     Outputs

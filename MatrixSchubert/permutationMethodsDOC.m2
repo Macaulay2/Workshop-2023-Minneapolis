@@ -588,7 +588,8 @@ doc ///
         Text
             Converts an alternating sign matrix (ASM) to a monotone triangle according to the bijection described in [HR].
             More precisely, suppose $A$ is an ASM.
-            The unique monotone triangle $T=(T_0,\hdots,T_n)$ corresponding to $A$ is given by $T_m = \sum_{i=1}^m A_m $, where $A_m$ denotes the $m$th row of $A$.
+            The unique monotone triangle $T=(T_0,\ldots,T_n)$ corresponding to $A$ has the property that $T_m$ is the (ordered) set of column indices in which $\sum_{i=1}^m A_m $ 
+	    has an entry of $1$, where $A_m$ denotes the $m$th row of $A$.
             See [HR] for more details.
 
             @UL {{"[HR]: Z. Hamaker and V. Reiner, \"Weak Order and Descents for Monotone Triangles\" (see ", arXiv "1809.10571", ")."},}@
@@ -612,9 +613,12 @@ doc ///
     Description
         Text
             Converts an monotone triangle to an alternating sign matrix (ASM) according to the bijection described in [HR].
-            More precisely, suppose $T=(T_0,\hdots,T_n)$ is an ASM.
-            The unique ASM $A$ corresponding to $T$ is given by $A_m = \mathbb{1}_{T_m} - \mathbb{1}_{T_{m-1}}$, where $A_m$ denotes the $m$th row of $A$.
+            More precisely, suppose $T=(T_0,\ldots,T_n)$ is a monotone triangle.
+            The unique ASM $A$ corresponding to $T$ is given by $A_m = \mathbb{1}_{T_m} - \mathbb{1}_{T_{m-1}}$, where $A_m$ denotes the $m$th row of $A$ and $\mathbb{1}_{T_i}$
+	    is the is a vector of length $n$ whose entries are $1$ in the positions whose indices appear in $T_i$ and $0$ otherwise.
             See [HR] for more details.
+	    
+	    This function does not check that what you've given it is actually a monotone triangle before attempting to convert to an ASM.
 
             @UL {{"[HR]: Z. Hamaker and V. Reiner, \"Weak Order and Descents for Monotone Triangles\" (see ", arXiv "1809.10571", ")."},}@
         Example

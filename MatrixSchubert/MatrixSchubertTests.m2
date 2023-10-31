@@ -377,7 +377,7 @@ testIdealMat = schubDetIdeal(I);
 assert(schubDecompose schubDetIdeal w == {{1, 2, 3, 4}})
 assert(schubDecompose schubDetIdeal I == {{1, 2, 3, 4}})
 
--permSetOfASM--
+--permSetOfASM--
 assert(permSetOfASM I == {{1, 2, 3, 4}})
 
 --isIntersectionSchubIdeals--
