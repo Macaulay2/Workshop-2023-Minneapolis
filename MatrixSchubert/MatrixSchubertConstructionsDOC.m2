@@ -284,12 +284,15 @@ doc ///
 	    {"[Kle23] Patricia Klein, ",
 	    HREF("https://arxiv.org/abs/2008.01717", EM "Diagonal degenerations of matrix Schubert varieties"),
 	    ", Algebraic Combinatorics 6 (2023) no. 4, 1073-1094."},	
-            {"[KM05] Allen Knutson and Ezra Miller, ",
-            HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
-            ", Annals of Mathematics (2005): 1245-1318."},
-	    {"[Knu09] Allen Knutson, ",
+            {"[Knu09] Allen Knutson, ",
             HREF("https://arxiv.org/abs/0911.4941", EM "Frobenius splitting, point-counting, and degeneration"),
             ", arxiv preprint 0911.4941."},
+	    {"[KM05] Allen Knutson and Ezra Miller, ",
+            HREF("https://arxiv.org/abs/math/0110058", EM "Gröbner geometry of Schubert polynomials"),
+            ", Annals of Mathematics (2005): 1245-1318."},
+	    {"[KMY09] Allen Knutson, Ezra Miller, and Alexander Yong ",
+            HREF("https://arxiv.org/abs/math/0502144", EM "Gröbner geometry of vertex decompositions and of flagged tableaux"),
+            ", J. Reine Angew. Math.630(2009), 1-31."},
 	    {"[KW21] Patricia Klein and Anna Weigandt, ",
 	    HREF("https://arxiv.org/abs/2108.08370", EM "Bumpless pipe dreams encode Grobner geometry of Schubert polynomials"),
 	    ", arxiv preprint 2108.08370."},
@@ -315,21 +318,19 @@ doc ///
 	Text
 	    By work of Knutson and Miller [KM05], building off of work of Bergeron and Billey [BB93], the prime components of the antidiagonal initial ideal
 	    of a Schubert determinantal ideal for a permutation w are in bijection with the pipe dreams associated
-	    to the permutation w.
-	    If w is a permutation of n, then a pipe dream is a filling of an nxn grid with
-	    elbow tiles (denoted /) and cross tiles (denoted +) such that no two pipes
-	    cross twice.
+	    to w.  See [BB93] for a detailed description of pipe dreams, there called RC-graphs.
 	Example
 	    # pipeDreams w == # (decompose inI)
 	Text
-	    In particular, to read off an associated prime of the antidiagonal initial ideal from a pipe dream,
-	    one simply needs to read off the + tiles from the grid.
+	    To read off an associated prime of the antidiagonal initial ideal from a pipe dream,
+	    one reads off the + tiles from the grid. When there is a + in location (i,j), then $x_{i,j}$ 
+	    is a generator of the associated prime in question.
 	Example
 	    netList ((pipeDreams w)_0)
 	    (decompose inI)_0
 	Text
-	    Diagonal term orders are less well understood for Schubert determinantal ideals and ASM ideals. 
-	    Their study was initiated by [Kle23] and has also been investigated in [KW21] and [HPW22].
+	    Initial ideals of Schubert determinantal ideals and ASM ideals under diagonal term orders are must less well understood. 
+	    They have been studied in [KMY09],[HPW22], [Kle23], and  [KW21].
 	    This package provides functionality for investigating three diagonal term orders:
 	    One which uses lex and orders the variables diagonally reading from the southeast corner @TO diagLexInitSE@,
 	    one which uses lex and orders the variables diagonaly reading from the northwest corner @TO diagLexInitNW@,
@@ -376,7 +377,7 @@ doc ///
 	    ", Advances in Mathematics 398 (2022): 108228."},
 	    {"[Kle23] Patricia Klein, ",
 	    HREF("https://arxiv.org/abs/2008.01717", EM "Diagonal degenerations of matrix Schubert varieties"),
-	    ", to appear in Algebraic Combinatorics."},	
+	    ", Algebraic Combinatorics 6 (2023) no. 4, 1073-1094."},	
             {"[KM05] Allen Knutson and Ezra Miller, ",
             HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
             ", Annals of Mathematics (2005): 1245-1318."},
