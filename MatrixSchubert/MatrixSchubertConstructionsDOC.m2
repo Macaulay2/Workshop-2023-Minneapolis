@@ -69,16 +69,16 @@ doc ///
 	    {"[Ful92] William Fulton, ",
 	    HREF("https://sites.math.washington.edu/~billey/classes/schubert.library/fulton.essential.set.pdf",
 		EM "Flags, Schubert polynomials, degeneracy loci, and determinantal formulas"),
-	    " , Duke Math J. 65 (1992): 381-420."},
+	    ", Duke Math J. 65 (1992): 381-420."},
 	    {"[HPW22] Zachary Hamaker, Oliver Pechenik, and Anna Weigandt, ",
 	    HREF("https://arxiv.org/abs/2003.13719", EM "Grobner geometry of Schubert polynomials through ice"),
-	    " , Advances in Mathematics 398 (2022): 108228."},
+	    ", Advances in Mathematics 398 (2022): 108228."},
             {"[KM05] Allen Knutson and Ezra Miller, ",
             HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
-            " , Annals of Mathematics (2005): 1245-1318."},
+            ", Annals of Mathematics (2005): 1245-1318."},
             {"[PSW21] Oliver Pechenik, David Speyer, and Anna Weigandt, ",
             HREF("https://arxiv.org/abs/2111.10681", EM "Castelnuovo-Mumford regularity of matrix Schubert varieties"),
-            " , arxiv preprint 2111.10681."}
+            ", arxiv preprint 2111.10681."}
             }@
 	Text
 	    The general method for creating a
@@ -160,10 +160,10 @@ doc ///
             @UL {
 	    {"[CV20] Aldo Conca and Matteo Varbaro, ",
 	    HREF("https://arxiv.org/abs/1805.11923", EM "Square-free Grobner degenerations"),
-	    " , Inventiones mathematicae, 221(3), pp.713-730."},
+	    ", Inventiones mathematicae, 221(3), pp.713-730."},
 	    {"[Wei17] Anna Weigandt, ",
             HREF("https://arxiv.org/abs/1708.07236", EM "Prism tableaux for alternating sign matrix varieties"),
-            " , arXiv preprint 1708.07236."}
+            ", arXiv preprint 1708.07236."}
             }@
 	Text
 	    The general method for defining the ideal of an ASM variety is @TO schubDetIdeal@.
@@ -266,37 +266,40 @@ doc ///
         basic functions for investigating initial ideals of ASM varieties
     Description
     	Text
-	    By work of Knutson and Miller [KM05] and Weigandt [Wei17],
-	    the Fulton generators form a Grobner basis for an ASM ideal with respect to any antidiagonal term order.
-	    However, the Grobner bases for ASM ideals with respect to other term orders, including diagonal ones, 
+	    By work of Knutson and Miller [KM05], Weigandt [Wei17], and Knutson [Knu09]
+	    the Fulton generators of an ASM ideal form a Groebner basis with respect to any antidiagonal term order.
+	    However,  Groebner bases for ASM ideals with respect to other term orders, including diagonal ones, 
 	    remain largely mysterious.
         Text
 	    @UL {
+	    {"[BB93] Nantel Bergeron and Sara Billey, ",
+	    HREF("https://projecteuclid.org/journals/experimental-mathematics/volume-2/issue-4/RC-graphs-and-Schubert-polynomials/em/1048516036.full", EM "RC-graphs and Schubert polynomials"),
+	    ", Experiment. Math.2(1993), no.4, 257–269."},
 	    {"[CV20] Aldo Conca and Matteo Varbaro, ",
 	    HREF("https://arxiv.org/abs/1805.11923", EM "Square-free Grobner degenerations"),
-	    " , Inventiones mathematicae, 221(3), pp.713-730."},
+	    ", Inventiones mathematicae, 221(3), pp.713-730."},
 	    {"[HPW22] Zachary Hamaker, Oliver Pechenik, and Anna Weigandt, ",
 	    HREF("https://arxiv.org/abs/2003.13719", EM "Grobner geometry of Schubert polynomials through ice"),
-	    " , Advances in Mathematics 398 (2022): 108228."},
+	    ", Advances in Mathematics 398 (2022): 108228."},
 	    {"[Kle23] Patricia Klein, ",
 	    HREF("https://arxiv.org/abs/2008.01717", EM "Diagonal degenerations of matrix Schubert varieties"),
-	    " , Algebraic Combinatorics 6 (2023) no. 4, 1073-1094."},	
+	    ", Algebraic Combinatorics 6 (2023) no. 4, 1073-1094."},	
             {"[KM05] Allen Knutson and Ezra Miller, ",
             HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
-            " , Annals of Mathematics (2005): 1245-1318."},
+            ", Annals of Mathematics (2005): 1245-1318."},
 	    {"[Knu09] Allen Knutson, ",
             HREF("https://arxiv.org/abs/0911.4941", EM "Frobenius splitting, point-counting, and degeneration"),
-            " , arxiv preprint 0911.4941."},
+            ", arxiv preprint 0911.4941."},
 	    {"[KW21] Patricia Klein and Anna Weigandt, ",
 	    HREF("https://arxiv.org/abs/2108.08370", EM "Bumpless pipe dreams encode Grobner geometry of Schubert polynomials"),
-	    " , arxiv preprint 2108.08370."},
+	    ", arxiv preprint 2108.08370."},
             {"[Wei17] Anna Weigandt, ",
             HREF("https://arxiv.org/abs/1708.07236", EM "Prism tableaux for alternating sign matrix varieties"),
-            " , arXiv preprint 1708.07236."}
+            ", arXiv preprint 1708.07236."}
             }@
 	Text
 	    Given a permutation or a partial ASM, one may compute its antidiagonal initial ideal.
-	    By [KM05] and [Wei17] or [Knu09], the Fulton generators form a Grobner basis for any ASM ideal with respect to
+	    By [KM05] and [Wei17] or [Knu09], the Fulton generators form a Groebner basis for any ASM ideal with respect to
 	    any antidiagonal term order.
         Example
 	    w = {2,4,5,1,3};
@@ -304,13 +307,13 @@ doc ///
 	    inI = antiDiagInit w;
 	    (netList sort inI_*, netList sort (trim I)_*)
 	Text
-	    In particular, by work of Conca and Varbaro [CV21], we know that the extremal Betti numbers (such as regularity
+	    By work of Conca and Varbaro [CV21], we know that the extremal Betti numbers (which encode regularity
 	    and projective dimension) of an ASM ideal and its antidiagonal initial ideal must coincide because the antidiagonal initial ideal is squarefree.
-	    Curiously, for this running example, all of the Betti numbers coincide (not just the extremal ones).
+	    For this running example, all of the Betti numbers coincide (not just the extremal ones).
 	Example
 	    (betti res I, betti res inI)
 	Text
-	    By work of Knutson and Miller [KM05], the prime components of the antidiagonal initial ideal
+	    By work of Knutson and Miller [KM05], building off of work of Bergeron and Billey [BB93], the prime components of the antidiagonal initial ideal
 	    of a Schubert determinantal ideal for a permutation w are in bijection with the pipe dreams associated
 	    to the permutation w.
 	    If w is a permutation of n, then a pipe dream is a filling of an nxn grid with
@@ -370,16 +373,16 @@ doc ///
 	    @UL {
 	    {"[HPW22] Zachary Hamaker, Oliver Pechenik, and Anna Weigandt, ",
 	    HREF("https://arxiv.org/abs/2003.13719", EM "Grobner geometry of Schubert polynomials through ice"),
-	    " , Advances in Mathematics 398 (2022): 108228."},
+	    ", Advances in Mathematics 398 (2022): 108228."},
 	    {"[Kle23] Patricia Klein, ",
 	    HREF("https://arxiv.org/abs/2008.01717", EM "Diagonal degenerations of matrix Schubert varieties"),
-	    " , to appear in Algebraic Combinatorics."},	
+	    ", to appear in Algebraic Combinatorics."},	
             {"[KM05] Allen Knutson and Ezra Miller, ",
             HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
-            " , Annals of Mathematics (2005): 1245-1318."},
+            ", Annals of Mathematics (2005): 1245-1318."},
 	    {"[KW21] Patricia Klein and Anna Weigandt, ",
 	    HREF("https://arxiv.org/abs/2108.08370", EM "Bumpless pipe dreams encode Grobner geometry of Schubert polynomials"),
-	    " , arxiv preprint 2108.08370."}
+	    ", arxiv preprint 2108.08370."}
 	    }@
 	Text
 	    Given a permutation as a list of integers, one can check if it is indeed a permutation,
