@@ -322,7 +322,7 @@ doc ///
     Description
         Text
             Given a permutation in 1-line notation, checks if the permutation is Cartwright-Sturmfels.  By [CDG22], the matrix
-	    Schubert variety $X_w$ is Cartwright-Sturmfels if and only if $w$ avoid all of the patterns 
+	    Schubert variety $X_w$ is Cartwright-Sturmfels if and only if $w$ avoids all of the patterns 
 	    $\{12543, 13254, 13524, 13542, 21543, 125364, 125634, 215364, 215634, 315264, 315624, 315642\}$.
 	    
 	     @UL {
@@ -355,7 +355,7 @@ doc ///
         Text
             Given a permutation in 1-line notation, checks if the permutation is CDG.  We say that a permutation $w$ is CDG 
 	    if a certain modification (see [Kle23] for precise description) of the Fulton generators of the Schubert determinantal
-	    ideal $I_w$ form a diagonal Gröbner basis.  By [Kle23], $w$ satisfies the CDG property if and only if $w$ avoid all of the patterns 
+	    ideal $I_w$ form a diagonal Gröbner basis.  By [Kle23], $w$ is CDG if and only if $w$ avoid all of the patterns 
 	    $\{13254, 21543, 214635, 215364, 215634, 241635, 315264, 4261735\}$.
 	    
 	     @UL {
