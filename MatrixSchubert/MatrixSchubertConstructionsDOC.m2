@@ -372,19 +372,27 @@ doc ///
             This package provides significantly expanded functionality for studying permutations
 	    in Macaulay2.
 	Text
-	    @UL {
+	    @UL {{"[HPW22] Aldo Conca, Emanuela De Negri, and Elisa Gorla, ",
+	    HREF("https://arxiv.org/abs/2108.10115", EM "Radical generic initial ideals"),
+	    ", Vietnam J. Math.50(2022), no.3, 807–827."},
 	    {"[HPW22] Zachary Hamaker, Oliver Pechenik, and Anna Weigandt, ",
 	    HREF("https://arxiv.org/abs/2003.13719", EM "Grobner geometry of Schubert polynomials through ice"),
 	    ", Advances in Mathematics 398 (2022): 108228."},
 	    {"[Kle23] Patricia Klein, ",
 	    HREF("https://arxiv.org/abs/2008.01717", EM "Diagonal degenerations of matrix Schubert varieties"),
 	    ", Algebraic Combinatorics 6 (2023) no. 4, 1073-1094."},	
-            {"[KM05] Allen Knutson and Ezra Miller, ",
-            HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
-            ", Annals of Mathematics (2005): 1245-1318."},
 	    {"[KW21] Patricia Klein and Anna Weigandt, ",
 	    HREF("https://arxiv.org/abs/2108.08370", EM "Bumpless pipe dreams encode Grobner geometry of Schubert polynomials"),
-	    ", arxiv preprint 2108.08370."}
+	    ", arxiv preprint 2108.08370."},
+	    {"[KM05] Allen Knutson and Ezra Miller, ",
+            HREF("https://arxiv.org/abs/math/0110058", EM "Grobner geometry of Schubert polynomials"),
+            ", Annals of Mathematics (2005): 1245-1318."},
+	    {"[KMY09] Allen Knutson, Ezra Miller, and Alexander Yong ",
+            HREF("https://arxiv.org/abs/math/0502144", EM "Gröbner geometry of vertex decompositions and of flagged tableaux"),
+            ", J. Reine Angew. Math.630(2009), 1-31."} ,
+	    {"[Wei17] Anna Weigandt, ",
+            HREF("https://arxiv.org/abs/1708.07236", EM "Prism tableaux for alternating sign matrix varieties"),
+            ", arXiv preprint 1708.07236."}
 	    }@
 	Text
 	    Given a permutation as a list of integers, one can check if it is indeed a permutation,
@@ -511,8 +519,8 @@ doc ///
     Headline
         compute the (unique) antidiagonal initial ideal of an ASM ideal
     Usage
-        antiDiagInit(w)
-        antiDiagInit(A)
+        antiDiagInit w
+        antiDiagInit A
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
@@ -551,8 +559,8 @@ doc ///
     Headline
         compute a table of rank conditions that determines a Schubert determinantal ideal or, more generally, an alternating sign matrix ideal.
     Usage
-        rankTable(w)
-        rankTable(A)
+        rankTable w
+        rankTable A
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
@@ -574,8 +582,8 @@ doc ///
     Headline
         find the Rothe diagram of a partial alternating sign matrix
     Usage
-        rotheDiagram(w)
-        rotheDiagram(A)
+        rotheDiagram w
+        rotheDiagram A
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
@@ -601,8 +609,8 @@ doc ///
     Headline
         find the Rothe diagram of a partial alternating sign matrix together with the rank table determining the alternating sign matrix variety
     Usage
-        augmentedRotheDiagram(w)
-        augmentedRotheDiagram(A)
+        augmentedRotheDiagram w
+        augmentedRotheDiagram A
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
@@ -627,8 +635,8 @@ doc ///
     Headline
         compute the essential set in the Rothe Diagram for a partial alternating sign matrix or a permutation.
     Usage
-        essentialSet(w)
-        essentialSet(A)
+        essentialSet w
+        essentialSet A
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
