@@ -153,7 +153,7 @@ doc ///
         basic functions for alternating sign matrix ideals
     Description
     	Text
-	    Alternating sign matrix (ASM) varieties were introduced by Weigandt [Wei17]. ASM varieties  generalize
+	    Alternating sign matrix (ASM) varieties were introduced by Weigandt [Wei17]. ASM varieties generalize
 	    matrix Schubert varieties. This package contains functions for investigating ASM varieties and 
 	    their defining ideals.
         Text
@@ -167,8 +167,7 @@ doc ///
             }@
 	Text
 	    The general method for defining the ideal of an ASM variety is @TO schubDetIdeal@.
-	    The input can be an alternating sign matrix or a partial alternating sign matrix,
-	    which always define the same ideal as some other ASM by results in [Wei17].
+	    The input can be an alternating sign matrix or a partial alternating sign matrix.
 	    This package contains functions for checking if a matrix is a partial ASM,
 	    extending a partial ASM to an ASM, and computing the rank matrix for an ASM.
 	Example
@@ -196,34 +195,38 @@ doc ///
 	Example
 	    peek I.cache
 	Text
-	    This package also contains methods for investigating initial ideals of ASM ideals.
+	    This package also contains methods for investigating or using initial ideals of ASM ideals.
 	Example
 	    antiDiagInit A
 	Text
 	    Every ASM ideal can be written as the intersection of Schubert determinantal ideals.
-	    The function @TO schubDecomposition@ outputs the list of permutations whose corresponding
-	    Schubert determinantal ideals form the prime components of the ASM ideal associated to A.
+	    The function @TO schubDecomposition@ outputs the list of permutations that index the
+	     prime components of the ASM variety associated to A.
 	Example
 	    schubDecomposition I
 	Text
 	    Given a list of partial ASMs, this package also contains functions for intersecting and adding
-	    the ASM ideals associated to the list of partial ASMs.
-	    The function @TO schubAdd@ automatically stores the ASM associated to this new ideal
-	    in its cache table.
+	    the ASM ideals associated to the list of ASMs or partial ASMs. Every sum of ASM ideals (equivalently, 
+	    of ideals defined by partial ASMs) is again an ASM ideal.  The function @TO schubAdd@ 
+	    automatically stores the ASM associated to this new ideal in its cache table.
 	Example
-	    B = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
+	    B = matrix{{0,1,0,0,0},{0,0,0,1,0},{1,-1,1,0,0},{0,0,0,0,1},{0,1,0,0,0}}
 	    L = {A, B} -- a list of 2 partial ASMs
 	    J = schubAdd L
 	    peek J.cache
 	    K = schubIntersect L
 	Text
-	    Given an ideal, we can obtain the ASM corresponding to that ideal using @TO getASM@.
-	    Once we do this, that ASM is stored in the ideal's cache table for easy access.
+	    Although every ASM ideal is an intersection of Schubert determinantal ideals, many
+	    intersections of Schubert determinantal ideals are not ASM ideals.  The function
+	    @TO isASMIdeal@ determines whether or not an ideal is the ASM ideal of any ASM.
+	    If it is, the ASM is stored in its cache table and is accessible via @TO getASM@.
 	Example
-    	    getASM K
-	    peek K.cache
+    	    isASMIdeal K
+	    K' = schubIntersect {{3, 1, 2}, {2, 3, 1}}
+	    isASMIdeal K'
+	    getASM K'
 	Text
-	    Finally, this package contains functions for investigating homological invariants of ASM ideals
+	    Additionally, this package facilitates the investigating homological invariants of ASM ideals
 	    efficiently by computing the associated invariants for their antidiagonal initial ideals,
 	    which are known to be squarefree by [Wei17]. Therefore the extremal Betti numbers
 	    (which encode regularity, depth, and projective dimension) of ASM ideals coincide 
