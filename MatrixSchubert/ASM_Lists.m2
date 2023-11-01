@@ -8,7 +8,7 @@
 ASMFullList = method()
 ASMFullList ZZ := List => (n) -> (
     if (n < 1 or n > 7) then error("There is no available list for this n.");
-    filename := concatenate(currentFileDirectory, "MatrixSchubert/ASMData/full/", toString n, ".txt");
+    filename := concatenate("./MatrixSchubert/ASMData/full/", toString n, ".txt");
     listOfMatrices := apply(lines get filename, i -> matrix value i);
     listOfMatrices
 );
