@@ -244,6 +244,7 @@ doc ///
 		TO (rankTableFromMatrix, Matrix),
 		TO (rankTableToASM, Matrix),
 		TO (isASMIdeal, Ideal),
+		TO (isASMMatrix, Matrix),
 		TO (isASMUnion, List),
 		TO (rotheDiagram, Matrix),
 		TO (augmentedRotheDiagram, Matrix),
@@ -992,6 +993,26 @@ doc ///
 	   I2=sub(schubDetIdeal {3,2,4,1},ring I1);
 	   I = intersect(I1,I2);
 	   isASMIdeal I
+///
+
+doc ///
+    Key
+        isASMMatrix
+        (isASMMatrix, Matrix)
+    Headline
+        whether a matrix is an ASM
+    Usage
+        isASMMatrix M
+    Inputs
+        M:Matrix
+    Outputs
+    	:Boolean
+    Description
+        Text
+            Returns true if the given matrix is an ASM, and false otherwise.
+	Example
+    	   M = matrix{{0, 0, 1, 0}, {1, 0, 0, 0}, {0, 1, -1, 1}, {0, 0, 1, 0}}
+	   isASMMatrix M
 ///
 
 doc ///

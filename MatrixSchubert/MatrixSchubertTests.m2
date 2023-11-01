@@ -422,6 +422,9 @@ assert(isIntersectionSchubIdeals schubDetIdeal I == true );
 assert(isASMIdeal schubDetIdeal w == true );
 assert(isASMIdeal schubDetIdeal I == true );
 
+--isASMMatrix--
+assert(isASMMatrix I == true );
+
 --isASMUnion--
 --Examples in other file
 
@@ -902,6 +905,16 @@ assert(isASMIdeal schubDetIdeal I == true );
 assert(isASMIdeal schubDetIdeal PI == true);
 ///
 
+TEST ///
+--isASMIMatrix--
+w = {2,1,6,3,5,4};
+I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
+PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
+
+assert(isASMMatrix permToMatrix w == true );
+assert(isASMMatrix I == true );
+assert(isASMMatrix PI == false);
+///
 
 TEST ///
 --getASM--

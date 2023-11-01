@@ -631,6 +631,25 @@ isASMIdeal Ideal := Boolean => (I) -> (
     isASM
 )
 
+
+-------------------------------------------
+--INPUT: a partial alternating sign matrix
+--OUTPUT: whether the matrix is an ASM matrix
+--TODO: docs and tests
+--TODO: input validation/type checking
+-------------------------------------------
+isASMMatrix = method()
+isASMMatrix Matrix := Boolean => (M) -> (
+    if not(isPartialASM M) then error("The input must be a partial alternating sign matrix or a permutation.");
+    n := numrows(M);
+    m := numcols(M);
+    if (n != m) then return false;
+    for i from 0 to n-1 do (
+	if ((sum entries(M_{i}) != {1}) or (sum entries((transpose M)_{i}) != {1})) then return false;
+    );
+    return true
+)
+
 -------------------------------------------
 --INPUT: a list of permutations in 1 line notation
 --OUTPUT: whether the union of their matrix schubert varieties is an ASM variety
