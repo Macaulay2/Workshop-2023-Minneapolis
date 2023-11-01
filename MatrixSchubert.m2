@@ -63,7 +63,7 @@ export{
     "isIntersectionSchubIdeals",    --documented ++
     "isIntersectionOfSchubertDeterminantalIdeals" => "isIntersectionSchubIdeals",
     "isASMIdeal",    	     	    --documented ++	 
-    "isASMMatrix",    	            --documented ++	 
+    "isASM",    	            --documented ++	 
     "isASMUnion",    	     	    --documented ++
     "getASM",	     	     	    --documented ++
     "isMinRankTable",	     	    --documented ++

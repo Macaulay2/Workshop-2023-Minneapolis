@@ -244,7 +244,7 @@ doc ///
 		TO (rankTableFromMatrix, Matrix),
 		TO (rankTableToASM, Matrix),
 		TO (isASMIdeal, Ideal),
-		TO (isASMMatrix, Matrix),
+		TO (isASM, Matrix),
 		TO (isASMUnion, List),
 		TO (rotheDiagram, Matrix),
 		TO (augmentedRotheDiagram, Matrix),
@@ -997,12 +997,12 @@ doc ///
 
 doc ///
     Key
-        isASMMatrix
-        (isASMMatrix, Matrix)
+        isASM
+        (isASM, Matrix)
     Headline
         whether a matrix is an ASM
     Usage
-        isASMMatrix M
+        isASM M
     Inputs
         M:Matrix
     Outputs
@@ -1012,7 +1012,7 @@ doc ///
             Returns true if the given matrix is an ASM, and false otherwise.
 	Example
     	   M = matrix{{0, 0, 1, 0}, {1, 0, 0, 0}, {0, 1, -1, 1}, {0, 0, 1, 0}}
-	   isASMMatrix M
+	   isASM M
 ///
 
 doc ///

@@ -638,8 +638,8 @@ isASMIdeal Ideal := Boolean => (I) -> (
 --TODO: docs and tests
 --TODO: input validation/type checking
 -------------------------------------------
-isASMMatrix = method()
-isASMMatrix Matrix := Boolean => (M) -> (
+isASM = method()
+isASM Matrix := Boolean => (M) -> (
     if not(isPartialASM M) then error("The input must be a partial alternating sign matrix or a permutation.");
     n := numrows(M);
     m := numcols(M);

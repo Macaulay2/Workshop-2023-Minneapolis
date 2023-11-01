@@ -293,6 +293,12 @@ assert(toExternalString schubPoly({1,2,3,4}) == "1")
 ///
 
 TEST ///
+--doubleSchubertPoly
+assert(toExternalString doubleSchubPoly({2,1,5,4,3}) == "x_1^3*x_2+x_1^2*x_2^2+x_1^3*x_3+2*x_1^2*x_2*x_3+x_1*x_2^2*x_3+x_1^2*x_3^2+x_1*x_2*x_3^2+x_1^3*x_4+x_1^2*x_2*x_4+x_1*x_2^2*x_4+x_1^2*x_3*x_4+x_1*x_2*x_3*x_4+x_1*x_3^2*x_4-x_1^3*y_1-3*x_1^2*x_2*y_1-2*x_1*x_2^2*y_1-3*x_1^2*x_3*y_1-4*x_1*x_2*x_3*y_1-x_2^2*x_3*y_1-2*x_1*x_3^2*y_1-x_2*x_3^2*y_1-2*x_1^2*x_4*y_1-2*x_1*x_2*x_4*y_1-x_2^2*x_4*y_1-2*x_1*x_3*x_4*y_1-x_2*x_3*x_4*y_1-x_3^2*x_4*y_1+2*x_1^2*y_1^2+3*x_1*x_2*y_1^2+x_2^2*y_1^2+3*x_1*x_3*y_1^2+2*x_2*x_3*y_1^2+x_3^2*y_1^2+x_1*x_4*y_1^2+x_2*x_4*y_1^2+x_3*x_4*y_1^2-x_1*y_1^3-x_2*y_1^3-x_3*y_1^3-x_1^3*y_2-2*x_1^2*x_2*y_2-x_1*x_2^2*y_2-2*x_1^2*x_3*y_2-2*x_1*x_2*x_3*y_2-x_1*x_3^2*y_2-x_1^2*x_4*y_2-x_1*x_2*x_4*y_2-x_1*x_3*x_4*y_2+3*x_1^2*y_1*y_2+4*x_1*x_2*y_1*y_2+x_2^2*y_1*y_2+4*x_1*x_3*y_1*y_2+2*x_2*x_3*y_1*y_2+x_3^2*y_1*y_2+2*x_1*x_4*y_1*y_2+x_2*x_4*y_1*y_2+x_3*x_4*y_1*y_2-3*x_1*y_1^2*y_2-2*x_2*y_1^2*y_2-2*x_3*y_1^2*y_2-x_4*y_1^2*y_2+y_1^3*y_2+x_1^2*y_2^2+x_1*x_2*y_2^2+x_1*x_3*y_2^2-2*x_1*y_1*y_2^2-x_2*y_1*y_2^2-x_3*y_1*y_2^2+y_1^2*y_2^2-x_1^3*y_3-2*x_1^2*x_2*y_3-x_1*x_2^2*y_3-2*x_1^2*x_3*y_3-2*x_1*x_2*x_3*y_3-x_1*x_3^2*y_3-x_1^2*x_4*y_3-x_1*x_2*x_4*y_3-x_1*x_3*x_4*y_3+3*x_1^2*y_1*y_3+4*x_1*x_2*y_1*y_3+x_2^2*y_1*y_3+4*x_1*x_3*y_1*y_3+2*x_2*x_3*y_1*y_3+x_3^2*y_1*y_3+2*x_1*x_4*y_1*y_3+x_2*x_4*y_1*y_3+x_3*x_4*y_1*y_3-3*x_1*y_1^2*y_3-2*x_2*y_1^2*y_3-2*x_3*y_1^2*y_3-x_4*y_1^2*y_3+y_1^3*y_3+2*x_1^2*y_2*y_3+2*x_1*x_2*y_2*y_3+2*x_1*x_3*y_2*y_3+x_1*x_4*y_2*y_3-4*x_1*y_1*y_2*y_3-2*x_2*y_1*y_2*y_3-2*x_3*y_1*y_2*y_3-x_4*y_1*y_2*y_3+2*y_1^2*y_2*y_3-x_1*y_2^2*y_3+y_1*y_2^2*y_3+x_1^2*y_3^2+x_1*x_2*y_3^2+x_1*x_3*y_3^2-2*x_1*y_1*y_3^2-x_2*y_1*y_3^2-x_3*y_1*y_3^2+y_1^2*y_3^2-x_1*y_2*y_3^2+y_1*y_2*y_3^2-x_1^2*x_2*y_4-x_1^2*x_3*y_4-x_1*x_2*x_3*y_4-x_1^2*x_4*y_4-x_1*x_2*x_4*y_4-x_1*x_3*x_4*y_4+x_1^2*y_1*y_4+2*x_1*x_2*y_1*y_4+2*x_1*x_3*y_1*y_4+x_2*x_3*y_1*y_4+2*x_1*x_4*y_1*y_4+x_2*x_4*y_1*y_4+x_3*x_4*y_1*y_4-2*x_1*y_1^2*y_4-x_2*y_1^2*y_4-x_3*y_1^2*y_4-x_4*y_1^2*y_4+y_1^3*y_4+x_1^2*y_2*y_4+x_1*x_2*y_2*y_4+x_1*x_3*y_2*y_4+x_1*x_4*y_2*y_4-2*x_1*y_1*y_2*y_4-x_2*y_1*y_2*y_4-x_3*y_1*y_2*y_4-x_4*y_1*y_2*y_4+y_1^2*y_2*y_4-x_1*y_2^2*y_4+y_1*y_2^2*y_4+x_1^2*y_3*y_4+x_1*x_2*y_3*y_4+x_1*x_3*y_3*y_4+x_1*x_4*y_3*y_4-2*x_1*y_1*y_3*y_4-x_2*y_1*y_3*y_4-x_3*y_1*y_3*y_4-x_4*y_1*y_3*y_4+y_1^2*y_3*y_4-x_1*y_2*y_3*y_4+y_1*y_2*y_3*y_4-x_1*y_3^2*y_4+y_1*y_3^2*y_4")
+assert(toExternalString doubleSchubPoly({1,2,3,4}) == "1")
+///
+
+TEST ///
 --rajCode
 assert(rajcode({7,2,5,8,1,3,6,4}) == {6, 4, 4, 4, 1, 1, 1, 0});
 assert(rajcode({1,6,9,2,4,7,3,5,8}) =={4, 5, 6, 2, 2, 2, 0, 0, 0});
@@ -422,8 +428,9 @@ assert(isIntersectionSchubIdeals schubDetIdeal I == true );
 assert(isASMIdeal schubDetIdeal w == true );
 assert(isASMIdeal schubDetIdeal I == true );
 
---isASMMatrix--
-assert(isASMMatrix I == true );
+--isASM--
+assert(isASM permToMatrix w == true );
+assert(isASM I == true );
 
 --isASMUnion--
 --Examples in other file
@@ -906,14 +913,14 @@ assert(isASMIdeal schubDetIdeal PI == true);
 ///
 
 TEST ///
---isASMIMatrix--
+--isASM--
 w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-assert(isASMMatrix permToMatrix w == true );
-assert(isASMMatrix I == true );
-assert(isASMMatrix PI == false);
+assert(isASM permToMatrix w == true );
+assert(isASM I == true );
+assert(isASM PI == false);
 ///
 
 TEST ///
