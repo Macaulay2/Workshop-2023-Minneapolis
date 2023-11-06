@@ -44,10 +44,10 @@ document{
     Headline => "Returns the anisotropic dimension of a symmetric bilinear form",
     Usage => "anisotropicDimension(beta)",
     Inputs => {
-	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(k)$///, " where ", TEX///$k$///, " is the complex numbers, reals, rationals, or a finite field."},
+	GrothendieckWittClass => "beta" => {"over a field ", TEX///$k$///, " where ", TEX///$k$///, " is the complex numbers, reals, rationals, or a finite field."},
 	},
     Outputs => {
-        ZZ => {"The rank of the anisotropic part of ", TEX///$\beta$///, "."},
+        ZZ => {"the rank of the anisotropic part of ", TEX///$\beta$///, "."},
 	},
     PARA{"By Witt decomposition, any form decomposes uniquely as ", TEX///$\beta \cong k \mathbb{H} \oplus \beta_a$///," where the form ", TEX///$\beta_a$///," is anisotropic. The rank of ", TEX///$\beta_a$///, " is called the ", EM "anisotropic dimension", " of ", TEX///$\beta$///, "."},
     PARA{"The anisotropic dimension of a form defined over the rationals is the maximum of the ", TO2(anisotropicDimensionQp,"anistropic dimension at each of the completions"), " of ", TEX///$\mathbb{Q}$///, "."},
