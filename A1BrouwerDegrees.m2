@@ -137,11 +137,6 @@ load "./A1-Brouwer/Code/AnisotropicDimension.m2"
 -- Finally, decomposing forms
 load "./A1-Brouwer/Code/Decomposition.m2"
 
-
-
-
-
-
 ----------------------------
 ----------------------------
 -- DOCUMENTATION
@@ -184,29 +179,12 @@ load "./A1-Brouwer/Documentation/AnisotropicDimensionDoc.m2"
 
 load "./A1-Brouwer/Documentation/DecompositionDoc.m2"
 
-
-
-
-
-
-
-
-
-
-
-
 ----------------------------
 ----------------------------
 -- Testing
 ----------------------------
 ----------------------------
 
--- For debugging: remember Macaulay2 starts counting the first test as Test 0
-
-       
-------------------
--- TESTING
-------------------
 
 -- Diagonal form testing
 -- Test 0
@@ -224,8 +202,6 @@ M3=matrix(CC, {{1, 2, 3}, {2, 4, 5}, {3, 5, 7}});
 G2=gwClass(M3);
 M4=diagonalClass(G2);
 assert(M4.matrix===matrix(CC, {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}));
--- Ensure the cache is populated
--- assert(G2.cache.?diagonalClass)
 ///
 
 --Test 2
@@ -254,7 +230,7 @@ assert(B.matrix === matrix(QQ, {{1, 2, 0, 0}, {2, 5, 0, 0}, {0, 0, 1, 2}, {0, 0,
 
 
 -- Testing for global and local A1 degrees
--- Test 4 (OK)
+-- Test 4
 TEST ///
 T1 = QQ[x]
 f = {x^2}
@@ -263,7 +239,7 @@ gamma = gwClass(matrix(QQ,{{0,1},{1,0}}))
 assert(gwIsomorphic(beta,gamma))
 ///
 
--- Test 5 (OK)
+-- Test 5
 TEST ///
 T1 = QQ[z_1..z_2];
 f1 = {(z_1-1)*z_1*z_2, (3/5)*z_1^2 - (17/3)*z_2^2};
@@ -277,13 +253,12 @@ f1LDsum = gwAdd(f1LDq, f1LDr);
 assert(gwIsomorphic(f1LDsum, f1GD));
 ///
 
--- Test 6 (OK)
+-- Test 6
 TEST ///
 T2 = GF(17)[w];
 f2 = {w^4 + w^3 - w^2 - w};
 f2GD= globalA1Degree(f2);
 assert(WittIndex(f2GD) == 2);
-
 p=ideal {w+1};
 f2LDp = localA1Degree(f2, p);
 assert(WittIndex(f2LDp) == 1);
@@ -311,16 +286,9 @@ B = gwClass(matrix(RR,{{0,1},{1,0}}));
 assert(gwIsomorphic(H,A));
 assert(gwIsomorphic(H,B));
 ///
-    
--- Test for the smallest magnitude representative of a square class over the rationals or integers
--- Test 9
-TEST ///
--- assert(squarefreePart(15/72) == 30);
--- assert(squarefreePart(-1/3) == -3);
-///
 
 -- Test for local algebra basis
--- Test 10
+-- Test 9
 TEST ///
 QQ[x,y]
 f = {x^2+1-y,y};
@@ -329,7 +297,7 @@ assert(localAlgebraBasis(f,p) == {1,x});
 ///
 
 -- Tests for diagonalClass and diagonalEntries
--- Test 11
+-- Test 10
 TEST ///
 M1 = matrix(CC,{{1,0,0},{0,2,0},{0,0,-3}});
 M2 = matrix(CC,{{1,0,0},{0,1,0},{0,0,1}});
@@ -339,7 +307,7 @@ assert(diagonalEntries(G) == {1,2,-3});
 
 ///
 
--- Test 12
+-- Test 11
 TEST ///
 M1 = matrix(RR,{{1,0,0},{0,2,0},{0,0,-3}});
 M2 = matrix(RR,{{1,0,0},{0,1,0},{0,0,-1}});
@@ -348,7 +316,7 @@ assert((diagonalClass(G)).matrix == M2);
 assert(diagonalEntries(G) == {1,2,-3});
 ///
 
--- Test 13
+-- Test 12
 TEST ///
 M = matrix(QQ,{{1,0,0},{0,2,0},{0,0,-3}});
 G = gwClass(M);
@@ -356,7 +324,7 @@ assert((diagonalClass(G)).matrix == M);
 assert(diagonalEntries(G) == {1,2,-3})
 ///
     
--- Test 14
+-- Test 13
 TEST ///
 M = matrix(GF(5),{{1,0,0},{0,2,0},{0,0,-3}});
 G = gwClass(M);
@@ -364,7 +332,7 @@ assert((diagonalClass(G)).matrix == M);
 assert(diagonalEntries(G) == {1,2,-3});
 ///
 
--- Test 15
+-- Test 14
 TEST ///
 kk = GF(7);
 M1 = matrix(kk,{{1,0,0},{0,2,0},{0,0,-3}});
@@ -374,7 +342,7 @@ assert((diagonalClass(G)).matrix == M2);
 assert(diagonalEntries(G) == {1,2,-3});
 ///
 
--- Test 16
+-- Test 15
 TEST ///
 M1 = matrix(QQ,{{18,0,0},{0,125/9,0},{0,0,-8/75}});
 M2 = matrix(QQ,{{2,0,0},{0,5,0},{0,0,-6}});
@@ -384,17 +352,18 @@ assert((diagonalClass(G1)).matrix == M2);
 
 
 -- Test for p-adic valuation
--- Test 17
+-- Test 16
 TEST ///
 assert(padicValuation(27,3) == 3);
 ///
 
 -- Test for congruenceDiagonalize
--- Test 18
+-- Test 17
 TEST ///
 B=matrix(QQ,{{0/1,1},{1,0}});
 eta = gwClass(B)
 assert(WittIndex(eta) == 1);
+
 P=matrix(QQ,{{0/1, 5,1},{2,2,1},{0,0,1}});
 A=matrix(QQ,{{1/1,0,0},{0,-1,0},{0,0,1}});
 assert(WittIndex(gwClass(congruenceDiagonalize(P*A*transpose(P)))) == 1);
@@ -402,21 +371,18 @@ assert(WittIndex(gwClass(congruenceDiagonalize(P*A*transpose(P)))) == 1);
 
 
 -- Test for gwClass
--- Test 19
+-- Test 18
 TEST ///
---M = matrix(ZZ,{{1,0,0},{0,1,0},{0,0,1}});
 M1 = matrix(QQ,{{1/1,0,0},{0,1,0},{0,0,1}});
 M2 = matrix(QQ,{{1/1,24/10,0},{24/10,-5,0},{0,0,69}});
 M3 = matrix(GF(7),{{1,0,0},{0,2,0},{0,0,-3}});
-
---assert(class(gwClass(M)) === GrothendieckWittClass);
 assert(class(gwClass(M1)) === GrothendieckWittClass);
 assert(class(gwClass(M2)) === GrothendieckWittClass);
 assert(class(gwClass(M3)) === GrothendieckWittClass);
 ///
 
 -- Test for baseField
--- Test 20
+-- Test 19
 TEST ///
 M = gwClass(matrix(QQ,{{1/1,0,0},{0,2,3},{0,3,1}}));
 M1 = gwClass(matrix(RR,{{1.0,24/10,-2.41},{24/10,-5,0},{-2.41,0,69}}));
@@ -430,7 +396,7 @@ assert(toString(baseField(M3)) === toString(GF(7)));
 ///
 
 -- Test for gwAdd
--- Test 21
+-- Test 20
 TEST ///
 M1 = gwClass(matrix(QQ, {{1/1,0,-3},{0,23,0},{-3,0,-2/5}}));
 M2 = gwClass(matrix(QQ, {{0,1/2,0},{1/2,5/9,0},{0,0,1}}));
@@ -449,53 +415,42 @@ assert(gwAdd(G1,G2) === G3);
 assert(gwAdd(H1,H2) === H3);
 ///
 
--- Test for gwMultiply
--- Test 22
-TEST ///
-assert(true);
-///
-
 -- Test for isIsotropic/isAnisotropic
--- Test 23 (OK)
-
+-- Test 21
 TEST ///
 A1=matrix(QQ, {{0, 1/1},{1/1, 0}});
 assert(isIsotropic(A1)===true);
--- assert(isAnisotropic(gwClass(A1))===false);
+assert(isAnisotropic(gwClass(A1))===false);
 
--- A2=matrix(RR, {{1, -2, 4}, {-2, 2, 0}, {4, 0, -7}});
--- assert(isAnisotropic(A2)===false);
--- assert(isIsotropic(gwClass(A2))===true);
+A2=matrix(RR, {{1, -2, 4}, {-2, 2, 0}, {4, 0, -7}});
+assert(isAnisotropic(A2)===false);
+assert(isIsotropic(gwClass(A2))===true);
 
--- K=GF(13^4);
--- A3=matrix(K, {{7, 81, 63}, {81, 7, 55}, {63, 55, 109}});
--- assert(isIsotropic(gwClass(A3))===true);
--- --Isotropic by the Chevalley-Warning Theorem.
+K=GF(13^4);
+A3=matrix(K, {{7, 81, 63}, {81, 7, 55}, {63, 55, 109}});
+assert(isIsotropic(gwClass(A3))===true);
+--Isotropic by the Chevalley-Warning Theorem.
 
--- A4=matrix(QQ, {{5, 0}, {0, 5}});
--- assert(isAnisotropic(A4)===true);
+A4=matrix(QQ, {{5, 0}, {0, 5}});
+assert(isAnisotropic(A4)===true);
 
--- A5=matrix(CC, {{3+ii, 0}, {0, 5-ii}});
--- assert(isAnisotropic(A5)===false);
+A5=matrix(CC, {{3+ii, 0}, {0, 5-ii}});
+assert(isAnisotropic(A5)===false);
 ///
 
 --Test for isIsomorphicFormQ
--- Test 24
-
+-- Test 22
 TEST ///
 B1=matrix(QQ, {{1/1, -2/1, 4/1}, {-2/1, 2/1, 0}, {4/1, 0, -7/1}});
 B2=matrix(QQ, {{-17198/4225, -166126/975, -71771/1560}, {-166126/975, -27758641/4050, -251077/135}, {-71771/1560, -251077/135, -290407/576}});
--- assert(gwIsomorphic(B1, B2)===true);
 assert(gwIsomorphic(gwClass(B1), gwClass(B2))===true);
-
 B3=matrix(QQ, {{-38/1, -50/1, 23/1}, {-50/1, -62/1, 41/1}, {23/1, 41/1, 29/1}});
--- assert(gwIsomorphic(B1, B3)===true);
 assert(gwIsomorphic(gwClass(B1), gwClass(B3))===true);
 ///
 
 
 --Test for gwIsomorphic
---Test 25 (OK)
+--Test 23
 
 TEST ///
 D1=matrix(QQ, {{1/1, -2/1, 4/1}, {-2/1, 2/1, 0}, {4/1, 0, -7/1}});
@@ -513,8 +468,7 @@ assert(gwIsomorphic(gwClass(C3), gwClass(C4))===true);
 ///
 
 -- Test for GWinvariants
--- Test 26
-
+-- Test 24
 TEST ///
 M1 = gwClass(matrix(QQ, {{1/1,0,-3},{0,23,0},{-3,0,-2/5}}));
 M2 = gwClass(matrix(QQ, {{1/1,0,0},{0, 23,0},{0,0,-2/5}}));
@@ -534,10 +488,8 @@ assert(HasseWittInvariant(M1, 47) == -1);
 ///
 
 -- Test for hilbertSymbols
--- Test 27
-
+-- Test 25
 TEST ///
-
 a = HilbertSymbol(100, 7, 3);
 assert(a==1);
 
