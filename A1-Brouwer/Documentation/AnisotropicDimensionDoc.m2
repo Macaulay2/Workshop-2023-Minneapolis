@@ -41,7 +41,7 @@ document{
 
 document{
     Key => {anisotropicDimension, (anisotropicDimension, GrothendieckWittClass), (anisotropicDimension, Matrix)},
-    Headline => "Returns the anisotropic dimension of a symmetric bilinear form",
+    Headline => "returns the anisotropic dimension of a symmetric bilinear form",
     Usage => "anisotropicDimension(beta)",
     Inputs => {
 	GrothendieckWittClass => "beta" => {"over a field ", TEX///$k$///, " where ", TEX///$k$///, " is the complex numbers, reals, rationals, or a finite field."},
@@ -57,7 +57,7 @@ document{
 
 document{
     Key => {WittIndex, (WittIndex, GrothendieckWittClass)},
-    Headline => "Returns the Witt index of a symmetric bilinear form",
+    Headline => "returns the Witt index of a symmetric bilinear form",
     Usage => "WittIndex(beta)",
     Inputs => {
 	GrothendieckWittClass => "beta" => {"denoted by ", TEX///$\beta\in\text{GW}(k)$///, ", where ", TEX///$k$///, " is the complex numbers, reals, rationals, or a finite field"},

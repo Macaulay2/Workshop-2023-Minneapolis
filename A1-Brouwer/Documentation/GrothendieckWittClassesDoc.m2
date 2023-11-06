@@ -28,7 +28,7 @@ document{
 
 document {
     Key => {gwClass, (gwClass, Matrix), (matrix, GrothendieckWittClass), (isWellDefined, Matrix)},
-	Headline => "Grothendieck Witt class of a symmetric matrix",
+	Headline => "the Grothendieck Witt class of a symmetric matrix",
 	Usage => "gwClass(M)",
 	Inputs => {
 	    Matrix => "M" => {"a symmetric matrix defined over an arbitrary field"}
@@ -56,7 +56,7 @@ document {
 
 document {
     Key => {baseField, (baseField, GrothendieckWittClass)},
-	Headline => "base field of a Grothendieck Witt class",
+	Headline => "the base field of a Grothendieck Witt class",
 	Usage => "baseField(beta)",
 	Inputs => {
 	    GrothendieckWittClass => "beta" => {"the isomorphism class of a symmetric bilinear form"}
@@ -76,7 +76,7 @@ document {
 
 document {
     Key => {gwAdd, (gwAdd, GrothendieckWittClass, GrothendieckWittClass)},
-    Headline => "The direct sum of two Grothendieck-Witt classes",     
+    Headline => "the direct sum of two Grothendieck-Witt classes",     
     Usage => "gwAdd(beta, gamma)",
 	Inputs => {
 	    GrothendieckWittClass => "beta" => {"the isomorphism class of a non-degenerate symmetric bilinear form represented by a matrix ", TT "M"},
@@ -98,7 +98,7 @@ document {
 
 document {
     Key => {gwMultiply, (gwMultiply, GrothendieckWittClass, GrothendieckWittClass)},
-    Headline => "The tensor product of two Grothendieck-Witt classes",     
+    Headline => "the tensor product of two Grothendieck-Witt classes",     
 	Usage => "gwMultiply(beta, gamma)",
 	Inputs => {
 	    GrothendieckWittClass => "beta" => {"the isomorphism class of a non-degenerate symmetric bilinear form represented by a matrix ", TT "M"},

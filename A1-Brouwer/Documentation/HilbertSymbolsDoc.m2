@@ -1,6 +1,6 @@
 document{
     Key => {HilbertSymbol, (HilbertSymbol, ZZ, ZZ, ZZ),  (HilbertSymbol, QQ, QQ, ZZ),  (HilbertSymbol, ZZ, QQ, ZZ),  (HilbertSymbol, QQ, ZZ, ZZ)},
-    Headline => "Computes the Hilbert symbol of two integers or rational numbers at a prime",
+    Headline => "computes the Hilbert symbol of two integers or rational numbers at a prime",
     Usage => "HilbertSymbol(a,b,p)",
     Inputs => {
 	QQ => "a" => {"any integer or rational number, considered as an element of ", TEX///$\mathbb{Q}_p$///},
@@ -27,7 +27,7 @@ document{
 
 document{
     Key => {HilbertSymbolReal, (HilbertSymbolReal, QQ, QQ),  (HilbertSymbolReal, ZZ, ZZ),  (HilbertSymbolReal, ZZ, QQ),  (HilbertSymbolReal, QQ, ZZ)},
-    Headline => "Computes the Hilbert symbol of two rational numbers over the reals",
+    Headline => "computes the Hilbert symbol of two rational numbers over the reals",
     Usage => "HilbertSymbolReal(a,b,p)",
     Inputs => {
 	QQ => "a" => {"any non-zero integer or rational number, considered as an element of ", TEX///$\mathbb{Q}_p$///},

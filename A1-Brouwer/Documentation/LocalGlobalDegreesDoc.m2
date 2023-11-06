@@ -1,6 +1,6 @@
 document {
     Key => {globalA1Degree, (globalA1Degree, List)},
-    Headline => "Computes a global A1-Brouwer degree of a list of n polynomials in n variables over a field k",
+    Headline => "computes a global A1-Brouwer degree of a list of n polynomials in n variables over a field k",
     Usage => "globalA1Degree(L)",
     Inputs => {
 	List => "L" => {"of polynomials ", TEX///$f = (f_1, \ldots, f_n)$///, " in the polynomial ring ", TEX///$k[x_1,\ldots,x_n]$///, " over a field ", TEX///$k$///}
@@ -60,7 +60,7 @@ document {
 
 document {
     Key => {localA1Degree, (localA1Degree, List, Ideal)},
-    Headline => "Computes a local A1-Brouwer degree of a list of n polynomials in n variables over a field k at a prime ideal in the zero locus",
+    Headline => "computes a local A1-Brouwer degree of a list of n polynomials in n variables over a field k at a prime ideal in the zero locus",
     Usage => "locallA1Degree(L,p)",
     Inputs => {
 	List => "L" => {"of polynomials ", TEX///$f = (f_1, \ldots, f_n)$///, " in the polynomial ring ", TEX///$k[x_1,\ldots,x_n]$///, " over a field ", TEX///$k$///},

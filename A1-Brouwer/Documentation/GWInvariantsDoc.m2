@@ -1,6 +1,6 @@
 document{
     Key => {signature, (signature, GrothendieckWittClass)},
-    Headline => "Outputs the signature of a symmetric bilinear form over the real or rational numbers",
+    Headline => "outputs the signature of a symmetric bilinear form over the real or rational numbers",
     Usage => "signature(beta)",
     Inputs => {
 	GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over ", TEX///$\mathbb{Q}$///, " or ", TEX///$\mathbb{R}$///},

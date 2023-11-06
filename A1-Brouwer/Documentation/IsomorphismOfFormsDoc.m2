@@ -1,6 +1,6 @@
 document{
     Key => {gwIsomorphic, (gwIsomorphic, GrothendieckWittClass, GrothendieckWittClass)},
-    Headline => "Determines whether two Grothendieck Witt classes are isomorphic over CC, RR, QQ, or a finite field.",
+    Headline => "determines whether two Grothendieck Witt classes are isomorphic over CC, RR, QQ, or a finite field.",
     Usage => "gwIsomorphic(alpha,beta)",
     Inputs => {
 	GrothendieckWittClass => "alpha" => {"denoted by ",TEX///$\alpha$///},

@@ -1,6 +1,6 @@
 document{
     Key => {isIsotropic, (isIsotropic, GrothendieckWittClass), (isIsotropic, Matrix)},
-    Headline => "Determines whether a Grothendieck-Witt class is isotropic",
+    Headline => "determines whether a Grothendieck-Witt class is isotropic",
     Usage => "isIsotropic(beta)",
     Inputs => {
 	GrothendieckWittClass => "beta" => {"denoted by ", TEX///$\beta\in\text{GW}(k)$///, ", where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field."},
@@ -15,7 +15,7 @@ document{
 
 document{
     Key => {isAnisotropic, (isAnisotropic, GrothendieckWittClass), (isAnisotropic, Matrix)},
-    Headline => "Determines whether a Grothendieck-Witt class is anisotropic",
+    Headline => "determines whether a Grothendieck-Witt class is anisotropic",
     Usage => "isAnisotropic(beta)",
     Inputs => {
 	GrothendieckWittClass => "beta" => {"denoted by ", TEX///$\beta\in\text{GW}(k)$///, ", where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field"},
