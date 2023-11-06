@@ -1,1 +1,0 @@
-To get started, read the following summary of [Git for Macaulay2 Contributors](https://github.com/Macaulay2/M2/wiki/Git-for-Macaulay2-Contributors).
