@@ -3,10 +3,10 @@ document{
     Headline => "Determines whether a Grothendieck-Witt class is isotropic",
     Usage => "isIsotropic(beta)",
     Inputs => {
-	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(k)$///, " where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field."},
+	GrothendieckWittClass => "beta" => {"denoted by ", TEX///$\beta\in\text{GW}(k)$///, ", where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field."},
 	},
     Outputs => {
-        Boolean => {"Whether ", TEX///$\beta$///, " is isotropic"},
+        Boolean => {"whether ", TEX///$\beta$///, " is isotropic"},
 	},
     PARA{"This is the negation of the boolean-valued ", TO2(isAnisotropic,"isAnisotropic"), ". See documentation there."},    
     SeeAlso => {"isAnisotropic", "HilbertSymbol", "signature"}
@@ -18,10 +18,10 @@ document{
     Headline => "Determines whether a Grothendieck-Witt class is anisotropic",
     Usage => "isAnisotropic(beta)",
     Inputs => {
-	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(k)$///, " where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field."},
+	GrothendieckWittClass => "beta" => {"denoted by ", TEX///$\beta\in\text{GW}(k)$///, ", where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field"},
 	},
     Outputs => {
-        Boolean => {"Whether ", TEX///$\beta$///, " is anisotropic"},
+        Boolean => {"whether ", TEX///$\beta$///, " is anisotropic"},
 	},
     PARA{"Recall a symmetric bilinear form ", TEX///$\beta$///, " is said to be ", EM "isotropic", " if there exists a nonzero vector ", TEX///$v$///, " for which ", TEX///$\beta(v,v) = 0$///, ". Witt's decomposition theorem implies that a non-degenerate symmetric bilinear form decomposes uniquely into an isotropic and an anisotropic part. Certifying (an)isotropy is then an important computational problem when working with the Grothendieck-Witt ring."},
     PARA{"Over ", TEX///$\mathbb{C}$///, ", any form of rank two or higher contains a copy of the hyperbolic form, and hence is isotropic. Thus we can determine anisotropy simply by a consideration of rank."},

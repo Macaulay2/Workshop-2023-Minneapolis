@@ -3,12 +3,12 @@ document{
     Headline => "Computes the Hilbert symbol of two integers or rational numbers at a prime",
     Usage => "HilbertSymbol(a,b,p)",
     Inputs => {
-	QQ => "a" => {"Any integer or rational number, considered as an element of ", TEX///$\mathbb{Q}_p$///, "."},
-	QQ => "b" => {"Any integer or rational number, considered as an element of ", TEX///$\mathbb{Q}_p$///, "."},
-	ZZ => "p" => {"Any integer prime number."},
+	QQ => "a" => {"any integer or rational number, considered as an element of ", TEX///$\mathbb{Q}_p$///},
+	QQ => "b" => {"any integer or rational number, considered as an element of ", TEX///$\mathbb{Q}_p$///},
+	ZZ => "p" => {"any integer prime number"},
 	},
     Outputs => {
-	ZZ => {"The ", EM "Hilbert symbol ", TEX///$(a,b)_p$///, "."},
+	ZZ => {"the ", EM "Hilbert symbol ", TEX///$(a,b)_p$///},
 	},
     PARA{"The ", EM "Hasse-Witt invariant", " of a diagonal form ", TEX///$\langle a_1,\ldots,a_n\rangle$///, " over a field ", TEX///$K$///, " is defined to be the product ", TEX///$\prod_{i<j}  \phi(a_i,a_j)$///, " where ", TEX///$\phi \colon K \times K \to \left\{\pm 1\right\}$///, " is any ", EM "symbol", " (see e.g. [MH73, III.5.4] for a definition). It is a classical result of Hilbert that over a local field of characteristic not equal to two, there is one and only symbol, ", TEX///$(-,-)_p$///,  " called the ", EM "Hilbert symbol", " ([S73, Chapter III]) computed as follows:"},
     PARA{TEX///$(a,b)_p = \begin{cases} 1 & z^2 = ax^2 + by^2 \text{ has a nonzero solution in } K^3 \\ -1 & \text{otherwise.} \end{cases}$///},
@@ -30,11 +30,11 @@ document{
     Headline => "Computes the Hilbert symbol of two rational numbers over the reals",
     Usage => "HilbertSymbolReal(a,b,p)",
     Inputs => {
-	QQ => "a" => {"Any non-zero integer or rational number, considered as an element of ", TEX///$\mathbb{Q}_p$///, "."},
-	QQ => "b" => {"Any non-zero integer or rational number, considered as an element of ", TEX///$\mathbb{Q}_p$///, "."},
+	QQ => "a" => {"any non-zero integer or rational number, considered as an element of ", TEX///$\mathbb{Q}_p$///},
+	QQ => "b" => {"any non-zero integer or rational number, considered as an element of ", TEX///$\mathbb{Q}_p$///},
 	},
     Outputs => {
-	ZZ => {"The ", EM "Hilbert symbol ", TEX///$(a,b)_{\mathbb{R}}$///, "."},
+	ZZ => {"the ", EM "Hilbert symbol ", TEX///$(a,b)_{\mathbb{R}}$///},
 	},
     PARA{"The ", EM "Hasse-Witt invariant", " of a diagonal form ", TEX///$\langle a_1,\ldots,a_n\rangle$///, " over a field ", TEX///$K$///, " is defined to be the product ", TEX///$\prod_{i<j}  \phi(a_i,a_j)$///, " where ", TEX///$\phi \colon K \times K \to \left\{\pm 1\right\}$///, " is any ", EM "symbol", " (see e.g. [MH73, III.5.4] for a definition). It is a classical result of Hilbert that over a local field of characteristic not equal to two, there is one and only symbol, ", TEX///$(-,-)_p$///,  " called the ", EM "Hilbert symbol", " ([S73, Chapter III]) computed as follows:"},
     PARA{TEX///$(a,b)_{\mathbb{R}} = \begin{cases} 1 & z^2 = ax^2 + by^2 \text{ has a nonzero solution in } {\mathbb{R}}^3 \\ -1 & \text{otherwise.} \end{cases}$///},

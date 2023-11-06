@@ -1,13 +1,13 @@
 document{
     Key => {anisotropicDimensionQp, (anisotropicDimensionQp, GrothendieckWittClass, ZZ)},
-    Headline => "Returns the anisotropic dimension of a rational symmetric bilinear form over the p-adics",
+    Headline => "returns the anisotropic dimension of a rational symmetric bilinear form over the p-adics",
     Usage => "anisotropicDimensionQp(beta, p)",
     Inputs => {
-	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(\mathbb{Q})$///, ". "},
-	ZZ => "p" => {"A prime number"},
+	GrothendieckWittClass => "beta" => {"over ", TEX///$\mathbb{Q}$///},
+	ZZ => "p" => {"a prime number"},
 	},
     Outputs => {
-        ZZ => {"The rank of the anisotropic part of ", TEX///$\beta$///, " over ", TEX///$\mathbb{Q}_p$///, "."},
+        ZZ => {"the rank of the anisotropic part of ", TEX///$\beta$///, " over ", TEX///$\mathbb{Q}_p$///},
 	},
     PARA{"This is an implementation of [KC18, Algorithm 8] in Macaulay2, which computes the anisotropic dimension of rational forms over the ", TEX///$p$///,"-adics. Note that any form of rank ", TEX///$\ge 5$///, " is always isotropic, so this method will return 0, 1, 2, 3, or 4."},
     PARA{EM "Citations:"},
@@ -60,10 +60,10 @@ document{
     Headline => "Returns the Witt index of a symmetric bilinear form",
     Usage => "WittIndex(beta)",
     Inputs => {
-	GrothendieckWittClass => "beta" => {"Any class ", TEX///$\beta\in\text{GW}(k)$///, " where ", TEX///$k$///, " is the complex numbers, reals, rationals, or a finite field."},
+	GrothendieckWittClass => "beta" => {"denoted by ", TEX///$\beta\in\text{GW}(k)$///, ", where ", TEX///$k$///, " is the complex numbers, reals, rationals, or a finite field"},
 	},
     Outputs => {
-        ZZ => {"The rank of the totally isotropic part of ", TEX///$\beta$///, "."},
+        ZZ => {"the rank of the totally isotropic part of ", TEX///$\beta$///},
 	},
     PARA{"By Witt decomposition, any form decomposes uniquely as ", TEX///$\beta \cong k \mathbb{H} \oplus \beta_a$///," where the form ", TEX///$\beta_a$///," is anisotropic. The integer ", TEX///$k$///, " is called the ", EM "Witt index", " of ", TEX///$\beta$///, ". See for instance [L05, I.4.3]."},
     

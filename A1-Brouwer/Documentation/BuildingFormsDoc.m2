@@ -6,7 +6,7 @@ document {
 	Inputs => {
 	    Ring => "k" => {"a field"},
 	    RingElement => "a" => {"any element ", TEX///$a\in k$///},
-	    Sequence => "L" => {"a list of elements ", TEX///$L = (a_1,\ldots,a_n)$///, " with ", TEX///$a_i \in k$///},
+	    Sequence => "L" => {"of elements ",TEX///$a_{i} \in k$///, ", where ", TEX///$i = 1,\dots, n$///},
 	    }, 
 	Outputs => { 
 	    GrothendieckWittClass => {"the diagonal form ", TEX///$\langle a_1,\ldots,a_n\rangle \in \text{GW}(k)$///},
@@ -31,7 +31,7 @@ document {
 	Inputs => {
 	    Ring => "k" => {"a field"},
 	    RingElement => "a" => {"any element ", TEX///$a\in k$///},
-	    Sequence => "L" => {"a list of elements ", TEX///$L = (a_1,\ldots,a_n)$///, " with ", TEX///$a_i \in k$///},
+	    Sequence => "L" => {"of elements ", TEX///$L = (a_1,\ldots,a_n)$///, " with ", TEX///$a_i \in k$///},
 	    }, 
 	Outputs => { 
 	    GrothendieckWittClass => {"the Pfister form ", TEX///$\langle\langle a_1,\ldots,a_n\rangle\rangle \in \text{GW}(k)$///},

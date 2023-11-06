@@ -3,10 +3,10 @@ document {
     Headline => "Computes a global A1-Brouwer degree of a list of n polynomials in n variables over a field k",
     Usage => "globalA1Degree(L)",
     Inputs => {
-	List => "L" => {"list of polynomials ", TEX///$f = (f_1, \ldots, f_n)$///, " in the polynomial ring ", TEX///$k[x_1,\ldots,x_n]$///, " over a field ", TEX///$k$///, "."}
+	List => "L" => {"of polynomials ", TEX///$f = (f_1, \ldots, f_n)$///, " in the polynomial ring ", TEX///$k[x_1,\ldots,x_n]$///, " over a field ", TEX///$k$///}
 	},
     Outputs => {
-	GrothendieckWittClass => {"The class ", TEX///$\text{deg}^{\mathbb{A}^1}(f)$///, " in the Grothendieck-Witt ring ", TEX///$\text{GW}(k)$///, "."}
+	GrothendieckWittClass => {"the class ", TEX///$\text{deg}^{\mathbb{A}^1}(f)$///, " in the Grothendieck-Witt ring ", TEX///$\text{GW}(k)$///}
 	},
     PARA{"Given an endomorphism of affine space ", TEX///$f=(f_1,\dots ,f_n) \colon \mathbb{A}^n_k \to \mathbb{A}^n_k$///, " with isolated zeros, we may compute its ", TEX///$\mathbb{A}^1$///, EM "-Brouwer degree", " valued in the Grothendieck-Witt ring ", TEX///$\text{GW}(k)$///, "."
 	},
@@ -63,11 +63,11 @@ document {
     Headline => "Computes a local A1-Brouwer degree of a list of n polynomials in n variables over a field k at a prime ideal in the zero locus",
     Usage => "locallA1Degree(L,p)",
     Inputs => {
-	List => "L" => {"list of polynomials ", TEX///$f = (f_1, \ldots, f_n)$///, " in the polynomial ring ", TEX///$k[x_1,\ldots,x_n]$///, " over a field ", TEX///$k$///, "."},
-	Ideal => "p" => {"a prime ideal ", TEX///$p \trianglelefteq k[x_1,\ldots,x_n]$///, " in the zero locus ", TEX///$V(f)$///, "."},
+	List => "L" => {"of polynomials ", TEX///$f = (f_1, \ldots, f_n)$///, " in the polynomial ring ", TEX///$k[x_1,\ldots,x_n]$///, " over a field ", TEX///$k$///},
+	Ideal => "p" => {"a prime ideal ", TEX///$p \trianglelefteq k[x_1,\ldots,x_n]$///, " in the zero locus ", TEX///$V(f)$///},
 	},
     Outputs => {
-	GrothendieckWittClass => {"The class ", TEX///$\text{deg}_p^{\mathbb{A}^1}(f)$///, " in the Grothendieck-Witt ring ", TEX///$\text{GW}(k)$///, "."}
+	GrothendieckWittClass => {"the class ", TEX///$\text{deg}_p^{\mathbb{A}^1}(f)$///, " in the Grothendieck-Witt ring ", TEX///$\text{GW}(k)$///}
 	},
     PARA{"Given an endomorphism of affine space ", TEX///$f=(f_1,\dots ,f_n) \colon \mathbb{A}^n_k \to \mathbb{A}^n_k$///, " and an isolated zero ", TEX///$p\in V(f)$/// ,", we may compute its local ", TEX///$\mathbb{A}^1$///, EM "-Brouwer degree", " valued in the Grothendieck-Witt ring ", TEX///$\text{GW}(k)$///, "."
 	},

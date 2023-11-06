@@ -3,7 +3,7 @@ document {
 	Headline => "produces a diagonalized form for any Grothendieck-Witt class, with simplified terms on the diagonal",
 	Usage => "diagonalClass(beta)",
 	Inputs => {
-	    GrothendieckWittClass => "beta" => {"any class in ", TEX///$\text{GW}(k)$///," where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field of characteristic not 2."}
+	    GrothendieckWittClass => "beta" => {"over a field ", TEX///$k$///,", where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field of characteristic not 2"}
 	    },
 	Outputs => {
 	    GrothendieckWittClass => {"a form isomorphic to ", TEX///$\beta$///, " with a diagonal Gram matrix"}
@@ -27,10 +27,10 @@ document {
 	Headline => "extracts a list of diagonal entries for a GrothendieckWittClass",
 	Usage => "diagonalEntries(beta)",
 	Inputs => {
-	    GrothendieckWittClass => "beta" => {"any class in ", TEX///$\text{GW}(k)$///," where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field of characteristic not 2."}
+	    GrothendieckWittClass => "beta" => {"over a field ", TEX///$k$///,", where ", TEX///$k$///, " is the rationals, reals, complex numbers, or a finite field of characteristic not 2"}
 	    },
 	Outputs => {
-	    List => "L" => {"a list ", TEX///$L = \{a_1,\ldots,a_n\}$///, " of elements ", TEX///$a_i\in k$///, " so that ", TEX///$\beta \cong \langle a_1,\ldots,a_n\rangle$///, "."}
+	    List => "L" => {" of elements ", TEX///$a_i\in k$///,", where ", TEX///$i = 1,\dots,n $///,", such that ", TEX///$\beta \cong \langle a_1,\ldots,a_n\rangle$///}
 	    },
 	PARA {"Given a diagonal form, ", TT "diagonalEntries", " will extract the elements along the diagonal."},
 	EXAMPLE lines ///

@@ -3,8 +3,8 @@ document{
     Headline => "Determines whether two Grothendieck Witt classes are isomorphic over CC, RR, QQ, or a finite field.",
     Usage => "gwIsomorphic(alpha,beta)",
     Inputs => {
-	GrothendieckWittClass => "alpha" => {"Any Grothendieck-Witt class ", TEX///$\alpha$///, "."},
-	GrothendieckWittClass => "beta" => {"Any Grothendieck-Witt class ", TEX///$\beta$///, "."},
+	GrothendieckWittClass => "alpha" => {"denoted by ",TEX///$\alpha$///},
+	GrothendieckWittClass => "beta" => {"denoted by ",TEX///$\beta$///},
 	},
     Outputs => {
 	Boolean => {"returns true or false depending on whether two Grothendieck Witt classes are equal in the Grothendieck-Witt ring"},

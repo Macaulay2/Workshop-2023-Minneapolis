@@ -43,11 +43,11 @@ document{
     Headline => "p-adic valuation of a rational number or integer",
     Usage => "padicValuation(a, p)",
     Inputs => {
-	ZZ => "a" => {"A non-zero rational number in ", TEX///$\mathbb{Q}_p$///, "."},
-	ZZ => "p" => {"A rational prime number."},
+	ZZ => "a" => {"a non-zero rational number in ", TEX///$\mathbb{Q}_p$///},
+	ZZ => "p" => {"a rational prime number"},
 	},
     Outputs =>{
-	ZZ => {"An integer ", TEX///$n$///, " where ",TEX///$a=p^n u$///, " and ", TEX///$u$///," is a unit in ", TEX///$\mathbb{Z}_p$///},
+	ZZ => {"an integer ", TEX///$n$///, " where ",TEX///$a=p^n u$///, " and ", TEX///$u$///," is a unit in ", TEX///$\mathbb{Z}_p$///},
         },
     EXAMPLE lines///
     a = 363/7;
@@ -61,11 +61,11 @@ document {
 	Headline => "produces a basis for a local finitely generated algebra over a field k",
 	Usage => "localAlgebraBasis(L,p)",
 	Inputs => {
-	    List => "L" => {"list of polynomials ", TEX///$f=(f_1, \dots ,f_n)$///, " over the same ring"},
-	    Ideal => "p" => {"prime ideal of an isolated zero"}
+	    List => "L" => {"of polynomials ", TEX///$f=(f_1, \dots ,f_n)$///, " over the same ring"},
+	    Ideal => "p" => {"a prime ideal of an isolated zero"}
 	    },
 	Outputs => {
-	    List => {"a list of basis elements of the local k-algebra ", TEX///$Q_p(f)$/// }
+	    List => {"of basis elements of the local ",TEX///$k$///,"-algebra ", TEX///$Q_p(f)$/// }
 	    },
 	PARA {"Given an endomorphism of affine space, ", TEX///$f=(f_1,\dots ,f_n)$///,
 			", given as a list of polynomials called ", TT "L", " and the prime ideal of an isolated zero, this command returns a list of basis elements of the local k-algebra ", TEX///$Q_p(f)$///, " by computing a normal basis for ", TEX///$(I:(I:p^{\infty}))$///, " (vis. [S02, Proposition 2.5])."},

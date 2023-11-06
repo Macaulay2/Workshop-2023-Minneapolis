@@ -34,7 +34,7 @@ document {
 	    Matrix => "M" => {"a symmetric matrix defined over an arbitrary field"}
 	    },
 	Outputs => {
-	    GrothendieckWittClass => { "the isomorphism class of a symmetric bilinear form represented by ", TEX/// $M$///, "." }
+	    GrothendieckWittClass => { "the isomorphism class of a symmetric bilinear form represented by ", TEX/// $M$///}
 	    },
 	PARA {"Given a symmetric matrix, ", TEX///$M$///, ", this command outputs an object of type ", TT "GrothendieckWittClass", ". ",
                 "This output has the representing matrix, ", TEX///$M$///, ", and the base field of the matrix stored in its CacheTable."},

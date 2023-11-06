@@ -3,7 +3,7 @@ document {
     Headline => "produces a simplified diagonal representative of a Grothendieck Witt class",
     Usage => "sumDecomposition(beta)",
     Inputs => {
-        GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over a field ", TEX///$k$///, "."},
+        GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over a field ", TEX///$k$///},
     },
     Outputs => { 
 	GrothendieckWittClass => {"a diagonal representative of the Grothendieck Witt class of the input form"},
@@ -34,11 +34,11 @@ document {
     Headline => "produces a simplified diagonal representative of a Grothendieck Witt class",
     Usage => "sumDecompositionString(beta)",
     Inputs => {
-        GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over a field ", TEX///$k$///, "."},
+        GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over a field ", TEX///$k$///},
     },
     Outputs => { 
 	--GrothendieckWittClass => {"a diagonal representative of the Grothendieck Witt class of the input form"},
-	String => {"The decomposition as a sum of hyperbolic and rank one forms."},
+	String => {"the decomposition as a sum of hyperbolic and rank one forms"},
 	},
     PARA {"Given a symmetric bilinear form ", TT"beta", " over a field ", TEX///$k$///, ", we return a simplified diagonal form of ", TT"beta","."},
     EXAMPLE lines ///
@@ -67,7 +67,7 @@ document {
     Headline => "returns the anisotropic part of a Grothendieck Witt class",
     Usage => "anisotropicPart(beta)",
     Inputs => {
-        GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over a field ", TEX///$k$///, "."},
+        GrothendieckWittClass => "beta" => {"a symmetric bilinear form defined over a field ", TEX///$k$///},
     },
     Outputs => { 
 	GrothendieckWittClass => {"the anisotropic part of ", TEX///$\beta$///},
