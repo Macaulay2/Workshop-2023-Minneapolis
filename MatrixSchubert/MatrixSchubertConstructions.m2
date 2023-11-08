@@ -50,6 +50,24 @@ indexOfVariable RingElement := ZZ => (elem) -> (
 )
 
 
+--------------------------------
+--pads an ASM with a block identity matrix to view the ASM in a larger polynomial ring
+--useful for adding and intersecting ASM ideals of differing sizes
+--INPUT: an ASM, number of rows/columns to add
+--OUTPUT: a new ASM from the old one with the same fulton generators, but forming a larger matrix
+--TODO: add docs and tests
+-----------------------------------
+padASM = method()
+padASM(Matrix, ZZ) := Matrix => (A,n) -> (
+    if not(isASM A) then error("The input must be an alternating sign matrix.");
+    m := numcols A;
+    zeroMatrixRight := map(ZZ^m, ZZ^n,0);
+    zeroMatrixUnder := map(ZZ^n, ZZ^m,0);
+    B := id_(ZZ^n);
+    matrix{{A,zeroMatrixRight},{zeroMatrixUnder,B}}
+    );
+
+
 --------------------------------------------
 --------------------------------------------
 --**Constructing ASM Varieties**--
@@ -476,9 +494,9 @@ entrywiseMinRankTable List := Matrix => L -> (
     -- comb through the list to get the minimal entries
     for M in L do (
 	T := rankTable M;
---      if (numrows M != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
---	if (numcols M != m) then error ("The input must be a list of partial alternating sign matrices of the same size.");	
-        if not(isPartialASM(M)) then error("The input must be a list containing partial alternating sign matrices.");
+      	if (numrows M != n) then error ("The input must be a list of alternating sign matrices of the same size.");
+      	if (numcols M != m) then error ("The input must be a list of alternating sign matrices of the same size.");	
+      	if not(isPartialASM(M)) then error("The input must be a list containing partial alternating sign matrices.");
 
         for i from 0 to n-1 do (
             for j from 0 to m-1 do (
@@ -504,8 +522,8 @@ entrywiseMaxRankTable List := Matrix => L -> (
     -- comb through the list to get the maximal entries
     for M in L do (
 	T := rankTable M;
---        if (numrows M != n) then error ("The input must be a list of partial alternating sign matrices of the same size.");
---	if (numcols M != m) then error ("The input must be a list of partial alternating sign matrices of the same size.");
+        if (numrows M != n) then error ("The input must be a list of alternating sign matrices of the same size.");
+	if (numcols M != m) then error ("The input must be a list of alternating sign matrices of the same size.");
         if not(isPartialASM(M)) then error("The input must be a list containing partial alternating sign matrices.");
 
         for i from 0 to (numrows M)-1 do (
@@ -610,25 +628,25 @@ isIntersectionSchubIdeals Ideal := Boolean => I -> (
 -------------------------------------------
 isASMIdeal = method()
 isASMIdeal Ideal := Boolean => (I) -> (
-    isASM := true;
+    ASMcheck := true;
     schubDecomp := schubDecompose I;
     primeComps := schubDecomp / schubDetIdeal;
     Q := ring primeComps_0;
     intersectCheck := intersect(apply(primeComps, J-> sub(J,Q)));
-    if (isASM = (intersectCheck == sub(I,Q))) then {
+    if (ASMcheck = (intersectCheck == sub(I,Q))) then {
         permMatrices := (schubDecomp / permToMatrix);
         rkTable := entrywiseMaxRankTable permMatrices;
         A := rankTableToASM matrix rkTable;
         ASMIdeal := schubDetIdeal matrix A;
 --	varHash := hashTable(apply((ring ASMIdeal)_*, i-> (last baseName i)=> i));
 --	phi := map(ring ASMIdeal, ring I, apply((ring I)_*, i-> varHash#(last baseName i)));
-        isASM = (ASMIdeal == sub(I, ring ASMIdeal));
-        if isASM then I.cache.ASM = A;
+        ASMcheck = (ASMIdeal == sub(I, ring ASMIdeal));
+        if ASMcheck then I.cache.ASM = A;
     }
     else {
-        isASM = false;
+        ASMcheck = false;
     };
-    isASM
+    ASMcheck
 )
 
 
@@ -800,8 +818,10 @@ schubIntersect List := Ideal => (L) -> (
 schubAdd = method()
 schubAdd List := Ideal => (L) -> (
     if (#L == 0) then error("Please enter a nonempty list.");
-    listPermM := L / (i -> if instance(i, Matrix) then i else if instance(i_0, List) then matrix i else (permToMatrix i));
-    rankM := entrywiseMinRankTable(listPermM);
+    listASMs := L / (i -> if instance(i, Matrix) then (partialASMToASM i) else if instance(i_0, List) then matrix i else (permToMatrix i));
+    n := max(apply(listASMs, i-> numrows i));
+    paddedASMs := apply(listASMs, A -> padASM(A, n - (numrows A)));
+    rankM := entrywiseMinRankTable(paddedASMs);
     sumI := schubDetIdeal rankTableToASM(rankM);
     sumI.cache.rankTable = rankM;
     sumI

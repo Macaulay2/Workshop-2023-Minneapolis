@@ -982,3 +982,28 @@ assert(isSchubCM(matrix{{0, 0, 1, 0}, {1, 0, -1, 1}, {0, 1, 0, 0}, {0, 0, 1, 0}}
 TEST ///
 assert(#ASMFullList(1) == 1);
 ///
+
+TEST ///
+--for schubAdd
+A = {3,2,4,1};
+B = {2,3,1};
+I = schubDetIdeal A;
+J = schubDetIdeal B;
+K = schubAdd {A,B};
+assert(K == sub(I + sub(J, ring I), ring K))
+
+---
+
+A = matrix{{0,0,0},{0,1,0},{1,-1,0}}
+B = matrix{{0,1,0,0,0},{0,0,0,1,0},{1,-1,1,0,0},{0,0,0,0,1},{0,1,0,0,0}}
+C = {3,1,4,2}
+L = schubAdd {A,B,C}
+
+I = schubDetIdeal A;
+J = schubDetIdeal B;
+K = schubDetIdeal C;
+I' = sub(I, ring J)
+K' = sub(K, ring J)
+assert(L == sub(I'+J+K', ring L))
+
+///
