@@ -99,7 +99,7 @@ doc ///
         -- :PolynomialRing --Not sure what to put here, PolynomialRing makes the compiler angry
     Description
         Text
-            Given a partial ASM $A$, compute the K Polynomial of its corresponding Ideal, defined as the numerator of its Hilbert series. The multi-degree variables are indexed along rows.
+            Given a partial ASM $A$, compute the K-polynomial of its corresponding Ideal, defined as the numerator of its Hilbert series. The multidegree variables are indexed along rows.
         Example
             A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}};
             KPolynomialASM A

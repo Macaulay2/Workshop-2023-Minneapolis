@@ -324,7 +324,7 @@ doc ///
 	    # pipeDreams w == # (decompose inI)
 	Text
 	    To read off an associated prime of the antidiagonal initial ideal from a pipe dream,
-	    one reads off the + tiles from the grid. When there is a + in location (i,j), then $z_{i,j}$ 
+	    one reads off the + tiles from the grid. When there is a + in location $(i,j)$, then $z_{i,j}$ 
 	    is a generator of the associated prime in question.
 	Example
 	    netList ((pipeDreams w)_0)
@@ -718,7 +718,7 @@ doc ///
     	:Ideal
     Description
         Text
-            Given a permutation in 1-line notation or, more generally, a partial alternating sign matrix, outputs the associated alternating sign matrix ideal (which is called a Schubert determinantal ideal in the case of a permutation).  (The convention throughout this package is that the permutation matrix of a pemutation w has 1's in positions (i,w(i)).)
+            Given a permutation in 1-line notation or, more generally, a partial alternating sign matrix, outputs the associated alternating sign matrix ideal (which is called a Schubert determinantal ideal in the case of a permutation).  (The convention throughout this package is that the permutation matrix of a pemutation $w$ has 1's in positions $(i,w(i))$.)
 	    
 	    This function computes over the coefficient field of rational numbers unless an alternative is specified.
         Example
