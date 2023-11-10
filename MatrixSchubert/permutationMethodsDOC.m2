@@ -524,7 +524,7 @@ doc ///
         w:List
     Description
         Text
-            Given a permutation in one line notation, finds the set of reduced pipe dreams. Each element of the output is a square array containing "+" and "/" symbols. The "+" symbols are interpreted as crossing tiles and the "/" are interpreted as bump tiles. Starting on the left edge, the path starting at row i will end at column w(i). This function only returns reduced pipe dreams (i.e. pipe dreams for which each pair of pipes crosses at most once).
+            Given a permutation in one line notation, finds the set of reduced pipe dreams. Each element of the output is a square array containing "+" and "/" symbols. The "+" symbols are interpreted as crossing tiles and the "/" are interpreted as bump tiles. Starting on the left edge, the path starting at row $i$ will end at column $w_i$. This function only returns reduced pipe dreams (i.e. pipe dreams for which each pair of pipes crosses at most once).
         Example
             w = {2,1,4,3,6,5};
             netList (pipeDreams w)_0
@@ -544,7 +544,7 @@ doc ///
         w:List
     Description
         Text
-            Given a permutation in one line notation, finds the set of  pipe dreams. Each element of the output is a square array containing "+" and "/" symbols. The "+" symbols are interpreted as crossing tiles and the "/" are interpreted as bump tiles. Starting on the left edge, the path starting at row i will end at column w(i). This function returns all pipe dreams of w, including those containing pairs of pipes that cross more than once.
+            Given a permutation in one line notation, finds the set of  pipe dreams. Each element of the output is a square array containing "+" and "/" symbols. The "+" symbols are interpreted as crossing tiles and the "/" are interpreted as bump tiles. Starting on the left edge, the path starting at row $i$ will end at column $w_i$. This function returns all pipe dreams of w, including those containing pairs of pipes that cross more than once.
         Example
             w = {2,1,4,3,6,5};
             netList (pipeDreamsNonReduced w)_1
