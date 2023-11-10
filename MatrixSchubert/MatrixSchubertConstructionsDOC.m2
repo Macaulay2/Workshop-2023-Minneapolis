@@ -464,6 +464,28 @@ doc ///
 
 doc ///
     Key
+        padASM
+        (padASM, Matrix, ZZ)
+    Headline
+        pad an ASM with an identity matrix
+    Usage
+        padASM(A, n)
+    Inputs
+        A:Matrix
+	n:ZZ
+    Outputs
+    	:Matrix
+    Description
+        Text
+            Given an alternating sign matrix, pads the ASM pads an ASM with a block of an $n\times n$ identity matrix
+	    to the bottom right of the original ASM.
+        Example
+	    A = matrix{{0, 0, 1, 0}, {1, 0, 0, 0}, {0, 1, -1, 1}, {0, 0, 1, 0}};
+	    padASM(A,3)
+///
+
+doc ///
+    Key
         isPartialASM
         (isPartialASM, Matrix)
     Headline

@@ -78,6 +78,19 @@ firstDescent List := ZZ => (w) -> (
     result
 )
 
+
+descentSet = method()
+descentSet List := List => (w) -> (
+    if not (isPerm w) then error ("Expecting a permutation.");
+--    if isIdentity(w) then error ("Expecting a non-identity permutation.");
+    n := #w;
+
+    result := new MutableList;
+    apply ((0..n-2), i-> if w_i > w_(i+1) then (result#(#result) = i+1));
+    toList result
+)
+
+
 -----------------------------------------------------------
 --computes the length of a permutation
 -----------------------------------------------------------

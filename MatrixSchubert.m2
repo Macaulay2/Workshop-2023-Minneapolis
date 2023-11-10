@@ -37,8 +37,8 @@ newPackage(
 )
 
 export{
-    
     --MatrixSchubertConstructions.m2
+    "padASM",	     	     	    -- ++
     "isPartialASM",    	       	    --documented ++
     "partialASMToASM",	      	    --documented ++
     "antiDiagInit",    	       	    --documented ++
@@ -81,6 +81,7 @@ export{
      "permutationToMatrix" => "permToMatrix",
     "lastDescent",    	      	    --documented ++
     "firstDescent",    	       	    --documented ++
+    "descentSet",    	     	    --documented ++
     "permLength",    	     	    --documented ++
      "permutationLength" => "permLength",
     "inverseOf",             	    --documented (check)

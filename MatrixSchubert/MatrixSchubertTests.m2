@@ -968,11 +968,6 @@ assert(toOneLineNotation getASM schubDetIdeal PI == {});
 
 
 TEST ///
---ASM
---???
-///
-
-TEST ///
 ---isSchubCM
 --assert(isSchubCM({1,3,2}) == true)
 assert(isSchubCM(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}) == true)
@@ -1006,4 +1001,18 @@ I' = sub(I, ring J)
 K' = sub(K, ring J)
 assert(L == sub(I'+J+K', ring L))
 
+///
+
+TEST ///
+--for padASM
+B = matrix{{0,1,0,0,0},{0,0,0,1,0},{1,-1,1,0,0},{0,0,0,0,1},{0,1,0,0,0}}
+assert(padASM(B,0) == B)
+assert(padASM(permToMatrix {3,1,2}, 2) == permToMatrix {3,1,2,4,5})
+
+///
+
+TEST ///
+assert(descentSet {3,1,2} == {1});
+assert(descentSet {3,1,2,5,4} == {1,4});
+assert(descentSet {1,2,3} == {});
 ///
