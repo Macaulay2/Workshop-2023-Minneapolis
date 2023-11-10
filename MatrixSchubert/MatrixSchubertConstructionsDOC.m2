@@ -324,7 +324,7 @@ doc ///
 	    # pipeDreams w == # (decompose inI)
 	Text
 	    To read off an associated prime of the antidiagonal initial ideal from a pipe dream,
-	    one reads off the + tiles from the grid. When there is a + in location (i,j), then $z_{i,j}$ 
+	    one reads off the + tiles from the grid. When there is a + in location $(i,j)$, then $z_{i,j}$ 
 	    is a generator of the associated prime in question.
 	Example
 	    netList ((pipeDreams w)_0)
