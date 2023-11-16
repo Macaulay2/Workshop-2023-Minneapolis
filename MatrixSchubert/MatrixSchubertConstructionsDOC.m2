@@ -1112,7 +1112,7 @@ doc ///
         rankTableToASM
         (rankTableToASM, Matrix)
     Headline
-        to find the ASM associated to a given rank table
+        to find the a partial ASM associated to a given rank table
     Usage
         rankTableToASM T
     Inputs
@@ -1121,7 +1121,7 @@ doc ///
     	:Matrix  
     Description
         Text
-            Given a square matrix that is a valid minimal rank table, returns the unique ASM associated to it. This algorithm follows
+            Given a matrix that is a valid minimal rank table, returns the unique partial ASM of the same size associated to it. This algorithm follows
 	    
 	    @UL {{"[Wei, Equation (21)]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},}@
 	    
