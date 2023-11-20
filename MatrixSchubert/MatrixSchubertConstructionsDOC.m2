@@ -410,8 +410,8 @@ doc ///
 	    Grothendieck polynomial.
 	Example
 	    u = {3,1,4,2}
-	    schubertPoly u
-	    doubleSchubertPoly u
+	    schubertPolynomial u
+	    doubleSchubertPolynomial u
 	    grothendieckPolynomial u
 	Text
 	    Moreover, this package contains functionality for checking whether
@@ -454,8 +454,8 @@ doc ///
 		TO (rajcode, List),
 		TO (rajIndex, List),
 		TO (grothendieckPolynomial,List),
-		TO (schubertPoly, List),
-		TO (doubleSchubertPoly, List),
+		TO (schubertPolynomial, List),
+		TO (doubleSchubertPolynomial, List),
 		TO (pipeDreams, List),
 		TO (pipeDreamsNonReduced, List),
 		TO (netPD, List)

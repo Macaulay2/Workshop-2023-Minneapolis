@@ -493,12 +493,12 @@ doc ///
 
 doc ///
     Key 
-        doubleSchubertPoly
-        (doubleSchubertPoly, List)
+        doubleSchubertPolynomial
+        (doubleSchubertPolynomial, List)
     Headline
         computes the double Schubert polynomial of a permutation 
     Usage
-        doubleSchubertPoly w
+        doubleSchubertPolynomial w
     Inputs
         w:List
     Description
@@ -506,7 +506,7 @@ doc ///
             Given a permutation in 1-line notation, finds its double Schubert polynomial. This is implemented via the transition equations for double Schubert polynomials.
         Example 
             w = {2,1,5,4,3}
-            doubleSchubertPoly w
+            doubleSchubertPolynomial w
 ///
 -*
 doc ///

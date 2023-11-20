@@ -105,9 +105,9 @@ export{
     "schubertPolynomial",    	       	    -- CHECK DOC
     "schubertPoly" => "schubertPolynomial",
     "schubPoly" => "schubertPolynomial",
-    "doubleSchubertPoly",           -- CHECK DOC
-    "doubleSchubertPolynomial" => "doubleSchubertPoly",
-    "doubleSchubPoly" => "doubleSchubertPoly",
+    "doubleSchubertPolynomial",           -- CHECK DOC
+    "doubleSchubertPoly" => "doubleSchubertPolynomial",
+    "doubleSchubPoly" => "doubleSchubertPolynomial",
     "pipeDreams",    	     	    -- CHECK DOC
     "pipeDreamsNonReduced",    	    -- CHECK DOC
     "netPD",	    	    	    -- CHECK DOC

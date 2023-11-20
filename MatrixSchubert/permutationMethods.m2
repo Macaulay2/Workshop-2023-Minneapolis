@@ -410,8 +410,8 @@ schubertPolynomial(List) := opts-> (w) -> (
     
 )
 
-doubleSchubertPoly = method()
-doubleSchubertPoly(List) := (w) -> (
+doubleSchubertPolynomial = method()
+doubleSchubertPolynomial(List) := (w) -> (
     n := #w;
     x := local x;
     y := local y;
