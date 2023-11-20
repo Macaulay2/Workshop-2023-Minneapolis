@@ -253,7 +253,7 @@ doc ///
 		TO (schubertDeterminantalIdeal, Matrix),
 		TO (fultonGens, Matrix),
 		TO (schubertIntersect, List),
-		TO (schubAdd, List),
+		TO (schubertAdd, List),
 		TO (schubReg, Matrix),
 		TO (schubCodim, Matrix),
 		TO (permSetOfASM, Matrix),
@@ -1178,12 +1178,12 @@ doc ///
 
 doc ///
     Key
-        schubAdd
-        (schubAdd, List)
+        schubertAdd
+        (schubertAdd, List)
     Headline
         compute the sum of ASM ideals
     Usage 
-        schubAdd L
+        schubertAdd L
     Inputs 
         L:List 
             of ASMs or permutations in 1-line notation
@@ -1202,6 +1202,6 @@ doc ///
 	    The canonical rank table of the sum will be entrywise minimum of the rank tables of the summands.  This function computes the sum of ASM ideals by computing the individual rank tables, using entrywiseMinRankTable to find the entrywise minimum, and then constructing the partial ASM from that rank table.
 	    
         Example
-            schubAdd {{3,2,1,4}, {2,1,4,3}}
-            schubAdd {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}}
+            schubertAdd {{3,2,1,4}, {2,1,4,3}}
+            schubertAdd {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}}
 ///

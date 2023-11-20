@@ -815,8 +815,8 @@ schubertIntersect List := Ideal => (L) -> (
 -- OUTPUT: the sum of the ideals 
 -- TODO: tests and documentation
 --------------------------------------------
-schubAdd = method()
-schubAdd List := Ideal => (L) -> (
+schubertAdd = method()
+schubertAdd List := Ideal => (L) -> (
     if (#L == 0) then error("Please enter a nonempty list.");
     listASMs := L / (i -> if instance(i, Matrix) then (partialASMToASM i) else if instance(i_0, List) then matrix i else (permToMatrix i));
     n := max(apply(listASMs, i-> numrows i));

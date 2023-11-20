@@ -71,8 +71,8 @@ export{
     "rankTableFromMatrix",    	    --documented ++
     "schubertIntersect",	     	    --documented ++
     "schubIntersect" => "schubertIntersect",
-    "schubAdd",	       	       	    --documented ++
-     "schubertAdd" => "schubAdd",
+    "schubertAdd",	       	       	    --documented ++
+     "schubAdd" => "schubertAdd",
    
  --permutationMethods.m2   
     "isPerm",	     	     	    --documented ++

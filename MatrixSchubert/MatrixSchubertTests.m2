@@ -213,8 +213,8 @@ assert(I==ideal(R_0,R_1*R_3));
 
 
 TEST ///
---schubAdd
-I=schubAdd {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}};
+--schubertAdd
+I=schubertAdd {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}};
 R=ring I;
 assert(I==ideal(R_0,R_1,R_3));
 ///
@@ -979,12 +979,12 @@ assert(#ASMFullList(1) == 1);
 ///
 
 TEST ///
---for schubAdd
+--for schubertAdd
 A = {3,2,4,1};
 B = {2,3,1};
 I = schubertDeterminantalIdeal A;
 J = schubertDeterminantalIdeal B;
-K = schubAdd {A,B};
+K = schubertAdd {A,B};
 assert(K == sub(I + sub(J, ring I), ring K))
 
 ---
@@ -992,7 +992,7 @@ assert(K == sub(I + sub(J, ring I), ring K))
 A = matrix{{0,0,0},{0,1,0},{1,-1,0}}
 B = matrix{{0,1,0,0,0},{0,0,0,1,0},{1,-1,1,0,0},{0,0,0,0,1},{0,1,0,0,0}}
 C = {3,1,4,2}
-L = schubAdd {A,B,C}
+L = schubertAdd {A,B,C}
 
 I = schubertDeterminantalIdeal A;
 J = schubertDeterminantalIdeal B;
