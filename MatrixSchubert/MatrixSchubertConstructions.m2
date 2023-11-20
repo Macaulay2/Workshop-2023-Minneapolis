@@ -763,16 +763,16 @@ rankTableFromMatrix Matrix := Matrix => A -> (
         for j from 0 to m-1 do(
             if (A_(i,j) < 0) then error("Must be a matrix with nonnegative entries.");
             if (i == 0 and j == 0) then (
-                rankTable_(n-1, n-1) = min(n, A_(n-1,n-1));
+                rankTable_(n-1, m-1) = min(n,m, A_(n-1,m-1));
             )
             else if (i == 0) then (
-                rankTable_(n-1-i, n-1-j) = min(n-i, n-j, A_(n-1-i, n-1-j), rankTable_(n-1-i,n-j));
+                rankTable_(n-1-i, m-1-j) = min(n-i, m-j, A_(n-1-i, m-1-j), rankTable_(n-1-i,m-j));
             )
             else if (j == 0) then (
-                rankTable_(n-1-i, n-1-j) = min(n-i, n-j, A_(n-1-i,n-1-j), rankTable_(n-i,n-j-1));
+                rankTable_(n-1-i, m-1-j) = min(n-i, m-j, A_(n-1-i,m-1-j), rankTable_(n-i,m-j-1));
             )
             else (
-                rankTable_(n-1-i, n-1-j) = min(n-i, n-j, A_(n-1-i,n-1-j), rankTable_(n-1-i, n-j), rankTable_(n-i,n-j-1));
+                rankTable_(n-1-i, m-1-j) = min(n-i, m-j, A_(n-1-i,m-1-j), rankTable_(n-1-i, m-j), rankTable_(n-i,m-j-1));
             );
         );
     );

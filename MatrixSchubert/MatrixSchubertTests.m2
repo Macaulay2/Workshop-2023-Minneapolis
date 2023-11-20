@@ -1016,3 +1016,11 @@ assert(descentSet {3,1,2} == {1});
 assert(descentSet {3,1,2,5,4} == {1,4});
 assert(descentSet {1,2,3} == {});
 ///
+
+TEST ///
+--rankTableFromMatrix nonsquare example
+M = matrix{{0,3,4},{1,1,1}}
+A = matrix{{0,1,1},{1,1,1}}
+assert(rankTableFromMatrix M == A)
+assert(rankTableFromMatrix A == A)
+///
