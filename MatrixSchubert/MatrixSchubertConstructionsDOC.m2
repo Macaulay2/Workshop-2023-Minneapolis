@@ -82,7 +82,7 @@ doc ///
             }@
 	Text
 	    The general method for creating a
-	    Schubert determinantal Ideal is @TO schubDetIdeal@.
+	    Schubert determinantal Ideal is @TO schubertDeterminantalIdeal@.
 	    The input is a permutation in the form of a list.
 	    This package contains functions for investigating the rank matrix,
 	    the Rothe diagram, and the essential cells of the Rothe diagram
@@ -94,10 +94,10 @@ doc ///
 	    rankTable p
 	    netList fultonGens p	    
 	Text
-	    The default presentation given by @TO schubDetIdeal@ is given by the Fulton generators of the ideal.
+	    The default presentation given by @TO schubertDeterminantalIdeal@ is given by the Fulton generators of the ideal.
 	    In order to access a minimal generating set, use @TO trim@.
 	Example
-	    I = schubDetIdeal p;
+	    I = schubertDeterminantalIdeal p;
 	    # (I_*)
 	    # ((trim I)_*)
 	Text
@@ -136,7 +136,7 @@ doc ///
 		TO (augmentedRotheDiagram, List),
 		TO (essentialSet, List),
 		TO (augmentedEssentialSet, List),
-		TO (schubDetIdeal, List),
+		TO (schubertDeterminantalIdeal, List),
 		TO (fultonGens, List),
 		TO (subwordComplex, List),
 		TO (schubIntersect, List),
@@ -166,7 +166,7 @@ doc ///
             ", arXiv preprint 1708.07236."}
             }@
 	Text
-	    The general method for defining the ideal of an ASM variety is @TO schubDetIdeal@.
+	    The general method for defining the ideal of an ASM variety is @TO schubertDeterminantalIdeal@.
 	    The input can be an alternating sign matrix or a partial alternating sign matrix.
 	    This package contains functions for checking if a matrix is a partial ASM,
 	    extending a partial ASM to an ASM, and computing the rank matrix for an ASM.
@@ -184,10 +184,10 @@ doc ///
 	    rankTable A
 	    netList fultonGens A	    
 	Text
-	    The default presentation given by @TO schubDetIdeal@ is given by the Fulton generators of the ideal.
+	    The default presentation given by @TO schubertDeterminantalIdeal@ is given by the Fulton generators of the ideal.
 	    In order to access a minimal generating set, use @TO trim@.
 	Example
-	    I = schubDetIdeal A;
+	    I = schubertDeterminantalIdeal A;
 	    # (I_*)
 	    # ((trim I)_*)
 	Text
@@ -233,7 +233,7 @@ doc ///
 	    with those of their antidiagonal initical ideals by [CV20].
 	Example
 	    time schubReg B
-	    time regularity comodule schubDetIdeal B
+	    time regularity comodule schubertDeterminantalIdeal B
 	Text
 	    @SUBSECTION "Functions for investigating ASM varieties"@
 	Text
@@ -250,7 +250,7 @@ doc ///
 		TO (augmentedRotheDiagram, Matrix),
 		TO (essentialSet, Matrix),
 		TO (augmentedEssentialSet, Matrix),
-		TO (schubDetIdeal, Matrix),
+		TO (schubertDeterminantalIdeal, Matrix),
 		TO (fultonGens, Matrix),
 		TO (schubIntersect, List),
 		TO (schubAdd, List),
@@ -307,7 +307,7 @@ doc ///
 	    any antidiagonal term order.
         Example
 	    w = {2,4,5,1,3};
-	    I = schubDetIdeal w;
+	    I = schubertDeterminantalIdeal w;
 	    inI = antiDiagInit w;
 	    (netList sort inI_*, netList sort (trim I)_*)
 	Text
@@ -701,16 +701,16 @@ doc ///
 
 doc ///
     Key
-        schubDetIdeal
-        (schubDetIdeal, List)
-        (schubDetIdeal, Matrix)
-	[schubDetIdeal, CoefficientRing]
-	[schubDetIdeal, Variable]
+        schubertDeterminantalIdeal
+        (schubertDeterminantalIdeal, List)
+        (schubertDeterminantalIdeal, Matrix)
+	[schubertDeterminantalIdeal, CoefficientRing]
+	[schubertDeterminantalIdeal, Variable]
     Headline
         compute an alternating sign matrix ideal (for example, a Schubert determinantal ideal)
     Usage
-        schubDetIdeal w
-        schubDetIdeal A
+        schubertDeterminantalIdeal w
+        schubertDeterminantalIdeal A
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
@@ -722,8 +722,8 @@ doc ///
 	    
 	    This function computes over the coefficient field of rational numbers unless an alternative is specified.
         Example
-            schubDetIdeal({1,3,2},CoefficientRing=>ZZ/3001)
-            schubDetIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}, Variable => y)
+            schubertDeterminantalIdeal({1,3,2},CoefficientRing=>ZZ/3001)
+            schubertDeterminantalIdeal(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}, Variable => y)
 
 ///
 
@@ -931,7 +931,7 @@ doc ///
             As output, each element in the list is the permutation associated to a prime component in the Schubert decomposition of the antidiagonal initial ideal of $I$.
 	Example
 	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
-	    J = schubDetIdeal A;
+	    J = schubertDeterminantalIdeal A;
 	    netList schubDecompose J
 	Text
 	    If the ASM ideal for an ASM $A$ has not het been computed, one may also give the ASM $A$ as input.
@@ -989,7 +989,7 @@ doc ///
 	    
 	Example
 	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
-	    J = schubDetIdeal A;
+	    J = schubertDeterminantalIdeal A;
 	    isIntersectionSchubIdeals J
 ///
 
@@ -1011,8 +1011,8 @@ doc ///
 	
 	    When this function returns true, it also stores the ASM $A$ so that $I=I_A$.  The matrix $A$ can then be accessed using getASM.
 	Example
-    	   I1=schubDetIdeal {3,4,1,2};
-	   I2=sub(schubDetIdeal {3,2,4,1},ring I1);
+    	   I1=schubertDeterminantalIdeal {3,4,1,2};
+	   I2=sub(schubertDeterminantalIdeal {3,2,4,1},ring I1);
 	   I = intersect(I1,I2);
 	   isASMIdeal I
 ///
@@ -1077,7 +1077,7 @@ doc ///
             If the ASM $A$ has already been computed and stored in the cache of I using isASMIdeal, then this function produces $A$ immediately. Otherwise, an attempt will be made to compute the ASM. Once the ASM is computed, it is stored in the cache of $I$.
 	Example
 	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
-	    I = schubDetIdeal A;
+	    I = schubertDeterminantalIdeal A;
 	    getASM I
 ///
 

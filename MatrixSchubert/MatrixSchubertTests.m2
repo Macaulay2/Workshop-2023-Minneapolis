@@ -109,21 +109,21 @@ assert(augmentedEssentialSet(matrix {{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0
 
 --TODO: make more complicated tests
 TEST ///
---schubDetIdeal
+--schubertDeterminantalIdeal
 --Example 15.4 from Miller-Sturmfels
-I = schubDetIdeal({1,2,3});
+I = schubertDeterminantalIdeal({1,2,3});
 assert(I == ideal(0_(ring I)));
 
-I = schubDetIdeal({2,1,3});
+I = schubertDeterminantalIdeal({2,1,3});
 assert(I == ideal((ring I)_0));
 
-I = schubDetIdeal({2,3,1});
+I = schubertDeterminantalIdeal({2,3,1});
 assert(I == ideal((ring I)_0, (ring I)_3));
 
-I = schubDetIdeal({3,2,1});
+I = schubertDeterminantalIdeal({3,2,1});
 assert(I == ideal((ring I)_0, (ring I)_1, (ring I)_3));
 
-I = schubDetIdeal({1,3,2});
+I = schubertDeterminantalIdeal({1,3,2});
 assert(I == ideal((ring I)_0 * (ring I)_4 - (ring I)_1 * (ring I)_3));
 ///
 
@@ -269,7 +269,7 @@ L = {
     matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}},
     matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
 }
-assert all (L, i -> schubCodim i == codim schubDetIdeal i)
+assert all (L, i -> schubCodim i == codim schubertDeterminantalIdeal i)
 ///
 
 TEST ///
@@ -374,9 +374,9 @@ assert(essentialSet(I) == {} );
 assert(augmentedEssentialSet(w) == {} );
 assert(augmentedEssentialSet(I) == {} );
 
---schubDetIdeal--
-testIdealPerm = schubDetIdeal(w);
-testIdealMat = schubDetIdeal(I);
+--schubertDeterminantalIdeal--
+testIdealPerm = schubertDeterminantalIdeal(w);
+testIdealMat = schubertDeterminantalIdeal(I);
 assert(testIdealPerm == ideal(0_(ring testIdealPerm)));
 assert(testIdealMat == ideal(0_(ring testIdealMat)));
 
@@ -412,21 +412,21 @@ assert(entrywiseMinRankTable {I} == matrix{{1, 1, 1, 1}, {1, 2, 2, 2}, {1, 2, 3,
 assert(entrywiseMaxRankTable {I} == matrix{{1, 1, 1, 1}, {1, 2, 2, 2}, {1, 2, 3, 3}, {1, 2, 3, 4}})
 
 --schubDecompose--
-testIdealPerm = schubDetIdeal(w);
-testIdealMat = schubDetIdeal(I);
-assert(schubDecompose schubDetIdeal w == {{1, 2, 3, 4}})
-assert(schubDecompose schubDetIdeal I == {{1, 2, 3, 4}})
+testIdealPerm = schubertDeterminantalIdeal(w);
+testIdealMat = schubertDeterminantalIdeal(I);
+assert(schubDecompose schubertDeterminantalIdeal w == {{1, 2, 3, 4}})
+assert(schubDecompose schubertDeterminantalIdeal I == {{1, 2, 3, 4}})
 
 --permSetOfASM--
 assert(permSetOfASM I == {{1, 2, 3, 4}})
 
 --isIntersectionSchubIdeals--
-assert(isIntersectionSchubIdeals schubDetIdeal w == true );
-assert(isIntersectionSchubIdeals schubDetIdeal I == true );
+assert(isIntersectionSchubIdeals schubertDeterminantalIdeal w == true );
+assert(isIntersectionSchubIdeals schubertDeterminantalIdeal I == true );
 
 --isASMIdeal--
-assert(isASMIdeal schubDetIdeal w == true );
-assert(isASMIdeal schubDetIdeal I == true );
+assert(isASMIdeal schubertDeterminantalIdeal w == true );
+assert(isASMIdeal schubertDeterminantalIdeal I == true );
 
 --isASM--
 assert(isASM permToMatrix w == true );
@@ -436,8 +436,8 @@ assert(isASM I == true );
 --Examples in other file
 
 --getASM--
-assert(getASM schubDetIdeal w == I );
-assert(getASM schubDetIdeal I == I );
+assert(getASM schubertDeterminantalIdeal w == I );
+assert(getASM schubertDeterminantalIdeal I == I );
 
 --isMinRankTable--
 assert(isMinRankTable rankTable w == true );
@@ -445,7 +445,7 @@ assert(isMinRankTable rankTable I == true );
 
 
 --getPermFromASM
-assert(toOneLineNotation getASM schubDetIdeal I == w );
+assert(toOneLineNotation getASM schubertDeterminantalIdeal I == w );
 
 
 --ASMToMonotoneTriangle--
@@ -586,12 +586,12 @@ assert(augmentedEssentialSet(PI) ==  {((1, 2), 0), ((2, 1), 0), ((2, 3), 1), ((3
 ///
 
 TEST ///
---schubDetIdeal--
+--schubertDeterminantalIdeal--
 w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-L = schubDetIdeal w;
+L = schubertDeterminantalIdeal w;
 assert(toExternalString L_0 == "z_(1,1)");
 assert(toExternalString L_1 == "-z_(1,3)*z_(2,2)*z_(3,1)+z_(1,2)*z_(2,3)*z_(3,1)+z_(1,3)*z_(2,1)*z_(3,2)-z_(1,1)*z_(2,3)*z_(3,2)-z_(1,2)*z_(2,1)*z_(3,3)+z_(1,1)*z_(2,2)*z_(3,3)");
 assert(toExternalString L_2 == "-z_(1,4)*z_(2,2)*z_(3,1)+z_(1,2)*z_(2,4)*z_(3,1)+z_(1,4)*z_(2,1)*z_(3,2)-z_(1,1)*z_(2,4)*z_(3,2)-z_(1,2)*z_(2,1)*z_(3,4)+z_(1,1)*z_(2,2)*z_(3,4)");
@@ -610,7 +610,7 @@ assert(toExternalString L_14 == "z_(1,4)*z_(3,3)*z_(4,2)*z_(5,1)-z_(1,3)*z_(3,4)
 assert(toExternalString L_15 == "z_(2,4)*z_(3,3)*z_(4,2)*z_(5,1)-z_(2,3)*z_(3,4)*z_(4,2)*z_(5,1)-z_(2,4)*z_(3,2)*z_(4,3)*z_(5,1)+z_(2,2)*z_(3,4)*z_(4,3)*z_(5,1)+z_(2,3)*z_(3,2)*z_(4,4)*z_(5,1)-z_(2,2)*z_(3,3)*z_(4,4)*z_(5,1)-z_(2,4)*z_(3,3)*z_(4,1)*z_(5,2)+z_(2,3)*z_(3,4)*z_(4,1)*z_(5,2)+z_(2,4)*z_(3,1)*z_(4,3)*z_(5,2)-z_(2,1)*z_(3,4)*z_(4,3)*z_(5,2)-z_(2,3)*z_(3,1)*z_(4,4)*z_(5,2)+z_(2,1)*z_(3,3)*z_(4,4)*z_(5,2)+z_(2,4)*z_(3,2)*z_(4,1)*z_(5,3)-z_(2,2)*z_(3,4)*z_(4,1)*z_(5,3)-z_(2,4)*z_(3,1)*z_(4,2)*z_(5,3)+z_(2,1)*z_(3,4)*z_(4,2)*z_(5,3)+z_(2,2)*z_(3,1)*z_(4,4)*z_(5,3)-z_(2,1)*z_(3,2)*z_(4,4)*z_(5,3)-z_(2,3)*z_(3,2)*z_(4,1)*z_(5,4)+z_(2,2)*z_(3,3)*z_(4,1)*z_(5,4)+z_(2,3)*z_(3,1)*z_(4,2)*z_(5,4)-z_(2,1)*z_(3,3)*z_(4,2)*z_(5,4)-z_(2,2)*z_(3,1)*z_(4,3)*z_(5,4)+z_(2,1)*z_(3,2)*z_(4,3)*z_(5,4)");
 
 
-L = schubDetIdeal I;
+L = schubertDeterminantalIdeal I;
 assert(toExternalString L_0 == "z_(1,1)");
 assert(toExternalString L_1 == "z_(1,2)");
 assert(toExternalString L_2 == "z_(2,1)");
@@ -622,7 +622,7 @@ assert(toExternalString L_7 == "-z_(2,2)*z_(3,1)+z_(2,1)*z_(3,2)");
 assert(toExternalString L_8 == "z_(1,4)*z_(2,3)*z_(3,2)*z_(4,1)-z_(1,3)*z_(2,4)*z_(3,2)*z_(4,1)-z_(1,4)*z_(2,2)*z_(3,3)*z_(4,1)+z_(1,2)*z_(2,4)*z_(3,3)*z_(4,1)+z_(1,3)*z_(2,2)*z_(3,4)*z_(4,1)-z_(1,2)*z_(2,3)*z_(3,4)*z_(4,1)-z_(1,4)*z_(2,3)*z_(3,1)*z_(4,2)+z_(1,3)*z_(2,4)*z_(3,1)*z_(4,2)+z_(1,4)*z_(2,1)*z_(3,3)*z_(4,2)-z_(1,1)*z_(2,4)*z_(3,3)*z_(4,2)-z_(1,3)*z_(2,1)*z_(3,4)*z_(4,2)+z_(1,1)*z_(2,3)*z_(3,4)*z_(4,2)+z_(1,4)*z_(2,2)*z_(3,1)*z_(4,3)-z_(1,2)*z_(2,4)*z_(3,1)*z_(4,3)-z_(1,4)*z_(2,1)*z_(3,2)*z_(4,3)+z_(1,1)*z_(2,4)*z_(3,2)*z_(4,3)+z_(1,2)*z_(2,1)*z_(3,4)*z_(4,3)-z_(1,1)*z_(2,2)*z_(3,4)*z_(4,3)-z_(1,3)*z_(2,2)*z_(3,1)*z_(4,4)+z_(1,2)*z_(2,3)*z_(3,1)*z_(4,4)+z_(1,3)*z_(2,1)*z_(3,2)*z_(4,4)-z_(1,1)*z_(2,3)*z_(3,2)*z_(4,4)-z_(1,2)*z_(2,1)*z_(3,3)*z_(4,4)+z_(1,1)*z_(2,2)*z_(3,3)*z_(4,4)");
 
 
-L = schubDetIdeal PI;
+L = schubertDeterminantalIdeal PI;
 assert(numgens L == 13);
 assert(toExternalString L_0 == "z_(1,1)");
 assert(toExternalString L_1 == "z_(1,2)");
@@ -876,9 +876,9 @@ w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-assert(flatten schubDecompose schubDetIdeal w == w)
-assert(schubDecompose schubDetIdeal I == {{3, 5, 1, 2, 4}, {5, 2, 3, 1, 4}, {4, 2, 5, 1, 3}, {3, 4, 1, 5, 2}, {4, 2, 3, 5, 1}})
-assert(schubDecompose schubDetIdeal PI == {{3, 6, 1, 2, 4, 5}, {6, 2, 3, 1, 4, 5}, {4, 2, 6, 1, 3, 5}, {3, 4, 1, 6, 2, 5}, {4, 2, 3, 6, 1, 5}})
+assert(flatten schubDecompose schubertDeterminantalIdeal w == w)
+assert(schubDecompose schubertDeterminantalIdeal I == {{3, 5, 1, 2, 4}, {5, 2, 3, 1, 4}, {4, 2, 5, 1, 3}, {3, 4, 1, 5, 2}, {4, 2, 3, 5, 1}})
+assert(schubDecompose schubertDeterminantalIdeal PI == {{3, 6, 1, 2, 4, 5}, {6, 2, 3, 1, 4, 5}, {4, 2, 6, 1, 3, 5}, {3, 4, 1, 6, 2, 5}, {4, 2, 3, 6, 1, 5}})
 ///
 
 TEST ///
@@ -896,9 +896,9 @@ w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-assert(isIntersectionSchubIdeals schubDetIdeal w == true );
-assert(isIntersectionSchubIdeals schubDetIdeal I == true );
-assert(isIntersectionSchubIdeals schubDetIdeal PI == true);
+assert(isIntersectionSchubIdeals schubertDeterminantalIdeal w == true );
+assert(isIntersectionSchubIdeals schubertDeterminantalIdeal I == true );
+assert(isIntersectionSchubIdeals schubertDeterminantalIdeal PI == true);
 ///
 
 TEST ///
@@ -907,9 +907,9 @@ w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-assert(isASMIdeal schubDetIdeal w == true );
-assert(isASMIdeal schubDetIdeal I == true );
-assert(isASMIdeal schubDetIdeal PI == true);
+assert(isASMIdeal schubertDeterminantalIdeal w == true );
+assert(isASMIdeal schubertDeterminantalIdeal I == true );
+assert(isASMIdeal schubertDeterminantalIdeal PI == true);
 ///
 
 TEST ///
@@ -929,9 +929,9 @@ w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-assert(getASM schubDetIdeal w == matrix{{0, 1, 0, 0, 0, 0}, {1, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 1}, {0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 1, 0}, {0, 0, 0, 1, 0, 0}} );
-assert(getASM schubDetIdeal I == I );
-assert(getASM schubDetIdeal PI == PI);
+assert(getASM schubertDeterminantalIdeal w == matrix{{0, 1, 0, 0, 0, 0}, {1, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 1}, {0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 1, 0}, {0, 0, 0, 1, 0, 0}} );
+assert(getASM schubertDeterminantalIdeal I == I );
+assert(getASM schubertDeterminantalIdeal PI == PI);
 ///
 
 TEST ///
@@ -961,9 +961,9 @@ w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-assert(toOneLineNotation getASM schubDetIdeal w == w );
-assert(toOneLineNotation getASM schubDetIdeal I == {} );
-assert(toOneLineNotation getASM schubDetIdeal PI == {});
+assert(toOneLineNotation getASM schubertDeterminantalIdeal w == w );
+assert(toOneLineNotation getASM schubertDeterminantalIdeal I == {} );
+assert(toOneLineNotation getASM schubertDeterminantalIdeal PI == {});
 ///
 
 
@@ -982,8 +982,8 @@ TEST ///
 --for schubAdd
 A = {3,2,4,1};
 B = {2,3,1};
-I = schubDetIdeal A;
-J = schubDetIdeal B;
+I = schubertDeterminantalIdeal A;
+J = schubertDeterminantalIdeal B;
 K = schubAdd {A,B};
 assert(K == sub(I + sub(J, ring I), ring K))
 
@@ -994,9 +994,9 @@ B = matrix{{0,1,0,0,0},{0,0,0,1,0},{1,-1,1,0,0},{0,0,0,0,1},{0,1,0,0,0}}
 C = {3,1,4,2}
 L = schubAdd {A,B,C}
 
-I = schubDetIdeal A;
-J = schubDetIdeal B;
-K = schubDetIdeal C;
+I = schubertDeterminantalIdeal A;
+J = schubertDeterminantalIdeal B;
+K = schubertDeterminantalIdeal C;
 I' = sub(I, ring J)
 K' = sub(K, ring J)
 assert(L == sub(I'+J+K', ring L))

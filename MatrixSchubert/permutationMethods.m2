@@ -352,7 +352,7 @@ grothendieckPoly = method(Options=>{Algorithm=>"DividedDifference"})
 grothendieckPoly(List) := opts -> w -> (
     if not(isPerm w) then error("The input must be a permutation in one-line notation.");
 -*    if opts.Algorithm == "Degree" then (
-        I := schubDetIdeal w;
+        I := schubertDeterminantalIdeal w;
         R := ring I;
         kk := coefficientRing R;
         possibleDegs := apply(#w, i-> toList insert(i,1,(#w-1):0));

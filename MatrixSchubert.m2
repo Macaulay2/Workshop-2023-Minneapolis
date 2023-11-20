@@ -47,8 +47,8 @@ export{
     "augmentedRotheDiagram",	    --documented ++
     "essentialSet",	     	        --documented ++
     "augmentedEssentialSet",        --documented ++
-    "schubDetIdeal",	       	    --documented ++
-    "schubertDeterminantalIdeal" => "schubDetIdeal",
+    "schubertDeterminantalIdeal",     --documented ++
+    "schubDetIdeal" => "schubertDeterminantalIdeal",
     "fultonGens",    	     	    --documented ++
     "diagLexInitSE",   	      	    --documented ++
     "diagLexInitNW",	    	    --documented ++

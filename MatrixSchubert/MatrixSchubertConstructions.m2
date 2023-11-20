@@ -321,13 +321,13 @@ augmentedEssentialSet Matrix := List => A -> (
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: Schubert determinantal ideal for w
 --------------------------------------------
-schubDetIdeal = method(
+schubertDeterminantalIdeal = method(
     Options => {
 	CoefficientRing => QQ,
 	Variable => getSymbol "z"
     }
 )
-schubDetIdeal Matrix := o -> A -> (
+schubertDeterminantalIdeal Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
  --   A = partialASMToASM(A);
     zMatrix := genMat(numrows A, numcols A, CoefficientRing=> o.CoefficientRing, Variable => o.Variable); --generic matrix
@@ -350,10 +350,10 @@ schubDetIdeal Matrix := o -> A -> (
     I.cache.ASM = A;
     return I;
 )
-schubDetIdeal List := o -> w -> (
+schubertDeterminantalIdeal List := o -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");    
     A := permToMatrix w;
-    schubDetIdeal(A,CoefficientRing=>o.CoefficientRing, Variable => o.Variable)
+    schubertDeterminantalIdeal(A,CoefficientRing=>o.CoefficientRing, Variable => o.Variable)
 )
 
 ----------------------------------------
@@ -367,11 +367,11 @@ fultonGens = method(
 	}
     )
 fultonGens Matrix := o -> A -> (
-    (schubDetIdeal(A,CoefficientRing => o.CoefficientRing, Variable => o.Variable))_*
+    (schubertDeterminantalIdeal(A,CoefficientRing => o.CoefficientRing, Variable => o.Variable))_*
 )
 
 fultonGens List := o -> w -> (
-    (schubDetIdeal(w,CoefficientRing=> o.CoefficientRing, Variable => o.Variable))_*
+    (schubertDeterminantalIdeal(w,CoefficientRing=> o.CoefficientRing, Variable => o.Variable))_*
 )
 
 
@@ -387,13 +387,13 @@ diagLexInitNW = method(
     )
 diagLexInitNW Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubDetIdeal(A,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
+    I := schubertDeterminantalIdeal(A,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
     R := newRing(ring I, MonomialOrder=>Lex); --making new ring with lex diagonal term order 
     monomialIdeal leadTerm sub(I, R)
 )
 diagLexInitNW List := o -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubDetIdeal(w,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
+    I := schubertDeterminantalIdeal(w,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
     R := newRing(ring I, MonomialOrder=>Lex); --making new ring with lex diagonal term order 
     monomialIdeal leadTerm sub(I, R)
 )
@@ -410,7 +410,7 @@ diagLexInitSE = method(
     )
 diagLexInitSE Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubDetIdeal(A,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
+    I := schubertDeterminantalIdeal(A,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
     R := ring I;
     kk := o.CoefficientRing;
     R' := kk[reverse R_*, MonomialOrder => Lex];
@@ -419,7 +419,7 @@ diagLexInitSE Matrix := o -> A -> (
 )
 diagLexInitSE List := o -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubDetIdeal(w,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
+    I := schubertDeterminantalIdeal(w,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
     R := ring I;
     kk := o.CoefficientRing;
     R' := kk[reverse R_*, MonomialOrder => Lex];
@@ -439,7 +439,7 @@ diagRevLexInit = method(
     )
 diagRevLexInit Matrix := o -> A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubDetIdeal(A, CoefficientRing => o.CoefficientRing, Variable => o.Variable);
+    I := schubertDeterminantalIdeal(A, CoefficientRing => o.CoefficientRing, Variable => o.Variable);
     k := numrows A;
     R := ring I;
     oldvars := R_*;
@@ -450,7 +450,7 @@ diagRevLexInit Matrix := o -> A -> (
 )
 diagRevLexInit List := o -> w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
-    I := schubDetIdeal(w,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
+    I := schubertDeterminantalIdeal(w,CoefficientRing => o.CoefficientRing, Variable => o.Variable);
     k := #w;
     R := ring I;
     oldvars := R_*;
@@ -582,7 +582,7 @@ schubDecompose Ideal := List => I -> (
 schubDecompose Matrix := List => A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix.");
     A' := partialASMToASM A;
-    I := schubDetIdeal A';
+    I := schubertDeterminantalIdeal A';
     schubDecompose I
     )
 
@@ -610,7 +610,7 @@ isIntersectionSchubIdeals = method()
 isIntersectionSchubIdeals Ideal := Boolean => I -> (
     isIntersection := true;
     if (I == radical(I)) then {
-        schubDecomp := apply(schubDecompose I, i-> schubDetIdeal(i, CoefficientRing => coefficientRing(ring I)));
+        schubDecomp := apply(schubDecompose I, i-> schubertDeterminantalIdeal(i, CoefficientRing => coefficientRing(ring I)));
 	Q := ring schubDecomp_0;
         isIntersection = sub(I,Q) == intersect apply(schubDecomp, J -> sub(J,Q));
     }
@@ -630,14 +630,14 @@ isASMIdeal = method()
 isASMIdeal Ideal := Boolean => (I) -> (
     ASMcheck := true;
     schubDecomp := schubDecompose I;
-    primeComps := schubDecomp / schubDetIdeal;
+    primeComps := schubDecomp / schubertDeterminantalIdeal;
     Q := ring primeComps_0;
     intersectCheck := intersect(apply(primeComps, J-> sub(J,Q)));
     if (ASMcheck = (intersectCheck == sub(I,Q))) then {
         permMatrices := (schubDecomp / permToMatrix);
         rkTable := entrywiseMaxRankTable permMatrices;
         A := rankTableToASM matrix rkTable;
-        ASMIdeal := schubDetIdeal matrix A;
+        ASMIdeal := schubertDeterminantalIdeal matrix A;
 --	varHash := hashTable(apply((ring ASMIdeal)_*, i-> (last baseName i)=> i));
 --	phi := map(ring ASMIdeal, ring I, apply((ring I)_*, i-> varHash#(last baseName i)));
         ASMcheck = (ASMIdeal == sub(I, ring ASMIdeal));
@@ -804,7 +804,7 @@ rankTableFromMatrix Matrix := Matrix => A -> (
 schubIntersect = method()
 schubIntersect List := Ideal => (L) -> (
     if (#L == 0) then error("Please enter a nonempty list.");
-    ll := L / schubDetIdeal;
+    ll := L / schubertDeterminantalIdeal;
     numVars := apply(ll, i-> #((ring i)_*));
     Q := ring ll_(position(numVars, i-> i == max numVars));
     intersect apply(ll, J -> sub(J, Q))
@@ -822,7 +822,7 @@ schubAdd List := Ideal => (L) -> (
     n := max(apply(listASMs, i-> numrows i));
     paddedASMs := apply(listASMs, A -> padASM(A, n - (numrows A)));
     rankM := entrywiseMinRankTable(paddedASMs);
-    sumI := schubDetIdeal rankTableToASM(rankM);
+    sumI := schubertDeterminantalIdeal rankTableToASM(rankM);
     sumI.cache.rankTable = rankM;
     sumI
 );
