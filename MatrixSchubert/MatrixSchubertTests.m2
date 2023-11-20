@@ -420,9 +420,9 @@ assert(schubertDecompose schubertDeterminantalIdeal I == {{1, 2, 3, 4}})
 --permSetOfASM--
 assert(permSetOfASM I == {{1, 2, 3, 4}})
 
---isIntersectionSchubIdeals--
-assert(isIntersectionSchubIdeals schubertDeterminantalIdeal w == true );
-assert(isIntersectionSchubIdeals schubertDeterminantalIdeal I == true );
+--isIntersectionOfSchubertDeterminantalIdeals--
+assert(isIntersectionOfSchubertDeterminantalIdeals schubertDeterminantalIdeal w == true );
+assert(isIntersectionOfSchubertDeterminantalIdeals schubertDeterminantalIdeal I == true );
 
 --isASMIdeal--
 assert(isASMIdeal schubertDeterminantalIdeal w == true );
@@ -891,14 +891,14 @@ assert(permSetOfASM I == {{3, 5, 1, 2, 4}, {5, 2, 3, 1, 4}, {4, 2, 5, 1, 3}, {3,
 ///
 
 TEST ///
---isIntersectionSchubIdeals--
+--isIntersectionOfSchubertDeterminantalIdeals--
 w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-assert(isIntersectionSchubIdeals schubertDeterminantalIdeal w == true );
-assert(isIntersectionSchubIdeals schubertDeterminantalIdeal I == true );
-assert(isIntersectionSchubIdeals schubertDeterminantalIdeal PI == true);
+assert(isIntersectionOfSchubertDeterminantalIdeals schubertDeterminantalIdeal w == true );
+assert(isIntersectionOfSchubertDeterminantalIdeals schubertDeterminantalIdeal I == true );
+assert(isIntersectionOfSchubertDeterminantalIdeals schubertDeterminantalIdeal PI == true);
 ///
 
 TEST ///

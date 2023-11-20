@@ -962,12 +962,12 @@ doc ///
 
 doc ///
     Key
-        isIntersectionSchubIdeals
-        (isIntersectionSchubIdeals, Ideal)
+        isIntersectionOfSchubertDeterminantalIdeals
+        (isIntersectionOfSchubertDeterminantalIdeals, Ideal)
     Headline
         whether an ideal is the intersection of Schubert determinantal ideals
     Usage
-        isIntersectionSchubIdeals I
+        isIntersectionOfSchubertDeterminantalIdeals I
     Inputs
         I:Ideal
     Outputs
@@ -990,7 +990,7 @@ doc ///
 	Example
 	    A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
 	    J = schubertDeterminantalIdeal A;
-	    isIntersectionSchubIdeals J
+	    isIntersectionOfSchubertDeterminantalIdeals J
 ///
 
 doc ///

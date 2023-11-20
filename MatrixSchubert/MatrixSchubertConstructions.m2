@@ -606,8 +606,8 @@ permSetOfASM Matrix := List => A -> (
 --TODO: docs and tests
 --TODO: input validation/type checking
 -------------------------------------------
-isIntersectionSchubIdeals = method()
-isIntersectionSchubIdeals Ideal := Boolean => I -> (
+isIntersectionOfSchubertDeterminantalIdeals = method()
+isIntersectionOfSchubertDeterminantalIdeals Ideal := Boolean => I -> (
     isIntersection := true;
     if (I == radical(I)) then {
         schubDecomp := apply(schubertDecompose I, i-> schubertDeterminantalIdeal(i, CoefficientRing => coefficientRing(ring I)));

@@ -60,8 +60,8 @@ export{
     "schubDecompose" => "schubertDecompose",
     "permSetOfASM",                  --documented ++
     "permutationSetofASM" => "permSetOfASM",
-    "isIntersectionSchubIdeals",    --documented ++
-    "isIntersectionOfSchubertDeterminantalIdeals" => "isIntersectionSchubIdeals",
+    "isIntersectionOfSchubertDeterminantalIdeals",    --documented ++
+    "isIntersectionSchubIdeals" => "isIntersectionOfSchubertDeterminantalIdeals",
     "isASMIdeal",    	     	    --documented ++	 
     "isASM",    	            --documented ++	 
     "isASMUnion",    	     	    --documented ++
