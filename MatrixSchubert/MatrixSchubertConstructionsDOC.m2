@@ -119,7 +119,7 @@ doc ///
 	Example
 	    L = {{3,1,5,4,2},{2,5,3,4,1}} -- a list of 2 permutations
 	    schubAdd L
-	    schubIntersect L
+	    schubertIntersect L
 	Text
 	    Finally, this package contains functions for investigating homological invariants of matrix Schubert
 	    varieties efficiently through combinatorial algorithms produced in [PSW21].
@@ -139,7 +139,7 @@ doc ///
 		TO (schubertDeterminantalIdeal, List),
 		TO (fultonGens, List),
 		TO (subwordComplex, List),
-		TO (schubIntersect, List),
+		TO (schubertIntersect, List),
 		TO (schubAdd, List),
 		TO (schubReg, List),
 		TO (schubCodim, List)
@@ -214,7 +214,7 @@ doc ///
 	    L = {A, B} -- a list of 2 partial ASMs
 	    J = schubAdd L
 	    peek J.cache
-	    K = schubIntersect L
+	    K = schubertIntersect L
 	Text
 	    Although every ASM ideal is an intersection of Schubert determinantal ideals, many
 	    intersections of Schubert determinantal ideals are not ASM ideals.  The function
@@ -222,7 +222,7 @@ doc ///
 	    If it is, the ASM is stored in its cache table and is accessible via @TO getASM@.
 	Example
     	    isASMIdeal K
-	    K' = schubIntersect {{3, 1, 2}, {2, 3, 1}}
+	    K' = schubertIntersect {{3, 1, 2}, {2, 3, 1}}
 	    isASMIdeal K'
 	    getASM K'
 	Text
@@ -252,7 +252,7 @@ doc ///
 		TO (augmentedEssentialSet, Matrix),
 		TO (schubertDeterminantalIdeal, Matrix),
 		TO (fultonGens, Matrix),
-		TO (schubIntersect, List),
+		TO (schubertIntersect, List),
 		TO (schubAdd, List),
 		TO (schubReg, Matrix),
 		TO (schubCodim, Matrix),
@@ -1157,12 +1157,12 @@ doc ///
 
 doc /// 
     Key
-        schubIntersect
-        (schubIntersect, List)
+        schubertIntersect
+        (schubertIntersect, List)
     Headline
         compute the intersection of ASM ideals
     Usage 
-        schubIntersect L
+        schubertIntersect L
     Inputs 
         L:List 
             of ASMs or permutations in 1-line notation
@@ -1172,8 +1172,8 @@ doc ///
         Text
             Given a list of ASMs or permutations in 1-line notation, compute the intersection of the corresponding Schubert determinantal ideals.
         Example
-            schubIntersect {{3,2,1,4}, {2,1,4,3}}
-            schubIntersect {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}}
+            schubertIntersect {{3,2,1,4}, {2,1,4,3}}
+            schubertIntersect {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}}
 ///
 
 doc ///

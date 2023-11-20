@@ -801,8 +801,8 @@ rankTableFromMatrix Matrix := Matrix => A -> (
 -- OUTPUT: the intersection of the ideals 
 -- TODO: tests and documentation
 --------------------------------------------
-schubIntersect = method()
-schubIntersect List := Ideal => (L) -> (
+schubertIntersect = method()
+schubertIntersect List := Ideal => (L) -> (
     if (#L == 0) then error("Please enter a nonempty list.");
     ll := L / schubertDeterminantalIdeal;
     numVars := apply(ll, i-> #((ring i)_*));

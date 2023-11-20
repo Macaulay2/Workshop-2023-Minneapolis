@@ -69,8 +69,8 @@ export{
     "isMinRankTable",	     	    --documented ++
     "rankTableToASM",	     	    --documented ++
     "rankTableFromMatrix",    	    --documented ++
-    "schubIntersect",	     	    --documented ++
-    "schubertIntersect" => "schubIntersect",
+    "schubertIntersect",	     	    --documented ++
+    "schubIntersect" => "schubertIntersect",
     "schubAdd",	       	       	    --documented ++
      "schubertAdd" => "schubAdd",
    

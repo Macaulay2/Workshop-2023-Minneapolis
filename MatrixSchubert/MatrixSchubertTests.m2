@@ -205,8 +205,8 @@ assert(rankTableFromMatrix(Am) == A)
 ///
 
 TEST ///
---schubIntersect
-I=schubIntersect {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}};
+--schubertIntersect
+I=schubertIntersect {matrix {{0,1,0},{1,-1,1},{0,1,0}}, {3,2,1}};
 R=ring I;
 assert(I==ideal(R_0,R_1*R_3));
 ///
