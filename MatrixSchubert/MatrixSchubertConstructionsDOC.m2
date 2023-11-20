@@ -1137,7 +1137,7 @@ doc ///
         rankTableFromMatrix
         (rankTableFromMatrix, Matrix)
     Headline
-        to find the minimal rank table from an arbitrary square integer matrix
+        returns the minimal rank table from an arbitrary integer matrix
     Usage
         rankTableFromMatrix M
     Inputs
@@ -1146,13 +1146,15 @@ doc ///
     	:Matrix
     Description
         Text
-            Given a square integer matrix (viewed as rank conditions to be imposed on a generic matrix), returns the unique integer matrix that both defines the same ideal of minors and also is the minimal rank table of some ASM.  See Section 1 and Equation (21) of 
+            Given an integer matrix (viewed as rank conditions to be imposed on a generic matrix), returns the unique integer matrix that both defines the same ideal of minors and also is the minimal rank table of some ASM.  See Section 1 and Equation (21) of 
 	    
 	    @UL {{"[Wei]: Weigandt, Prism tableaux for alternating sign matrix varieties (see ", arXiv "1708.07236", ")."},}@
 	    
         Example
             M = matrix {{1,0,0},{0,23,24},{23,24,25}};
             rankTableFromMatrix M
+	    N = matrix{{0,3,4},{1,1,1}};
+	    rankTableFromMatrix N
 ///   
 
 doc /// 
