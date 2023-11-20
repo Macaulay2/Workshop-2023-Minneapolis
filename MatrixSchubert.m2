@@ -118,11 +118,11 @@ export{
 --MatrixSchubertInvariants.m2    
     "schubertRegularity",    	                --documented ++
     "schubReg" => "schubertRegularity",
-    "schubCodim",           	    --documented ++
-    "schubertCodim" => "schubCodim",
+    "schubertCodim",           	    --documented ++
+    "schubCodim" => "schubertCodim",
     "KPolynomialASM",	     	    -- CHECK DOC
-    "isSchubCM",    	       	    --documented ++
-    "isSchubertCM" => "isSchubCM",
+    "isSchubertCM",    	       	    --documented ++
+    "isSchubCM" => "isSchubertCM",
 
 --ASM_Lists.m2
     "ASMFullList",    	      	    --ADD EX TO DOC

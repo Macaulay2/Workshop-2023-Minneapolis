@@ -142,7 +142,7 @@ doc ///
 		TO (schubertIntersect, List),
 		TO (schubertAdd, List),
 		TO (schubertRegularity, List),
-		TO (schubCodim, List)
+		TO (schubertCodim, List)
 		}@
 ///
 
@@ -255,7 +255,7 @@ doc ///
 		TO (schubertIntersect, List),
 		TO (schubertAdd, List),
 		TO (schubertRegularity, Matrix),
-		TO (schubCodim, Matrix),
+		TO (schubertCodim, Matrix),
 		TO (permSetOfASM, Matrix),
 		TO (toOneLineNotation, Matrix)
 		}@

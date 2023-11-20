@@ -28,12 +28,12 @@ schubertRegularity Matrix := ZZ => A -> (
     return regularity(I) -1;
 );
 
-schubCodim = method() 
-schubCodim Matrix := ZZ => A -> (
+schubertCodim = method() 
+schubertCodim Matrix := ZZ => A -> (
     if not (isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     codim antiDiagInit A
 )
-schubCodim List := ZZ => w -> (
+schubertCodim List := ZZ => w -> (
     if not (isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     permLength w
 )
@@ -61,14 +61,14 @@ KPolynomialASM Matrix := ZZ => A -> (
 --INPUT: a list w corresponding to a permutation in 1-line notation or an ASM ideal
 --OUTPUT: whether or not R/I_A is CM
 ---------------------------------------
-isSchubCM = method()
-isSchubCM Matrix := Boolean => A -> (
+isSchubertCM = method()
+isSchubertCM Matrix := Boolean => A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     R:=ring(antiDiagInit A);
     codim(antiDiagInit A)==pdim(comodule (antiDiagInit A))
     );
 
-isSchubCM List := Boolean => w -> (
+isSchubertCM List := Boolean => w -> (
     if not(isPerm w) then error("The input must be a partial alternating sign matrix or a permutation.");
     print "We know from a theorem of Fulton that the quotient by any Schubert determinantal ideal is actually Cohen--Macaulay!";
     true

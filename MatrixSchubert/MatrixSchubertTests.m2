@@ -262,14 +262,14 @@ assert(permLength {8,7,6,5,4,3,2,1} == 28)
 
 
 TEST ///
--- schubCodim
+-- schubertCodim
 L = {
     {1},
     {2,1},
     matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}},
     matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}}
 }
-assert all (L, i -> schubCodim i == codim schubertDeterminantalIdeal i)
+assert all (L, i -> schubertCodim i == codim schubertDeterminantalIdeal i)
 ///
 
 TEST ///
@@ -968,10 +968,10 @@ assert(toOneLineNotation getASM schubertDeterminantalIdeal PI == {});
 
 
 TEST ///
----isSchubCM
+---isSchubertCM
 --assert(isSchubCM({1,3,2}) == true)
-assert(isSchubCM(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}) == true)
-assert(isSchubCM(matrix{{0, 0, 1, 0}, {1, 0, -1, 1}, {0, 1, 0, 0}, {0, 0, 1, 0}}) == false)
+assert(isSchubertCM(matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}) == true)
+assert(isSchubertCM(matrix{{0, 0, 1, 0}, {1, 0, -1, 1}, {0, 1, 0, 0}, {0, 0, 1, 0}}) == false)
 ///
 
 TEST ///

@@ -36,14 +36,14 @@ doc ///
 
 doc ///
     Key
-        schubCodim
-        (schubCodim, List)
-        (schubCodim, Matrix)
+        schubertCodim
+        (schubertCodim, List)
+        (schubertCodim, Matrix)
     Headline
         compute the codimension (i.e., height) of a Schubert determinantal ideal or ASM ideal
     Usage
-        schubCodim w
-        schubCodim A
+        schubertCodim w
+        schubertCodim A
     Inputs
         w:List
 	        or {\tt A} is a @TO Matrix@
@@ -51,21 +51,21 @@ doc ///
         Text
             Given a partial alternating sign matrix or a permutation in 1-line notation, outputs the codimension of the corresponding alternating sign matrix ideal or Schubert determinantal ideal.
         Example
-            schubCodim matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}
-            schubCodim {1,3,2}
+            schubertCodim matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}
+            schubertCodim {1,3,2}
 ///
 
 
 doc ///
     Key
-    	isSchubCM
-    	(isSchubCM, Matrix)
-    	(isSchubCM, List)
+    	isSchubertCM
+    	(isSchubertCM, Matrix)
+    	(isSchubertCM, List)
     Headline
     	whether an ASM variety is Cohen-Macaulay
     Usage
-    	isSchubCM A
-    	isSchubCM w
+    	isSchubertCM A
+    	isSchubertCM w
     Inputs
 	A:Matrix
 		or {\tt w} is a @TO List@
@@ -80,9 +80,9 @@ doc ///
 	    of Fulton says $R/I_w$ is always Cohen-Macaulay.
         Example
             A = matrix{{0,0,0,1},{0,1,0,0},{1,-1,1,0},{0,1,0,0}}
-	    isSchubCM A
+	    isSchubertCM A
 	    w = {1,3,2}
-            isSchubCM w
+            isSchubertCM w
 ///
 
 doc ///
