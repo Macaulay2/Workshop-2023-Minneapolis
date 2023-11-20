@@ -287,9 +287,9 @@ assert(toExternalString grothendieckPolynomial({1,2,3,4}) == "1")
 ///
 
 TEST ///
---schubPoly
-assert(toExternalString schubPoly({2,1,5,4,3}) == "x_1^3*x_2+x_1^2*x_2^2+x_1^3*x_3+2*x_1^2*x_2*x_3+x_1*x_2^2*x_3+x_1^2*x_3^2+x_1*x_2*x_3^2+x_1^3*x_4+x_1^2*x_2*x_4+x_1*x_2^2*x_4+x_1^2*x_3*x_4+x_1*x_2*x_3*x_4+x_1*x_3^2*x_4")
-assert(toExternalString schubPoly({1,2,3,4}) == "1")
+--schubertPolynomial
+assert(toExternalString schubertPolynomial({2,1,5,4,3}) == "x_1^3*x_2+x_1^2*x_2^2+x_1^3*x_3+2*x_1^2*x_2*x_3+x_1*x_2^2*x_3+x_1^2*x_3^2+x_1*x_2*x_3^2+x_1^3*x_4+x_1^2*x_2*x_4+x_1*x_2^2*x_4+x_1^2*x_3*x_4+x_1*x_2*x_3*x_4+x_1*x_3^2*x_4")
+assert(toExternalString schubertPolynomial({1,2,3,4}) == "1")
 ///
 
 TEST ///

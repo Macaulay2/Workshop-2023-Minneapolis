@@ -469,13 +469,13 @@ doc ///
 
 doc ///
     Key 
-        schubertPoly
-        (schubertPoly, List)
-	[schubertPoly, Algorithm]
+        schubertPolynomial
+        (schubertPolynomial, List)
+	[schubertPolynomial, Algorithm]
     Headline
         computes the Schubert polynomial of a permutation 
     Usage
-        schubertPoly w
+        schubertPolynomial w
     Inputs
         w:List
 	Algorithm => String
@@ -487,8 +487,8 @@ doc ///
 	    
         Example 
 	    w = {2,1,5,4,3}
-	    schubertPoly w
-	    schubertPoly (w,Algorithm=>"Transition")
+	    schubertPolynomial w
+	    schubertPolynomial (w,Algorithm=>"Transition")
 ///
 
 doc ///

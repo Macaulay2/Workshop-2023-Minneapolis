@@ -102,9 +102,9 @@ export{
     "rajchgotIndex" => "rajIndex",
     "grothendieckPolynomial",	       	    -- CHECK DOC
     "grothendieckPoly" => "grothendieckPolynomial",
-    "schubertPoly",    	       	    -- CHECK DOC
-    "schubertPolynomial" => "schubertPoly",
-    "schubPoly" => "schubertPoly",
+    "schubertPolynomial",    	       	    -- CHECK DOC
+    "schubertPoly" => "schubertPolynomial",
+    "schubPoly" => "schubertPolynomial",
     "doubleSchubertPoly",           -- CHECK DOC
     "doubleSchubertPolynomial" => "doubleSchubertPoly",
     "doubleSchubPoly" => "doubleSchubertPoly",

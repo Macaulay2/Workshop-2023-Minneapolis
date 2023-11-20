@@ -396,8 +396,8 @@ schubertPolyHelper(List, PolynomialRing) := opts -> (w, Q) -> (
         sum(toList(apply(us, u -> schubertPolyHelper(u, Q, Double=>isDouble)))) + (Q_r - Q_(n-1+v_r)) * schubertPolyHelper(v, Q, Double=>isDouble)
 )
 
-schubertPoly = method(Options=>{Algorithm=>"DividedDifference"})
-schubertPoly(List) := opts-> (w) -> (
+schubertPolynomial = method(Options=>{Algorithm=>"DividedDifference"})
+schubertPolynomial(List) := opts-> (w) -> (
     
     n := #w;
     x := local x;
