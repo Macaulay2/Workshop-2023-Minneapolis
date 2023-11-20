@@ -116,8 +116,8 @@ export{
     "MonotoneTriangleToASM",        --documented ++
 
 --MatrixSchubertInvariants.m2    
-    "schubReg",    	                --documented ++
-    "schubertRegularity" => "schubReg",
+    "schubertRegularity",    	                --documented ++
+    "schubReg" => "schubertRegularity",
     "schubCodim",           	    --documented ++
     "schubertCodim" => "schubCodim",
     "KPolynomialASM",	     	    -- CHECK DOC

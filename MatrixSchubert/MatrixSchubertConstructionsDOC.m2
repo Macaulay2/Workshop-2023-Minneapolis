@@ -124,7 +124,7 @@ doc ///
 	    Finally, this package contains functions for investigating homological invariants of matrix Schubert
 	    varieties efficiently through combinatorial algorithms produced in [PSW21].
 	Example
-	    time schubReg p
+	    time schubertRegularity p
 	    time regularity comodule I 
 	Text
 	    @SUBSECTION "Functions for investigating matrix Schubert varieties"@
@@ -140,8 +140,8 @@ doc ///
 		TO (fultonGens, List),
 		TO (subwordComplex, List),
 		TO (schubertIntersect, List),
-		TO (schubAdd, List),
-		TO (schubReg, List),
+		TO (schubertAdd, List),
+		TO (schubertRegularity, List),
 		TO (schubCodim, List)
 		}@
 ///
@@ -207,12 +207,12 @@ doc ///
 	Text
 	    Given a list of partial ASMs, this package also contains functions for intersecting and adding
 	    the ASM ideals associated to the list of ASMs or partial ASMs. Every sum of ASM ideals (equivalently, 
-	    of ideals defined by partial ASMs) is again an ASM ideal.  The function @TO schubAdd@ 
+	    of ideals defined by partial ASMs) is again an ASM ideal.  The function @TO schubertAdd@ 
 	    automatically stores the ASM associated to this new ideal in its cache table.
 	Example
 	    B = matrix{{0,1,0,0,0},{0,0,0,1,0},{1,-1,1,0,0},{0,0,0,0,1},{0,1,0,0,0}}
 	    L = {A, B} -- a list of 2 partial ASMs
-	    J = schubAdd L
+	    J = schubertAdd L
 	    peek J.cache
 	    K = schubertIntersect L
 	Text
@@ -232,7 +232,7 @@ doc ///
 	    (which encode regularity, depth, and projective dimension) of ASM ideals coincide 
 	    with those of their antidiagonal initical ideals by [CV20].
 	Example
-	    time schubReg B
+	    time schubertRegularity B
 	    time regularity comodule schubertDeterminantalIdeal B
 	Text
 	    @SUBSECTION "Functions for investigating ASM varieties"@
@@ -254,7 +254,7 @@ doc ///
 		TO (fultonGens, Matrix),
 		TO (schubertIntersect, List),
 		TO (schubertAdd, List),
-		TO (schubReg, Matrix),
+		TO (schubertRegularity, Matrix),
 		TO (schubCodim, Matrix),
 		TO (permSetOfASM, Matrix),
 		TO (toOneLineNotation, Matrix)

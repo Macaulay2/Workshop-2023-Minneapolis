@@ -313,7 +313,7 @@ assert(rajIndex({1, 2, 3, 4, 5, 6, 7, 8}) == 0);
 ///
 
 TEST ///
---schubReg
+--schubertRegularity
 L = {
     {2,9,3,4,1,7,5,6,8}, -- example 1.2 in PSW
     {2,1},
@@ -323,7 +323,7 @@ L = {
 }
 expected = {5,0,1,4,2}
 
-assert all (#L, i -> schubReg L#i == expected#i)
+assert all (#L, i -> schubertRegularity L#i == expected#i)
 ///
 
 TEST ///

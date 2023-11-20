@@ -1,14 +1,14 @@
 
 doc ///
     Key
-        schubReg
-        (schubReg, List)
-	(schubReg, Matrix)
+        schubertRegularity
+        (schubertRegularity, List)
+	(schubertRegularity, Matrix)
     Headline
         compute the Castelnuovo-Mumford regularity of the quotient by a Schubert determinantal ideal or ASM ideal
     Usage
-        schubReg w
-        schubReg A
+        schubertRegularity w
+        schubertRegularity A
     Inputs
         w:List
             or {\tt A} is a @TO Matrix@
