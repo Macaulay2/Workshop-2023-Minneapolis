@@ -411,11 +411,11 @@ assert(entrywiseMinRankTable {I} == matrix{{1, 1, 1, 1}, {1, 2, 2, 2}, {1, 2, 3,
 --entrywiseMaxRankTable--
 assert(entrywiseMaxRankTable {I} == matrix{{1, 1, 1, 1}, {1, 2, 2, 2}, {1, 2, 3, 3}, {1, 2, 3, 4}})
 
---schubDecompose--
+--schubertDecompose--
 testIdealPerm = schubertDeterminantalIdeal(w);
 testIdealMat = schubertDeterminantalIdeal(I);
-assert(schubDecompose schubertDeterminantalIdeal w == {{1, 2, 3, 4}})
-assert(schubDecompose schubertDeterminantalIdeal I == {{1, 2, 3, 4}})
+assert(schubertDecompose schubertDeterminantalIdeal w == {{1, 2, 3, 4}})
+assert(schubertDecompose schubertDeterminantalIdeal I == {{1, 2, 3, 4}})
 
 --permSetOfASM--
 assert(permSetOfASM I == {{1, 2, 3, 4}})
@@ -871,14 +871,14 @@ assert(toExternalString(F) == "{z_(1,4)*z_(2,3)*z_(2,4)*z_(3,2)*z_(3,3)*z_(3,4)*
 
 
 TEST ///
---schubDecompose--
+--schubertDecompose--
 w = {2,1,6,3,5,4};
 I = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,1},{0,0,0,1,0}};
 PI = matrix{{0,0,1,0,0},{0,1,-1,1,0},{1,-1,1,0,0},{0,1,0,-1,0},{0,0,0,1,0}};
 
-assert(flatten schubDecompose schubertDeterminantalIdeal w == w)
-assert(schubDecompose schubertDeterminantalIdeal I == {{3, 5, 1, 2, 4}, {5, 2, 3, 1, 4}, {4, 2, 5, 1, 3}, {3, 4, 1, 5, 2}, {4, 2, 3, 5, 1}})
-assert(schubDecompose schubertDeterminantalIdeal PI == {{3, 6, 1, 2, 4, 5}, {6, 2, 3, 1, 4, 5}, {4, 2, 6, 1, 3, 5}, {3, 4, 1, 6, 2, 5}, {4, 2, 3, 6, 1, 5}})
+assert(flatten schubertDecompose schubertDeterminantalIdeal w == w)
+assert(schubertDecompose schubertDeterminantalIdeal I == {{3, 5, 1, 2, 4}, {5, 2, 3, 1, 4}, {4, 2, 5, 1, 3}, {3, 4, 1, 5, 2}, {4, 2, 3, 5, 1}})
+assert(schubertDecompose schubertDeterminantalIdeal PI == {{3, 6, 1, 2, 4, 5}, {6, 2, 3, 1, 4, 5}, {4, 2, 6, 1, 3, 5}, {3, 4, 1, 6, 2, 5}, {4, 2, 3, 6, 1, 5}})
 ///
 
 TEST ///

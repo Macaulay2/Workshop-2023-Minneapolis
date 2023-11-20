@@ -56,8 +56,8 @@ export{
     "subwordComplex",	     	    --documented ++
     "entrywiseMinRankTable",	    --documented ++
     "entrywiseMaxRankTable",	    --documented ++
-    "schubDecompose",	        --documented ++
-    "schubertDecompose" => "schubDecompose",
+    "schubertDecompose",	        --documented ++
+    "schubDecompose" => "schubertDecompose",
     "permSetOfASM",                  --documented ++
     "permutationSetofASM" => "permSetOfASM",
     "isIntersectionSchubIdeals",    --documented ++
