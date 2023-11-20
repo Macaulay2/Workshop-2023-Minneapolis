@@ -12,12 +12,12 @@
 --     return regularity(I) -1;   
 -- )
 
-schubReg = method()
-schubReg List := ZZ => w -> (
+schubertRegularity = method()
+schubertRegularity List := ZZ => w -> (
      if not (isPerm w) then error ("The input must be a partial alternating sign matrix or a permutation.");
      return rajIndex(w) - permLength(w);
 )
-schubReg Matrix := ZZ => A -> (
+schubertRegularity Matrix := ZZ => A -> (
     if not(isPartialASM A) then error("The input must be a partial alternating sign matrix or a permutation.");
     --Check if Matrix is a partial permutation matrix, and if it is, use rajindex formula.
     w := toOneLineNotation partialASMToASM A;
