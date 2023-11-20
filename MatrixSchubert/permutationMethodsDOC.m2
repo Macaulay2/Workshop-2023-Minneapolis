@@ -444,14 +444,14 @@ doc ///
 
 doc ///
     Key 
-        grothendieckPoly
-        (grothendieckPoly, List)
-	[grothendieckPoly, Algorithm]
+        grothendieckPolynomial
+        (grothendieckPolynomial, List)
+	[grothendieckPolynomial, Algorithm]
 	Algorithm
     Headline
         computes the Grothendieck polynomial of a permutation 
     Usage
-        grothendieckPoly w
+        grothendieckPolynomial w
     Inputs
         w:List
 	Algorithm => String
@@ -462,8 +462,8 @@ doc ///
 	    
 	Example
 	    w = {2,1,4,3}
-	    time grothendieckPoly w
-	    time grothendieckPoly (w,Algorithm=>"PipeDream")
+	    time grothendieckPolynomial w
+	    time grothendieckPolynomial (w,Algorithm=>"PipeDream")
 	    
 ///
 

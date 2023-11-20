@@ -281,9 +281,9 @@ assert(toExternalString KPolynomialASM matrix {{0, 0, 1, 0, 0}, {0, 1, -1, 1, 0}
 ///
 
 TEST ///
---grothendieckPoly
-assert(toExternalString grothendieckPoly({2,1,4,3}) == "x_1^2*x_2*x_3-x_1^2*x_2-x_1^2*x_3-x_1*x_2*x_3+x_1^2+x_1*x_2+x_1*x_3")
-assert(toExternalString grothendieckPoly({1,2,3,4}) == "1")
+--grothendieckPolynomial
+assert(toExternalString grothendieckPolynomial({2,1,4,3}) == "x_1^2*x_2*x_3-x_1^2*x_2-x_1^2*x_3-x_1*x_2*x_3+x_1^2+x_1*x_2+x_1*x_3")
+assert(toExternalString grothendieckPolynomial({1,2,3,4}) == "1")
 ///
 
 TEST ///

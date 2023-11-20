@@ -100,8 +100,8 @@ export{
     "rajCode" => "rajcode",
     "rajIndex",        	       	    --documented ++
     "rajchgotIndex" => "rajIndex",
-    "grothendieckPoly",	       	    -- CHECK DOC
-    "grothendiechPolynomial" => "grothendieckPoly",
+    "grothendieckPolynomial",	       	    -- CHECK DOC
+    "grothendieckPoly" => "grothendieckPolynomial",
     "schubertPoly",    	       	    -- CHECK DOC
     "schubertPolynomial" => "schubertPoly",
     "schubPoly" => "schubertPoly",

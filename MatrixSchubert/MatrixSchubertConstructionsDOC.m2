@@ -412,7 +412,7 @@ doc ///
 	    u = {3,1,4,2}
 	    schubertPoly u
 	    doubleSchubertPoly u
-	    grothendieckPoly u
+	    grothendieckPolynomial u
 	Text
 	    Moreover, this package contains functionality for checking whether
 	    a permutation avoids a set of patterns.
@@ -453,7 +453,7 @@ doc ///
 		TO (isCDG, List),
 		TO (rajcode, List),
 		TO (rajIndex, List),
-		TO (grothendieckPoly,List),
+		TO (grothendieckPolynomial,List),
 		TO (schubertPoly, List),
 		TO (doubleSchubertPoly, List),
 		TO (pipeDreams, List),

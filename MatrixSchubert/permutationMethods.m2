@@ -348,8 +348,8 @@ rajIndex List := ZZ => (w) -> (
 --INPUT: a list w corresponding to a permutation in 1-line notation
 --OUTPUT: single Grothendieck polynomials
 ----------------------------
-grothendieckPoly = method(Options=>{Algorithm=>"DividedDifference"})
-grothendieckPoly(List) := opts -> w -> (
+grothendieckPolynomial = method(Options=>{Algorithm=>"DividedDifference"})
+grothendieckPolynomial(List) := opts -> w -> (
     if not(isPerm w) then error("The input must be a permutation in one-line notation.");
 -*    if opts.Algorithm == "Degree" then (
         I := schubertDeterminantalIdeal w;
