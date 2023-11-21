@@ -94,7 +94,7 @@ doc ///
         w:List
     Description
         Text
-            Given permutation in 1-line notation, lists the locatio of its descents, i.e., the least $i$ so that $w_{i+1}<w_i$.
+            Given permutation in 1-line notation, lists the location of its descents, i.e., the least $i$ so that $w_{i+1}<w_i$.
         Example
             w = {7,2,5,8,1,3,6,4}
             descentSet w
