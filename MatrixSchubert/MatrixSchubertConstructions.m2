@@ -566,7 +566,7 @@ schubertDecompose Ideal := List => I -> (
 	maxIdx = 2*(numcols M) - entrySum;
 	);
     if not(I.cache.?ASM) then (
-	maxIdx = max((flatten entries vars ring I) / indexOfVariable // max);
+	maxIdx = max((ring I)_* / indexOfVariable  / toList / sum);
 	);
     primeDecomp := decompose ideal leadTerm I;
     -- varWeights := (monoid ring I).Options.MonomialOrder#1#1;
@@ -574,7 +574,10 @@ schubertDecompose Ideal := List => I -> (
     for primeComp in primeDecomp do {
         mons := sort(primeComp_*, mon -> monomialRank(mon, maxIdx));
         perms := apply(mons / indexOfVariable, perm -> toAntiDiagTrans(perm, maxIdx));
-        cycleDecomp = append(cycleDecomp, fold(composePerms, perms));
+        fullPerm := fold(composePerms, perms);
+        trimmedPermIdx := select(#fullPerm, i -> fullPerm_{i..#fullPerm-1} != toList(i+1..#fullPerm));        
+        trimmedPerm := fullPerm_trimmedPermIdx;
+        cycleDecomp = append(cycleDecomp, trimmedPerm);
     };
     unique cycleDecomp
 )
