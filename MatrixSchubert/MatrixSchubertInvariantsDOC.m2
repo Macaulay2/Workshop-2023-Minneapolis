@@ -28,9 +28,9 @@ doc ///
 	    
         Example
             w = {2,3,5,1,4}
-            schubReg w
+            schubertRegularity w
             A = matrix{{0,0,1,0,0},{1,0,0,0,0},{0,1,-1,1,0},{0,0,0,0,1},{0,0,1,0,0}};
-            schubReg A
+            schubertRegularity A
 ///
 
 

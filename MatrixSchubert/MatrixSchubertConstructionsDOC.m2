@@ -118,7 +118,7 @@ doc ///
 	    the Schubert determinantal ideals associated to the list of permutations.
 	Example
 	    L = {{3,1,5,4,2},{2,5,3,4,1}} -- a list of 2 permutations
-	    schubAdd L
+	    schubertAdd L
 	    schubertIntersect L
 	Text
 	    Finally, this package contains functions for investigating homological invariants of matrix Schubert
