@@ -42,6 +42,8 @@ export{
     "isPartialASM",    	       	    --documented ++
     "partialASMToASM",	      	    --documented ++
     "antiDiagInit",    	       	    --documented ++
+    "antidiagInit" => "antiDiagInit",
+    "antidiagonalInitialIdeal" => "antiDiagInit",
     "rankTable",    	     	    --documented ++  
     "rotheDiagram",    	       	    --documented ++  
     "augmentedRotheDiagram",	    --documented ++
