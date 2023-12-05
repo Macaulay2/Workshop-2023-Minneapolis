@@ -1,8 +1,9 @@
 newPackage(
     "MatrixSchubert",
     AuxiliaryFiles => true,
-    Version => "0.1", 
-    Date => "",
+    Version => "1.0", 
+    Date => "November 30, 2023",
+    Keywords => {"Combinatorics", "Commutative Algebra"},
     Authors => {
         {Name => "Ayah Almousa", 
             Email => "almou007@umn.edu", 
@@ -86,8 +87,8 @@ export{
     "descentSet",    	     	    --documented ++
     "permLength",    	     	    --documented ++
      "permutationLength" => "permLength",
-    "inverseOf",             	    --documented (check)
-    "longestPerm",    	      	    --documented (check)
+    "inverseOf",             	    --documented ++
+    "longestPerm",    	      	    --documented ++
      "longestPermutation" => "longestPerm",
     "toOneLineNotation",    	    --documented ++
     "composePerms",    	       	    --documented ++
@@ -102,36 +103,36 @@ export{
     "rajCode" => "rajcode",
     "rajIndex",        	       	    --documented ++
     "rajchgotIndex" => "rajIndex",
-    "grothendieckPolynomial",	       	    -- CHECK DOC
+    "grothendieckPolynomial",	       	    -- documented ++
     "grothendieckPoly" => "grothendieckPolynomial",
-    "schubertPolynomial",    	       	    -- CHECK DOC
+    "schubertPolynomial",    	       	    -- documented ++
     "schubertPoly" => "schubertPolynomial",
     "schubPoly" => "schubertPolynomial",
-    "doubleSchubertPolynomial",           -- CHECK DOC
+    "doubleSchubertPolynomial",           -- documented ++
     "doubleSchubertPoly" => "doubleSchubertPolynomial",
     "doubleSchubPoly" => "doubleSchubertPolynomial",
-    "pipeDreams",    	     	    -- CHECK DOC
-    "pipeDreamsNonReduced",    	    -- CHECK DOC
-    "netPD",	    	    	    -- CHECK DOC
+    "pipeDreams",    	     	    -- documented ++
+    "pipeDreamsNonReduced",    	    -- documented ++
+    "netPD",	    	    	    -- documented ++
     "netPipeDream" => "netPD",
     "ASMToMonotoneTriangle",        --documented ++
-    "MonotoneTriangleToASM",        --documented ++
+    "monotoneTriangleToASM",        --documented ++
 
 --MatrixSchubertInvariants.m2    
     "schubertRegularity",    	                --documented ++
     "schubReg" => "schubertRegularity",
     "schubertCodim",           	    --documented ++
     "schubCodim" => "schubertCodim",
-    "KPolynomialASM",	     	    -- CHECK DOC
+    "KPolynomialASM",	     	    --documented ++
     "isSchubertCM",    	       	    --documented ++
     "isSchubCM" => "isSchubertCM",
 
 --ASM_Lists.m2
-    "ASMFullList",    	      	    --ADD EX TO DOC
-    "ASMRandomList",	    	    --ADD EX TO DOC
-    "cohenMacaulayASMsList",	    --ADD EX TO DOC
-    "nonCohenMacaulayASMsList",	    --ADD EX TO DOC
-    "initialIdealsList"    	        --ADD EX TO DOC
+    "ASMFullList",    	      	    --documented ++
+    "ASMRandomList",	    	    --documented ++
+    "cohenMacaulayASMsList",	    --documented ++
+    "nonCohenMacaulayASMsList",	    --documented ++
+    "initialIdealsList"    	    --documented ++
 }
 
 --keys used for Schubert/Grothendieck polynomials
@@ -173,8 +174,6 @@ end---------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 
-M = matrix{{0,3,4},{1,1,1}}
-rankTableFromMatrix M
 
 ------------------------------------
 --Development Section
