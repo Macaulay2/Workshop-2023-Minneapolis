@@ -76,14 +76,12 @@ internalValuation (Function, Thing, Thing) := (v, S, T) -> (
         }
     )
 
+-- Concerns with subrings and local rings, will need testing.
 Valuation Thing := (v,t) -> (
-    if (v#"domain" === null) then
-        --(ring t) === v#"domain" then
-        -- Concerns with comparing things like ZZ and QQ
-        -- Concerns with subrings and local rings, will need testing.
-        (v#"function" promote(t,v#"domain"))
-    else
-        (error "Input in wrong domain");
+    if (v#"domain" === null) or (ring t) === v#"domain" then
+        v#"function" t
+    else if (isMember(ring t, v#"domain".baseRings)) then
+        v#"function" promote(t, v#"domain")
     )
 
 --------------------------------------------------------------------------------
