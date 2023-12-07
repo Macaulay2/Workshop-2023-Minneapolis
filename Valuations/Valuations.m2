@@ -1,6 +1,6 @@
 newPackage("Valuations",
         Headline => "implementation of valuations for rings",
-        Version => "0.1",
+        Version => "1.0",
         Date => "June 5, 2023",
         Authors => {
             {Name => "Michael Burr", Email => "burr2@clemson.edu", HomePage => "https://cecas.clemson.edu/~burr2/"},
@@ -14,7 +14,6 @@ newPackage("Valuations",
         HomePage => "https://github.com/Macaulay2/Workshop-2023-Minneapolis/tree/valuations",
         Configuration => {},
         PackageExports => {"LocalRings", "SubalgebraBases", "InvariantRing"}
---      PackageExports => {"SubalgebraBases"}
         )
 
 -- importFrom_"LocalRings" {"LocalRing"}
@@ -78,10 +77,13 @@ internalValuation (Function, Thing, Thing) := (v, S, T) -> (
     )
 
 Valuation Thing := (v,t) -> (
-    if (v#"domain" === null) or (ring t) === v#"domain" then
-    -- Concerns with comparing things like ZZ and QQ
-    -- Concerns with subrings and local rings, will need testing.
-    v#"function" t
+    if (v#"domain" === null) then
+        --(ring t) === v#"domain" then
+        -- Concerns with comparing things like ZZ and QQ
+        -- Concerns with subrings and local rings, will need testing.
+        (v#"function" promote(t,v#"domain"))
+    else
+        (error "Input in wrong domain");
     )
 
 --------------------------------------------------------------------------------
@@ -191,7 +193,7 @@ leadTermValuation = method()
 leadTermValuation PolynomialRing := R -> (
     monOrder := (options R).MonomialOrder;
     orderedMod := orderedQQn(R);
-    valFunc := f -> if f == 0_R then infinity else monomialToOrderedQQVector(leadTerm f, orderedMod);
+    valFunc := f -> (print f;print describe f;if f == 0 then infinity else monomialToOrderedQQVector(leadTerm f, orderedMod));
     internalValuation(valFunc, R, orderedMod)
     )
 
@@ -429,11 +431,22 @@ doc ///
       Headline
       	  A package for constructing and using valuations.
       Description
-      	  Text
+        Text
 	      A valuation is a function $v:R\rightarrow G\cup\{\infty\}$ 
 	      where $R$ is a ring and $G$ is a linearly ordered group with
 	      the following properties: $v(ab)=v(a)+v(b)$, 
 	      $v(a+b)\geq\min\{v(a),v(b)\}$, and $v(a)=\infty$ iff $a=0$.
+          As implemented in @TT "Macaulay2"@, a valuation acts like @ofClass Function@,
+          perhaps with extra information.
+        Example
+          pval = padicValuation 3;
+          pval(54)
+          R = QQ[x,y];
+          leadval = leadTermValuation R;
+          leadval(x^3+3*x^3*y^2+2*y^4)
+          lowestval = lowestTermValuation R;
+          lowestval(x^3+3*x^3*y^2+2*y^4)
+          pval(0)
       ///
 
 doc ///
