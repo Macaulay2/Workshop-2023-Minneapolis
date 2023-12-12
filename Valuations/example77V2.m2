@@ -26,9 +26,19 @@ primeConesOfIdeal = I -> (
 -- given a set of rays of a 2D cone,
 -- get two interior points of the cone that span it (as a vector space)
 coneToMatrix = coneRays -> (
-    v1 := coneRays_0 + coneRays_1;
-    v2 := coneRays_0 + 2*coneRays_1;
-    transpose matrix {v1, v2}
+    independentConeRays := getMaxIndependent(coneRays);
+    coeffs := matrix for i from 1 to numcols independentConeRays list for j from 1 to numcols independentConeRays list if i == j then 2 else 1;
+    print(coeffs);
+    print(independentConeRays);
+    coeffs*(transpose independentConeRays)
+    )
+
+-- get a maximal set of independent columns of a matrix
+getMaxIndependent = M -> (
+    -- compute the pivot columns to obtain a maximal linearly independent subset of columns of M
+    R := reducedRowEchelonForm(sub(M, QQ));
+    P := for i from 1 to rank M list min (for j from 1 to numcols M list if R_(i-1,j-1) != 0 then j-1 else numcols M);
+    M_P
     )
 
 -- scale the rows of a list of matrices
