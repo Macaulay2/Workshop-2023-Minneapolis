@@ -16,11 +16,7 @@ newPackage("Valuations",
         PackageExports => {"LocalRings", "SubalgebraBases", "InvariantRing"}
         )
 
--- importFrom_"LocalRings" {"LocalRing"}
--- importFrom_LocalRings {"LocalRing"}
--- importFrom_SubalgebraBases {"Subring"}
-
------ MOVE TO SubalgebraBases -> Subring
+----- Possibly move to other packages
 ring Subring := A -> ambient A
 ring RingOfInvariants := A -> ambient A
 ring LocalRing := A -> A
@@ -186,12 +182,12 @@ padicValuation ZZ := p -> (
     valuation func
     )
 
--- Leading Term Valuation (max convention)
+-- Leading Term Valuation
 leadTermValuation = method()
 leadTermValuation PolynomialRing := R -> (
     monOrder := (options R).MonomialOrder;
     orderedMod := orderedQQn(R);
-    valFunc := f -> (print f;print describe f;if f == 0 then infinity else monomialToOrderedQQVector(leadTerm f, orderedMod));
+    valFunc := f -> (if f == 0 then infinity else monomialToOrderedQQVector(leadTerm f, orderedMod));
     internalValuation(valFunc, R, orderedMod)
     )
 
@@ -240,7 +236,7 @@ doc ///
      Key
          "trivialValuation"
      Headline
-         Constructs the trivial valuation
+         The trivial valuation
      Usage
          v = trivialValuation
      Outputs
@@ -248,7 +244,7 @@ doc ///
              the trivial valuation
      Description
        Text
-           A function to construct the trivial valuation, returning infinity when the valuation input is zero and returning zero otherwise.
+           This valuation returns zero for all nonzero inputs.
        Example
            v = trivialValuation;
            v (-13)
@@ -257,6 +253,11 @@ doc ///
            v 0
      SeeAlso
          valuation
+         Valuation
+         leadTermValuation
+         lowestTermValuation
+         localRingValuation
+         padicValuation
      ///
 
 
@@ -265,7 +266,7 @@ doc ///
          padicValuation
          (padicValuation, ZZ)
      Headline
-         Construct a p-adic valuation
+         The p-adic valuation
      Usage
          v = padicValuation(p)
      Inputs
@@ -276,7 +277,8 @@ doc ///
              p-adic valuation using prime p
      Description
        Text
-           A function to construct the p-adic valuation, returning the number of times that p divides the numerator minus the number of times it divides the denominator.
+           This valuation returns the number of times that $p$ divides the numerator
+           minus the number of times that $p$ divides the denominator.
        Example
            v = padicValuation 7;
            v 98
@@ -285,6 +287,11 @@ doc ///
            v (-42)
      SeeAlso
          valuation
+         Valuation
+         leadTermValuation
+         lowestTermValuation
+         localRingValuation
+         "trivialValuation"
      ///
 
 doc ///
@@ -292,29 +299,44 @@ doc ///
         lowestTermValuation
         (lowestTermValuation, PolynomialRing)
      Headline
-        The valuation which returns the lowest term of an element of an ordered ring
+        The valuation defined by lowest terms
      Usage
          v = lowestTermValuation
      Inputs
          R:PolynomialRing
+            the ring whose term order is used to define the valuation
      Outputs
          v:Valuation
-             the lowest term valuation
+            the lowest term valuation
      Description
        Text
-           This valuation returns the lowest (trailing) term of a polynomial with respect to the ring's term order.
-	   The valuation returns a value in an ordered module. For more details see @TO "Ordered modules"@.
+           This valuation returns the exponent vector of the
+           lowest (trailing) term of a polynomial with respect to the ring's term order.
+	       This valuation returns the exponent vector of the
+           lead term of a polynomial with respect to the ring's term order.
+           The valuation returns vectors in an @TT "ordered $\\QQ$-module"@,
+           which respects the monomial order of the
+           @TO "PolynomialRing"@. For more details see @TO "Ordered modules"@.
        Example
            R = QQ[a,b,c, MonomialOrder => Lex];
            vR = lowestTermValuation R;
            f = 13*a^2*b + a*c^3;
+           g = 5*a^2*c + b^3;
            vR f
+           vR f < vR g
            S = QQ[a,b,c, MonomialOrder => RevLex, Global => false];
            vS = lowestTermValuation S;
            f = 13*a^2*b + a*c^3;
+           g = 5*a^2*c + b^3;
            vS f
+           vS f < vS g
      SeeAlso
          valuation
+         Valuation
+         leadTermValuation
+         localRingValuation
+         padicValuation
+         "trivialValuation"
      ///
 
 doc ///
@@ -368,19 +390,22 @@ doc ///
         leadTermValuation
         (leadTermValuation, PolynomialRing)
      Headline
-        The valuation which returns the exponent of the lead term of an element of an ordered ring
+        The valuation defined by leading terms
      Usage
          v = leadTermValuation R
      Inputs
          R:PolynomialRing
+            the ring whose term order is used to define the valuation
      Outputs
          v:Valuation
-             the lead term valuation
-     Description
+            the lead term valuation
+    Description
        Text
-           This valuation returns the exponent vector of the lead term of a polynomial with respect to the ring's term order.
-           The valuation returns vectors in an \textit{ordered $\QQ$-module}, which respects the monomial order of the
-           given @TO "PolynomialRing"@. For more details see @TO "Ordered modules"@.
+           This valuation returns the exponent vector of the
+           lead term of a polynomial with respect to the ring's term order.
+           The valuation returns vectors in an @TT "ordered $\\QQ$-module"@,
+           which respects the monomial order of the
+           @TO "PolynomialRing"@. For more details see @TO "Ordered modules"@.
        Example
            R = QQ[a,b,c, MonomialOrder => Lex];
            v = leadTermValuation R;
@@ -388,9 +413,14 @@ doc ///
            g = 5*a^2*c + b^3;
            v f
            v g
-           v f > v g
-     SeeAlso
-         valuation
+           v f < v g
+    SeeAlso
+      valuation
+      Valuation
+      localRingValuation
+      lowestTermValuation
+      padicValuation
+      "trivialValuation"
 ///
 
 doc ///
@@ -432,19 +462,26 @@ doc ///
         Text
 	      A valuation is a function $v:R\rightarrow G\cup\{\infty\}$ 
 	      where $R$ is a ring and $G$ is a linearly ordered group with
-	      the following properties: $v(ab)=v(a)+v(b)$, 
-	      $v(a+b)\geq\min\{v(a),v(b)\}$, and $v(a)=\infty$ iff $a=0$.
-          As implemented in @TT "Macaulay2"@, a valuation acts like @ofClass Function@,
-          perhaps with extra information.
+	      the following properties:
+        Text
+          @UL {{"$v(ab)=v(a)+v(b)$,"},
+          {"$v(a+b)\\geq\\min\\{v(a),v(b)\\}$, and"},
+          {"$v(a)=\\infty$ iff $a=0$."}}@
+        Text
+          The @TT "Valuations"@ package provides uniform constructions of
+          common valuations and user-defined valuations.
+          A valuation acts like @ofClass Function@,
+          but contains extra information.
         Example
           pval = padicValuation 3;
           pval(54)
+          pval(2)
           R = QQ[x,y];
           leadval = leadTermValuation R;
           leadval(x^3+3*x^3*y^2+2*y^4)
           lowestval = lowestTermValuation R;
           lowestval(x^3+3*x^3*y^2+2*y^4)
-          pval(0)
+          lowestval(0)
       ///
 
 doc ///
@@ -487,8 +524,6 @@ doc ///
      SeeAlso
      	 leadTermValuation
 	 lowestTermValuation
-    
-
 ///
 
 --------------------------------------------------------------------------------
@@ -518,25 +553,25 @@ assert(val (7/9) == 1)
 TEST///
 R = QQ[x,y]
 val = leadTermValuation(R)
-assert(val(x) < val(y^2))
+assert(val(x) > val(y^2))
 ///
 TEST///
 R = QQ[x,y, MonomialOrder=>Lex]
 val = leadTermValuation(R)
-assert(val(x) > val(y^2))
+assert(val(x) < val(y^2))
 ///
 
 -- Lowest Term Valuation tests
 TEST///
 R = QQ[x,y,MonomialOrder => Lex];
 val = lowestTermValuation R;
-assert(val(x^2 + x*y) > val(y^3 + x*y^4));
+assert(val(x^2 + x*y) < val(y^3 + x*y^4));
 ///
 
 TEST///
 R = QQ[x,y,z, Degrees => {1,2,3}, MonomialOrder => GLex];
 val = lowestTermValuation R;
-assert(val(x^2*y^2*z + x^7*y) > val(x*y*z^2 + y^3*z))
+assert(val(x^2*y^2*z + x^7*y) < val(x*y*z^2 + y^3*z))
 ///
 
 -- Local ring valuation tests
