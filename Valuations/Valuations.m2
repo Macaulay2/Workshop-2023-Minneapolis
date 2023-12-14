@@ -198,7 +198,7 @@ lowestTermValuation PolynomialRing := R -> (
     orderedMod := orderedQQn(R);
     valFunc := f -> (
         if f == 0_R then infinity
-        else monomialToOrderedQQVector((sort flatten entries monomials f)_0, orderedMod)
+        else (-1)*monomialToOrderedQQVector((sort flatten entries monomials f)_0, orderedMod)
         );
     internalValuation(valFunc, R, orderedMod)
     )
@@ -343,46 +343,56 @@ doc ///
      Key
          valuation
          (valuation, Function)
-	 (valuation, Function, Ring, Ring) 
-	 (valuation, Function, Ring, Subring)
-	 (valuation, Function, Ring, LocalRing)
-	 (valuation, Function, Ring, RingOfInvariants)
-	 (valuation, Function, Subring, Ring)
-	 (valuation, Function, Subring, Subring)
-	 (valuation, Function, Subring, LocalRing)
-	 (valuation, Function, Subring, RingOfInvariants)
-	 (valuation, Function, LocalRing, Ring)
-	 (valuation, Function, LocalRing, Subring)
-	 (valuation, Function, LocalRing, LocalRing)
-	 (valuation, Function, LocalRing, RingOfInvariants)
-	 (valuation, Function, RingOfInvariants, Ring)
-	 (valuation, Function, RingOfInvariants, Subring)
-	 (valuation, Function, RingOfInvariants, LocalRing)
-	 (valuation, Function, RingOfInvariants, RingOfInvariants)
+	     (valuation, Function, Ring, Ring)
+	     (valuation, Function, Ring, Subring)
+	     (valuation, Function, Ring, LocalRing)
+	     (valuation, Function, Ring, RingOfInvariants)
+	     (valuation, Function, Subring, Ring)
+	     (valuation, Function, Subring, Subring)
+	     (valuation, Function, Subring, LocalRing)
+	     (valuation, Function, Subring, RingOfInvariants)
+	     (valuation, Function, LocalRing, Ring)
+	     (valuation, Function, LocalRing, Subring)
+	     (valuation, Function, LocalRing, LocalRing)
+	     (valuation, Function, LocalRing, RingOfInvariants)
+	     (valuation, Function, RingOfInvariants, Ring)
+	     (valuation, Function, RingOfInvariants, Subring)
+	     (valuation, Function, RingOfInvariants, LocalRing)
+	     (valuation, Function, RingOfInvariants, RingOfInvariants)
      Headline
-         Constructs a user defined valuation object
+         User-defined valuation object
      Usage
          v = valuation(f)
          v = valuation(f, S, T)
      Inputs
          f:Function
+           the valuation function.
          S:{Ring,LocalRing,Subring}
+           the domain
          T:{Ring,LocalRing,Subring}
+           the codomain
      Outputs
          v:Valuation
-            user defined valuation function
+            user-defined valuation function
      Description
          Text
-             A function to construct a user defined valuation function.
+             Construct a user defined valuation function.
+             User-defined functions are not checked for satisfying the
+             properties of a valuation.
+             It is not necessary to specify a domain or codomain, but
+             if they are provided, then the input is checked to
+             be in the domain (or promotable to the domain).
+             For common use cases, it is suggested to use the
+             provided valuations.
          Example
              v = valuation(x -> if x == 0 then infinity else 0)
              v = valuation(x -> if x == 0 then infinity else 0, ZZ, ZZ)
      SeeAlso
           lowestTermValuation
-	  padicValuation
-	  "trivialValuation"
-	  leadTermValuation
-	  localRingValuation
+	      padicValuation
+	      "trivialValuation"
+	      leadTermValuation
+	      localRingValuation
 ///
 
 doc ///
@@ -428,29 +438,34 @@ doc ///
          localRingValuation
          (localRingValuation, LocalRing)
      Headline
-         Construct a local ring valuation given a local ring.
+         The valuation defined by a local ring.
      Usage
          v = localRingValuation(R)
      Inputs
          R:LocalRing
-             a local ring
+             the ring whose maximal ideal determines the order
      Outputs
          v:Valuation
              local ring valuation using a local ring R
      Description
        Text
-           A function to construct a local ring valuation. This function returns the largest power of the maximal ideal
-	   of R that contains the input of the valuation.
+           This valuation returns the largest power of the maximal ideal
+	       of R that contains the input to the valuation.
        Example
            R = QQ[x,y];
-	   I = ideal(x,y);
-	   S = R_I
-	   localVal = localRingValuation(S)
-	   localVal(1 + x + y)
-	   localVal(x^4 + x^2*y^2 + x^7 + y^3)
-	   localVal(x^2 + x*y + y^2)
+	       I = ideal(x,y);
+	       S = R_I
+	       localVal = localRingValuation(S)
+	       localVal(1 + x + y)
+	       localVal(x^4 + x^2*y^2 + x^7 + y^3)
+	       localVal(x^2 + x*y + y^2)
      SeeAlso
          valuation
+         Valuation
+         leadTermValuation
+         lowestTermValuation
+         padicValuation
+         "trivialValuation"
      ///
      
 doc ///
@@ -486,15 +501,29 @@ doc ///
 
 doc ///
       Key
-      	  Valuation
+            Valuation
       Headline
-      	  The type of all valuations
+            The type of all valuations
       Description
-      	  Text
-	      @TT "Valuation"@ is a type that contains the data needed 
-	      to evaluate a valuation.
+          Text
+            @TT "Valuation"@ is a type that contains the data needed
+            to evaluate a @TT "valuation"@.
+            A valuation is a function $v:R\rightarrow G\cup\{\infty\}$
+            where $R$ is a ring and $G$ is a linearly ordered group with
+            the following properties:
+          Text
+            @UL {{"$v(ab)=v(a)+v(b)$,"},
+            {"$v(a+b)\\geq\\min\\{v(a),v(b)\\}$, and"},
+            {"$v(a)=\\infty$ iff $a=0$."}}@
+          Text
+            This package provides common valuations and user-defined valuations.
       SeeAlso
-      	  valuation
+          valuation
+          leadTermValuation
+          lowestTermValuation
+          localRingValuation
+          padicValuation
+          "trivialValuation"
       ///
 
 doc ///
@@ -565,13 +594,13 @@ assert(val(x) < val(y^2))
 TEST///
 R = QQ[x,y,MonomialOrder => Lex];
 val = lowestTermValuation R;
-assert(val(x^2 + x*y) < val(y^3 + x*y^4));
+assert(val(x^2 + x*y) > val(y^3 + x*y^4));
 ///
 
 TEST///
 R = QQ[x,y,z, Degrees => {1,2,3}, MonomialOrder => GLex];
 val = lowestTermValuation R;
-assert(val(x^2*y^2*z + x^7*y) < val(x*y*z^2 + y^3*z))
+assert(val(x^2*y^2*z + x^7*y) > val(x*y*z^2 + y^3*z))
 ///
 
 -- Local ring valuation tests
