@@ -35,6 +35,8 @@ export{"valuation",
        "getMExponent",
        "domain",
        "codomain",
+       "OrderedQQn",
+       "OrderedQQVector",
        "orderedQQn"
        }
    
@@ -134,7 +136,7 @@ OrderedQQVector ? OrderedQQVector := (a, b) -> (
     bScaled := d*b;
 
     R := M.cache.Ring;
-    c := for i from 0 to numgens R-1 list min(a_i, b_i, 0);
+    c := for i from 0 to numgens R-1 list min(aScaled_i, bScaled_i, 0);
 
     aMonomial := product for i from 0 to numgens R-1 list (R_i)^(sub(aScaled_i - c_i,ZZ));
     bMonomial := product for i from 0 to numgens R-1 list (R_i)^(sub(bScaled_i - c_i,ZZ));
@@ -145,7 +147,7 @@ OrderedQQVector ? OrderedQQVector := (a, b) -> (
     )
 
 OrderedQQVector == InfiniteNumber := (a, b) -> false
-InfiniteNumber ==  OrderedQQn := (a, b) -> false
+InfiniteNumber ==  OrderedQQVector := (a, b) -> false
 
 --
 -- monomialToOrderedQQVector
@@ -468,9 +470,10 @@ doc ///
      Description
        Text
            Many standard valuations take values in a totally ordered subgroup $\Gamma \subseteq \QQ^n$.
-	   These standard valuations implement the \textit{OrderedQQn} object, whose order is based on the
+	   These standard valuations implement @ofClass OrderedQQn@, whose order is based on the
 	   monomial order of a given ring $R$.
 	   The values in $\QQ^n$ are compared using the monomial order of $R$.
+	   By default, our valuations use the min convention, that is $v(a + b) \ge \min(v(a), v(b))$.
        Example
            R = QQ[x,y];
 	   I = ideal(x,y);
@@ -487,9 +490,174 @@ doc ///
      SeeAlso
      	 leadTermValuation
 	 lowestTermValuation
-    
+         OrderedQQn
+	 orderedQQn
 
 ///
+
+doc ///
+     Key
+         OrderedQQn
+     Headline
+         The class of all ordered modules $\QQ^n$
+     Description
+       Text
+           For an introduction see @TO "Ordered modules"@. Every element of
+	   an ordered $\QQ^n$ module is @ofClass OrderedQQVector@. A new
+	   ordered $\QQ^n$ module is created with the function @TO "orderedQQn"@.
+     SeeAlso
+     	 "Ordered modules"
+	 orderedQQn
+	 OrderedQQVector
+    
+///
+
+
+doc ///
+     Key
+         orderedQQn
+	 (orderedQQn, PolynomialRing)
+	 (orderedQQn, ZZ, List)
+     Headline
+         Construct an ordered module $\QQ^n$
+     Usage
+         M = orderedQQn R
+	 M = orderedQQn(n, monomialOrders) 
+     Inputs
+         R:PolynomialRing
+	     polynomial ring for the construction
+	 n:ZZ
+	     rank of the module
+	 monomialOrder:List
+	     monomial order for comparison
+     Outputs
+         M:OrderedQQn
+     Description
+       Text
+           For an overview see @TO "Ordered modules"@.
+	   Let $R$ be @ofClass PolynomialRing@ with $n$ variables $x_1 \dots x_n$.
+	   Then the corresponding ordered $\QQ^n$ module has the following
+	   ordering. Suppose that $v, w \in QQ^n$.
+	   Let $d \in \ZZ$ be a positive integer and $c \in \ZZ^n_{\ge 0}$ 
+	   be a vector such that $dv + c$ and $dw + c$ have non-negative 
+	   entries. Then we say $v < w$ if and only if $x^{dv + c} > x^{dw + c}$
+	   in $R$. Note that this property does not depend on the choice of $d$
+	   $c$ so we obtain a well-defined order on $\QQ^n$.
+	   
+       Example
+           R = QQ[x_1 .. x_3, MonomialOrder => Lex]
+	   M = orderedQQn R
+	   v = 1/2 * M_0 - 1/3 * M_1
+	   w = 1/2 * M_0 + 1/4 * M_2
+	   v < w
+       
+       Text
+           Instead of supplying @ofClass PolynomialRing@, we may supply directly
+	   give the rank $n$ of the module along with a monomial order.
+	   The constructor creates the ring $R$ with $n$ variables and the
+	   given monomial order and uses this for the comparison operations.
+	   
+       Example
+           N = orderedQQn(3, {Lex})
+	   R = N.cache.Ring
+	   N' = orderedQQn R
+	   N == N' 
+       
+       Text
+           In the above example, $N$ and $N'$ are the same module
+	   because they are built from the same ring. See @TO (symbol ==, OrderedQQn, OrderedQQn)@.
+	   
+     SeeAlso
+     	 "Ordered modules"
+	 orderedQQn    
+///
+
+
+doc ///
+     Key
+         "OrderedQQVector == InfiniteNumber"
+	 "InfiniteNumber == OrderedQQVector"
+	 "(symbol ==, OrderedQQVector, InfiniteNumber)"
+	 "(symbol ==, InfiniteNumber, OrderedQQVector)"
+     Headline
+         Ordered $\QQ^n$ vectors that are infinte
+     Description
+       Text
+           The image of $0$ under a valuation is $\infty$ or $-\infty$,
+	   depending on the choice of min or max convention. So it may be
+	   necessary to test whether an element of an ordered module $\QQ^n$
+	   is equal to the valuation of $0$.
+       Example
+           M = orderedQQn(3, {Lex})
+	   M_0 < infinity
+	   M_0 == infinity
+     SeeAlso
+     	 "Ordered modules"
+	 OrderedQQn
+	 orderedQQn
+///
+
+doc ///
+     Key
+         (symbol ==, OrderedQQn, OrderedQQn)
+     Headline
+         Equality of ordered modules $\QQ^n$
+     Description
+       Text
+           Two ordered $\QQ^n$ modules are considered equal if they are
+	   built from the same ring. Note that isomorphic rings with the
+	   same term order may not be equal.
+       Example
+           M1 = orderedQQn(3, {Lex})
+	   R = M1.cache.Ring
+	   M2 = orderedQQn R
+	   M1 == M2
+	   S = QQ[x_1 .. x_3, MonomialOrder => {Lex}]
+	   M3 = orderedQQn S
+	   M1 == M3
+     SeeAlso
+     	 "Ordered modules"
+	 OrderedQQn
+	 orderedQQn
+///
+
+
+doc ///
+     Key
+         "OrderedQQVector ? OrderedQQVector"
+     Headline
+         Comparison of vectors of an ordered module $\QQ^n$
+     Description
+       Text
+           See @TO "Ordered modules"@. 
+	   -- TODO add more explanation ...
+     SeeAlso
+     	 "Ordered modules"
+	 OrderedQQn
+	 orderedQQn
+///
+
+
+doc ///
+     Key
+         OrderedQQVector
+     Headline
+         The class of all vectors of an ordered module $\QQ^n$
+     Description
+       Text
+           For an introduction see @TO "Ordered modules"@. Every ordered $\QQ^n$
+	   vector belongs to @ofClass OrderedQQn@. The ordered $\QQ^n$ vectors
+	   are most easily accessed though the original module.
+       Example
+           M = orderedQQn(3, {Lex})
+	   M_0 + 2 * M_1 + 3 * M_2
+     SeeAlso
+     	 "Ordered modules"
+	 orderedQQn
+///
+
+
+
 
 --------------------------------------------------------------------------------
 ------------------------------------ Tests -------------------------------------
