@@ -40,7 +40,7 @@ doc ///
         Text
             The following people have generously contributed code, improved existing code, or enhanced the documentation:
             @HREF("https://sites.google.com/illinois.edu/shiliang-gao", "Shiliang Gao")@,
-            @HREF("https://www.math.tamu.edu/directory/graduate.html", "Pooja Joshi")@, 
+            @HREF("https://www.math.tamu.edu/directory/graduate.html", "Pooja Joshi")@,
 	    @HREF("https://www-users.cse.umn.edu/~mahrud/", "Mahrud Sayrafi")@, and
             @HREF("https://www.clemson.edu/science/academics/departments/mathstat/about/profiles/arakoto", "Antsa Tantely Fandresena Rakotondrafara")@.
     SeeAlso 
