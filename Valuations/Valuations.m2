@@ -10,7 +10,7 @@ newPackage("Valuations",
             {Name => "Shelby Cox", Email => "spcox@umich.edu"},
             {Name => "Courtney George", Email => "courtney.george@uky.edu"},
             {Name => "Oliver Clarke", Email => "oliver.clarke@ed.ac.uk", HomePage => "oliverclarkemath.com"}},
-        DebuggingMode => false,
+        DebuggingMode => true,
         HomePage => "https://github.com/Macaulay2/Workshop-2023-Minneapolis/tree/valuations",
         Configuration => {},
         --PackageExports => {"LocalRings", "SubalgebraBases", "InvariantRing", "Tropical", "gfanInterface", "Binomials"}
@@ -32,7 +32,12 @@ export{"valuation",
        "getMExponent",
        "domain",
        "codomain",
---       "valM",
+       "valM",
+       "primeConesOfIdeal",
+       "coneToMatrix",
+       "getMaxIndependent",
+       "positivity",
+       "coneToValuation",
        "OrderedQQn",
        "OrderedQQVector",
        "orderedQQn"
@@ -233,14 +238,33 @@ localRingValuation LocalRing := R -> (
 --------------------------------------------------------------------------------
 -------------------------------- example77 Valuation ---------------------------
 --------------------------------------------------------------------------------
--*
+-- internalTropicalVariety -- simple tropical variety computation
+-- input:
+-- I : Ideal: prime, homogeneous
+--
+-- output:
+-- T : tropical polyhedral fan trop(I) without weights
+--  
+internalTropicalVariety = method()
+internalTropicalVariety Ideal := I -> (
+    if not I.cache#?"TropicalVariety" then (
+    	startCone := gfanTropicalStartingCone I;
+    	T := gfanTropicalTraverse startCone;
+    	I.cache#"TropicalVariety" = T_0;
+	);
+    I.cache#"TropicalVariety"
+    )
+
+
 primeConesOfIdeal = I -> (
-    F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
+    --F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
+    F := internalTropicalVariety I;
     r:=rays(F);
     c:=maxCones(F);
     cns := for i in c list(r_i);
     inCns := for c in cns list (flatten entries( c * transpose matrix{toList(numColumns(c) : 1)}));
-    L:= for i from 0 to #cns-1 list (J = gfanBuchberger(I, "w" => -1*(inCns#i));
+    L:= for i from 0 to #cns-1 list (
+	J := gfanBuchberger(I, "w" => -1*(inCns#i));
 	H := gfanInitialForms(J, -1*(inCns#i), "ideal" =>true);
 	K := H_1;
 	if binomialIsPrime(ideal(K)) then cns#i);
@@ -273,7 +297,7 @@ positivity = (f, matL) -> (
     finalScaledMats := {};
     matList := for i from 0 to #matL-1 list entries matL_i;    
     for i from 0 to #matList-1 do (
-	scaledRows = {};
+	scaledRows := {};
 	for j from 0 to #(matList_i)-1 do (
 	    coeff := -1*floor(min apply(#(matList_i)_j, k -> (((matList_i)_j)_k)/(flatten entries l)_k));
 	    scaledRows = append(scaledRows, (1/gcd(flatten entries (coeff*l + matrix{(matList_i)_j})))*(coeff*l + matrix{(matList_i)_j}));
@@ -286,15 +310,21 @@ positivity = (f, matL) -> (
     )
 
 -- TODO need to generalize!
-coneToValuation = (coneRays, I) -> (
-    F := tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
+coneToValuation = (coneRays, I, S) -> (
+    --F := tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
+    F := internalTropicalVariety I;
     M := coneToMatrix(coneRays);
-    scaledM := (positivity(F, {M}))/(i -> sub(i, ZZ));
-    T := QQ[e_1, e_2, e_3, y, MonomialOrder=>{Weights=>((entries scaledM_0)_0), Weights=>((entries scaledM_0)_1)}];
+    scaledM := (positivity(F, {-M}))/(i -> sub(i, ZZ));
+    weightList := for row in entries scaledM_0 list Weights => row;
+    e := symbol e;
+    y := symbol y;
+    T := QQ[e_1, e_2, e_3, y, MonomialOrder => weightList];
+    --T := QQ[e_1, e_2, e_3, y, MonomialOrder=>{Weights=>((entries scaledM_0)_0), Weights=>((entries scaledM_0)_1)}];
     val := leadTermValuation(T);
     orderedM := orderedQQn(2, {Lex});
     func := (f -> (
-	    valf := val(sub(f, T));
+	    m := map(T, S, gens T);
+	    valf := val(m f);
 	    if valf == infinity then infinity else (
 		(gens orderedM)*(scaledM_0)*(valf)
 		)
@@ -306,20 +336,29 @@ coneToValuation = (coneRays, I) -> (
 -- TODO need to generalize!
 -- construct the new valuation by taking min
 valM = (T, valMTwiddle) -> (
-    valMfunc = (g) -> (
+    valMfunc := (g) -> (
+	x := symbol x;
+	e := symbol e;
+	y := symbol y;
 	R := QQ[x_1, x_2, x_3, e_1, e_2, e_3, y, MonomialOrder => Eliminate 3];
-	I := ideal{x_1 + x_2 + x_3 - e_1, x_1*x_2 + x_1*x_3 + x_2*x_3 - e_2, x_1*x_2*x_3 - e_3, (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3) - y};
-	f := e_1^2*e_2^2 - 4*e_2^3 - 4*e_3*e_1^3 + 18*e_1*e_2*e_3 - 27*e_3^2 - y^2;
+	--I := ideal{x_1 + x_2 + x_3 - e_1, x_1*x_2 + x_1*x_3 + x_2*x_3 - e_2, x_1*x_2*x_3 - e_3, (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3) - y};
+	--f := e_1^2*e_2^2 - 4*e_2^3 - 4*e_3*e_1^3 + 18*e_1*e_2*e_3 - 27*e_3^2 - y^2;
+	I := ideal{R_0 + R_1 + R_2 - R_3, R_0*R_1 + R_0*R_2 + R_1*R_2 - R_4, R_0*R_1*R_2 - R_5, (R_0 - R_1)*(R_0 - R_2)*(R_1 - R_2) - R_6};
+	f := R_3^2*R_4^2 - 4*R_4^3 - 4*R_5*R_3^3 + 18*R_3*R_4*R_5 - 27*R_5^2 - R_6^2;
 	S := valMTwiddle#"domain";
 	m := map(S, R, matrix{{0,0,0}} | matrix {gens S});
-	gTwiddle := m (sub(g, R) % I);
-	maxTwiddle := gTwiddle % ideal(sub(f, S));
-	use T; -- something above changes the user's ring (what could it be?) let's assume it was T
+	--gTwiddle := m (sub(g, R) % I);
+	--maxTwiddle := gTwiddle % ideal(sub(f, S));
+	TtoR := map(R, T, (gens R)_{0 .. numgens T -1});
+	gTwiddle := m ((TtoR g) % I);
+	RtoS := map(S, R, {0_S, 0_S, 0_S} | gens S);
+	maxTwiddle := gTwiddle % ideal(RtoS f);
+	--use T; -- something above changes the user's ring (what could it be?) let's assume it was T
 	valMTwiddle(maxTwiddle)
 	);
     valuation(valMfunc, T, valMTwiddle#"codomain")
     )
-*-
+
 --------------------------------------------------------------------------------
 -------------------------------- Documentation ---------------------------------
 --------------------------------------------------------------------------------
@@ -652,7 +691,7 @@ doc ///
 	 orderedQQn
 ///
 
--*
+
 doc ///
      Key
     	"valM"
@@ -663,42 +702,51 @@ doc ///
            Add description!
        Example
             R = QQ[x_1, x_2, x_3];
-
             A = subring {
                 x_1 + x_2 + x_3,
                 x_1*x_2 + x_1*x_3 + x_2*x_3,
                 x_1*x_2*x_3,
                 (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3)
                 };
-
             S = QQ[e_1, e_2, e_3, y];
-
             presMap = map(R, S, gens A);
             I = ker presMap
-
-            -- The primes cones of the tropical variety:
-            C = primeConesOfIdeal I
-
-            -- turn them into weights:
-            flatten (C/coneToMatrix/(i -> positivity(tropicalVariety I, {i})))
-
-            -- create weight valuations on the polynomial ring S
-            v0 = coneToValuation(C#0, I);
-            v1 = coneToValuation(C#1, I);
-            v2 = coneToValuation(C#2, I);
-            use S;
-
+       Text
+            The primes cones of the tropical variety:
+       Example
+            -- C = primeConesOfIdeal I -- This line takes too long for an example
+            C = {
+                matrix {{-3, 22}, {-6, -2}, {14, -3}, {-9, -3}},
+                matrix {{22, -3}, {-2, -6}, {-3, -9}, {-3, 14}},
+                matrix {{-11, -2}, {1, 19}, {13, -6}, {-10, -6}}
+                }
+       Text 
+            Turn them into weights. 
+	    
+	    Note that @TT "internalTropicalVariety"@ is NOT exported
+	    
+	    REMOVE THIS TEXT AND NEXT EXAMPLE BEFORE RELEASE!
+       Example
+            debug Valuations
+            flatten (C/coneToMatrix/(i -> positivity(internalTropicalVariety I, {i})))
+       Text
+            create weight valuations on the polynomial ring S
+       Example
+	    v0 = coneToValuation(C#0, I, S);
+            v1 = coneToValuation(C#1, I, S);
+            v2 = coneToValuation(C#2, I, S);
+	    use S;
             v0(e_1^2 + e_2*e_3 - y^3) -- lead term from e_1^2
             v1(e_1^2 + e_2*e_3 - y^3) -- lead term from y^3
             v2(e_1^2 + e_2*e_3 - y^3) -- lead term from e_2*e_3
-
-
-            -- create the induced valuation on the subring A
+       Text
+            create the induced valuation on the subring A
+       Example	    
             vA0 = valM(R, v0);
             vA1 = valM(R, v1);
             vA2 = valM(R, v2);
             use R;
-
+	    
             vA0(x_1^2 + x_2^2 + x_3^2)
             vA1(x_1^2 + x_2^2 + x_3^2)
             vA2(x_1^2 + x_2^2 + x_3^2)
@@ -708,18 +756,18 @@ doc ///
             vA2((x_1^2 - x_2^2)*(x_1^2 - x_3^2)*(x_2^2 - x_3^2))
 
             vA0(0_R)
-
-            -- Note, for elements not in A, the valuation returns nonsense 
-            -- because the valuation does not come from a weight valuation
-            -- on R
+       Text
+            Note, for elements not in A, the valuation returns nonsense
+            because the valuation does not come from a weight valuation
+            on R
+       Example
             vA0(x_2)
             vA0(x_2^2)
-            vA0(x_2^3) 
+            vA0(x_2^3)
      SeeAlso
      
 ///
 
-*-
 
 doc ///
      Key
@@ -954,3 +1002,10 @@ testPackage = x -> (
     installPackage("Valuations");
     check Valuations;
     )
+
+---------------------
+restart
+uninstallPackage "Valuations"
+restart
+installPackage "Valuations"
+needsPackage "Valuations"
