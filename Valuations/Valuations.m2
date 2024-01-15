@@ -244,22 +244,37 @@ localRingValuation LocalRing := R -> (
 --
 -- output:
 -- T : tropical polyhedral fan trop(I) without weights
---  
-internalTropicalVariety = method()
-internalTropicalVariety Ideal := I -> (
-    if not I.cache#?"TropicalVariety" then (
+--     uses max-convention (from gfan)
+--
+internalTropicalVariety = method(
+    Options => {
+	"Convention" => "Max"
+	}
+    )
+internalTropicalVariety Ideal := opts -> I -> (
+    if not I.cache#?("TropicalVariety", opts) then (
     	startCone := gfanTropicalStartingCone I;
-    	T := gfanTropicalTraverse startCone;
-    	I.cache#"TropicalVariety" = T_0;
+    	T := (gfanTropicalTraverse startCone)_0;
+	if opts#"Convention" == "Max" then (
+	    -- use default output of gfan
+	    )
+	else if opts#"Convention" == "Min" then (
+	    -- negate the rays
+	    T = fan(-rays T, linealitySpace T, maxCones T);
+	    )
+	else (
+	    error("-- Unknown value for option 'Convention', use 'Max' or 'Min'");
+	    );
+    	I.cache#("TropicalVariety", opts) = T;
 	);
-    I.cache#"TropicalVariety"
+    I.cache#("TropicalVariety", opts)
     )
 
 
 primeConesOfIdeal = I -> (
     --F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
-    F := internalTropicalVariety I;
-    r:=rays(F);
+    F := internalTropicalVariety(I, "Convention" => "Min");
+    r := rays F;
     c:=maxCones(F);
     cns := for i in c list(r_i);
     inCns := for c in cns list (flatten entries( c * transpose matrix{toList(numColumns(c) : 1)}));
@@ -312,7 +327,7 @@ positivity = (f, matL) -> (
 -- TODO need to generalize!
 coneToValuation = (coneRays, I, S) -> (
     --F := tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
-    F := internalTropicalVariety I;
+    F := internalTropicalVariety(I, "Convention" => "Min");
     M := coneToMatrix(coneRays);
     scaledM := (positivity(F, {-M}))/(i -> sub(i, ZZ));
     weightList := for row in entries scaledM_0 list Weights => row;
@@ -714,7 +729,7 @@ doc ///
        Text
             The primes cones of the tropical variety:
        Example
-            -- C = primeConesOfIdeal I -- This line takes too long for an example
+            C = primeConesOfIdeal I -- This line takes too long for an example
             C = {
                 matrix {{-3, 22}, {-6, -2}, {14, -3}, {-9, -3}},
                 matrix {{22, -3}, {-2, -6}, {-3, -9}, {-3, 14}},
