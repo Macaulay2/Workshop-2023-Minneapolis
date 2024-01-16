@@ -344,7 +344,9 @@ coneToValuation = (coneRays, I, S) -> (
 		)
 	    )
 	);
-    valuation(func, S, orderedM)
+    valS := valuation(func, S, orderedM);
+    valS.cache.Ideal = I;
+    valS
     )
 
 -- TODO need to generalize!
@@ -354,19 +356,29 @@ valM = (T, valMTwiddle) -> (
 	x := symbol x;
 	e := symbol e;
 	y := symbol y;
-	R := QQ[x_1, x_2, x_3, e_1, e_2, e_3, y, MonomialOrder => Eliminate 3];
+
+    S := valMTwiddle#"domain";
+
+	numberVariables := #T_*;
+    numberGenerators := #S_*;
+    tensorVariables := monoid[Variables => numberVariables + numberGenerators,
+                                MonomialOrder => Eliminate numberVariables];
+    R := (coefficientRing T) tensorVariables;
+
 	--I := ideal{x_1 + x_2 + x_3 - e_1, x_1*x_2 + x_1*x_3 + x_2*x_3 - e_2, x_1*x_2*x_3 - e_3, (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3) - y};
 	--f := e_1^2*e_2^2 - 4*e_2^3 - 4*e_3*e_1^3 + 18*e_1*e_2*e_3 - 27*e_3^2 - y^2;
 	I := ideal{R_0 + R_1 + R_2 - R_3, R_0*R_1 + R_0*R_2 + R_1*R_2 - R_4, R_0*R_1*R_2 - R_5, (R_0 - R_1)*(R_0 - R_2)*(R_1 - R_2) - R_6};
-	f := R_3^2*R_4^2 - 4*R_4^3 - 4*R_5*R_3^3 + 18*R_3*R_4*R_5 - 27*R_5^2 - R_6^2;
-	S := valMTwiddle#"domain";
-	m := map(S, R, matrix{{0,0,0}} | matrix {gens S});
+	
+    phi := map(R, S, (gens R)_{numberVariables .. numgens R - 1});
+    f := phi (valMTwiddle.cache.Ideal);
+    
+    m := map(S, R, matrix{{0,0,0}} | matrix {gens S});
 	--gTwiddle := m (sub(g, R) % I);
 	--maxTwiddle := gTwiddle % ideal(sub(f, S));
 	TtoR := map(R, T, (gens R)_{0 .. numgens T -1});
 	gTwiddle := m ((TtoR g) % I);
 	RtoS := map(S, R, {0_S, 0_S, 0_S} | gens S);
-	maxTwiddle := gTwiddle % ideal(RtoS f);
+	maxTwiddle := gTwiddle % (RtoS f);
 	--use T; -- something above changes the user's ring (what could it be?) let's assume it was T
 	valMTwiddle(maxTwiddle)
 	);
