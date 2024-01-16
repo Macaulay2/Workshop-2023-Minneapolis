@@ -275,14 +275,13 @@ primeConesOfIdeal = I -> (
     --F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
     F := internalTropicalVariety(I, "Convention" => "Min");
     r := rays F;
-    c:=maxCones(F);
-    cns := for i in c list(r_i);
-    inCns := for c in cns list (flatten entries( c * transpose matrix{toList(numColumns(c) : 1)}));
-    L:= for i from 0 to #cns-1 list (
-	J := gfanBuchberger(I, "w" => -1*(inCns#i));
-	H := gfanInitialForms(J, -1*(inCns#i), "ideal" =>true);
-	K := H_1;
-	if binomialIsPrime(ideal(K)) then cns#i);
+    c := maxCones F;
+    cns := for i in c list r_i;
+    inCns := for c in cns list (flatten entries(c * transpose matrix{toList(numColumns(c) : 1)}));
+    L := for i from 0 to #cns-1 list (
+	H := gfanInitialForms(first entries gens I, -1*(inCns#i), "ideal" =>true);
+	if binomialIsPrime ideal H then cns#i
+	);
     delete(null,L)
     )
 						    
@@ -729,12 +728,12 @@ doc ///
        Text
             The primes cones of the tropical variety:
        Example
-            C = primeConesOfIdeal I -- This line takes too long for an example
-            C = {
-                matrix {{-3, 22}, {-6, -2}, {14, -3}, {-9, -3}},
-                matrix {{22, -3}, {-2, -6}, {-3, -9}, {-3, 14}},
-                matrix {{-11, -2}, {1, 19}, {13, -6}, {-10, -6}}
-                }
+            C = primeConesOfIdeal I 
+	    -- C = {
+            --    matrix {{-3, 22}, {-6, -2}, {14, -3}, {-9, -3}},
+            --    matrix {{22, -3}, {-2, -6}, {-3, -9}, {-3, 14}},
+            --    matrix {{-11, -2}, {1, 19}, {13, -6}, {-10, -6}}
+            --    }
        Text 
             Turn them into weights. 
 	    
@@ -743,7 +742,8 @@ doc ///
 	    REMOVE THIS TEXT AND NEXT EXAMPLE BEFORE RELEASE!
        Example
             debug Valuations
-            flatten (C/coneToMatrix/(i -> positivity(internalTropicalVariety I, {i})))
+            internalTropicalVariety I
+	    flatten (C/coneToMatrix/(i -> positivity(internalTropicalVariety I, {i})))
        Text
             create weight valuations on the polynomial ring S
        Example
