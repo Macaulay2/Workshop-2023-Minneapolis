@@ -34,6 +34,7 @@ export{"valuation",
        "codomain",
        "valM",
        "primeConesOfIdeal",
+       "primeConesOfSubalgebra",
        "coneToMatrix",
        "getMaxIndependent",
        "positivity",
@@ -284,6 +285,11 @@ primeConesOfIdeal = I -> (
 	);
     delete(null,L)
     )
+
+primeConesOfSubalgebra = A -> (
+    I := ker A#"presentationMap";
+    primeConesOfIdeal I
+)
 						    
 -- given a set of rays of a 2D cone,
 -- get two interior points of the cone that span it (as a vector space)
@@ -324,8 +330,11 @@ positivity = (f, matL) -> (
     )
 
 -- TODO need to generalize!
-coneToValuation = (coneRays, I, S) -> (
+coneToValuation = method()
+coneToValuation (Matrix, Subring) := (coneRays, A) -> (coneToValuation(coneRays, A, presentationRing A))
+coneToValuation (Matrix, Subring, Ring) := (coneRays, A, S) -> (
     --F := tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
+    I := ker A#"presentationMap";
     F := internalTropicalVariety(I, "Convention" => "Min");
     M := coneToMatrix(coneRays);
     scaledM := (positivity(F, {-M}))/(i -> sub(i, ZZ));
@@ -345,7 +354,8 @@ coneToValuation = (coneRays, I, S) -> (
 	    )
 	);
     valS := valuation(func, S, orderedM);
-    valS.cache.Ideal = I;
+    valS.cache#"Ideal" = I;
+    valS.cache#"Subalgebra" = A;
     valS
     )
 
@@ -353,9 +363,7 @@ coneToValuation = (coneRays, I, S) -> (
 -- construct the new valuation by taking min
 valM = (T, valMTwiddle) -> (
     valMfunc := (g) -> (
-	x := symbol x;
-	e := symbol e;
-	y := symbol y;
+	A := valMTwiddle.cache#"Subalgebra";
 
     S := valMTwiddle#"domain";
 
@@ -363,21 +371,21 @@ valM = (T, valMTwiddle) -> (
     numberGenerators := numcols vars S;
     tensorVariables := monoid[Variables => numberVariables + numberGenerators,
                                 MonomialOrder => Eliminate numberVariables];
-    R := (coefficientRing T) tensorVariables;
+    tensorRing := (coefficientRing T) tensorVariables;
 
-	--I := ideal{x_1 + x_2 + x_3 - e_1, x_1*x_2 + x_1*x_3 + x_2*x_3 - e_2, x_1*x_2*x_3 - e_3, (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3) - y};
-	--f := e_1^2*e_2^2 - 4*e_2^3 - 4*e_3*e_1^3 + 18*e_1*e_2*e_3 - 27*e_3^2 - y^2;
-	I := ideal{R_0 + R_1 + R_2 - R_3, R_0*R_1 + R_0*R_2 + R_1*R_2 - R_4, R_0*R_1*R_2 - R_5, (R_0 - R_1)*(R_0 - R_2)*(R_1 - R_2) - R_6};
-	
-    phi := map(R, S, (gens R)_{numberVariables .. numgens R - 1});
-    f := phi (valMTwiddle.cache.Ideal);
+    includeT := map(tensorRing, T, (gens tensorRing)_{0 .. numgens T -1});
+    includeS := map(tensorRing, S, (gens tensorRing)_{numberVariables .. numgens tensorRing - 1});
+
+	generatingVariables := (vars tensorRing)_{numberVariables..numberVariables + numberGenerators - 1};
+    SIdeal := ideal(generatingVariables - includeT gens A); -- need a map to include 
     
-    m := map(S, R, matrix{{0,0,0}} | matrix {gens S});
+    f := includeS (valMTwiddle.cache#"Ideal");
+    
+    m := map(S, tensorRing, matrix{{0,0,0}} | matrix {gens S});
 	--gTwiddle := m (sub(g, R) % I);
 	--maxTwiddle := gTwiddle % ideal(sub(f, S));
-	TtoR := map(R, T, (gens R)_{0 .. numgens T -1});
-	gTwiddle := m ((TtoR g) % I);
-	RtoS := map(S, R, {0_S, 0_S, 0_S} | gens S);
+	gTwiddle := m ((includeT g) % SIdeal);
+	RtoS := map(S, tensorRing, {0_S, 0_S, 0_S} | gens S);
 	maxTwiddle := gTwiddle % (RtoS f);
 	--use T; -- something above changes the user's ring (what could it be?) let's assume it was T
 	valMTwiddle(maxTwiddle)
