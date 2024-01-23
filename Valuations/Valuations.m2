@@ -296,6 +296,7 @@ coneToMatrix = coneRays -> (
     )
 
 -- get a maximal set of independent columns of a matrix
+-- TODO: Cleanup
 getMaxIndependent = M -> (
     -- compute the pivot columns to obtain a maximal linearly independent subset of columns of M
     R := reducedRowEchelonForm(sub(M, QQ));
