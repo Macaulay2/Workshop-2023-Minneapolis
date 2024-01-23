@@ -359,8 +359,8 @@ valM = (T, valMTwiddle) -> (
 
     S := valMTwiddle#"domain";
 
-	numberVariables := #T_*;
-    numberGenerators := #S_*;
+	numberVariables := numcols vars T;
+    numberGenerators := numcols vars S;
     tensorVariables := monoid[Variables => numberVariables + numberGenerators,
                                 MonomialOrder => Eliminate numberVariables];
     R := (coefficientRing T) tensorVariables;
