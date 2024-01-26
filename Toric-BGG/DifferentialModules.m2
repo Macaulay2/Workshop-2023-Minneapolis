@@ -118,9 +118,34 @@ unfold(DifferentialModule,ZZ,ZZ) := ChainComplex => (D,low,high)->(
     )
 
 
+minFlagOneStep = method()
 
---killing cycles algorithm for resolution
---CAVEAT:  maybe assumes that you start w/ a free differential module??
+minFlagOneStep(DifferentialModule) := (D) -> (
+    d := degree D;
+    R := ring D;
+    minDegree := min degrees trim HH_0 D;
+    colList := select(rank source (mingens HH_0(D)), i -> degree (mingens HH_0(D))_i == minDegree);
+    minDegHom := (mingens HH_0(D))_colList;
+    homMat :=  mingens image((minDegHom) % (image D.dd_1));
+    G := res image homMat;
+    psi := map(D_0,G_0**R^{d},homMat, Degree=>d);
+    newDiff := matrix{{D.dd_1,psi},{map(G_0**R^{d},D_1,0, Degree=>d), map(G_0**R^{d},G_0**R^{d},0, Degree=>d)}};
+    assert (newDiff*(newDiff) == 0);
+    differentialModule newDiff
+)
+
+resMinFlag = method();
+resMinFlag(DifferentialModule) := (D) -> (
+    k := dim ring D + 1;
+    d := degree D;
+    R := ring D;
+    s := numgens D_0;
+    scan(k,i-> D = minFlagOneStep(D));
+    t := numgens D_0;
+    newDiff := submatrix(D.dd_1, toList(s..t-1),toList(s..t-1));
+    differentialModule (chainComplex(newDiff**R^{-d},newDiff**R^{-d})[1])
+)
+
 -- MAYA: changed to be compatible with new degree convention         
 killingCyclesOneStep = method();
 killingCyclesOneStep(DifferentialModule) := (D)->(
@@ -684,3 +709,51 @@ TEST /// --resDM 3 vars
 ///
 *-
 end;
+
+--restart;
+--load("DifferentialModules.m2");
+
+--- run examples below here
+
+--R = ZZ/101[x,y]
+--A = map(R^2, R^2, matrix{{x*y, -x^2}, {y^2, -x*y}}, Degree => 2)
+-- D1 = differentialModule(A)
+-- F = resKC(D1)
+-- F1 = resMinFlag(D1)
+
+
+-- S = ZZ/101[x,y]
+-- C = koszul matrix{{x,y}}
+-- D = foldComplex(C, 0)
+-- minFlagOneStep(D)
+
+-- S = ZZ/101[x,y]
+-- C = koszul matrix{{x,y}}
+-- D = foldComplex(C, 2)
+-- minFlagOneStep(D)
+
+-- S = QQ[x,y,z]
+-- phi = map(S^4, S^4, matrix{{x*y,y^2,z,0},{-x^2,-x*y,0,z},{0,0,-x*y,-y^2},{0,0,x^2,x*y}})
+-- D = differentialModule phi
+-- minFlagOneStep(D)
+-- F = resDM D  
+
+-- S = QQ[x,y]
+-- f = map(S^{0,-1,-1,-2}, S^{0,-1,-1,-2}, matrix{{0,x,y,0},{0,0,0,-y},{0,0,0,x},{0,0,0,0}})
+-- isHomogeneous f
+
+-- g = map(S^{-1,-2,-2,-3}, S^{-1,-2,-2,-3}, matrix{{0,x,y,0},{0,0,0,-y},{0,0,0,x},{0,0,0,0}})
+-- isHomogeneous g
+
+-- h = map(S^{0,-1,-1,-2,-1,-2,-2,-3},S^{0,-1,-1,-2,-1,-2,-2,-3}, f ++ g)
+
+-- isHomogeneous h
+-- D = differentialModule(h)
+-- C1 = resMinFlag(D)
+-- C2 = resKC(D)
+-- C1.dd_1^2
+-- trim HH_0(C2) == trim HH_0(D)
+
+-- minFlagOneStep(D)
+
+-- killingCyclesOneStep(D)
