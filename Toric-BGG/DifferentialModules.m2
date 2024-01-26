@@ -135,8 +135,7 @@ minFlagOneStep(DifferentialModule) := (D) -> (
 )
 
 resMinFlag = method();
-resMinFlag(DifferentialModule) := (D) -> (
-    k := dim ring D + 1;
+resMinFlag(DifferentialModule, ZZ) := (D, k) -> (
     d := degree D;
     R := ring D;
     s := numgens D_0;
@@ -740,16 +739,13 @@ end;
 
 -- S = QQ[x,y]
 -- f = map(S^{0,-1,-1,-2}, S^{0,-1,-1,-2}, matrix{{0,x,y,0},{0,0,0,-y},{0,0,0,x},{0,0,0,0}})
--- isHomogeneous f
 
 -- g = map(S^{-1,-2,-2,-3}, S^{-1,-2,-2,-3}, matrix{{0,x,y,0},{0,0,0,-y},{0,0,0,x},{0,0,0,0}})
--- isHomogeneous g
 
 -- h = map(S^{0,-1,-1,-2,-1,-2,-2,-3},S^{0,-1,-1,-2,-1,-2,-2,-3}, f ++ g)
 
--- isHomogeneous h
 -- D = differentialModule(h)
--- C1 = resMinFlag(D)
+-- C1 = resMinFlag(D, 4)
 -- C2 = resKC(D)
 -- C1.dd_1^2
 -- trim HH_0(C2) == trim HH_0(D)
