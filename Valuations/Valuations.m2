@@ -13,11 +13,10 @@ newPackage("Valuations",
         DebuggingMode => true,
         HomePage => "https://github.com/Macaulay2/Workshop-2023-Minneapolis/tree/valuations",
         Configuration => {},
-        --PackageExports => {"LocalRings", "SubalgebraBases", "InvariantRing", "Tropical", "gfanInterface", "Binomials"}
         PackageExports => {"LocalRings", "SubalgebraBases", "InvariantRing", "gfanInterface", "Binomials"}
 	)
 
------ Possibly move to other packages
+----- Eventually move to other packages
 ring Subring := A -> ambient A
 ring RingOfInvariants := A -> ambient A
 ring LocalRing := A -> A
@@ -109,6 +108,7 @@ orderedQQn(PolynomialRing) := R -> (
     ordMod.cache.Ring = R;
     ordMod
     )
+
 orderedQQn(ZZ, List) := (n, monOrder) -> (
     R := QQ[Variables => n, MonomialOrder => monOrder];
     ordMod := orderedQQn R;
@@ -252,6 +252,7 @@ internalTropicalVariety = method(
 	"Convention" => "Max"
 	}
     )
+
 internalTropicalVariety Ideal := opts -> I -> (
     if not I.cache#?("TropicalVariety", opts) then (
     	startCone := gfanTropicalStartingCone I;
@@ -319,7 +320,7 @@ positivity = (f, matL) -> (
     for i from 0 to #matList-1 do (
 	scaledRows := {};
 	for j from 0 to #(matList_i)-1 do (
-	    coeff := -1*floor(min apply(#(matList_i)_j, k -> (((matList_i)_j)_k)/(flatten entries l)_k));
+	    coeff := -1*min apply(#(matList_i)_j, k -> (((matList_i)_j)_k)/(flatten entries l)_k);
 	    scaledRows = append(scaledRows, (1/gcd(flatten entries (coeff*l + matrix{(matList_i)_j})))*(coeff*l + matrix{(matList_i)_j}));
 	    );
 	mat := scaledRows_0;
@@ -349,7 +350,7 @@ coneToValuation (Matrix, Subring, Ring) := (coneRays, A, S) -> (
 	    m := map(T, S, gens T);
 	    valf := val(m f);
 	    if valf == infinity then infinity else (
-		(gens orderedM)*(scaledM_0)*(valf)
+		(gens orderedM)*(-scaledM_0)*(valf)
 		)
 	    )
 	);
@@ -377,14 +378,14 @@ valM = (T, valMTwiddle) -> (
     includeS := map(tensorRing, S, (gens tensorRing)_{numberVariables .. numgens tensorRing - 1});
 
 	generatingVariables := (vars tensorRing)_{numberVariables..numberVariables + numberGenerators - 1};
-    SIdeal := ideal(generatingVariables - includeT gens A); -- need a map to include 
+    I := ideal(generatingVariables - includeT gens A); -- need a map to include
     
     f := includeS (valMTwiddle.cache#"Ideal");
     
     m := map(S, tensorRing, matrix{{0,0,0}} | matrix {gens S});
 	--gTwiddle := m (sub(g, R) % I);
 	--maxTwiddle := gTwiddle % ideal(sub(f, S));
-	gTwiddle := m ((includeT g) % SIdeal);
+	gTwiddle := m ((includeT g) % I);
 	RtoS := map(S, tensorRing, {0_S, 0_S, 0_S} | gens S);
 	maxTwiddle := gTwiddle % (RtoS f);
 	--use T; -- something above changes the user's ring (what could it be?) let's assume it was T
@@ -742,46 +743,31 @@ doc ///
                 x_1*x_2*x_3,
                 (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3)
                 };
-            S = QQ[e_1, e_2, e_3, y];
-            presMap = map(R, S, gens A);
-            I = ker presMap
        Text
             The primes cones of the tropical variety:
        Example
-            C = primeConesOfIdeal I 
-	    -- C = {
-            --    matrix {{-3, 22}, {-6, -2}, {14, -3}, {-9, -3}},
-            --    matrix {{22, -3}, {-2, -6}, {-3, -9}, {-3, 14}},
-            --    matrix {{-11, -2}, {1, 19}, {13, -6}, {-10, -6}}
-            --    }
+            C = primeConesOfSubalgebra A
        Text 
-            Turn them into weights. 
-	    
-	    Note that @TT "internalTropicalVariety"@ is NOT exported
-	    
-	    REMOVE THIS TEXT AND NEXT EXAMPLE BEFORE RELEASE!
-       Example
-            debug Valuations
-            internalTropicalVariety I
-	    flatten (C/coneToMatrix/(i -> positivity(internalTropicalVariety I, {i})))
+            Turn them into weights.
        Text
             create weight valuations on the polynomial ring S
        Example
-	    v0 = coneToValuation(C#0, I, S);
-            v1 = coneToValuation(C#1, I, S);
-            v2 = coneToValuation(C#2, I, S);
-	    use S;
-            v0(e_1^2 + e_2*e_3 - y^3) -- lead term from e_1^2
-            v1(e_1^2 + e_2*e_3 - y^3) -- lead term from y^3
-            v2(e_1^2 + e_2*e_3 - y^3) -- lead term from e_2*e_3
+            v0 = coneToValuation(C#0, A);
+            v1 = coneToValuation(C#1, A);
+            v2 = coneToValuation(C#2, A);
+
+            use A#"presentationRing";
+            v0(p_0^2 + p_1*p_2 - p_3^3)
+            v1(p_0^2 + p_1*p_2 - p_3^3)
+            v2(p_0^2 + p_1*p_2 - p_3^3)
        Text
             create the induced valuation on the subring A
        Example	    
             vA0 = valM(R, v0);
             vA1 = valM(R, v1);
             vA2 = valM(R, v2);
+
             use R;
-	    
             vA0(x_1^2 + x_2^2 + x_3^2)
             vA1(x_1^2 + x_2^2 + x_3^2)
             vA2(x_1^2 + x_2^2 + x_3^2)
