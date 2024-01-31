@@ -296,6 +296,11 @@ S = ring weightedProjectiveSpace {1,1,1,2,2}
 I = minors(2, matrix{{x_0, x_1, x_2^2, x_3}, {x_1, x_2, x_3, x_4}})
 M = Ext^3(module S/I, S^{{-7}})
 N = stronglyLinearStrand M
+--Wrong answer. The terms are correct, and C.dd_2 is correct.
+--But C.dd_1 is, bizarrely, 0. I believe the correct matrix is:
+--matrix{{-x_0, 0, -x_3, 0, x_1, 0}, {-x_1, -x_0, -x_4, -x_3, x_2, x_1}, {0, -x_1, 0, -x_4, 0, x_2}}
+--I think stronglyLinearStrand is correct. The problem is with toricLL. Not sure yet what
+--the problem is. In particular, I'm not sure if this is the same problem as before or a new problem.
 --Aside: M is the canonical module of the coordinate ring of a copy of P^1 embedded in
 --the weighted projective space P(1,1,1,2,2). 
 ///
@@ -375,8 +380,111 @@ toricLL(N'')
 
 
 
+
+sheafCohomologyBGG = method();
+--Input: M a graded S-module, S the Cox ring of a weighted projective space.
+--output will be HH^i \tilde( M(j) ). Here we're computing cohomology over the associated weighted projective stack.
+sheafCohomologyBGG(Module, ZZ, ZZ) := (M, i, j) -> (
+    if depth M <= 1 then error("--M is not saturated");
+    if i == 0 then return M_j;
+    r := regularity M;
+    minDeg := min flatten degrees gens M;
+    maxDeg := max flatten degrees gens M;
+    --LL := toList (minDeg..maxDeg);
+    LL := {{0}, {1}, {2}, {3}};
+    RM := toricRR(M,LL);
+    F := resDM(RM, LengthLimit => 4);
+    T := F_0;
+    --numRows Hom(coker vars ring T, T)_{j, -i}
+    basis({-6,-3}, Hom(coker vars ring T, T));
+    )
+
+
+
+TEST///
+restart
+needsPackage "NormalToricVarieties"
+load "MultigradedBGG.m2"
+X = weightedProjectiveSpace {1,1,2}
+S = ring X
+M = S^1
+regularity M
+M = S^{{6}}
+regularity M
+M = coker vars S
+regularity M
+needsPackage "Depth"
+sheafCohomologyBGG(S^1,1,-6)
+///
+
 end;
 
 --TESTS
 
+
+--DEMO. We should delete this eventually, but leaving it here for now in case it's useful.
+restart
+load "MultigradedBGG.m2"
+--We introduce a new type: a differential module.
+--There is a method that turns any map A such that A^2 = 0 into a differential module.
+--Here is an example from the talk over the weekend:
+R = ZZ/101[x, y]
+M = map(R^2, R^2, matrix{{x*y, -x^2}, {y^2, -x*y}})
+D = differentialModule(M)
+oo.dd
+--We can compute its homology, as in the exercises:
+mingens HH(D)
+--We can take its free resolution in two ways. First, we execute
+--the algorithm from the problem set over the weekend ("KC" stands for "killing cycles")
+resKC(D)
+oo.dd
+--Here is another method for resolving. The underlying module of the output will always be
+--the free resolution of H(D):
+resDM(D)
+oo.dd
+--(it gives the same answer as resKC in this example, but this need not always be the case)
+--This resolution isn't minimal. Let's minimize it:
+minimizeDM resDM(D)
+oo.dd
+--We get back what we started, as expected.
+
+--Application to BGG:
+--The output of the multigraded BGG functor is a differential module.
+--Here is an example from the problem set over the weekend:
+restart
+load "MultigradedBGG.m2"
+X = weightedProjectiveSpace {1,1,2}
+S = ring X
+--There is a BGG functor R: mod(S) --> DM(E),
+--where E is the "Koszul dual" of S. It induces an equivalence on derived categories.
+--The output of R is typically an infinitely generated free E-module, so we must
+--specify a degree range for the output:
+toricRR(S^1, {0, 1, 2, 3})
+oo.dd
+--We also implement the left adjoint, L, of R. Applying it to a rank 1 free module gives
+--the Koszul complex:
+E = dualRingToric S
+toricLL(E^1)
+oo.dd
+--Given an S-module M, we can compute H^i(X,\widetilde{M}(j)) using BGG. Here is an example.
+M = S^1
+--Compute R(M) (in a certain degree range):
+ = toricRR(M, {0,1,2,3})
+--Resolve it:
+tail = (resDM(D, LengthLimit => 3))
+--each H^2(X, O(j)) can be computed by picking off the socle generators of the
+--summands of the tail
+bggCohomologyCheck j -> (
+    kk = coker vars ring tail_0;
+    sum flatten entries basis({j,-3}, Hom(kk, tail_0)) == rank HH^2(X, sheaf(S^{{j}}))
+    )    
+--bggCohomology prints "true" if the rank of the degree (j, -3) part of 
+--the socle of the free resolution of R(M) is equal to dim_k H^2(X, O(j))
+for k from -7 to 7 do (
+    print bggCohomologyCheck(k);
+    );
+--we get the right answer in a certain "window".
+bggCohomologyCheck(-8)
+--we get the wrong answer eventually, because our window for R(M) and its resolution 
+--is only so big. To get more cohomology, one must widen the window.
 
