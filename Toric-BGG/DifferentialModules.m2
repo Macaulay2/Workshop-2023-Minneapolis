@@ -137,7 +137,7 @@ minFlagOneStep(DifferentialModule) := (D) -> (
 resMinFlag = method();
 resMinFlag(DifferentialModule, ZZ) := (D, k) -> (
     d := degree D;
-    assert(#d == 1 and first d == 0);
+    assert(first d == 0);
     R := ring D;
     s := numgens D_0;
     scan(k,i-> D = minFlagOneStep(D));
@@ -718,6 +718,7 @@ end;
 -- R = ZZ/101[x,y]
 -- A = map(R^2, R^2, matrix{{x*y, -x^2}, {y^2, -x*y}}, Degree => 2)
 -- D1 = differentialModule(A)
+
 -- F1 = resMinFlag(D1, 4)
 
 -- F = resKC(D1)
@@ -726,7 +727,7 @@ end;
 -- S = ZZ/101[x,y]
 -- C = koszul matrix{{x,y}}
 -- D = foldComplex(C, 0)
--- minFlagOneStep(D)
+-- F = resMinFlag(D, 4)
 
 -- S = ZZ/101[x,y]
 -- C = koszul matrix{{x,y}}
