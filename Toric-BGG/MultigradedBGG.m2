@@ -141,6 +141,7 @@ minFlagOneStep(DifferentialModule) := (D) -> (
 resMinFlag = method();
 resMinFlag(DifferentialModule, ZZ) := (D, k) -> (
     d := degree D;
+    assert(first d == 0);
     R := ring D;
     s := numgens D_0;
     scan(k,i-> D = minFlagOneStep(D));
@@ -612,7 +613,7 @@ F1 = resMinFlag(D1)
 S = ZZ/101[x,y]
 C = koszul matrix{{x,y}}
 D = foldComplex(C, 0)
-minFlagOneStep(D)
+minFlagOneStep(D,4)
 
 -- S = ZZ/101[x,y]
 -- C = koszul matrix{{x,y}}
