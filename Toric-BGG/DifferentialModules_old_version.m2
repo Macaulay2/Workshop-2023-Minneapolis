@@ -24,8 +24,8 @@ export {
     "differentialModule",
     "unfold",
     "foldComplex",
-    "resDM",  
-    "resKC",    
+    "resDM",
+    "resKC",
     "minimizeDM",
     "differential"
     }
@@ -61,7 +61,7 @@ differentialModule = method(TypicalValue => DifferentialModule)
 differentialModule ChainComplex := C -> (
     --add error if C is not of the following form:
     --C_1 --> C_0 --> C_{-1}, where the two differentials
-    --are the same matrix (say of degree d, if there 
+    --are the same matrix (say of degree d, if there
     --is a grading), this matrix squares to 0, C_1 = C_0(-d), and C_{-1} = C_0(d).
   new DifferentialModule from C);
 
@@ -72,8 +72,8 @@ differentialModule Matrix := phi -> (
     if phi^2 != 0 then error "The differential does not square to zero.";
     R := ring phi;
     -- MAYA d := (degrees source phi)_0 - (degrees target phi)_0;
-    -- MAYA if target phi != source phi**R^{d} then error "source and target of map are not the same, up to a twist"; 
-    if target phi != source phi then error "source and target of map are not the same"; 
+    -- MAYA if target phi != source phi**R^{d} then error "source and target of map are not the same, up to a twist";
+    if target phi != source phi then error "source and target of map are not the same";
     -- MAYA new DifferentialModule from (chainComplex(phi**R^{d},phi)[1]));
     new DifferentialModule from (chainComplex(phi,phi)[1]));
 
@@ -82,8 +82,8 @@ differentialModule Matrix := phi -> (
     --check if the source and target are the same up to a twist
     R := ring phi;
     d := (degrees source phi)_0 - (degrees target phi)_0;
-    if target phi != source phi**R^{d} then error "source and target of map are not the same, up to a twist"; 
-    --if target phi != source phi then error "source and target of map are not the same"; 
+    if target phi != source phi**R^{d} then error "source and target of map are not the same, up to a twist";
+    --if target phi != source phi then error "source and target of map are not the same";
     new DifferentialModule from (chainComplex(phi**R^{d},phi)[1]));
     --new DifferentialModule from (chainComplex(phi,phi)[1]));
  *-
@@ -95,8 +95,8 @@ module DifferentialModule :=  (cacheValue symbol module)(D -> D_0);
 degree DifferentialModule := ZZ => (D -> degree D.dd_1); --maya changed to make degree of dm the degree of the map
 differential = method();
 differential DifferentialModule := Matrix=> (D->D.dd_1);
-kernel DifferentialModule := Module => opts -> (D -> kernel D.dd_0); 
-image DifferentialModule := Module => (D -> image D.dd_1); 
+kernel DifferentialModule := Module => opts -> (D -> kernel D.dd_0);
+image DifferentialModule := Module => (D -> image D.dd_1);
 homology DifferentialModule := Module => opts -> (D -> HH_0 D);
 
 isFreeModule(DifferentialModule) := D ->(
@@ -137,6 +137,7 @@ minFlagOneStep(DifferentialModule) := (D) -> (
 resMinFlag = method();
 resMinFlag(DifferentialModule, ZZ) := (D, k) -> (
     d := degree D;
+    assert(first d == 0);
     R := ring D;
     s := numgens D_0;
     scan(k,i-> D = minFlagOneStep(D));
@@ -145,7 +146,7 @@ resMinFlag(DifferentialModule, ZZ) := (D, k) -> (
     differentialModule (chainComplex(newDiff**R^{-d},newDiff**R^{-d})[1])
 )
 
--- MAYA: changed to be compatible with new degree convention         
+-- MAYA: changed to be compatible with new degree convention
 killingCyclesOneStep = method();
 killingCyclesOneStep(DifferentialModule) := (D)->(
 --  commented out code was working but I'm trying to improve
@@ -184,7 +185,7 @@ resKC(DifferentialModule,ZZ) := (D,k)->(
     differentialModule (chainComplex(newDiff**R^{-d},newDiff**R^{-d})[1])
     )
 
---same as above, but default value of k 
+--same as above, but default value of k
 --MAYA: changed to be compatible with new degree convention
 resKC(DifferentialModule) := (D)->(
     k := dim ring D + 1;
@@ -201,7 +202,7 @@ resKC(DifferentialModule) := (D)->(
 --  This code uses the Cartan-Eilenberg construction to build a "free resolution"
 --  of an arbitrary differential module.
 --  It could use some work.
---  SHOULD WE ADD "prune" when resolviing kernel and image? 
+--  SHOULD WE ADD "prune" when resolviing kernel and image?
 
 resDM = method(TypicalValue => DifferentialModule,
             Options => {
@@ -395,18 +396,18 @@ foldComplex(ChainComplex,ZZ) := DifferentialModule => (F,d)->(
 beginDocumentation()
 
 doc ///
-   Key 
+   Key
       DifferentialModules
-   Headline 
+   Headline
       Package for Computing Free Resolutions of Differential Modules
    Description
     Text
-      Blah blah blah      
+      Blah blah blah
 ///
 
 
 doc ///
-   Key 
+   Key
     differentialModule
     (differentialModule, map)
    Headline
@@ -416,11 +417,11 @@ doc ///
    Inputs
     f: module map with the same source and target
    Outputs
-    : DifferentialModule 
+    : DifferentialModule
    Description
     Text
       Given a module $f: M\to M$ of degree a this creates a degree a differential module from
-      f represented as as 3-term chain complex in degree -1, 0, 1. If you want a nonzero, 
+      f represented as as 3-term chain complex in degree -1, 0, 1. If you want a nonzero,
       you should specify the degree of the map explicitly.
       An error is returned if the source and target of f are not equal.
     Example
@@ -431,7 +432,7 @@ doc ///
 
 
 doc ///
-   Key 
+   Key
     unfold
     (unfold,DifferentialModule,ZZ,ZZ)
    Headline
@@ -457,7 +458,7 @@ doc ///
 
 
 doc ///
-   Key 
+   Key
     foldComplex
     (foldComplex,ChainComplex,ZZ)
    Headline
@@ -482,7 +483,7 @@ doc ///
 
 
 doc ///
-   Key 
+   Key
     resDM
     (resDM,DifferentialModule)
    Headline
@@ -506,7 +507,7 @@ doc ///
       r = resDM(D)
       r.dd_1
     Text
-      The default LengthLimit is 3 because I couldn't figure out how to change it. So if your 
+      The default LengthLimit is 3 because I couldn't figure out how to change it. So if your
       ring has dimension greater than 3, or if it's not a regular, then you can increase the
       LengthLimit to get more information.
     Example
@@ -514,14 +515,14 @@ doc ///
       phi = map(R^1,R^1,x^2,Degree=>2);
       D = differentialModule phi;
       r = resDM(D)
-      r.dd_1      
+      r.dd_1
       r = resDM(D,LengthLimit => 6)
-      r.dd_1      
+      r.dd_1
 ///
 
 
 doc ///
-   Key 
+   Key
     resKC
     (resKC,DifferentialModule)
     (resKC,DifferentialModule,ZZ)
@@ -556,14 +557,14 @@ doc ///
       phi = map(R^1,R^1,x^2, Degree=>2);
       D = differentialModule phi;
       r = resKC(D)
-      r.dd_1      
+      r.dd_1
       r = resKC(D,6)
-      r.dd_1      
+      r.dd_1
 ///
 
 
 doc ///
-   Key 
+   Key
     DifferentialModule
    Headline
     The class of differential modules.
@@ -576,7 +577,7 @@ doc ///
 
 
 doc ///
-   Key 
+   Key
     minimizeDM
     (minimizeDM,DifferentialModule)
    Headline
@@ -600,11 +601,11 @@ doc ///
       r = resKC(D)
       r.dd_1
       mr = minimizeDM(r)
-      mr.dd_1   
+      mr.dd_1
 ///
 
 
-TEST /// --test basic diff mod stuff 
+TEST /// --test basic diff mod stuff
     S = QQ[x,y]
     m = matrix{{0,x,y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
     phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
@@ -626,7 +627,7 @@ TEST /// --test basic diff mod stuff 2
     assert(prune homology D==cokernel matrix{{x*y,x^2}})
 ///
 
-TEST /// --test minimizeDM 
+TEST /// --test minimizeDM
     S = QQ[x,y]
     m = matrix{{0,x,y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
     phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
@@ -703,30 +704,30 @@ TEST /// --resDM 3 vars
     S = QQ[x,y,z]
     phi = map(S^4, S^4, matrix{{x*y,y^2,z,0},{-x^2,-x*y,0,z},{0,0,-x*y,-y^2},{0,0,x^2,x*y}})
     D = differentialModule phi
-    F = resDM D    
+    F = resDM D
     assert(F.dd_0^2==0)
 ///
 *-
 end;
 
-restart;
-load("DifferentialModules.m2");
-R = ZZ/101[x,y]
-f = map(coker vars R, coker vars R, 0)
-D = differentialModule(f)
-F = resMinFlag(D, 3)
-F.dd
+-- restart;
+-- load("DifferentialModules.m2");
+
+--- run examples below here
+
+-- R = ZZ/101[x,y]
+-- A = map(R^2, R^2, matrix{{x*y, -x^2}, {y^2, -x*y}}, Degree => 2)
+-- D1 = differentialModule(A)
+
+-- F1 = resMinFlag(D1, 4)
+
+-- F = resKC(D1)
 
 
-D1 = differentialModule(M)
-F = resKC(D1)
-F1 = resMinFlag(D1)
-
-
-S = ZZ/101[x,y]
-C = koszul matrix{{x,y}}
-D = foldComplex(C, 0)
-minFlagOneStep(D)
+-- S = ZZ/101[x,y]
+-- C = koszul matrix{{x,y}}
+-- D = foldComplex(C, 0)
+-- F = resMinFlag(D, 4)
 
 -- S = ZZ/101[x,y]
 -- C = koszul matrix{{x,y}}
@@ -736,8 +737,9 @@ minFlagOneStep(D)
 -- S = QQ[x,y,z]
 -- phi = map(S^4, S^4, matrix{{x*y,y^2,z,0},{-x^2,-x*y,0,z},{0,0,-x*y,-y^2},{0,0,x^2,x*y}})
 -- D = differentialModule phi
+-- << degree(D) << endl;
 -- minFlagOneStep(D)
--- F = resDM D  
+-- F = resMinFlag
 
 -- S = QQ[x,y]
 -- f = map(S^{0,-1,-1,-2}, S^{0,-1,-1,-2}, matrix{{0,x,y,0},{0,0,0,-y},{0,0,0,x},{0,0,0,0}})
