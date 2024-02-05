@@ -12,7 +12,9 @@ newPackage("MultigradedBGG",
 	{Name => "Eduardo Torres Davila",    Email => "torre680@umn.edu",      HomePage => "https://etdavila10.github.io/" }
 	{Name => "Sasha	Zotine",    	     Email => "18az45@queensu.ca",     HomePage => "https://sites.google.com/view/szotine/home" }
     },
-    PackageExports => { "Complexes" },
+-- sasha: this is an export rather than an import for external/internal reasons. the user will continue to use complexes with this package.
+-- but if, e.g. we had some function which called a method internally (but don't need the method otherwise) we would just import it.
+    PackageExports => {"NormalToricVarieties", "Complexes"},
     Keywords => {todo},
     DebuggingMode => true
   )
@@ -33,15 +35,13 @@ exports {
     "differential"
     }
 
-load "MultigradedBGG.m2"
 *-
+--todo: make this officially a package, so we'd remove this line.
+loadPackage "Complexes"
 
 --------------------------------------------------
 --- Differential Modules
 --------------------------------------------------
-loadPackage "Complexes"
--- todo: remove resKC
-
 
 DifferentialModule = new Type of Complex
 DifferentialModule.synonym = "differential module"
@@ -258,306 +258,6 @@ foldComplex(Complex,ZZ) := DifferentialModule => (F,d)->(
     )
 
 -*
-beginDocumentation()
-
-doc ///
-   Key 
-      DifferentialModules
-   Headline 
-      Package for Computing Free Resolutions of Differential Modules
-   Description
-    Text
-      Blah blah blah      
-///
-
-
-doc ///
-   Key 
-    differentialModule
-    (differentialModule, map)
-   Headline
-    converts a square zero matrix into a differential module
-   Usage
-    differentialModule(f)
-   Inputs
-    f: module map with the same source and target
-   Outputs
-    : DifferentialModule 
-   Description
-    Text
-      Given a module $f: M\to M$ of degree a this creates a degree a differential module from
-      f represented as as 3-term chain complex in degree -1, 0, 1. If you want a nonzero, 
-      you should specify the degree of the map explicitly.
-      An error is returned if the source and target of f are not equal.
-    Example
-      R = QQ[x]
-      phi = map(R^1/(x^2),R^1/(x^2),x, Degree=>1)
-      differentialModule(phi)
-///
-
-
-doc ///
-   Key 
-    unfold
-    (unfold,DifferentialModule,ZZ,ZZ)
-   Headline
-    converts a differential module into a 1-periodic complex
-   Usage
-    unfold(D,a,b)
-   Inputs
-    D: DifferentialModule
-    a: ZZ
-    b: ZZ
-   Outputs
-    : Complex
-   Description
-    Text
-      Given a differential module D and an integers a and b it produces a
-      chain complex with the module D in homological a through b and where
-      all maps are the differential of D.
-    Example
-      phi = matrix{{0,1},{0,0}};
-      D = differentialModule(phi);
-      unfold(D,-3,4)
-///
-
-
-doc ///
-   Key 
-    foldComplex
-    (foldComplex,Complex,ZZ)
-   Headline
-    converts a chain complex into a differential module
-   Usage
-    foldComplex(C)
-   Inputs
-    C: Complex
-    d: ZZ
-   Outputs
-    : DifferentialModule
-   Description
-    Text
-      Given a chain complex C and integer d it creates the corresponding
-      (flag) differential module of degree d.
-    Example
-      R = QQ[x,y];
-      C = res ideal(x,y)
-      D = foldComplex(C,0);
-      D.dd_1
-///
-
-
-doc ///
-   Key 
-    resDM
-    (resDM,DifferentialModule)
-   Headline
-    uses the Cartan-Eilenberg style construction to find a free resolution of a differential module
-   Usage
-    resDM(D)
-   Inputs
-    D: DifferentialModule
-   Outputs
-    : DifferentialModule
-   Description
-    Text
-      Given a differential module D it creates a free flag resolution of D, using a Cartan-Eilenberg
-      construction, up to the optional LengthLimit. So you should double
-      check that.
-    Example
-      R = QQ[x,y];
-      M = R^1/ideal(x^2,y^2);
-      phi = map(M,M,x*y, Degree=>2);
-      D = differentialModule phi;
-      r = resDM(D)
-      r.dd_1
-    Text
-      The default LengthLimit is 3 because I couldn't figure out how to change it. So if your 
-      ring has dimension greater than 3, or if it's not a regular, then you can increase the
-      LengthLimit to get more information.
-    Example
-      R = QQ[x]/(x^3);
-      phi = map(R^1,R^1,x^2,Degree=>2);
-      D = differentialModule phi;
-      r = resDM(D)
-      r.dd_1      
-      r = resDM(D,LengthLimit => 6)
-      r.dd_1      
-///
-
-
-doc ///
-   Key 
-    resKC
-    (resKC,DifferentialModule)
-    (resKC,DifferentialModule,ZZ)
-   Headline
-    uses a killing cycles style construction to find a free resolution of a differential module
-   Usage
-    resKC(D)
-    resKC(D,k)
-   Inputs
-    D: DifferentialModule
-    k: ZZ
-   Outputs
-    : DifferentialModule
-   Description
-    Text
-      Given a differential module D it creates a free flag resolution of D, using a killing cycles
-      construction.  Because of issues with adding options, there are two chocies.  The defualt
-      resKC(D) runs the algorithm for the number of steps determined by the dimension of the ambient ring.
-      resKC(D,k) for k steps.
-    Example
-      R = QQ[x,y];
-      M = R^1/ideal(x^2,y^2);
-      phi = map(M,M,x*y, Degree=>2);
-      D = differentialModule phi;
-      r = resKC(D)
-      r.dd_1
-    Text
-      The default algorithm runs for dim R + 1 steps, again because I couldn't figure out the options.
-      Adding the number of steps as a second argument is like adding a LengthLimit.
-    Example
-      R = QQ[x]/(x^3);
-      phi = map(R^1,R^1,x^2, Degree=>2);
-      D = differentialModule phi;
-      r = resKC(D)
-      r.dd_1      
-      r = resKC(D,6)
-      r.dd_1      
-///
-
-
-doc ///
-   Key 
-    DifferentialModule
-   Headline
-    The class of differential modules.
-   Description
-    Text
-      A differential module is just a module with a square zero endomorphism.  We represent this
-      via a 3-term complex with the module in positions -1, 0, and 1 and both maps being the
-      endomorphism.
-///
-
-
-doc ///
-   Key 
-    minimizeDM
-    (minimizeDM,DifferentialModule)
-   Headline
-    minimizes a sqaure matrix or a differential module
-   Usage
-    minimizeDM(D)
-   Inputs
-    D: DifferentialModule
-   Outputs
-    : DifferentialModule
-   Description
-    Text
-      Given a differential module D this code breaks off trivial
-      blocks, producing a quasi-isomorphic differential module D' with a minimal
-      differential.
-    Example
-      R = QQ[x,y];
-      M = R^1/ideal(x^2,y^2);
-      phi = map(M,M,x*y, Degree=>2);
-      D = differentialModule phi;
-      r = resKC(D)
-      r.dd_1
-      mr = minimizeDM(r)
-      mr.dd_1   
-///
-
-
-TEST /// --test basic diff mod stuff 
-    S = QQ[x,y]
-    m = matrix{{0,x,y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
-    phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
-    D = differentialModule phi
-    assert(D.dd_0^2==0)
-    assert(isHomogeneous D.dd_0)
-    assert(degree D=={2})
-    assert(prune homology D==cokernel matrix{{x,y}})
-///
-
-TEST /// --test basic diff mod stuff 2
-    S = QQ[x,y]
-    m = matrix{{0,x^2,x*y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
-    phi = map(S^{0,1,1,3}, S^{0,1,1,3} ,m, Degree=>3)
-    D = differentialModule phi
-    assert(D.dd_0^2==0)
-    assert(isHomogeneous D.dd_0)
-    assert(degree D=={3})
-    assert(prune homology D==cokernel matrix{{x*y,x^2}})
-///
-
-TEST /// --test minimizeDM 
-    S = QQ[x,y]
-    m = matrix{{0,x,y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
-    phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
-    D = differentialModule phi
-    M = minimizeDM D
-    assert(M.dd_1^2==0)
-    assert(isHomogeneous M.dd_0)
-    assert(degrees M_0=={{-1},{-1}})
-    assert(degree M=={2})
-///
-
-TEST /// --test minimizeDM 2
-    S = QQ[x,y]
-    m = matrix{{0,x^2,x*y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
-    phi = map(S^{0,1,1,3}, S^{0,1,1,3} ,m, Degree=>3)
-    D = differentialModule phi
-    M = minimizeDM D
-    delM = map(S^{1,1},S^{1,1},matrix{{x^2*y,x*y^2},{-x^3,-x^2*y}},Degree=>3)
-    assert(differential M==delM)
-///
-
-TEST /// --test resDM
-    S = QQ[x,y]
-    m = matrix{{x*y,y^2},{-x^2,-x*y}}
-    phi = map(S^2, S^2, m, Degree=>2)
-    D = differentialModule phi
-    F = resDM D
-    del = map(S^{-1,0,0,1},S^{-1,0,0,1},matrix{{0,-y,-x,-1},{0,0,0,x},{0,0,0,-y},{0,0,0,0}}, Degree=>2)
-    assert(F.dd_0^2==0)
-    assert(isHomogeneous F.dd_0)
-    assert(degree F=={2})
-    assert(differential F==del)
-///
-
-TEST /// --test foldComplex
-    S = QQ[x,y,z]
-    K = koszulComplex vars S
-    F0 = foldComplex(K,0)
-    F1 = foldComplex(K,1)
-    F4 = foldComplex(K,4)
-    assert(isHomogeneous differential F1)
-    assert(degree F0=={0})
-    assert(degree F1=={1})
-    assert(degree F4=={4})
-    assert(F4.dd_0^2==0)
-///
-
-TEST /// --test unfold
-    S = QQ[x,y]
-    phi = map(S^{1,1},S^{1,1},matrix{{x^2*y,x*y^2},{-x^3,-x^2*y}},Degree=>3)
-    D = differentialModule phi
-    C = unfold(D,-2,2)
-    assert(C.dd_0==D.dd_0)
-    assert(C.dd_1==C.dd_0)
-    assert(degree C.dd_0=={3})
-    assert(C_-2==C_3)
-///
-
-TEST /// --resDM 3 vars
-    S = QQ[x,y,z]
-    phi = map(S^4, S^4, matrix{{x*y,y^2,z,0},{-x^2,-x*y,0,z},{0,0,-x*y,-y^2},{0,0,x^2,x*y}})
-    D = differentialModule phi
-    F = resDM D    
-    assert(F.dd_0^2==0)
-///
 
 restart;
 load("DifferentialModules.m2");
@@ -606,38 +306,37 @@ minFlagOneStep(D,4)
 
 -- killingCyclesOneStep(D)
 
----
----
----
----
-
 *-
 
---Input:    A pair of matrices (M,N)
---Output:   The effect of contracting M by N. 
+--------------------------------------------------
+--- Toric BGG
+--------------------------------------------------
+
+-- Non-exported method for contracting matrices.
+-- Input:   A pair of matrices (M,N)
+-- Output:  The effect of contracting M by N. 
 matrixContract = method()
 matrixContract (Matrix,Matrix) := (M,N) -> (
     S := ring M;
     if M==0 or N==0 then return map(S^(-degrees source N),S^(degrees source M),0);
-    assert(rank source M == rank target N); 
-    transpose map(S^(-degrees source N), , transpose matrix apply(rank target M,i->apply(rank source N,j->		
-           sum(rank source M,k->contract(M_(i,k),N_(k,j) ))
-	    )))
+    if rank source M != rank target N then error("--rank of source M and target N differ");
+    mapmatrix := transpose matrix apply(rank target M, i -> apply(rank source N, j ->		
+            sum(rank source M, k -> contract(M_(i,k),N_(k,j)))
+	    )
+       	);
+    -- sasha: what the heck? why is there a null input? this doesn't cause errors but i feel like it might
+    transpose map(S^(-degrees source N), , mapmatrix)
     )
 
-
-dualRingToric = method(
-        Options => {
+-- Exported method for dualizing an algebra.
+-- Input:   a polynomial ring OR an exterior algebra
+-- Output:  the Koszul dual exterior algebra, but with an additional 
+--          ZZ-degree, the ``standard grading'' where elements of \bigwedge^k
+--          have degree k.
+dualRingToric = method(Options => {
     	    Variable        => getSymbol "x",
-	    SkewVariable => getSymbol "e"
-	}
-    );
-
+	    SkewVariable => getSymbol "e"});
 dualRingToric PolynomialRing := opts -> S ->(
-    --  Input: a polynomial ring OR an exterior algebra
---  Output:  the Koszul dual exterior algebra, but with an additional 
---           ZZ-degree, the ``standard grading'' where elements of \bigwedge^k
---           have degree k.
     kk := coefficientRing S;
     degs := null;
     if isSkewCommutative S == false then(
@@ -654,59 +353,50 @@ dualRingToric PolynomialRing := opts -> S ->(
 	);       
     )
 
-TEST ///
-restart
-needsPackage "NormalToricVarieties"
-load "MultigradedBGG.m2"
-S = ring(hirzebruchSurface(2, Variable => y));
-E = dualRingToric(S,SkewVariable => f);
-SY = dualRingToric(E);
-assert(degrees SY == degrees S)
-///
-
+-- Input:   M a (multi)-graded S-module.
+--          L a list of degrees.
+-- Output:  The differential module RR(M) in degrees from L,
+--          presented as a complex in homological degrees -1, 0 ,1
+--          and with the same differential in both spots.
 toricRR = method();
---Input: (M,LL) M a (multi)-graded S-module.
---             LL a list of degrees.
---Output:  The differenial module RR(M) in degrees from LL,
---         presented as a complex in homological degrees -1, 0 ,1
---         and with the same differential in both spots.
-toricRR(Module,List) := (N,LL) ->(
+toricRR(Module,List) := (N,L) ->(
     M = coker presentation N;
     S := ring M;
-    if not isCommutative S then error "ring M is not commutative";
+    if not isCommutative S then error "--base ring is not commutative";
     if not S.?exterior then S.exterior = dualRingToric(S);
     E := S.exterior;
-    relationsM := presentation M;
-    -- this used to say "gens image presentation M"... just in case a bug arises
-    f0 := matrix {for d in unique LL list gens image basis(d,M)};
+    -- pick out the generators in the selected degree range.
+    f0 := matrix {for d in unique L list gens image basis(d,M)};
+    -- this is the degree of the anti-canonical bundle, which
+    -- we need to twist by when we take the koszul dual.
     wEtwist := append(-sum degrees S, -numgens S);
-    df0 := apply(degrees source f0, d -> (-d | {0}) + wEtwist);
-    SE := S**E;
-    --the line below is better for degrees,it overwrites S somehow...
-    -- sasha edit: i edited the line below so that it wouldn't overwrite S. dunno if we want this.
-    --SE := (coefficientRing S)(monoid[gens S|gens E, Degrees => apply(degrees S,d->d|{0}) | degrees E, SkewCommutative => gens E]);
-    tr := sum(dim S, i-> SE_(dim S+i)*SE_i);
-    newf0 := sub(f0,SE)*tr;
-    relationsMinSE := sub(relationsM,SE);
-    newf0 = newf0 % relationsMinSE;
-    newg := matrixContract(transpose sub(f0,SE),newf0);
-    g' := sub(newg,E);
-    if E^df0 == E^0 then complex map(E^0, E^0, 0) else (
-    	differentialModule(complex{map(E^df0,E^df0, -g', Degree => degree 1_S | {-1}),map(E^df0,E^df0, -g',  Degree => degree 1_S | {-1})}[1])
+    -- here are the degrees of the generators we will have in the dual.
+    f0degs := apply(degrees source f0, d -> (-d | {0}) + wEtwist);
+    if isEmpty f0degs then complex map(E^0, E^0, 0) else (	
+    	relationsM := presentation M;
+    	SE := S**E;
+    	tr := sum(dim S, i-> SE_(dim S+i)*SE_i);
+    	newf0 := sub(f0,SE)*tr;
+    	relationsMinSE := sub(relationsM,SE);
+    	newf0 = newf0 % relationsMinSE;
+    	newg := matrixContract(transpose sub(f0,SE),newf0);
+    	g' := sub(newg,E);
+	del := map(E^f0degs,E^f0degs, -g', Degree => degree 1_S | {-1});
+	differentialModule(complex({del, del})[1])
     	)
     )
 
--- if no degree range is inputted, makes a simple choice.
+-- If there is no input of L, we make a simple choice based on some information on M.
 toricRR Module := M -> (
-    LL := if length M < infinity then unique flatten degrees basis M
-    else join(degrees M,apply(degrees ring M, d -> (degrees M)_0 + d));
-    toricRR(M,LL)
+    L := if length M < infinity then unique flatten degrees basis M
+    else join(degrees M, apply(degrees ring M, d -> (degrees M)_0 + d));
+    toricRR(M,L)
     )
 
+
+-- todo: clean these tests up next.
+-- Testing toricRR
 TEST ///
-restart
-loadPackage "NormalToricVarieties"
-load "MultigradedBGG.m2"
 S = ring hirzebruchSurface 3;
 M = coker matrix{{x_0}};
 L = {{0,0}, {1,0}, {-3, 1}, {0,1}, {2,0}};
@@ -933,7 +623,337 @@ toricLL(N'')
 ///
 end;
 
+-*
+beginDocumentation()
 
-load "MultigradedBGG.m2"
+--------------------------------------------------
+--- Differential Modules
+--------------------------------------------------
+
+doc ///
+   Key 
+      DifferentialModules
+   Headline 
+      Package for Computing Free Resolutions of Differential Modules
+   Description
+    Text
+      Blah blah blah      
+///
 
 
+doc ///
+   Key 
+    differentialModule
+    (differentialModule, map)
+   Headline
+    converts a square zero matrix into a differential module
+   Usage
+    differentialModule(f)
+   Inputs
+    f: module map with the same source and target
+   Outputs
+    : DifferentialModule 
+   Description
+    Text
+      Given a module $f: M\to M$ of degree a this creates a degree a differential module from
+      f represented as as 3-term chain complex in degree -1, 0, 1. If you want a nonzero, 
+      you should specify the degree of the map explicitly.
+      An error is returned if the source and target of f are not equal.
+    Example
+      R = QQ[x]
+      phi = map(R^1/(x^2),R^1/(x^2),x, Degree=>1)
+      differentialModule(phi)
+///
+
+
+doc ///
+   Key 
+    unfold
+    (unfold,DifferentialModule,ZZ,ZZ)
+   Headline
+    converts a differential module into a 1-periodic complex
+   Usage
+    unfold(D,a,b)
+   Inputs
+    D: DifferentialModule
+    a: ZZ
+    b: ZZ
+   Outputs
+    : Complex
+   Description
+    Text
+      Given a differential module D and an integers a and b it produces a
+      chain complex with the module D in homological a through b and where
+      all maps are the differential of D.
+    Example
+      phi = matrix{{0,1},{0,0}};
+      D = differentialModule(phi);
+      unfold(D,-3,4)
+///
+
+
+doc ///
+   Key 
+    foldComplex
+    (foldComplex,Complex,ZZ)
+   Headline
+    converts a chain complex into a differential module
+   Usage
+    foldComplex(C)
+   Inputs
+    C: Complex
+    d: ZZ
+   Outputs
+    : DifferentialModule
+   Description
+    Text
+      Given a chain complex C and integer d it creates the corresponding
+      (flag) differential module of degree d.
+    Example
+      R = QQ[x,y];
+      C = res ideal(x,y)
+      D = foldComplex(C,0);
+      D.dd_1
+///
+
+
+doc ///
+   Key 
+    resDM
+    (resDM,DifferentialModule)
+   Headline
+    uses the Cartan-Eilenberg style construction to find a free resolution of a differential module
+   Usage
+    resDM(D)
+   Inputs
+    D: DifferentialModule
+   Outputs
+    : DifferentialModule
+   Description
+    Text
+      Given a differential module D it creates a free flag resolution of D, using a Cartan-Eilenberg
+      construction, up to the optional LengthLimit. So you should double
+      check that.
+    Example
+      R = QQ[x,y];
+      M = R^1/ideal(x^2,y^2);
+      phi = map(M,M,x*y, Degree=>2);
+      D = differentialModule phi;
+      r = resDM(D)
+      r.dd_1
+    Text
+      The default LengthLimit is 3 because I couldn't figure out how to change it. So if your 
+      ring has dimension greater than 3, or if it's not a regular, then you can increase the
+      LengthLimit to get more information.
+    Example
+      R = QQ[x]/(x^3);
+      phi = map(R^1,R^1,x^2,Degree=>2);
+      D = differentialModule phi;
+      r = resDM(D)
+      r.dd_1      
+      r = resDM(D,LengthLimit => 6)
+      r.dd_1      
+///
+
+
+doc ///
+   Key 
+    resKC
+    (resKC,DifferentialModule)
+    (resKC,DifferentialModule,ZZ)
+   Headline
+    uses a killing cycles style construction to find a free resolution of a differential module
+   Usage
+    resKC(D)
+    resKC(D,k)
+   Inputs
+    D: DifferentialModule
+    k: ZZ
+   Outputs
+    : DifferentialModule
+   Description
+    Text
+      Given a differential module D it creates a free flag resolution of D, using a killing cycles
+      construction.  Because of issues with adding options, there are two chocies.  The defualt
+      resKC(D) runs the algorithm for the number of steps determined by the dimension of the ambient ring.
+      resKC(D,k) for k steps.
+    Example
+      R = QQ[x,y];
+      M = R^1/ideal(x^2,y^2);
+      phi = map(M,M,x*y, Degree=>2);
+      D = differentialModule phi;
+      r = resKC(D)
+      r.dd_1
+    Text
+      The default algorithm runs for dim R + 1 steps, again because I couldn't figure out the options.
+      Adding the number of steps as a second argument is like adding a LengthLimit.
+    Example
+      R = QQ[x]/(x^3);
+      phi = map(R^1,R^1,x^2, Degree=>2);
+      D = differentialModule phi;
+      r = resKC(D)
+      r.dd_1      
+      r = resKC(D,6)
+      r.dd_1      
+///
+
+
+doc ///
+   Key 
+    DifferentialModule
+   Headline
+    The class of differential modules.
+   Description
+    Text
+      A differential module is just a module with a square zero endomorphism.  We represent this
+      via a 3-term complex with the module in positions -1, 0, and 1 and both maps being the
+      endomorphism.
+///
+
+
+doc ///
+   Key 
+    minimizeDM
+    (minimizeDM,DifferentialModule)
+   Headline
+    minimizes a sqaure matrix or a differential module
+   Usage
+    minimizeDM(D)
+   Inputs
+    D: DifferentialModule
+   Outputs
+    : DifferentialModule
+   Description
+    Text
+      Given a differential module D this code breaks off trivial
+      blocks, producing a quasi-isomorphic differential module D' with a minimal
+      differential.
+    Example
+      R = QQ[x,y];
+      M = R^1/ideal(x^2,y^2);
+      phi = map(M,M,x*y, Degree=>2);
+      D = differentialModule phi;
+      r = resKC(D)
+      r.dd_1
+      mr = minimizeDM(r)
+      mr.dd_1   
+///
+
+--------------------------------------------------
+--- Toric BGG
+--------------------------------------------------
+
+--todo: document dualRingToric, toricRR and toricLL
+
+
+--- TESTS
+
+--------------------------------------------------
+--- Differential Modules
+--------------------------------------------------
+
+-- Constructor tests
+TEST /// 
+    S = QQ[x,y]
+    m = matrix{{0,x,y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
+    phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
+    D = differentialModule phi
+    assert(D.dd_0^2==0)
+    assert(isHomogeneous D.dd_0)
+    assert(degree D=={2})
+    assert(prune homology D==cokernel matrix{{x,y}})
+///
+
+TEST ///
+    S = QQ[x,y]
+    m = matrix{{0,x^2,x*y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
+    phi = map(S^{0,1,1,3}, S^{0,1,1,3} ,m, Degree=>3)
+    D = differentialModule phi
+    assert(D.dd_0^2==0)
+    assert(isHomogeneous D.dd_0)
+    assert(degree D=={3})
+    assert(prune homology D==cokernel matrix{{x*y,x^2}})
+///
+
+-- Testing minimizeDM
+TEST /// 
+    S = QQ[x,y]
+    m = matrix{{0,x,y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
+    phi = map(S^{0,1,1,2}, S^{0,1,1,2} ,m, Degree=>2)
+    D = differentialModule phi
+    M = minimizeDM D
+    assert(M.dd_1^2==0)
+    assert(isHomogeneous M.dd_0)
+    assert(degrees M_0=={{-1},{-1}})
+    assert(degree M=={2})
+///
+
+TEST ///
+    S = QQ[x,y]
+    m = matrix{{0,x^2,x*y,1},{0,0,0,-y},{0,0,0,x},{0,0,0,0}}
+    phi = map(S^{0,1,1,3}, S^{0,1,1,3} ,m, Degree=>3)
+    D = differentialModule phi
+    M = minimizeDM D
+    delM = map(S^{1,1},S^{1,1},matrix{{x^2*y,x*y^2},{-x^3,-x^2*y}},Degree=>3)
+    assert(differential M==delM)
+///
+
+-- Testing resDM
+TEST ///
+    S = QQ[x,y]
+    m = matrix{{x*y,y^2},{-x^2,-x*y}}
+    phi = map(S^2, S^2, m, Degree=>2)
+    D = differentialModule phi
+    F = resDM D
+    del = map(S^{-1,0,0,1},S^{-1,0,0,1},matrix{{0,-y,-x,-1},{0,0,0,x},{0,0,0,-y},{0,0,0,0}}, Degree=>2)
+    assert(F.dd_0^2==0)
+    assert(isHomogeneous F.dd_0)
+    assert(degree F=={2})
+    assert(differential F==del)
+///
+
+TEST ///
+    S = QQ[x,y,z]
+    phi = map(S^4, S^4, matrix{{x*y,y^2,z,0},{-x^2,-x*y,0,z},{0,0,-x*y,-y^2},{0,0,x^2,x*y}})
+    D = differentialModule phi
+    F = resDM D    
+    assert(F.dd_0^2==0)
+///
+
+-- Testing foldComplex
+TEST ///
+    S = QQ[x,y,z]
+    K = koszulComplex vars S
+    F0 = foldComplex(K,0)
+    F1 = foldComplex(K,1)
+    F4 = foldComplex(K,4)
+    assert(isHomogeneous differential F1)
+    assert(degree F0=={0})
+    assert(degree F1=={1})
+    assert(degree F4=={4})
+    assert(F4.dd_0^2==0)
+///
+
+-- Testing unfold
+TEST ///
+    S = QQ[x,y]
+    phi = map(S^{1,1},S^{1,1},matrix{{x^2*y,x*y^2},{-x^3,-x^2*y}},Degree=>3)
+    D = differentialModule phi
+    C = unfold(D,-2,2)
+    assert(C.dd_0==D.dd_0)
+    assert(C.dd_1==C.dd_0)
+    assert(degree C.dd_0=={3})
+    assert(C_-2==C_3)
+///
+
+--------------------------------------------------
+--- Toric BGG
+--------------------------------------------------
+
+-- Testing dualRingToric
+TEST ///
+S = ring(hirzebruchSurface(2, Variable => y));
+E = dualRingToric(S,SkewVariable => f);
+SY = dualRingToric(E);
+assert(degrees SY == degrees S)
+///
