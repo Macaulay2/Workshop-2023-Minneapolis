@@ -2,7 +2,7 @@
 newPackage("MultigradedBGG",
     Version => "1.1",
     Date => "5 June 2023",
-    Headline => "The multigraded BGG correspondence in Macaulay2",
+    Headline => "the multigraded BGG correspondence and differential modules",
     Authors => {
 	{Name => "Maya Banks",         	     Email => "mdbanks@wisc.edu",      HomePage => "https://sites.google.com/wisc.edu/mayabanks" }
         {Name => "Michael K. Brown",         Email => "mkb0096@auburn.edu",    HomePage => "http://webhome.auburn.edu/~mkb0096/" }
@@ -11,8 +11,10 @@ newPackage("MultigradedBGG",
 	{Name => "Prashanth Sridhar",	     Email => "pzs0094@auburn.edu",    HomePage => "https://sites.google.com/view/prashanthsridhar/home" }
 	{Name => "Eduardo Torres Davila",    Email => "torre680@umn.edu",      HomePage => "https://etdavila10.github.io/" }
 	{Name => "Sasha	Zotine",    	     Email => "18az45@queensu.ca",     HomePage => "https://sites.google.com/view/szotine/home" }
-	    },
-  DebuggingMode => true
+    },
+    PackageExports => { "Complexes" },
+    Keywords => {todo},
+    DebuggingMode => true
   )
 
 
@@ -26,50 +28,31 @@ exports {
     "differentialModule",
     "unfold",
     "foldComplex",
-    "resDM",  
-    "resKC",    
+    "resDM",    
     "minimizeDM",
     "differential"
     }
+
+load "MultigradedBGG.m2"
 *-
 
-
---path=prepend("../",path)
---Input:    A list of matrices with the same number of rows.
---Output:   The concatenation of those matrices.
-concatMatrices=method()
-concatMatrices(List) := L -> (
-    m:= first L;
-    scan(#L-1,i->m=m|L_(i+1));
-    m)
+--------------------------------------------------
+--- Differential Modules
+--------------------------------------------------
+loadPackage "Complexes"
+-- todo: remove resKC
 
 
---Example
---R = ZZ/101[x,y]
---A = matrix{{x*y, -x^2}, {y^2, -x*y}}
---d = map(R^2, R^2, A)
---C = chainComplex(d, d)
-
-
----
----
----
----GENERAL STUFF ON DIFFERENTIAL MODULES
----
----
----
-DifferentialModule = new Type of ChainComplex
+DifferentialModule = new Type of Complex
 DifferentialModule.synonym = "differential module"
 
-
 differentialModule = method(TypicalValue => DifferentialModule)
-differentialModule ChainComplex := C -> (
+differentialModule Complex := C -> (
     --add error if C is not of the following form:
     --C_1 --> C_0 --> C_{-1}, where the two differentials
     --are the same matrix (say of degree d, if there 
     --is a grading), this matrix squares to 0, C_1 = C_0(-d), and C_{-1} = C_0(d).
   new DifferentialModule from C);
-
 
 ---MAYA: changed this so that source and target are the same, map may be nonzero degree
 differentialModule Matrix := phi -> (
@@ -80,7 +63,7 @@ differentialModule Matrix := phi -> (
     -- MAYA if target phi != source phi**R^{d} then error "source and target of map are not the same, up to a twist"; 
     if target phi != source phi then error "source and target of map are not the same"; 
     -- MAYA new DifferentialModule from (chainComplex(phi**R^{d},phi)[1]));
-    new DifferentialModule from (chainComplex(phi,phi)[1]));
+    new DifferentialModule from (complex({phi,phi})[1]));
 
 -*
 differentialModule Matrix := phi -> (
@@ -92,7 +75,6 @@ differentialModule Matrix := phi -> (
     new DifferentialModule from (chainComplex(phi**R^{d},phi)[1]));
     --new DifferentialModule from (chainComplex(phi,phi)[1]));
  *-
-
 
 ring(DifferentialModule) := Ring => D -> D.ring;
 module DifferentialModule :=  (cacheValue symbol module)(D -> D_0);
@@ -113,15 +95,14 @@ unfold = method();
 --Input:  a differential module and a pair of integers low and high
 --Output:  the unfolded chain complex of the differential module, in homological degrees
 --         low through high.
-unfold(DifferentialModule,ZZ,ZZ) := ChainComplex => (D,low,high)->(
+unfold(DifferentialModule,ZZ,ZZ) := Complex => (D,low,high)->(
     L := toList(low..high);
     d := degree D;
     R := ring D;
     phi := differential D;
     --MAYA chainComplex apply(L,l-> phi**R^{l*d})[-low]
-    chainComplex apply(L,l-> phi)[-low]
+    complex apply(L,l-> phi)[-low]
     )
-
 
 minFlagOneStep = method()
 minFlagOneStep(DifferentialModule) := (D) -> (
@@ -147,7 +128,7 @@ resMinFlag(DifferentialModule, ZZ) := (D, k) -> (
     scan(k,i-> D = minFlagOneStep(D));
     t := numgens D_0;
     newDiff := submatrix(D.dd_1, toList(s..t-1),toList(s..t-1));
-    differentialModule (chainComplex(newDiff**R^{-d},newDiff**R^{-d})[1])
+    differentialModule (complex({newDiff**R^{-d},newDiff**R^{-d}})[1])
 )
 
 -- MAYA: changed to be compatible with new degree convention         
@@ -189,7 +170,7 @@ resDM(DifferentialModule,ZZ) := (D,k)->(
     scan(k,i-> D = killingCyclesOneStep(D));
     t := numgens D_0;
     newDiff := submatrix(D.dd_1, toList(s..t-1),toList(s..t-1));
-    differentialModule (chainComplex(newDiff**R^{-d},newDiff**R^{-d})[1])
+    differentialModule (complex({newDiff**R^{-d},newDiff**R^{-d}})[1])
     )
 
 --same as above, but default value of k 
@@ -202,10 +183,8 @@ resDM(DifferentialModule) := (D)->(
     scan(k,i-> D = killingCyclesOneStep(D));
     t := numgens D_0;
     newDiff := submatrix(D.dd_1, toList(s..t-1),toList(s..t-1));
-    differentialModule (chainComplex(newDiff**R^{-d},newDiff**R^{-d})[1])
+    differentialModule (complex({newDiff**R^{-d},newDiff**R^{-d}})[1])
     )
-
-
 
 --  Subroutines and routines to produce the minimal part of a matrix.
 --  NEEDS TO BE A SQUARE MATRIX
@@ -245,7 +224,6 @@ minimizeDiff(Matrix) := A ->(
     A
     )
 
-
 --  Input:  A (finite, free) differential module
 --  Output: A minimization of that DM.
 -- MAYA: changed to be compatible with new degree convention
@@ -255,7 +233,7 @@ minimizeDM(DifferentialModule) := r ->(
     d := degree r;
     A := minimizeDiff(r.dd_1);
     degA := map(target A, source A, A, Degree=>d);
-    differentialModule (chainComplex(degA,degA)[1])
+    differentialModule (complex({degA,degA})[1])
     )
 
 ---
@@ -265,17 +243,18 @@ minimizeDM(DifferentialModule) := r ->(
 --  Output: the corresponding free differential module of degree da
 --MAYA: changed to be compatible with degree convention
 foldComplex = method();
-foldComplex(ChainComplex,ZZ) := DifferentialModule => (F,d)->(
+foldComplex(Complex,ZZ) := DifferentialModule => (F,d)->(
     R := ring F;
     L := apply(length F+1,j->(
-	    transpose concatMatrices apply(length F+1,i->map(F_j,F_i, if i == j+1 then F.dd_i else 0))
+	    --sasha: i removed the concatMatrices method since 'matrix {_}' just does the same thing
+	    transpose matrix {apply(length F+1,i->map(F_j,F_i, if i == j+1 then F.dd_i else 0))}
 	));
-    FDiff := transpose(concatMatrices L);
+    FDiff := transpose(matrix {L});
     FMod := F_0;
     scan(length F+1, i-> FMod = FMod ++ ((F_(i+1))**(R)^{(i+1)*d}));
     degFDiff := map(FMod,FMod,FDiff, Degree=>d); --maya added
     -- MAYA differentialModule(chainComplex(FDiff**(ring F)^{d},FDiff)[1])
-    differentialModule(chainComplex(degFDiff,degFDiff)[1]) --maya added
+    differentialModule(complex({degFDiff,degFDiff})[1]) --maya added
     )
 
 -*
@@ -330,7 +309,7 @@ doc ///
     a: ZZ
     b: ZZ
    Outputs
-    : ChainComplex
+    : Complex
    Description
     Text
       Given a differential module D and an integers a and b it produces a
@@ -346,13 +325,13 @@ doc ///
 doc ///
    Key 
     foldComplex
-    (foldComplex,ChainComplex,ZZ)
+    (foldComplex,Complex,ZZ)
    Headline
     converts a chain complex into a differential module
    Usage
     foldComplex(C)
    Inputs
-    C: ChainComplex
+    C: Complex
     d: ZZ
    Outputs
     : DifferentialModule
@@ -541,20 +520,6 @@ TEST /// --test resDM
     phi = map(S^2, S^2, m, Degree=>2)
     D = differentialModule phi
     F = resDM D
-    del = map(S^{-1,0,0,1},S^{-1,0,0,1},matrix{{0,x,y,1},{0,0,0,y},{0,0,0,-x},{0,0,0,0}}, Degree=>2)
-    assert(F.dd_0^2==0)
-    assert(isHomogeneous F.dd_0)
-    assert(degree F=={2})
-    assert(differential F==del)
-///
-
-
-TEST /// --test resKC
-    S = QQ[x,y]
-    m = matrix{{x*y,y^2},{-x^2,-x*y}}
-    phi = map(S^2, S^2, m, Degree=>2)
-    D = differentialModule phi
-    F = resKC D
     del = map(S^{-1,0,0,1},S^{-1,0,0,1},matrix{{0,-y,-x,-1},{0,0,0,x},{0,0,0,-y},{0,0,0,0}}, Degree=>2)
     assert(F.dd_0^2==0)
     assert(isHomogeneous F.dd_0)
@@ -564,7 +529,7 @@ TEST /// --test resKC
 
 TEST /// --test foldComplex
     S = QQ[x,y,z]
-    K = koszul vars S
+    K = koszulComplex vars S
     F0 = foldComplex(K,0)
     F1 = foldComplex(K,1)
     F4 = foldComplex(K,4)
@@ -593,8 +558,6 @@ TEST /// --resDM 3 vars
     F = resDM D    
     assert(F.dd_0^2==0)
 ///
-*-
-end;
 
 restart;
 load("DifferentialModules.m2");
@@ -647,6 +610,8 @@ minFlagOneStep(D,4)
 ---
 ---
 ---
+
+*-
 
 --Input:    A pair of matrices (M,N)
 --Output:   The effect of contracting M by N. 
@@ -726,8 +691,8 @@ toricRR(Module,List) := (N,LL) ->(
     newf0 = newf0 % relationsMinSE;
     newg := matrixContract(transpose sub(f0,SE),newf0);
     g' := sub(newg,E);
-    if E^df0 == E^0 then chainComplex map(E^0, E^0, 0) else (
-    	differentialModule(chainComplex{map(E^df0,E^df0, -g', Degree => degree 1_S | {-1}),map(E^df0,E^df0, -g',  Degree => degree 1_S | {-1})}[1])
+    if E^df0 == E^0 then complex map(E^0, E^0, 0) else (
+    	differentialModule(complex{map(E^df0,E^df0, -g', Degree => degree 1_S | {-1}),map(E^df0,E^df0, -g',  Degree => degree 1_S | {-1})}[1])
     	)
     )
 
@@ -843,8 +808,8 @@ toricLL Module := N -> (
     differential := sum for i to numgens E-1 list (
         S_i* EtoS matrix basis(-infinity, infinity, map(N,N,E_i))
 	);
-    if #homDegs == 1 then (chainComplex map(S^0,FF#0,0))[1] else (
-	chainComplex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^(homDegs#0)*differential_(inds#(i+1))^(inds#(i))))[homDegs#0]
+    if #homDegs == 1 then (complex map(S^0,FF#0,0))[1] else (
+	complex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^(homDegs#0)*differential_(inds#(i+1))^(inds#(i))))[homDegs#0]
 	)
     )
 
