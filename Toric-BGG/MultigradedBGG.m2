@@ -12,8 +12,6 @@ newPackage("MultigradedBGG",
 	{Name => "Eduardo Torres Davila",    Email => "torre680@umn.edu",      HomePage => "https://etdavila10.github.io/" }
 	{Name => "Sasha	Zotine",    	     Email => "18az45@queensu.ca",     HomePage => "https://sites.google.com/view/szotine/home" }
     },
--- sasha: this is an export rather than an import for external/internal reasons. the user will continue to use complexes with this package.
--- but if, e.g. we had some function which called a method internally (but don't need the method otherwise) we would just import it.
     PackageExports => {"NormalToricVarieties", "Complexes"},
     Keywords => {todo},
     DebuggingMode => true
@@ -393,40 +391,6 @@ toricRR Module := M -> (
     toricRR(M,L)
     )
 
-
--- todo: clean these tests up next.
--- Testing toricRR
-TEST ///
-restart
-needsPackage "NormalToricVarieties"
-load "MultigradedBGG.m2"
-S = ring hirzebruchSurface 3;
-M = coker matrix{{x_0}};
-L = {{0,0}, {1,0}};
-D = toricRR(M, L);
-assert(degree D == {0,0,-1})
-E = ring D;
-f = map(E^{{1, -2, -4}} ++ E^{{0, -2, -4}}, E^{{1, -2, -4}} ++ E^{{0, -2, -4}}, matrix{{0, 0}, {e_2, 0}});
-assert(D.dd_0 == f)
-L = {{0,0}, {1,0}, {-3, 1}, {0,1}, {2,0}};
-D = toricRR(M,L);
-assert(degree D == {0,0,-1})
-assert(D.dd^2 == 0)
-M = coker random(S^2, S^{3:{-3,-2}});
-D = toricRR M --takes several seconds
-assert(degree D == {0,0,-1})
-assert(D.dd^2 == 0)
-///
-
-TEST ///
-S = ring weightedProjectiveSpace {1,1,2}
-M = coker random(S^2, S^{3:{-5}});
-D = toricRR M --takes several seconds
-assert(degree D == {0,-1})
-assert(D.dd^2 == 0)
-///
-
-
 toricLL = method();
 --Input: N a (multi)-graded E-module.
 --Caveat: Assumes N is finitely generated.
@@ -450,14 +414,11 @@ toricLL Module := N -> (
     differential := sum for i to numgens E-1 list (
         S_i* EtoS matrix basis(-infinity, infinity, map(N,N,E_i))
 	);
-    if #homDegs == 1 then (complex map(S^0,FF#0,0))[1] else (
+    if #homDegs == 1 then (complex {map(S^0,FF#0,0)})[1] else (
 	complex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^(homDegs#0)*differential_(inds#(i+1))^(inds#(i))))[homDegs#0]
 	)
     )
 TEST ///
-restart
-load "MultigradedBGG.m2"
-needsPackage "NormalToricVarieties"
 S = ring hirzebruchSurface 3;
 E = dualRingToric S;
 C = toricLL(E^1)
@@ -470,39 +431,35 @@ assert (HH_6 C == 0)
 assert (HH_7 C == 0)
 assert (HH_8 C == 0)
 assert (minors(1, C.dd_5) == ideal vars ring C)
-
-
 N = coker vars E
-toricLL(N)--problem here caused by Complexes package?
+C = toricLL(N)--problem here caused by Complexes package?
+assert(rank C_0 == 1)
+assert(C_-1 == 0)
+assert(C_1 == 0)
+///
 
---how about a cyclic but non-free module:
+--todo: verify that these are the correct matrices for the two examples
+--      then we'll actually manually input them for the assert
+-- cyclic but non-free module:
+TEST ///
+restart
+load "MultigradedBGG.m2"
+needsPackage "NormalToricVarieties"
+S = ring hirzebruchSurface 3;
+E = dualRingToric S;
 C2 = toricLL(coker matrix{{e_0, e_1}})
-isHomogeneous C2
-(C2.dd)^2 == 0
-C2.dd
-isHomogeneous oo
---let's try it with a non-cyclic module
-S = ring weightedProjectiveSpace {1,1,1,1}
+assert(isHomogeneous C2)
+assert((C2.dd)^2 == 0)
+///
+
+TEST ///
+--non-cyclic module
+S = ring weightedProjectiveSpace {1,1,2,3}
 E = dualRingToric S
 N = module ideal(e_2, e_1*e_3)
-presentation N
-module ideal(e_0, e_1 * e_3)
-C3 = toricLL(module ideal(e_0, e_1*e_3))
-C3.dd
-C4 = toricLL(module ideal(e_2, e_1*e_3))
-C4.dd
-isHomogeneous C3
-(C3.dd)^2 == 0
-C3.dd
-C3_(-1)
-
-N = coker matrix{{e_0, e_1}}
-C = toricLL(N)
-isHomogeneous oo
-(toricLL(N)).dd
-degrees C_0
-degrees C_1
-degrees C_2
+C = toricLL N
+assert(isHomogeneous C)
+assert((C3.dd)^2 == 0)
 ///
 
 
@@ -525,52 +482,38 @@ stronglyLinearStrand Module := M -> (
 
 
 
-TEST///
-restart
-load "MultigradedBGG.m2"
-needsPackage "NormalToricVarieties"
+TEST ///
 S = ring weightedProjectiveSpace {1,1,1,2,2};
 I = minors(2, matrix{{x_0, x_1, x_2^2, x_3}, {x_1, x_2, x_3, x_4}});
 M = Ext^3(module S/I, S^{{-7}});
 L = stronglyLinearStrand M
 betti L
 L.dd
-S = ring hirzebruchSurface 3;
-M = coker vars S;
-stronglyLinearStrand(M)--should give Koszul complex, and it does.
-M = coker matrix{{x_1, x_2^2}}
-res M
-L = stronglyLinearStrand(M)
-L.dd
 loadPackage "TateOnProducts"
-M = coker(N.dd_1)
-ring M
+M = coker(L.dd_1)
 S = ring M
+--todo: sasha will ask greg about loading packages in tests
 A = coker map(S^{-1} ++ S^{-1} ++ S^{-1}, S^{-2} ++ S^{-2} ++ S^{-2} ++ S^{-2} ++ S^{-3} ++ S^{-3}, matrix{{x_0, 0, x_1, 0, x_3, 0}, {0,x_0,-x_2,x_1,-x_4,x_3}, {-x_2,-x_1,0,-x_2,0,-x_4}})
 isIsomorphic(M, A)
-
+assert(HH_2 L == 0)
+assert(HH_1 L == 0)
 --Aside: M is the canonical module of the coordinate ring of a copy of P^1 embedded in
 --the weighted projective space P(1,1,1,2,2). 
 ///
 
-TEST///
-restart
-load "MultigradedBGG.m2"
-needsPackage "NormalToricVarieties"
+TEST ///
 S = ring hirzebruchSurface 3;
-E = dualRingToric S;
-C = toricLL(E^1)
-C_(-1)
-C.dd
-C.dd
-N = module ideal {e_0, e_1*e_3}
-
-C3 = toricLL(module ideal(e_0, e_1*e_3))
-C3.dd
-C4 = toricLL(module ideal(e_2, e_1*e_3))
-C4.dd
+M = coker vars S;
+L = stronglyLinearStrand(M)--should give Koszul complex, and it does.
+assert(numcols basis HH_0 L == 1)
+assert(HH_1 L == 0)
+assert(HH_2 L == 0)
+assert(HH_3 L == 0)
+assert(HH_4 L == 0)
+M = coker matrix{{x_1, x_2^2}}
+L = stronglyLinearStrand(M)
+assert(L == koszulComplex {x_1})
 ///
-
 
 end;
 
@@ -907,4 +850,33 @@ S = ring(hirzebruchSurface(2, Variable => y));
 E = dualRingToric(S,SkewVariable => f);
 SY = dualRingToric(E);
 assert(degrees SY == degrees S)
+///
+
+-- Testing toricRR
+TEST ///
+S = ring hirzebruchSurface 3;
+M = coker matrix{{x_0}};
+L = {{0,0}, {1,0}};
+D = toricRR(M, L);
+assert(degree D == {0,0,-1})
+E = ring D;
+f = map(E^{{1, -2, -4}} ++ E^{{0, -2, -4}}, E^{{1, -2, -4}} ++ E^{{0, -2, -4}}, matrix{{0, 0}, {e_2, 0}});
+assert(D.dd_0 == f)
+L = {{0,0}, {1,0}, {-3, 1}, {0,1}, {2,0}};
+D = toricRR(M,L);
+assert(degree D == {0,0,-1})
+assert(D.dd^2 == 0)
+--this takes several seconds, so we won't include it
+--M = coker random(S^2, S^{3:{-3,-2}});
+--D = toricRR M
+--assert(degree D == {0,0,-1})
+--assert(D.dd^2 == 0)
+///
+
+TEST ///
+S = ring weightedProjectiveSpace {1,1,2}
+M = coker random(S^2, S^{3:{-5}});
+D = toricRR M
+assert(degree D == {0,-1})
+assert(D.dd^2 == 0)
 ///
