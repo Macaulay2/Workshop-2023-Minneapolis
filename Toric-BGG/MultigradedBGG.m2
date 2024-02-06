@@ -372,7 +372,7 @@ toricRR(Module,List) := (N,L) ->(
     wEtwist := append(-sum degrees S, -numgens S);
     -- here are the degrees of the generators we will have in the dual.
     f0degs := apply(degrees source f0, d -> (-d | {0}) + wEtwist);
-    if isEmpty f0degs then complex map(E^0, E^0, 0) else (	
+    if #f0degs == 0 then complex map(E^0, E^0, 0) else (	
     	relationsM := presentation M;
     	SE := S**E;
     	tr := sum(dim S, i-> SE_(dim S+i)*SE_i);
@@ -397,81 +397,33 @@ toricRR Module := M -> (
 -- todo: clean these tests up next.
 -- Testing toricRR
 TEST ///
+restart
+needsPackage "NormalToricVarieties"
+load "MultigradedBGG.m2"
 S = ring hirzebruchSurface 3;
 M = coker matrix{{x_0}};
+L = {{0,0}, {1,0}};
+D = toricRR(M, L);
+assert(degree D == {0,0,-1})
+E = ring D;
+f = map(E^{{1, -2, -4}} ++ E^{{0, -2, -4}}, E^{{1, -2, -4}} ++ E^{{0, -2, -4}}, matrix{{0, 0}, {e_2, 0}});
+assert(D.dd_0 == f)
 L = {{0,0}, {1,0}, {-3, 1}, {0,1}, {2,0}};
-D = toricRR(M,L)
-D.dd
-
-
-LL = {{1,0}, {-3, 1}, {0,1}}
-toricRR(N, LL)
-LL = {{0,0}, {1,0}}
-
-RM = toricRR(M, LL)
-toricRR(M)
-
-S = ring weightedProjectiveSpace {1,1,1,1}
-N = coker map(S^1, (S^{-2})^4, matrix{{x_0^2, x_1^2, x_2^2, x_3^2}})
-isHomogeneous N
-M = coker map(N**(S^{2}) ++ N**(S^{1}), N**(S^{1}) ++ N ++ N ++ N, matrix {{x_0, 0, 0, x_1*x_3}, {0, x_3, x_1, -x_0}})
-isHomogeneous M
-
-basis M
-LL = {-2,-1, 0,1}
-toricRR(M, {-2,-1, 0,1})
-oo.dd
-X = weightedProjectiveSpace {1,1,2}
-S = ring X
-M = coker matrix{{x_0, x_1^2, x_2}}
-F = res M
-F.dd
-presentation M
-flatten degrees target oo
-toricRR(M, {0,1,2,3})
-///
-
-TEST ///
-restart
-load "MultigradedBGG.m2"
-kk=ZZ/101
-S=kk[x_0,x_1,Degrees=>{1,1}]
-D = toricRR(S^1,{0,1})
-G = cornerDM({0},D,LengthLimit => 3)
-G_0 == minimalPart G
-tally degrees G_0
-F = resDM(D, LengthLimit => 2)
-tally degrees F_0
-tally degrees minimalPart F
-F.dd_1
+D = toricRR(M,L);
+assert(degree D == {0,0,-1})
 assert(D.dd^2 == 0)
-assert(isHomogeneous D)
-///
-
-
-TEST ///
-restart
-load "MultigradedBGG.m2"
-kk = ZZ/101
--- ring of hirzebruchSurface 3
-S = kk[x_0, x_1, x_2, x_3, Degrees =>{{1,0},{-3,1},{1,0},{0,1}}]
-M = S^{{2,-4}}
-L = unique apply(((ideal 1_S)_* | (ideal {x_0..x_3})_* | ((ideal {x_0..x_3})^2)_*)/degree, x -> x + {-2,4})
-RM = toricRR(M,L)
-assert(RM.dd^2 == 0)
-assert(isHomogeneous RM)
+M = coker random(S^2, S^{3:{-3,-2}});
+D = toricRR M --takes several seconds
+assert(degree D == {0,0,-1})
+assert(D.dd^2 == 0)
 ///
 
 TEST ///
-restart
-load "MultigradedBGG.m2"
-kk = ZZ/101
--- ring of hirzebruchSurface 3
-S = kk[x_0, x_1, x_2, x_3, Degrees =>{{1,0},{-3,1},{1,0},{0,1}}]
-M = S^1/(ideal {x_0^2, x_1^2, x_2^2, x_3^2})
-RM = toricRR M
-assert(RM.dd^2 == 0)
-assert(isHomogeneous RM)
+S = ring weightedProjectiveSpace {1,1,2}
+M = coker random(S^2, S^{3:{-5}});
+D = toricRR M --takes several seconds
+assert(degree D == {0,-1})
+assert(D.dd^2 == 0)
 ///
 
 
@@ -502,6 +454,58 @@ toricLL Module := N -> (
 	complex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^(homDegs#0)*differential_(inds#(i+1))^(inds#(i))))[homDegs#0]
 	)
     )
+TEST ///
+restart
+load "MultigradedBGG.m2"
+needsPackage "NormalToricVarieties"
+S = ring hirzebruchSurface 3;
+E = dualRingToric S;
+C = toricLL(E^1)
+assert (isHomogeneous C)
+assert ((C.dd)^2 == 0)
+--The following 5 assertions check that C is isomorphic to the 
+--Koszul complex on x_0, ..., x_3 (up to a twist and shift)
+assert (HH_5 C == 0)
+assert (HH_6 C == 0)
+assert (HH_7 C == 0)
+assert (HH_8 C == 0)
+assert (minors(1, C.dd_5) == ideal vars ring C)
+
+
+N = coker vars E
+toricLL(N)--problem here caused by Complexes package?
+
+--how about a cyclic but non-free module:
+C2 = toricLL(coker matrix{{e_0, e_1}})
+isHomogeneous C2
+(C2.dd)^2 == 0
+C2.dd
+isHomogeneous oo
+--let's try it with a non-cyclic module
+S = ring weightedProjectiveSpace {1,1,1,1}
+E = dualRingToric S
+N = module ideal(e_2, e_1*e_3)
+presentation N
+module ideal(e_0, e_1 * e_3)
+C3 = toricLL(module ideal(e_0, e_1*e_3))
+C3.dd
+C4 = toricLL(module ideal(e_2, e_1*e_3))
+C4.dd
+isHomogeneous C3
+(C3.dd)^2 == 0
+C3.dd
+C3_(-1)
+
+N = coker matrix{{e_0, e_1}}
+C = toricLL(N)
+isHomogeneous oo
+(toricLL(N)).dd
+degrees C_0
+degrees C_1
+degrees C_2
+///
+
+
 
 stronglyLinearStrand = method();
 stronglyLinearStrand Module := M -> (
@@ -565,62 +569,9 @@ C3 = toricLL(module ideal(e_0, e_1*e_3))
 C3.dd
 C4 = toricLL(module ideal(e_2, e_1*e_3))
 C4.dd
-
---silly rank 1 example
-toricLL(coker vars E)
---applying LL to a rank 1 free module should give a Koszul complex (up to a degree twist)
-C1 = toricLL(E^1)
-isHomogeneous C1
-(C1.dd)^2 == 0
-C1.dd
-(dual C1).dd
---how about a cyclic but non-free module:
-C2 = toricLL(coker matrix{{e_0, e_1}})
-isHomogeneous C2
-(C2.dd)^2 == 0
-C2.dd
-isHomogeneous oo
---let's try it with a non-cyclic module
-S = ring weightedProjectiveSpace {1,1,1,1}
-E = dualRingToric S
-N = module ideal(e_2, e_1*e_3)
-presentation N
-module ideal(e_0, e_1 * e_3)
-C3 = toricLL(module ideal(e_0, e_1*e_3))
-C3.dd
-C4 = toricLL(module ideal(e_2, e_1*e_3))
-C4.dd
-isHomogeneous C3
-(C3.dd)^2 == 0
-C3.dd
-C3_(-1)
-
-N = coker matrix{{e_0, e_1}}
-C = toricLL(N)
-isHomogeneous oo
-(toricLL(N)).dd
-degrees C_0
-degrees C_1
-degrees C_2
-
-
-
---rank 1 example
-toricLL(coker vars E)
-isHomogeneous oo
---we should get the (twisted) Koszul complex when we input E
-N = E^1
-toricLL(E^1)
-isHomogeneous oo
-
-
-
-
-N' = ker matrix{{e_1}, {e_2}, {e_3}}
-toricLL(N')
-N'' = coker presentation N'
-toricLL(N'')
 ///
+
+
 end;
 
 -*
