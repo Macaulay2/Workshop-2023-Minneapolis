@@ -61,7 +61,7 @@ differentialModule Matrix := phi -> (
     -- MAYA if target phi != source phi**R^{d} then error "source and target of map are not the same, up to a twist"; 
     if target phi != source phi then error "source and target of map are not the same"; 
     -- MAYA new DifferentialModule from (chainComplex(phi**R^{d},phi)[1]));
-    new DifferentialModule from (complex({phi,phi})[1]));
+    new DifferentialModule from (complex({-phi,-phi})[1]));--the maps are negated to cancel out the sign introduced by the shift.
 
 -*
 differentialModule Matrix := phi -> (
@@ -126,7 +126,7 @@ resMinFlag(DifferentialModule, ZZ) := (D, k) -> (
     scan(k,i-> D = minFlagOneStep(D));
     t := numgens D_0;
     newDiff := submatrix(D.dd_1, toList(s..t-1),toList(s..t-1));
-    differentialModule (complex({newDiff**R^{-d},newDiff**R^{-d}})[1])
+    differentialModule (complex({-newDiff**R^{-d},-newDiff**R^{-d}})[1])
 )
 
 -- MAYA: changed to be compatible with new degree convention         
@@ -168,7 +168,7 @@ resDM(DifferentialModule,ZZ) := (D,k)->(
     scan(k,i-> D = killingCyclesOneStep(D));
     t := numgens D_0;
     newDiff := submatrix(D.dd_1, toList(s..t-1),toList(s..t-1));
-    differentialModule (complex({newDiff**R^{-d},newDiff**R^{-d}})[1])
+    differentialModule (complex({-newDiff**R^{-d},-newDiff**R^{-d}})[1])
     )
 
 --same as above, but default value of k 
@@ -181,7 +181,7 @@ resDM(DifferentialModule) := (D)->(
     scan(k,i-> D = killingCyclesOneStep(D));
     t := numgens D_0;
     newDiff := submatrix(D.dd_1, toList(s..t-1),toList(s..t-1));
-    differentialModule (complex({newDiff**R^{-d},newDiff**R^{-d}})[1])
+    differentialModule (complex({-newDiff**R^{-d},-newDiff**R^{-d}})[1])
     )
 
 --  Subroutines and routines to produce the minimal part of a matrix.
@@ -231,7 +231,7 @@ minimizeDM(DifferentialModule) := r ->(
     d := degree r;
     A := minimizeDiff(r.dd_1);
     degA := map(target A, source A, A, Degree=>d);
-    differentialModule (complex({degA,degA})[1])
+    differentialModule (complex({-degA,-degA})[1])
     )
 
 ---
@@ -252,7 +252,7 @@ foldComplex(Complex,ZZ) := DifferentialModule => (F,d)->(
     scan(length F+1, i-> FMod = FMod ++ ((F_(i+1))**(R)^{(i+1)*d}));
     degFDiff := map(FMod,FMod,FDiff, Degree=>d); --maya added
     -- MAYA differentialModule(chainComplex(FDiff**(ring F)^{d},FDiff)[1])
-    differentialModule(complex({degFDiff,degFDiff})[1]) --maya added
+    differentialModule(complex({-degFDiff,-degFDiff})[1]) --maya added
     )
 
 -*
