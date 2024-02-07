@@ -438,8 +438,7 @@ assert(C_-1 == 0)
 assert(C_1 == 0)
 ///
 
---todo: verify that these are the correct matrices for the two examples
---      then we'll actually manually input them for the assert
+
 -- cyclic but non-free module:
 TEST ///
 restart
@@ -447,19 +446,22 @@ load "MultigradedBGG.m2"
 needsPackage "NormalToricVarieties"
 S = ring hirzebruchSurface 3;
 E = dualRingToric S;
-C2 = toricLL(coker matrix{{e_0, e_1}})
-assert(isHomogeneous C2)
-assert((C2.dd)^2 == 0)
+C = toricLL(coker matrix{{e_0, e_1}})
+assert(C == koszulComplex {x_2, x_3})
 ///
 
 TEST ///
 --non-cyclic module
-S = ring weightedProjectiveSpace {1,1,2,3}
-E = dualRingToric S
-N = module ideal(e_2, e_1*e_3)
-C = toricLL N
-assert(isHomogeneous C)
-assert((C3.dd)^2 == 0)
+restart
+load "MultigradedBGG.m2"
+needsPackage "NormalToricVarieties"
+E = dualRingToric (ZZ/101[x_0, x_1, Degrees => {1, 2}]);
+N = module ideal(e_0, e_1);
+C = toricLL(N);
+S = ring C;
+f = map(S^{{3}}, S^{{1}} ++ S^{{2}}, matrix{{x_1, -x_0}});
+C' = complex({f})[-2];
+assert(C == C')
 ///
 
 
