@@ -116,15 +116,15 @@ presMap = map(R, S, gens A);
 I = ker presMap
 
 -- The primes cones of the tropical variety:
-C = primeConesOfIdeal I
+C = primeConesOfSubalgebra A
 
 -- turn them into weights:
 flatten (C/coneToMatrix/(i -> positivity(tropicalVariety I, {i})))
 
 -- create weight valuations on the polynomial ring S
-v0 = coneToValuation(C#0, I);
-v1 = coneToValuation(C#1, I);
-v2 = coneToValuation(C#2, I);
+v0 = coneToValuation(C#0, A);
+v1 = coneToValuation(C#1, A);
+v2 = coneToValuation(C#2, A);
 use S;
 
 v0(e_1^2 + e_2*e_3 - y^3) -- lead term from e_1^2
