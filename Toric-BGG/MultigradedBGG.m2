@@ -432,7 +432,7 @@ assert (HH_7 C == 0)
 assert (HH_8 C == 0)
 assert (minors(1, C.dd_5) == ideal vars ring C)
 N = coker vars E
-C = toricLL(N)--problem here caused by Complexes package?
+C = toricLL(N)
 assert(rank C_0 == 1)
 assert(C_-1 == 0)
 assert(C_1 == 0)
