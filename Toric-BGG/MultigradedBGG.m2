@@ -99,7 +99,7 @@ unfold(DifferentialModule,ZZ,ZZ) := Complex => (D,low,high)->(
     R := ring D;
     phi := differential D;
     --MAYA chainComplex apply(L,l-> phi**R^{l*d})[-low]
-    complex apply(L,l-> phi)[-low]
+    complex apply(L,l-> (-1)^{low}*phi)[-low]
     )
 
 minFlagOneStep = method()
@@ -415,7 +415,7 @@ toricLL Module := N -> (
         S_i* EtoS matrix basis(-infinity, infinity, map(N,N,E_i))
 	);
     if #homDegs == 1 then (complex {map(S^0,FF#0,0)})[1] else (
-	complex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^(homDegs#0)*differential_(inds#(i+1))^(inds#(i))))[homDegs#0]
+	complex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^(homDegs#0)*differential_(inds#(i+1))^(inds#(i))))[-homDegs#0]
 	)
     )
 TEST ///
@@ -426,11 +426,11 @@ assert (isHomogeneous C)
 assert ((C.dd)^2 == 0)
 --The following 5 assertions check that C is isomorphic to the 
 --Koszul complex on x_0, ..., x_3 (up to a twist and shift)
-assert (HH_5 C == 0)
-assert (HH_6 C == 0)
-assert (HH_7 C == 0)
-assert (HH_8 C == 0)
-assert (minors(1, C.dd_5) == ideal vars ring C)
+assert (HH_(0) C == 0)
+assert (HH_(-1) C == 0)
+assert (HH_(-2) C == 0)
+assert (HH_(-3) C == 0)
+assert (minors(1, C.dd_(-3)) == ideal vars ring C)
 N = coker vars E
 C = toricLL(N)
 assert(rank C_0 == 1)
@@ -518,6 +518,7 @@ assert(L == koszulComplex {x_1})
 ///
 
 end;
+
 
 -*
 beginDocumentation()
@@ -747,6 +748,9 @@ doc ///
 --------------------------------------------------
 --- Differential Modules
 --------------------------------------------------
+
+--Michael: I changed some signs in the differential modules methods that may affect these tests. Some signs
+--may need to be flipped. 
 
 -- Constructor tests
 TEST /// 
