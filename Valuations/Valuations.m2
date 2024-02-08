@@ -4,7 +4,7 @@ newPackage("Valuations",
         Date => "June 5, 2023",
         Authors => {
             {Name => "Michael Burr", Email => "burr2@clemson.edu", HomePage => "https://cecas.clemson.edu/~burr2/"},
-            {Name => "Colin Alstad", Email => "calstad@clemson.edu"},
+            {Name => "Colin Alstad", Email => "calstad@clemson.edu", HomePage => "https://colinalstad.com/"},
             {Name => "Michael Byrd", Email => "mbyrd6@clemson.edu", HomePage => "https://michael-byrd.github.io"},
             {Name => "Ethan Partida", Email => "ethan_partida@brown.edu", HomePage => "https://ethanpartida.github.io/"},
             {Name => "Shelby Cox", Email => "spcox@umich.edu"},
@@ -14,7 +14,7 @@ newPackage("Valuations",
         HomePage => "https://github.com/Macaulay2/Workshop-2023-Minneapolis/tree/valuations",
         Configuration => {},
         PackageExports => {"LocalRings", "SubalgebraBases", "InvariantRing", "gfanInterface", "Binomials"}
-	)
+        )
 
 ----- Eventually move to other packages
 ring Subring := A -> ambient A
@@ -42,7 +42,7 @@ export{"valuation",
        "OrderedQQVector",
        "orderedQQn"
        }
-   
+
 OrderedQQn = new Type of Module
 OrderedQQVector = new Type of Vector
 
@@ -128,7 +128,7 @@ OrderedQQn#{Standard,AfterNoPrint} = M -> (
     );
 
 --
--- comparison of ordered vectors 
+-- comparison of ordered vectors
 OrderedQQVector ? OrderedQQVector := (a, b) -> (
     M := class a;
     N := class b;
@@ -157,7 +157,7 @@ InfiniteNumber ==  OrderedQQVector := (a, b) -> false
 -- monomialToOrderedQQVector
 --
 -- A function that takes a monomial and an ordered QQ-module and returns the
--- exponent vector of the monomial as a vector in the passed QQ-module    
+-- exponent vector of the monomial as a vector in the passed QQ-module
 monomialToOrderedQQVector = method()
 monomialToOrderedQQVector (RingElement, OrderedQQn) := (monomial, orderedQQModule) -> (
     exponentVector := vector flatten exponents monomial;
@@ -249,26 +249,26 @@ localRingValuation LocalRing := R -> (
 --
 internalTropicalVariety = method(
     Options => {
-	"Convention" => "Max"
-	}
+        "Convention" => "Max"
+        }
     )
 
 internalTropicalVariety Ideal := opts -> I -> (
     if not I.cache#?("TropicalVariety", opts) then (
-    	startCone := gfanTropicalStartingCone I;
-    	T := (gfanTropicalTraverse startCone)_0;
-	if opts#"Convention" == "Max" then (
-	    -- use default output of gfan
-	    )
-	else if opts#"Convention" == "Min" then (
-	    -- negate the rays
-	    T = fan(-rays T, linealitySpace T, maxCones T);
-	    )
-	else (
-	    error("-- Unknown value for option 'Convention', use 'Max' or 'Min'");
-	    );
-    	I.cache#("TropicalVariety", opts) = T;
-	);
+        startCone := gfanTropicalStartingCone I;
+        T := (gfanTropicalTraverse startCone)_0;
+        if opts#"Convention" == "Max" then (
+            -- use default output of gfan
+            )
+        else if opts#"Convention" == "Min" then (
+            -- negate the rays
+            T = fan(-rays T, linealitySpace T, maxCones T);
+            )
+        else (
+            error("-- Unknown value for option 'Convention', use 'Max' or 'Min'");
+            );
+        I.cache#("TropicalVariety", opts) = T;
+        );
     I.cache#("TropicalVariety", opts)
     )
 
@@ -281,9 +281,9 @@ primeConesOfIdeal = I -> (
     cns := for i in c list r_i;
     inCns := for c in cns list (flatten entries(c * transpose matrix{toList(numColumns(c) : 1)}));
     L := for i from 0 to #cns-1 list (
-	H := gfanInitialForms(first entries gens I, -1*(inCns#i), "ideal" =>true);
-	if binomialIsPrime ideal H then cns#i
-	);
+        H := gfanInitialForms(first entries gens I, -1*(inCns#i), "ideal" =>true);
+        if binomialIsPrime ideal H then cns#i
+        );
     delete(null,L)
     )
 
@@ -291,7 +291,7 @@ primeConesOfSubalgebra = A -> (
     I := ker A#"presentationMap";
     primeConesOfIdeal I
 )
-						    
+
 -- given a set of rays of a 2D cone,
 -- get two interior points of the cone that span it (as a vector space)
 coneToMatrix = coneRays -> (
@@ -317,17 +317,17 @@ getMaxIndependent = M -> (
 positivity = (f, matL) -> (
     l := transpose linealitySpace(f);
     finalScaledMats := {};
-    matList := for i from 0 to #matL-1 list entries matL_i;    
+    matList := for i from 0 to #matL-1 list entries matL_i;
     for i from 0 to #matList-1 do (
-	scaledRows := {};
-	for j from 0 to #(matList_i)-1 do (
-	    coeff := -1*min apply(#(matList_i)_j, k -> (((matList_i)_j)_k)/(flatten entries l)_k);
-	    scaledRows = append(scaledRows, (1/gcd(flatten entries (coeff*l + matrix{(matList_i)_j})))*(coeff*l + matrix{(matList_i)_j}));
-	    );
-	mat := scaledRows_0;
-	for i from 1 to #scaledRows-1 do mat = mat || scaledRows_i;
-	finalScaledMats = append(finalScaledMats, mat);
-    	);
+        scaledRows := {};
+        for j from 0 to #(matList_i)-1 do (
+            coeff := -1*min apply(#(matList_i)_j, k -> (((matList_i)_j)_k)/(flatten entries l)_k);
+            scaledRows = append(scaledRows, (1/gcd(flatten entries (coeff*l + matrix{(matList_i)_j})))*(coeff*l + matrix{(matList_i)_j}));
+            );
+        mat := scaledRows_0;
+        for i from 1 to #scaledRows-1 do mat = mat || scaledRows_i;
+        finalScaledMats = append(finalScaledMats, mat);
+        );
     finalScaledMats
     )
 
@@ -348,13 +348,13 @@ coneToValuation (Matrix, Subring, Ring) := (coneRays, A, S) -> (
     val := leadTermValuation(T);
     orderedM := orderedQQn(2, {Lex});
     func := (f -> (
-	    m := map(T, S, gens T);
-	    valf := val(m f);
-	    if valf == infinity then infinity else (
-		(gens orderedM)*(-scaledM_0)*(valf)
-		)
-	    )
-	);
+            m := map(T, S, gens T);
+            valf := val(m f);
+            if valf == infinity then infinity else (
+                (gens orderedM)*(-scaledM_0)*(valf)
+                )
+            )
+        );
     valS := valuation(func, S, orderedM);
     valS.cache#"Ideal" = I;
     valS.cache#"Subalgebra" = A;
@@ -365,11 +365,11 @@ coneToValuation (Matrix, Subring, Ring) := (coneRays, A, S) -> (
 -- construct the new valuation by taking min
 valM = (T, valMTwiddle) -> (
     valMfunc := (g) -> (
-	A := valMTwiddle.cache#"Subalgebra";
+        A := valMTwiddle.cache#"Subalgebra";
 
     S := valMTwiddle#"domain";
 
-	numberVariables := numcols vars T;
+        numberVariables := numcols vars T;
     numberGenerators := numcols vars S;
     tensorVariables := monoid[Variables => numberVariables + numberGenerators,
                                 MonomialOrder => Eliminate numberVariables];
@@ -378,20 +378,20 @@ valM = (T, valMTwiddle) -> (
     includeT := map(tensorRing, T, (gens tensorRing)_{0 .. numgens T -1});
     includeS := map(tensorRing, S, (gens tensorRing)_{numberVariables .. numgens tensorRing - 1});
 
-	generatingVariables := (vars tensorRing)_{numberVariables..numberVariables + numberGenerators - 1};
+        generatingVariables := (vars tensorRing)_{numberVariables..numberVariables + numberGenerators - 1};
     I := ideal(generatingVariables - includeT gens A); -- need a map to include
-    
+
     f := includeS (valMTwiddle.cache#"Ideal");
-    
+
     m := map(S, tensorRing, matrix{{0,0,0}} | matrix {gens S});
-	--gTwiddle := m (sub(g, R) % I);
-	--maxTwiddle := gTwiddle % ideal(sub(f, S));
-	gTwiddle := m ((includeT g) % I);
-	RtoS := map(S, tensorRing, {0_S, 0_S, 0_S} | gens S);
-	maxTwiddle := gTwiddle % (RtoS f);
-	--use T; -- something above changes the user's ring (what could it be?) let's assume it was T
-	valMTwiddle(maxTwiddle)
-	);
+        --gTwiddle := m (sub(g, R) % I);
+        --maxTwiddle := gTwiddle % ideal(sub(f, S));
+        gTwiddle := m ((includeT g) % I);
+        RtoS := map(S, tensorRing, {0_S, 0_S, 0_S} | gens S);
+        maxTwiddle := gTwiddle % (RtoS f);
+        --use T; -- something above changes the user's ring (what could it be?) let's assume it was T
+        valMTwiddle(maxTwiddle)
+        );
     valuation(valMfunc, T, valMTwiddle#"codomain")
     )
 
@@ -480,8 +480,6 @@ doc ///
      Description
        Text
            This valuation returns the exponent vector of the
-           lowest (trailing) term of a polynomial with respect to the ring's term order.
-	       This valuation returns the exponent vector of the
            lead term of a polynomial with respect to the ring's term order.
            The valuation returns vectors in an @TT "ordered $\\QQ$-module"@,
            which respects the monomial order of the
@@ -512,22 +510,22 @@ doc ///
      Key
          valuation
          (valuation, Function)
-	     (valuation, Function, Ring, Ring)
-	     (valuation, Function, Ring, Subring)
-	     (valuation, Function, Ring, LocalRing)
-	     (valuation, Function, Ring, RingOfInvariants)
-	     (valuation, Function, Subring, Ring)
-	     (valuation, Function, Subring, Subring)
-	     (valuation, Function, Subring, LocalRing)
-	     (valuation, Function, Subring, RingOfInvariants)
-	     (valuation, Function, LocalRing, Ring)
-	     (valuation, Function, LocalRing, Subring)
-	     (valuation, Function, LocalRing, LocalRing)
-	     (valuation, Function, LocalRing, RingOfInvariants)
-	     (valuation, Function, RingOfInvariants, Ring)
-	     (valuation, Function, RingOfInvariants, Subring)
-	     (valuation, Function, RingOfInvariants, LocalRing)
-	     (valuation, Function, RingOfInvariants, RingOfInvariants)
+             (valuation, Function, Ring, Ring)
+             (valuation, Function, Ring, Subring)
+             (valuation, Function, Ring, LocalRing)
+             (valuation, Function, Ring, RingOfInvariants)
+             (valuation, Function, Subring, Ring)
+             (valuation, Function, Subring, Subring)
+             (valuation, Function, Subring, LocalRing)
+             (valuation, Function, Subring, RingOfInvariants)
+             (valuation, Function, LocalRing, Ring)
+             (valuation, Function, LocalRing, Subring)
+             (valuation, Function, LocalRing, LocalRing)
+             (valuation, Function, LocalRing, RingOfInvariants)
+             (valuation, Function, RingOfInvariants, Ring)
+             (valuation, Function, RingOfInvariants, Subring)
+             (valuation, Function, RingOfInvariants, LocalRing)
+             (valuation, Function, RingOfInvariants, RingOfInvariants)
      Headline
          User-defined valuation object
      Usage
@@ -558,10 +556,10 @@ doc ///
              v = valuation(x -> if x == 0 then infinity else 0, ZZ, ZZ)
      SeeAlso
           lowestTermValuation
-	      padicValuation
-	      "trivialValuation"
-	      leadTermValuation
-	      localRingValuation
+              padicValuation
+              "trivialValuation"
+              leadTermValuation
+              localRingValuation
 ///
 
 doc ///
@@ -619,15 +617,15 @@ doc ///
      Description
        Text
            This valuation returns the largest power of the maximal ideal
-	       of R that contains the input to the valuation.
+               of R that contains the input to the valuation.
        Example
            R = QQ[x,y];
-	       I = ideal(x,y);
-	       S = R_I
-	       localVal = localRingValuation(S)
-	       localVal(1 + x + y)
-	       localVal(x^4 + x^2*y^2 + x^7 + y^3)
-	       localVal(x^2 + x*y + y^2)
+               I = ideal(x,y);
+               S = R_I
+               localVal = localRingValuation(S)
+               localVal(1 + x + y)
+               localVal(x^4 + x^2*y^2 + x^7 + y^3)
+               localVal(x^2 + x*y + y^2)
      SeeAlso
          valuation
          Valuation
@@ -636,17 +634,17 @@ doc ///
          padicValuation
          "trivialValuation"
      ///
-     
+
 doc ///
       Key
-      	  Valuations
+          Valuations
       Headline
-      	  A package for constructing and using valuations.
+          A package for constructing and using valuations.
       Description
         Text
-	      A valuation is a function $v:R\rightarrow G\cup\{\infty\}$ 
-	      where $R$ is a ring and $G$ is a linearly ordered group with
-	      the following properties:
+              A valuation is a function $v:R\rightarrow G\cup\{\infty\}$
+              where $R$ is a ring and $G$ is a linearly ordered group with
+              the following properties:
         Text
           @UL {{"$v(ab)=v(a)+v(b)$,"},
           {"$v(a+b)\\geq\\min\\{v(a),v(b)\\}$, and"},
@@ -697,40 +695,40 @@ doc ///
 
 doc ///
      Key
-    	"Ordered modules"
+        "Ordered modules"
      Headline
          Overview of the ordered module $\QQ^n$
      Description
        Text
            Many standard valuations take values in a totally ordered subgroup $\Gamma \subseteq \QQ^n$.
-	   These standard valuations implement @ofClass OrderedQQn@, whose order is based on the
-	   monomial order of a given ring $R$.
-	   The values in $\QQ^n$ are compared using the monomial order of $R$.
-	   By default, our valuations use the min convention, that is $v(a + b) \ge \min(v(a), v(b))$.
+           These standard valuations implement @ofClass OrderedQQn@, whose order is based on the
+           monomial order of a given ring $R$.
+           The values in $\QQ^n$ are compared using the monomial order of $R$.
+           By default, our valuations use the min convention, that is $v(a + b) \ge \min(v(a), v(b))$.
        Example
            R = QQ[x,y];
-	   I = ideal(x,y);
-	   v = leadTermValuation R;
-	   a = v(x)
-	   b = v(y)
-	   c = v(x+y)
-	   a > b
-	   a == c
+           I = ideal(x,y);
+           v = leadTermValuation R;
+           a = v(x)
+           b = v(y)
+           c = v(x+y)
+           a > b
+           a == c
        Text
-       	   In the future, this object will be implemented at a deeper level.
-	   A @TO "Module"@ object does not naturally contain a monomial order. 
-	   We aim to implemenet this like we see in the object @TO "Ring"@. 
+           In the future, this object will be implemented at a deeper level.
+           A @TO "Module"@ object does not naturally contain a monomial order.
+           We aim to implement this like we see in the object @TO "Ring"@.
      SeeAlso
-     	 leadTermValuation
-	 lowestTermValuation
+         leadTermValuation
+         lowestTermValuation
          OrderedQQn
-	 orderedQQn
+         orderedQQn
 ///
 
 
 doc ///
      Key
-    	"valM"
+        "valM"
      Headline
          Add headline!
      Description
@@ -748,7 +746,7 @@ doc ///
             The primes cones of the tropical variety:
        Example
             C = primeConesOfSubalgebra A
-       Text 
+       Text
             Turn them into weights.
        Text
             create weight valuations on the polynomial ring S
@@ -763,7 +761,7 @@ doc ///
             v2(p_0^2 + p_1*p_2 - p_3^3)
        Text
             create the induced valuation on the subring A
-       Example	    
+       Example
             vA0 = valM(R, v0);
             vA1 = valM(R, v1);
             vA2 = valM(R, v2);
@@ -787,7 +785,7 @@ doc ///
             vA0(x_2^2)
             vA0(x_2^3)
      SeeAlso
-     
+
 ///
 
 
@@ -799,98 +797,98 @@ doc ///
      Description
        Text
            For an introduction see @TO "Ordered modules"@. Every element of
-	   an ordered $\QQ^n$ module is @ofClass OrderedQQVector@. A new
-	   ordered $\QQ^n$ module is created with the function @TO "orderedQQn"@.
+           an ordered $\QQ^n$ module is @ofClass OrderedQQVector@. A new
+           ordered $\QQ^n$ module is created with the function @TO "orderedQQn"@.
      SeeAlso
-     	 "Ordered modules"
-	 orderedQQn
-	 OrderedQQVector
-    
+         "Ordered modules"
+         orderedQQn
+         OrderedQQVector
+
 ///
 
 
 doc ///
      Key
          orderedQQn
-	 (orderedQQn, PolynomialRing)
-	 (orderedQQn, ZZ, List)
+         (orderedQQn, PolynomialRing)
+         (orderedQQn, ZZ, List)
      Headline
          Construct an ordered module $\QQ^n$
      Usage
          M = orderedQQn R
-	 M = orderedQQn(n, monomialOrders) 
+         M = orderedQQn(n, monomialOrders)
      Inputs
          R:PolynomialRing
-	     polynomial ring for the construction
-	 n:ZZ
-	     rank of the module
-	 monomialOrder:List
-	     monomial order for comparison
+             polynomial ring for the construction
+         n:ZZ
+             rank of the module
+         monomialOrder:List
+             monomial order for comparison
      Outputs
          M:OrderedQQn
      Description
        Text
            For an overview see @TO "Ordered modules"@.
-	   Let $R$ be @ofClass PolynomialRing@ with $n$ variables $x_1 \dots x_n$.
-	   Then the corresponding ordered $\QQ^n$ module has the following
-	   ordering. Suppose that $v, w \in QQ^n$.
-	   Let $d \in \ZZ$ be a positive integer and $c \in \ZZ^n_{\ge 0}$ 
-	   be a vector such that $dv + c$ and $dw + c$ have non-negative 
-	   entries. Then we say $v < w$ if and only if $x^{dv + c} > x^{dw + c}$
-	   in $R$. Note that this property does not depend on the choice of $d$
-	   $c$ so we obtain a well-defined order on $\QQ^n$.
-	   
+           Let $R$ be @ofClass PolynomialRing@ with $n$ variables $x_1 \dots x_n$.
+           Then the corresponding ordered $\QQ^n$ module has the following
+           ordering. Suppose that $v, w \in QQ^n$.
+           Let $d \in \ZZ$ be a positive integer and $c \in \ZZ^n_{\ge 0}$
+           be a vector such that $dv + c$ and $dw + c$ have non-negative
+           entries. Then we say $v < w$ if and only if $x^{dv + c} > x^{dw + c}$
+           in $R$. Note that this property does not depend on the choice of $d$
+           $c$ so we obtain a well-defined order on $\QQ^n$.
+
        Example
            R = QQ[x_1 .. x_3, MonomialOrder => Lex]
-	   M = orderedQQn R
-	   v = 1/2 * M_0 - 1/3 * M_1
-	   w = 1/2 * M_0 + 1/4 * M_2
-	   v < w
-       
+           M = orderedQQn R
+           v = 1/2 * M_0 - 1/3 * M_1
+           w = 1/2 * M_0 + 1/4 * M_2
+           v < w
+
        Text
            Instead of supplying @ofClass PolynomialRing@, we may supply directly
-	   give the rank $n$ of the module along with a monomial order.
-	   The constructor creates the ring $R$ with $n$ variables and the
-	   given monomial order and uses this for the comparison operations.
-	   
+           give the rank $n$ of the module along with a monomial order.
+           The constructor creates the ring $R$ with $n$ variables and the
+           given monomial order and uses this for the comparison operations.
+
        Example
            N = orderedQQn(3, {Lex})
-	   R = N.cache.Ring
-	   N' = orderedQQn R
-	   N == N' 
-       
+           R = N.cache.Ring
+           N' = orderedQQn R
+           N == N'
+
        Text
            In the above example, $N$ and $N'$ are the same module
-	   because they are built from the same ring. See @TO (symbol ==, OrderedQQn, OrderedQQn)@.
-	   
+           because they are built from the same ring. See @TO (symbol ==, OrderedQQn, OrderedQQn)@.
+
      SeeAlso
-     	 "Ordered modules"
-	 orderedQQn    
+         "Ordered modules"
+         orderedQQn
 ///
 
 
 doc ///
      Key
          "OrderedQQVector == InfiniteNumber"
-	 "InfiniteNumber == OrderedQQVector"
-	 "(symbol ==, OrderedQQVector, InfiniteNumber)"
-	 "(symbol ==, InfiniteNumber, OrderedQQVector)"
+         "InfiniteNumber == OrderedQQVector"
+         "(symbol ==, OrderedQQVector, InfiniteNumber)"
+         "(symbol ==, InfiniteNumber, OrderedQQVector)"
      Headline
          Ordered $\QQ^n$ vectors that are infinte
      Description
        Text
            The image of $0$ under a valuation is $\infty$ or $-\infty$,
-	   depending on the choice of min or max convention. So it may be
-	   necessary to test whether an element of an ordered module $\QQ^n$
-	   is equal to the valuation of $0$.
+           depending on the choice of min or max convention. So it may be
+           necessary to test whether an element of an ordered module $\QQ^n$
+           is equal to the valuation of $0$.
        Example
            M = orderedQQn(3, {Lex})
-	   M_0 < infinity
-	   M_0 == infinity
+           M_0 < infinity
+           M_0 == infinity
      SeeAlso
-     	 "Ordered modules"
-	 OrderedQQn
-	 orderedQQn
+         "Ordered modules"
+         OrderedQQn
+         orderedQQn
 ///
 
 doc ///
@@ -901,20 +899,20 @@ doc ///
      Description
        Text
            Two ordered $\QQ^n$ modules are considered equal if they are
-	   built from the same ring. Note that isomorphic rings with the
-	   same term order may not be equal.
+           built from the same ring. Note that isomorphic rings with the
+           same term order may not be equal.
        Example
            M1 = orderedQQn(3, {Lex})
-	   R = M1.cache.Ring
-	   M2 = orderedQQn R
-	   M1 == M2
-	   S = QQ[x_1 .. x_3, MonomialOrder => {Lex}]
-	   M3 = orderedQQn S
-	   M1 == M3
+           R = M1.cache.Ring
+           M2 = orderedQQn R
+           M1 == M2
+           S = QQ[x_1 .. x_3, MonomialOrder => {Lex}]
+           M3 = orderedQQn S
+           M1 == M3
      SeeAlso
-     	 "Ordered modules"
-	 OrderedQQn
-	 orderedQQn
+         "Ordered modules"
+         OrderedQQn
+         orderedQQn
 ///
 
 
@@ -925,12 +923,12 @@ doc ///
          Comparison of vectors of an ordered module $\QQ^n$
      Description
        Text
-           See @TO "Ordered modules"@. 
-	   -- TODO add more explanation ...
+           See @TO "Ordered modules"@.
+           -- TODO add more explanation ...
      SeeAlso
-     	 "Ordered modules"
-	 OrderedQQn
-	 orderedQQn
+         "Ordered modules"
+         OrderedQQn
+         orderedQQn
 ///
 
 
@@ -942,14 +940,14 @@ doc ///
      Description
        Text
            For an introduction see @TO "Ordered modules"@. Every ordered $\QQ^n$
-	   vector belongs to @ofClass OrderedQQn@. The ordered $\QQ^n$ vectors
-	   are most easily accessed though the original module.
+           vector belongs to @ofClass OrderedQQn@. The ordered $\QQ^n$ vectors
+           are most easily accessed though the original module.
        Example
            M = orderedQQn(3, {Lex})
-	   M_0 + 2 * M_1 + 3 * M_2
+           M_0 + 2 * M_1 + 3 * M_2
      SeeAlso
-     	 "Ordered modules"
-	 orderedQQn
+         "Ordered modules"
+         orderedQQn
 ///
 
 
@@ -1005,7 +1003,7 @@ assert(val(x^2*y^2*z + x^7*y) > val(x*y*z^2 + y^3*z))
 
 -- Local ring valuation tests
 
--- 
+--
 
 end--
 
