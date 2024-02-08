@@ -52,15 +52,12 @@ differentialModule Complex := C -> (
     --is a grading), this matrix squares to 0, C_1 = C_0(-d), and C_{-1} = C_0(d).
   new DifferentialModule from C);
 
----MAYA: changed this so that source and target are the same, map may be nonzero degree
+
 differentialModule Matrix := phi -> (
     --check if the source and target are the same up to a twist
     if phi^2 != 0 then error "The differential does not square to zero.";
     R := ring phi;
-    -- MAYA d := (degrees source phi)_0 - (degrees target phi)_0;
-    -- MAYA if target phi != source phi**R^{d} then error "source and target of map are not the same, up to a twist"; 
     if target phi != source phi then error "source and target of map are not the same"; 
-    -- MAYA new DifferentialModule from (chainComplex(phi**R^{d},phi)[1]));
     new DifferentialModule from (complex({-phi,-phi})[1]));--the maps are negated to cancel out the sign introduced by the shift.
 
 -*
@@ -76,8 +73,7 @@ differentialModule Matrix := phi -> (
 
 ring(DifferentialModule) := Ring => D -> D.ring;
 module DifferentialModule :=  (cacheValue symbol module)(D -> D_0);
---MAYA degree DifferentialModule := ZZ => (D -> (degrees D_1)_0 - (degrees D_0)_0);
-degree DifferentialModule := ZZ => (D -> degree D.dd_1); --maya changed to make degree of dm the degree of the map
+degree DifferentialModule := ZZ => (D -> degree D.dd_1); 
 differential = method();
 differential DifferentialModule := Matrix=> (D->D.dd_1);
 kernel DifferentialModule := Module => opts -> (D -> kernel D.dd_0); 
@@ -88,7 +84,7 @@ isFreeModule(DifferentialModule) := D ->(
     isFreeModule module D
     )
 
---MAYA: changed to be compatible with new degree convention
+
 unfold = method();
 --Input:  a differential module and a pair of integers low and high
 --Output:  the unfolded chain complex of the differential module, in homological degrees
@@ -98,7 +94,6 @@ unfold(DifferentialModule,ZZ,ZZ) := Complex => (D,low,high)->(
     d := degree D;
     R := ring D;
     phi := differential D;
-    --MAYA chainComplex apply(L,l-> phi**R^{l*d})[-low]
     complex apply(L,l-> phi)[-low]
     )
 
@@ -129,7 +124,7 @@ resMinFlag(DifferentialModule, ZZ) := (D, k) -> (
     differentialModule (complex({-newDiff**R^{-d},-newDiff**R^{-d}})[1])
 )
 
--- MAYA: changed to be compatible with new degree convention         
+        
 killingCyclesOneStep = method();
 killingCyclesOneStep(DifferentialModule) := (D)->(
 --  commented out code was working but I'm trying to improve
@@ -146,8 +141,7 @@ killingCyclesOneStep(DifferentialModule) := (D)->(
     homMat := mingens image((gens HH_0 D) %  (image D.dd_1));
     G := res image homMat;
     psi := map(D_0,G_0**R^{d},homMat, Degree=>d);
-    --MAYA newDiff := matrix{{D.dd_1,psi},{map(G_0**R^{d},D_1,0),map(G_0**R^{d},G_0,0)}};
-    newDiff := matrix{{D.dd_1,psi},{map(G_0**R^{d},D_1,0, Degree=>d),map(G_0**R^{d},G_0**R^{d},0, Degree=>d)}}; --maya added
+    newDiff := matrix{{D.dd_1,psi},{map(G_0**R^{d},D_1,0, Degree=>d),map(G_0**R^{d},G_0**R^{d},0, Degree=>d)}}; 
     assert (newDiff*(newDiff) == 0);
     differentialModule newDiff
     )
@@ -156,7 +150,6 @@ killingCyclesOneStep(DifferentialModule) := (D)->(
 --Output:  the killing cycles resolution of D after k steps.
 -- NOTE:  until recently this produced the CONE over the resolution.
 --        but I'm interested in the resolution itself so the last few lines change that
---MAYA: changed to be compatible with new degree convention
 --Michael: changed the name of this method (and the next) to resDM, rather than resKC. The old
 --resDM has been removed.
 
@@ -172,7 +165,6 @@ resDM(DifferentialModule,ZZ) := (D,k)->(
     )
 
 --same as above, but default value of k 
---MAYA: changed to be compatible with new degree convention
 resDM(DifferentialModule) := (D)->(
     k := dim ring D + 1;
     d := degree D;
@@ -186,8 +178,6 @@ resDM(DifferentialModule) := (D)->(
 
 --  Subroutines and routines to produce the minimal part of a matrix.
 --  NEEDS TO BE A SQUARE MATRIX
---  MAYA: matrix should be a map of free modules
--- MAYA: changed to preserve degree
 minimizeDiffOnce = method();
 minimizeDiffOnce(Matrix,ZZ,ZZ) := (A,u,v) -> (
     a := rank target A;
@@ -224,7 +214,6 @@ minimizeDiff(Matrix) := A ->(
 
 --  Input:  A (finite, free) differential module
 --  Output: A minimization of that DM.
--- MAYA: changed to be compatible with new degree convention
 minimizeDM = method();
 minimizeDM(DifferentialModule) := r ->(
     R := ring r;
@@ -239,7 +228,6 @@ minimizeDM(DifferentialModule) := r ->(
 
 --  Input:  a free complex F and a degree d
 --  Output: the corresponding free differential module of degree da
---MAYA: changed to be compatible with degree convention
 foldComplex = method();
 foldComplex(Complex,ZZ) := DifferentialModule => (F,d)->(
     R := ring F;
@@ -250,61 +238,9 @@ foldComplex(Complex,ZZ) := DifferentialModule => (F,d)->(
     FDiff := transpose(matrix {L});
     FMod := F_0;
     scan(length F+1, i-> FMod = FMod ++ ((F_(i+1))**(R)^{(i+1)*d}));
-    degFDiff := map(FMod,FMod,FDiff, Degree=>d); --maya added
-    -- MAYA differentialModule(chainComplex(FDiff**(ring F)^{d},FDiff)[1])
-    differentialModule(complex({-degFDiff,-degFDiff})[1]) --maya added
+    degFDiff := map(FMod,FMod,FDiff, Degree=>d); 
+    differentialModule(complex({-degFDiff,-degFDiff})[1]) 
     )
-
--*
-
-restart;
-load("DifferentialModules.m2");
-R = ZZ/101[x,y]
-f = map(coker vars R, coker vars R, 0)
-D = differentialModule(f)
-F = resMinFlag(D, 3)
-F.dd
-
-
-D1 = differentialModule(M)
-F = resKC(D1)
-F1 = resMinFlag(D1)
-
-
-S = ZZ/101[x,y]
-C = koszul matrix{{x,y}}
-D = foldComplex(C, 0)
-minFlagOneStep(D,4)
-
--- S = ZZ/101[x,y]
--- C = koszul matrix{{x,y}}
--- D = foldComplex(C, 2)
--- minFlagOneStep(D)
-
--- S = QQ[x,y,z]
--- phi = map(S^4, S^4, matrix{{x*y,y^2,z,0},{-x^2,-x*y,0,z},{0,0,-x*y,-y^2},{0,0,x^2,x*y}})
--- D = differentialModule phi
--- minFlagOneStep(D)
--- F = resDM D  
-
--- S = QQ[x,y]
--- f = map(S^{0,-1,-1,-2}, S^{0,-1,-1,-2}, matrix{{0,x,y,0},{0,0,0,-y},{0,0,0,x},{0,0,0,0}})
-
--- g = map(S^{-1,-2,-2,-3}, S^{-1,-2,-2,-3}, matrix{{0,x,y,0},{0,0,0,-y},{0,0,0,x},{0,0,0,0}})
-
--- h = map(S^{0,-1,-1,-2,-1,-2,-2,-3},S^{0,-1,-1,-2,-1,-2,-2,-3}, f ++ g)
-
--- D = differentialModule(h)
--- C1 = resMinFlag(D, 4)
--- C2 = resKC(D)
--- C1.dd_1^2
--- trim HH_0(C2) == trim HH_0(D)
-
--- minFlagOneStep(D)
-
--- killingCyclesOneStep(D)
-
-*-
 
 --------------------------------------------------
 --- Toric BGG
