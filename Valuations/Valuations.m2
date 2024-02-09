@@ -365,11 +365,11 @@ coneToValuation (Matrix, Subring, Ring) := (coneRays, A, S) -> (
 -- construct the new valuation by taking min
 valM = (T, valMTwiddle) -> (
     valMfunc := (g) -> (
-        A := valMTwiddle.cache#"Subalgebra";
+    A := valMTwiddle.cache#"Subalgebra";
 
     S := valMTwiddle#"domain";
-
-        numberVariables := numcols vars T;
+    
+    numberVariables := numcols vars T;
     numberGenerators := numcols vars S;
     tensorVariables := monoid[Variables => numberVariables + numberGenerators,
                                 MonomialOrder => Eliminate numberVariables];
@@ -799,6 +799,12 @@ doc ///
            For an introduction see @TO "Ordered modules"@. Every element of
            an ordered $\QQ^n$ module is @ofClass OrderedQQVector@. A new
            ordered $\QQ^n$ module is created with the function @TO "orderedQQn"@.
+       Example
+           R = QQ[x_1 .. x_4, MonomialOrder => Lex]
+	   M = orderedQQn R
+	   M_0, M_1, M_2, M_3
+	   M_0 < M_1
+	   M_0 + M_3 < M_1 + M_2
      SeeAlso
          "Ordered modules"
          orderedQQn
@@ -863,7 +869,7 @@ doc ///
 
      SeeAlso
          "Ordered modules"
-         orderedQQn
+         OrderedQQn
 ///
 
 
@@ -923,8 +929,13 @@ doc ///
          Comparison of vectors of an ordered module $\QQ^n$
      Description
        Text
-           See @TO "Ordered modules"@.
-           -- TODO add more explanation ...
+           For an introduction to ordered modules see @TO "Ordered modules"@.
+	   Any pair of vectors of a module of type @TO "OrderedQQn"@ may be
+	   compared with "<", ">", and "==".
+       Example
+           M = orderedQQn(3, {GLex})
+	   2*M_1 < M_0 + M_2 
+	   3*M_1 < M_0 + M_2
      SeeAlso
          "Ordered modules"
          OrderedQQn
@@ -1026,6 +1037,7 @@ testPackage = x -> (
 ---------------------
 restart
 uninstallPackage "Valuations"
+
 restart
 installPackage "Valuations"
 needsPackage "Valuations"
