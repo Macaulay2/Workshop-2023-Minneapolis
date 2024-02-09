@@ -730,7 +730,7 @@ doc ///
 
 doc ///
      Key
-        "valM"
+         "valM"
      Headline
          Add headline!
      Description
@@ -790,6 +790,46 @@ doc ///
 
 ///
 
+doc ///
+     Key
+        coneToValuation
+        (coneToValuation, Matrix, Subring)
+        (coneToValuation, Matrix, Subring, Ring)
+     Headline
+        Convert a prime cone of a tropical ideal to a valuation
+     Description
+       Text
+            This function constructs a valuation from the prime cone of a tropical variety.
+            As an example, consider the subalgebra:
+       Example
+            R = QQ[x_1, x_2, x_3];
+            A = subring {
+                x_1 + x_2 + x_3,
+                x_1*x_2 + x_1*x_3 + x_2*x_3,
+                x_1*x_2*x_3,
+                (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3)
+                };
+       Text
+            The primes cones of the tropical variety:
+       Example
+            C = primeConesOfSubalgebra A
+       Text
+            Turn them into weights.
+       Text
+            create weight valuations on the polynomial ring S
+       Example
+            v0 = coneToValuation(C#0, A);
+            v1 = coneToValuation(C#1, A);
+            v2 = coneToValuation(C#2, A);
+
+            use A#"presentationRing";
+            v0(p_0^2 + p_1*p_2 - p_3^3)
+            v1(p_0^2 + p_1*p_2 - p_3^3)
+            v2(p_0^2 + p_1*p_2 - p_3^3)
+     SeeAlso
+        "valM"
+
+///
 
 doc ///
      Key
