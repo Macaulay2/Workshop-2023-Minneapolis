@@ -29,8 +29,6 @@ export{"valuation",
        "lowestTermValuation",
        "localRingValuation",
        "getMExponent",
-       "domain",
-       "codomain",
        "valM",
        "primeConesOfIdeal",
        "primeConesOfSubalgebra",
@@ -75,18 +73,18 @@ internalValuation = method()
 internalValuation (Function, Thing, Thing) := (v, S, T) -> (
     new Valuation from{
         "function" => v,
-        "domain" => S,
-        "codomain" => T,
+        "source" => S,
+        "target" => T,
         cache => new CacheTable
         }
     )
 
 -- Concerns with subrings and local rings, will need testing.
 Valuation Thing := (v,t) -> (
-    if (v#"domain" === null) or (ring t) === v#"domain" then
+    if (v#"source" === null) or (ring t) === v#"source" then
         v#"function" t
-    else if (isMember(ring t, v#"domain".baseRings)) then
-        v#"function" promote(t, v#"domain")
+    else if (isMember(ring t, v#"source".baseRings)) then
+        v#"function" promote(t, v#"source")
     )
 
 --------------------------------------------------------------------------------
@@ -367,8 +365,8 @@ valM = (T, valMTwiddle) -> (
     valMfunc := (g) -> (
     A := valMTwiddle.cache#"Subalgebra";
 
-    S := valMTwiddle#"domain";
-    
+    S := valMTwiddle#"source";
+
     numberVariables := numcols vars T;
     numberGenerators := numcols vars S;
     tensorVariables := monoid[Variables => numberVariables + numberGenerators,
@@ -392,7 +390,7 @@ valM = (T, valMTwiddle) -> (
         --use T; -- something above changes the user's ring (what could it be?) let's assume it was T
         valMTwiddle(maxTwiddle)
         );
-    valuation(valMfunc, T, valMTwiddle#"codomain")
+    valuation(valMfunc, T, valMTwiddle#"target")
     )
 
 --------------------------------------------------------------------------------
@@ -535,9 +533,9 @@ doc ///
          f:Function
            the valuation function.
          S:{Ring,LocalRing,Subring}
-           the domain
+           the source
          T:{Ring,LocalRing,Subring}
-           the codomain
+           the target
      Outputs
          v:Valuation
             user-defined valuation function
@@ -546,9 +544,9 @@ doc ///
              Construct a user defined valuation function.
              User-defined functions are not checked for satisfying the
              properties of a valuation.
-             It is not necessary to specify a domain or codomain, but
+             It is not necessary to specify a source or target, but
              if they are provided, then the input is checked to
-             be in the domain (or promotable to the domain).
+             be in the source (or promotable to the source).
              For common use cases, it is suggested to use the
              provided valuations.
          Example
@@ -801,10 +799,10 @@ doc ///
            ordered $\QQ^n$ module is created with the function @TO "orderedQQn"@.
        Example
            R = QQ[x_1 .. x_4, MonomialOrder => Lex]
-	   M = orderedQQn R
-	   M_0, M_1, M_2, M_3
-	   M_0 < M_1
-	   M_0 + M_3 < M_1 + M_2
+           M = orderedQQn R
+           M_0, M_1, M_2, M_3
+           M_0 < M_1
+           M_0 + M_3 < M_1 + M_2
      SeeAlso
          "Ordered modules"
          orderedQQn
@@ -930,12 +928,12 @@ doc ///
      Description
        Text
            For an introduction to ordered modules see @TO "Ordered modules"@.
-	   Any pair of vectors of a module of type @TO "OrderedQQn"@ may be
-	   compared with "<", ">", and "==".
+           Any pair of vectors of a module of type @TO "OrderedQQn"@ may be
+           compared with "<", ">", and "==".
        Example
            M = orderedQQn(3, {GLex})
-	   2*M_1 < M_0 + M_2 
-	   3*M_1 < M_0 + M_2
+           2*M_1 < M_0 + M_2
+           3*M_1 < M_0 + M_2
      SeeAlso
          "Ordered modules"
          OrderedQQn
@@ -1037,7 +1035,6 @@ testPackage = x -> (
 ---------------------
 restart
 uninstallPackage "Valuations"
-
 restart
 installPackage "Valuations"
 needsPackage "Valuations"
