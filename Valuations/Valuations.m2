@@ -512,18 +512,22 @@ doc ///
              (valuation, Function, Ring, Subring)
              (valuation, Function, Ring, LocalRing)
              (valuation, Function, Ring, RingOfInvariants)
+             (valuation, Function, Ring, OrderedQQn)
              (valuation, Function, Subring, Ring)
              (valuation, Function, Subring, Subring)
              (valuation, Function, Subring, LocalRing)
              (valuation, Function, Subring, RingOfInvariants)
+             (valuation, Function, Subring, OrderedQQn)
              (valuation, Function, LocalRing, Ring)
              (valuation, Function, LocalRing, Subring)
              (valuation, Function, LocalRing, LocalRing)
              (valuation, Function, LocalRing, RingOfInvariants)
+             (valuation, Function, LocalRing, OrderedQQn)
              (valuation, Function, RingOfInvariants, Ring)
              (valuation, Function, RingOfInvariants, Subring)
              (valuation, Function, RingOfInvariants, LocalRing)
              (valuation, Function, RingOfInvariants, RingOfInvariants)
+             (valuation, Function, RingOfInvariants, OrderedQQn)
      Headline
          User-defined valuation object
      Usage
