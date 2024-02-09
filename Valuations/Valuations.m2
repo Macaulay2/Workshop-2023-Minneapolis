@@ -875,7 +875,22 @@ doc ///
 
 doc ///
      Key
-        primeConesOfSubalgebra
+        coneToMatrix
+     Headline
+        Finds vectors that span a 2-dimensional cone.
+     Description
+       Text
+         Given any two rays in a cone $C$, this function returns a matrix whose columns are
+         two interior points of $C$ that span $C$.
+     SeeAlso
+       primeConesOfIdeal
+       primeConesOfSubalgebra
+       coneToValuation
+///
+
+doc ///
+     Key
+       primeConesOfSubalgebra
      Headline
         Finds the prime cones of the tropicalization of a given subalgebra.
      Description
