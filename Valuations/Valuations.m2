@@ -427,7 +427,6 @@ doc ///
          padicValuation
      ///
 
-
 doc ///
      Key
          padicValuation
@@ -635,6 +634,35 @@ doc ///
          lowestTermValuation
          padicValuation
          "trivialValuation"
+     ///
+
+doc ///
+     Key
+         getMExponent
+         (getMExponent, Ideal, RingElement)
+     Headline
+         Finds the smallest power of an ideal that a given ring element belongs to.
+     Usage
+         n = getMExponent(I, r)
+     Inputs
+         I:Ideal
+             An ideal of R
+         r:RingElement
+             An element of R
+     Outputs
+         n:ZZ
+             Smallest n such that r is in I^n
+     Description
+       Text
+           Returns the smallest power of the ideal $I$ that contains $r$
+       Example
+           R = QQ[x,y];
+           I = ideal(x,y);
+           getMExponent(I, 1 + x + y)
+           getMExponent(I, x^4 + x^2*y^2 + x^7 + y^3)
+           getMExponent(I, x^2 + x*y + y^2)
+     SeeAlso
+        localRingValuation
      ///
 
 doc ///
