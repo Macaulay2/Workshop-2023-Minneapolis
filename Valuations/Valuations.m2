@@ -847,6 +847,31 @@ doc ///
 
 doc ///
      Key
+        primeConesOfSubalgebra
+     Headline
+        Finds the prime cones of the tropicalization of a given subalgebra.
+     Description
+       Text
+            As an example, consider the subalgebra:
+       Example
+            R = QQ[x_1, x_2, x_3];
+            A = subring {
+                x_1 + x_2 + x_3,
+                x_1*x_2 + x_1*x_3 + x_2*x_3,
+                x_1*x_2*x_3,
+                (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3)
+                };
+       Text
+            The primes cones of the tropical variety:
+       Example
+            C = primeConesOfSubalgebra A
+     SeeAlso
+       primeConesOfIdeal
+       coneToValuation
+///
+
+doc ///
+     Key
          OrderedQQn
      Headline
          The class of all ordered modules $\QQ^n$
