@@ -755,7 +755,6 @@ doc ///
          orderedQQn
 ///
 
-
 doc ///
      Key
          "valM"
@@ -911,6 +910,28 @@ doc ///
      SeeAlso
        primeConesOfIdeal
        coneToValuation
+///
+
+doc ///
+     Key
+        getMaxIndependent
+     Headline
+        Finds the maximum number of linearly independent columns of a given matrix.
+     Description
+       Text
+          Given a matrix $M$, this function returns a matrix $M^{\prime}$ that is
+          composed of a maximal number of linearly indedpendent columns of the matrix $M$.s
+///
+
+doc ///
+     Key
+        positivity
+     Headline
+        Scale the rows of a list of matrices based on a tropical variety.
+     Description
+       Text
+         Given a list of matrices, this function scales each matrix by a positive
+         vector in the lineality space of the a given tropical variety.
 ///
 
 doc ///
