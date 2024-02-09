@@ -828,7 +828,21 @@ doc ///
             v2(p_0^2 + p_1*p_2 - p_3^3)
      SeeAlso
         "valM"
+///
 
+doc ///
+     Key
+        primeConesOfIdeal
+     Headline
+        Finds the prime cones of the tropicalization of a given ideal.
+     Description
+       Text
+         Let $I \subset k[x]$ be a prime ideal and let $C \subset \mathcal{T}(I)$ be an open cone in
+         the tropicalization of $I$.  This function returns all such $C$ where the initial ideal
+         $\operatorname{in_{C}}(I)$ is a prime ideal.
+     SeeAlso
+       primeConesOfSubalgebra
+       coneToValuation
 ///
 
 doc ///
@@ -851,9 +865,7 @@ doc ///
          "Ordered modules"
          orderedQQn
          OrderedQQVector
-
 ///
-
 
 doc ///
      Key
@@ -913,7 +925,6 @@ doc ///
          "Ordered modules"
          OrderedQQn
 ///
-
 
 doc ///
      Key
@@ -983,7 +994,6 @@ doc ///
          OrderedQQn
          orderedQQn
 ///
-
 
 doc ///
      Key
