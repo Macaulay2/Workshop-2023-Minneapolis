@@ -13,8 +13,7 @@ newPackage("Valuations",
         DebuggingMode => true,
         HomePage => "https://github.com/Macaulay2/Workshop-2023-Minneapolis/tree/valuations",
         Configuration => {},
-        PackageExports => {"LocalRings", "SubalgebraBases", "InvariantRing", "gfanInterface", "Binomials"}
-        )
+        PackageExports => {"LocalRings", "SubalgebraBases", "InvariantRing", "gfanInterface", "Binomials"})
 
 ----- Eventually move to other packages
 ring Subring := A -> ambient A
@@ -33,13 +32,11 @@ export{"valuation",
        "primeConesOfIdeal",
        "primeConesOfSubalgebra",
        "coneToMatrix",
-       "getMaxIndependent",
        "positivity",
        "coneToValuation",
        "OrderedQQn",
        "OrderedQQVector",
-       "orderedQQn"
-       }
+       "orderedQQn"}
 
 OrderedQQn = new Type of Module
 OrderedQQVector = new Type of Vector
@@ -54,7 +51,7 @@ valuation = method()
 
 valuation Function := v -> (
     internalValuation(v, null, null)
-    )
+)
 
 ourSources := {Ring,Subring,LocalRing,RingOfInvariants}
 ourTargets := {Ring,Subring,LocalRing,RingOfInvariants,OrderedQQn}
@@ -65,9 +62,9 @@ for i in ourSources do (
     for j in ourTargets do (
         valuation (Function, i, j) := (v, S, T) -> (
             internalValuation(v, S, T)
-            )
         )
     )
+)
 
 -- Create a valuation from a function, source, and target
 -- The source and target may be null (hence the type Thing).
@@ -78,8 +75,8 @@ internalValuation (Function, Thing, Thing) := (v, S, T) -> (
         source => S,
         target => T,
         cache => new CacheTable
-        }
-    )
+    }
+)
 
 ourInputs := {Number, RingElement, Constant}
 
@@ -88,10 +85,16 @@ ourInputs := {Number, RingElement, Constant}
 -- Other inputs will need to be added to that list, if needed
 for i in ourInputs do (
     Valuation i := (v,t) -> (
+        num := try numerator t then numerator t else t;
+        den := try denominator t then denominator t else 1_(ring t);
         if (v#source === null) or (ring t) === v#source then
             v#"function" t
         else if (isMember(ring t, v#source.baseRings)) then
             v#"function" promote(t, v#source)
+        else if (ring t) === v#source then
+            v#"function" num - v#"function" den
+        else if (isMember(ring num, v#source.baseRings)) then
+            v#"function" promote(num, v#source) - v#"function" promote(den, v#source)
     )
 )
 
@@ -129,19 +132,19 @@ orderedQQn(PolynomialRing) := R -> (
     ordMod := new OrderedQQn of OrderedQQVector from QQ^n;
     ordMod.cache.Ring = R;
     ordMod
-    )
+)
 
 -- Create an orderedQQn from an integer (the rank) and a monomial order
 orderedQQn(ZZ, List) := (n, monOrder) -> (
     R := QQ[Variables => n, MonomialOrder => monOrder];
     ordMod := orderedQQn R;
     ordMod
-    )
+)
 
 -- Two ordered modules are equal iff their cached rings are identitcal
 OrderedQQn == OrderedQQn := (N, M) -> (
     N.cache.Ring === M.cache.Ring
-    )
+)
 
 -- Informative afterprint identifying the module as an ordered module
 OrderedQQn#{Standard,AfterPrint} =
@@ -149,7 +152,7 @@ OrderedQQn#{Standard,AfterNoPrint} = M -> (
     << endl; -- double space
     << concatenate(interpreterDepth:"o") << lineNumber;
     << " : Ordered QQ^" | toString (numgens M) | " module" << endl
-    );
+);
 
 -- An OrderedQQVector is an element of an OrderedQQn
 -- This identifies that this comes from an ordered module
@@ -159,7 +162,7 @@ OrderedQQVector#{Standard,AfterNoPrint} = v -> (
     << endl; -- double space
     << concatenate(interpreterDepth:"o") << lineNumber;
     << " : Ordered QQ^" | toString (numgens M) | " module" << endl
-    );
+);
 
 -- comparison of ordered vectors
 OrderedQQVector ? OrderedQQVector := (a, b) -> (
@@ -178,10 +181,10 @@ OrderedQQVector ? OrderedQQVector := (a, b) -> (
     aMonomial := product for i from 0 to numgens R-1 list (R_i)^(sub(aScaled_i - c_i,ZZ));
     bMonomial := product for i from 0 to numgens R-1 list (R_i)^(sub(bScaled_i - c_i,ZZ));
 
-    if aMonomial > bMonomial then symbol <
-    else if aMonomial < bMonomial then symbol >
+    if aMonomial < bMonomial then symbol <
+    else if aMonomial > bMonomial then symbol >
     else symbol ==
-    )
+)
 
 -- Comparisons with infinity
 OrderedQQVector == InfiniteNumber := (a, b) -> false
@@ -194,57 +197,62 @@ monomialToOrderedQQVector (RingElement, OrderedQQn) := (monomial, orderedQQModul
     exponentVector := vector flatten exponents monomial;
     modGens := gens orderedQQModule;
     modGens*exponentVector
-    )
+)
+
 --------------------------------------------------------------------------------
 ------------------------- Built-in Valuation Functions -------------------------
 --------------------------------------------------------------------------------
 
--- Trivial Valuation
+-- Trivial Valuation.  Always returns 0, any input is valid
 trivialValuation = valuation (x -> if x == 0 then infinity else 0)
 
--- p-adic Valuation
+-- Returns the number of times that p divides x
 countPrimeFactor = (p, x) -> (
-    -- Returns the number of times that p divides x
     numFactors := 0;
     while x % p == 0 do (
         x = x // p;
         numFactors = numFactors + 1
-        );
+    );
     numFactors
-    )
+)
 
+-- p-adic Valuation valuation construction
+-- Allows for inputs to be rationals and computes difference of the
+-- valuations for the numerator and denominator
 padicValuation = method()
 padicValuation ZZ := p -> (
     if not isPrime p then error "expected a prime integer";
     func := x -> (
         if x == 0 then infinity
         else countPrimeFactor(p, numerator x_QQ) - countPrimeFactor(p, denominator x_QQ)
-        );
+    );
     valuation(func,QQ,QQ)
-    )
+)
 
--- Leading Term Valuation
+-- Leading Term Valuation,
+-- returns negative of exponent of leading term of the input polynomial.
 leadTermValuation = method()
 leadTermValuation PolynomialRing := R -> (
     monOrder := (options R).MonomialOrder;
     orderedMod := orderedQQn(R);
-    valFunc := f -> (if f == 0 then infinity else monomialToOrderedQQVector(leadTerm f, orderedMod));
+    valFunc := f -> (if f == 0 then infinity else (-1)*monomialToOrderedQQVector(leadTerm f, orderedMod));
     internalValuation(valFunc, R, orderedMod)
-    )
+)
 
--- Lowest Term Valuation
+-- Lowest Term Valuation,
+-- returns lowest term of the input polynomial.
 lowestTermValuation = method()
 lowestTermValuation PolynomialRing := R -> (
     monOrder := (options R).MonomialOrder;
     orderedMod := orderedQQn(R);
     valFunc := f -> (
         if f == 0_R then infinity
-        else (-1)*monomialToOrderedQQVector((sort flatten entries monomials f)_0, orderedMod)
-        );
+        else monomialToOrderedQQVector((sort flatten entries monomials f)_0, orderedMod)
+    );
     internalValuation(valFunc, R, orderedMod)
-    )
+)
 
--- Local Ring Valuation
+-- returns the highest power of the maximal ideal m containing x
 getMExponent = method()
 getMExponent (Ideal, RingElement) := (m, x) -> (
     numFactors := 0;
@@ -252,10 +260,12 @@ getMExponent (Ideal, RingElement) := (m, x) -> (
     while x % n == 0 do (
         numFactors = numFactors + 1;
         n = n*m;
-        );
+    );
     numFactors
-    )
+)
 
+-- constructs the local ring valuation
+-- allows for inputs to be in the fraction field of R
 localRingValuation = method()
 localRingValuation LocalRing := R -> (
     m := R.maxIdeal;
@@ -263,12 +273,12 @@ localRingValuation LocalRing := R -> (
     func := x -> (
         if x == 0 then infinity
         else getMExponent(m, sub(x, S))
-        );
+    );
     valuation(func, R, ZZ)
-    )
+)
 
 --------------------------------------------------------------------------------
--------------------------------- example77 Valuation ---------------------------
+------------------ Kaveh-Manon prime cones valuation ---------------------------
 --------------------------------------------------------------------------------
 -- internalTropicalVariety -- simple tropical variety computation
 -- input:
@@ -277,35 +287,45 @@ localRingValuation LocalRing := R -> (
 -- output:
 -- T : tropical polyhedral fan trop(I) without weights
 --     uses max-convention (from gfan)
---
+
+-- A method for tropical varieties to avoid the tropical package
+-- There is a naming conflict with the tropical package, once that is resolved,
+-- this method can be merged with that one.
 internalTropicalVariety = method(
     Options => {
         "Convention" => "Max"
-        }
-    )
+    }
+)
 
+-- Construct a tropical variety from an ideal
+-- the convention can be "Max" or "Min"
+-- stores the tropical variety in the cache
+-- this code could be deleted when the conflict with the Tropical
+-- package is resolved
 internalTropicalVariety Ideal := opts -> I -> (
     if not I.cache#?("TropicalVariety", opts) then (
         startCone := gfanTropicalStartingCone I;
         T := (gfanTropicalTraverse startCone)_0;
         if opts#"Convention" == "Max" then (
             -- use default output of gfan
-            )
+        )
         else if opts#"Convention" == "Min" then (
             -- negate the rays
             T = fan(-rays T, linealitySpace T, maxCones T);
-            )
+        )
         else (
             error("-- Unknown value for option 'Convention', use 'Max' or 'Min'");
-            );
-        I.cache#("TropicalVariety", opts) = T;
         );
+        I.cache#("TropicalVariety", opts) = T;
+    );
     I.cache#("TropicalVariety", opts)
-    )
+)
 
-
+-- Searches through the cones to find the prime cones.
 primeConesOfIdeal = I -> (
-    --F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
+    -- When the conflict with the Tropical package is resolved,
+    -- the following code can be used
+    -- F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
     F := internalTropicalVariety(I, "Convention" => "Min");
     r := rays F;
     c := maxCones F;
@@ -314,36 +334,37 @@ primeConesOfIdeal = I -> (
     L := for i from 0 to #cns-1 list (
         H := gfanInitialForms(first entries gens I, -1*(inCns#i), "ideal" =>true);
         if binomialIsPrime ideal H then cns#i
-        );
+    );
     delete(null,L)
-    )
+)
 
+-- Searches through the prime cones of the kernel of the
+-- presentation map.
 primeConesOfSubalgebra = A -> (
     I := ker A#"presentationMap";
     primeConesOfIdeal I
 )
 
--- given a set of rays of a 2D cone,
--- get two interior points of the cone that span it (as a vector space)
+-- Given a set of rays of a 2D cone,
+-- construct interior points of the cone that span it (as a vector space)
 coneToMatrix = coneRays -> (
     independentConeRays := getMaxIndependent(coneRays);
     onevector := matrix {toList ((numcols independentConeRays):1)};
     coeffs := 1 + (transpose onevector * onevector);
     coeffs*(transpose independentConeRays)
-    )
+)
 
--- get a maximal set of independent columns of a matrix
--- TODO: Cleanup
+-- Construct a maximal set of independent columns of a matrix
+-- compute the pivot columns to obtain a maximal linearly independent subset of columns of M
 getMaxIndependent = M -> (
-    -- compute the pivot columns to obtain a maximal linearly independent subset of columns of M
     R := reducedRowEchelonForm(sub(M, QQ));
-    P := for i from 1 to rank M list min (for j from 1 to numcols M list if R_(i-1,j-1) != 0 then j-1 else numcols M);
+    P := delete(infinity,apply(entries R,i->min(positions(i,j->j!=0))));
     M_P
-    )
+)
 
--- scale the rows of a list of matrices
--- using a positive vector of the lineality space of a tropical
--- variety f
+-- Scale the rows of a list of matrices
+-- Using a multiple of the lineality space
+-- of a tropical variety f
 positivity = (f, matL) -> (
     l := transpose linealitySpace(f);
     finalScaledMats := {};
@@ -353,50 +374,51 @@ positivity = (f, matL) -> (
         for j from 0 to #(matList_i)-1 do (
             coeff := -1*min apply(#(matList_i)_j, k -> (((matList_i)_j)_k)/(flatten entries l)_k);
             scaledRows = append(scaledRows, (1/gcd(flatten entries (coeff*l + matrix{(matList_i)_j})))*(coeff*l + matrix{(matList_i)_j}));
-            );
+        );
         mat := scaledRows_0;
         for i from 1 to #scaledRows-1 do mat = mat || scaledRows_i;
         finalScaledMats = append(finalScaledMats, mat);
-        );
+    );
     finalScaledMats
-    )
+)
 
--- TODO need to generalize!
+-- Construct a quasivaluation from a prime cone using the construction in Kaveh-Manon
+-- Technically, the result is only a quasivaluation since it might not be a multiplicative homomorphism
 coneToValuation = method()
 coneToValuation (Matrix, Subring) := (coneRays, A) -> (coneToValuation(coneRays, A, presentationRing A))
 coneToValuation (Matrix, Subring, Ring) := (coneRays, A, S) -> (
+    -- When the conflict with the Tropical package is resolved,
+    -- the following code can be used, although it should be cached instead of recomputed
     --F := tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
     I := ker A#"presentationMap";
     F := internalTropicalVariety(I, "Convention" => "Min");
     M := coneToMatrix(coneRays);
     scaledM := (positivity(F, {-M}))/(i -> sub(i, ZZ));
     weightList := for row in entries scaledM_0 list Weights => row;
+    ncols := numcols scaledM_0;
     e := symbol e;
-    y := symbol y;
-    T := QQ[e_1, e_2, e_3, y, MonomialOrder => weightList];
-    --T := QQ[e_1, e_2, e_3, y, MonomialOrder=>{Weights=>((entries scaledM_0)_0), Weights=>((entries scaledM_0)_1)}];
+    T := QQ[e_1..e_ncols, MonomialOrder => weightList];
     val := leadTermValuation(T);
-    orderedM := orderedQQn(2, {Lex});
+    orderedM := orderedQQn(#weightList, {Lex});
     func := (f -> (
             m := map(T, S, gens T);
             valf := val(m f);
             if valf == infinity then infinity else (
-                (gens orderedM)*(-scaledM_0)*(valf)
-                )
+                (gens orderedM)*(scaledM_0)*(valf)
             )
-        );
+        )
+    );
     valS := valuation(func, S, orderedM);
     valS.cache#"Ideal" = I;
     valS.cache#"Subalgebra" = A;
     valS
-    )
+)
 
--- TODO need to generalize!
--- construct the new valuation by taking min
+-- construct the new valuation on the quotient by taking min of preimages
+-- This turns a quasivaluation into a valuation using construction in Kaveh-Manon
 valM = (T, valMTwiddle) -> (
     valMfunc := (g) -> (
     A := valMTwiddle.cache#"Subalgebra";
-
     S := valMTwiddle#source;
 
     numberVariables := numcols vars T;
@@ -414,16 +436,13 @@ valM = (T, valMTwiddle) -> (
     f := includeS (valMTwiddle.cache#"Ideal");
 
     m := map(S, tensorRing, matrix{{0,0,0}} | matrix {gens S});
-        --gTwiddle := m (sub(g, R) % I);
-        --maxTwiddle := gTwiddle % ideal(sub(f, S));
         gTwiddle := m ((includeT g) % I);
         RtoS := map(S, tensorRing, {0_S, 0_S, 0_S} | gens S);
         maxTwiddle := gTwiddle % (RtoS f);
-        --use T; -- something above changes the user's ring (what could it be?) let's assume it was T
         valMTwiddle(maxTwiddle)
-        );
+    );
     valuation(valMfunc, T, valMTwiddle#target)
-    )
+)
 
 --------------------------------------------------------------------------------
 -------------------------------- Documentation ---------------------------------
