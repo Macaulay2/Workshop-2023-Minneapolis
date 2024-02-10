@@ -59,6 +59,8 @@ valuation Function := v -> (
 ourSources := {Ring,Subring,LocalRing,RingOfInvariants}
 ourTargets := {Ring,Subring,LocalRing,RingOfInvariants,OrderedQQn}
 
+-- Create different valuation functions for various inputs
+-- Add items to the sources and targets above to add types
 for i in ourSources do (
     for j in ourTargets do (
         valuation (Function, i, j) := (v, S, T) -> (
@@ -67,25 +69,45 @@ for i in ourSources do (
         )
     )
 
--- parameter class was Type, but the null
--- input is not a "Type", but a "Thing"
+-- Create a valuation from a function, source, and target
+-- The source and target may be null (hence the type Thing).
 internalValuation = method()
 internalValuation (Function, Thing, Thing) := (v, S, T) -> (
     new Valuation from{
         "function" => v,
-        "source" => S,
-        "target" => T,
+        source => S,
+        target => T,
         cache => new CacheTable
         }
     )
 
--- Concerns with subrings and local rings, will need testing.
-Valuation Thing := (v,t) -> (
-    if (v#"source" === null) or (ring t) === v#"source" then
-        v#"function" t
-    else if (isMember(ring t, v#"source".baseRings)) then
-        v#"function" promote(t, v#"source")
+ourInputs := {Number, RingElement, Constant}
+
+-- Evaluation of a valuation on an input.
+-- The standard types of inputs are in the input list
+-- Other inputs will need to be added to that list, if needed
+for i in ourInputs do (
+    Valuation i := (v,t) -> (
+        if (v#source === null) or (ring t) === v#source then
+            v#"function" t
+        else if (isMember(ring t, v#source.baseRings)) then
+            v#"function" promote(t, v#source)
     )
+)
+
+-- Print information about a valuation
+net Valuation := v -> (
+    s := v#source;
+    t := v#target;
+    if not ((s === null) or (t === null)) then
+        "valuation from " | toString(s) | " to " | toString(t)
+    else if not (s === null) then
+        "valuation from " | toString(s)
+    else if not (t === null) then
+        "valuation to " | toString(t)
+    else
+        "valuation with unspecified source and target"
+)
 
 --------------------------------------------------------------------------------
 --------------------------- Ordered QQ-module Types ----------------------------
@@ -100,6 +122,8 @@ Valuation Thing := (v,t) -> (
 -- 3) compare x^(d*a + c) and x^(d*b + c) in the polynomial ring
 
 orderedQQn = method()
+
+-- Create a orderedQQn from a ring R, using the monomial order of the ring
 orderedQQn(PolynomialRing) := R -> (
     n := numgens R;
     ordMod := new OrderedQQn of OrderedQQVector from QQ^n;
@@ -107,6 +131,7 @@ orderedQQn(PolynomialRing) := R -> (
     ordMod
     )
 
+-- Create an orderedQQn from an integer (the rank) and a monomial order
 orderedQQn(ZZ, List) := (n, monOrder) -> (
     R := QQ[Variables => n, MonomialOrder => monOrder];
     ordMod := orderedQQn R;
@@ -118,6 +143,7 @@ OrderedQQn == OrderedQQn := (N, M) -> (
     N.cache.Ring === M.cache.Ring
     )
 
+-- Informative afterprint identifying the module as an ordered module
 OrderedQQn#{Standard,AfterPrint} =
 OrderedQQn#{Standard,AfterNoPrint} = M -> (
     << endl; -- double space
@@ -125,7 +151,16 @@ OrderedQQn#{Standard,AfterNoPrint} = M -> (
     << " : Ordered QQ^" | toString (numgens M) | " module" << endl
     );
 
---
+-- An OrderedQQVector is an element of an OrderedQQn
+-- This identifies that this comes from an ordered module
+OrderedQQVector#{Standard,AfterPrint} =
+OrderedQQVector#{Standard,AfterNoPrint} = v -> (
+    M := module v;
+    << endl; -- double space
+    << concatenate(interpreterDepth:"o") << lineNumber;
+    << " : Ordered QQ^" | toString (numgens M) | " module" << endl
+    );
+
 -- comparison of ordered vectors
 OrderedQQVector ? OrderedQQVector := (a, b) -> (
     M := class a;
@@ -148,12 +183,10 @@ OrderedQQVector ? OrderedQQVector := (a, b) -> (
     else symbol ==
     )
 
+-- Comparisons with infinity
 OrderedQQVector == InfiniteNumber := (a, b) -> false
 InfiniteNumber ==  OrderedQQVector := (a, b) -> false
 
---
--- monomialToOrderedQQVector
---
 -- A function that takes a monomial and an ordered QQ-module and returns the
 -- exponent vector of the monomial as a vector in the passed QQ-module
 monomialToOrderedQQVector = method()
@@ -187,7 +220,7 @@ padicValuation ZZ := p -> (
         if x == 0 then infinity
         else countPrimeFactor(p, numerator x_QQ) - countPrimeFactor(p, denominator x_QQ)
         );
-    valuation func
+    valuation(func,QQ,QQ)
     )
 
 -- Leading Term Valuation
@@ -364,7 +397,7 @@ valM = (T, valMTwiddle) -> (
     valMfunc := (g) -> (
     A := valMTwiddle.cache#"Subalgebra";
 
-    S := valMTwiddle#"source";
+    S := valMTwiddle#source;
 
     numberVariables := numcols vars T;
     numberGenerators := numcols vars S;
@@ -389,7 +422,7 @@ valM = (T, valMTwiddle) -> (
         --use T; -- something above changes the user's ring (what could it be?) let's assume it was T
         valMTwiddle(maxTwiddle)
         );
-    valuation(valMfunc, T, valMTwiddle#"target")
+    valuation(valMfunc, T, valMTwiddle#target)
     )
 
 --------------------------------------------------------------------------------
