@@ -27,12 +27,11 @@ export{"valuation",
        "leadTermValuation",
        "lowestTermValuation",
        "localRingValuation",
-       "getMExponent",
+       --"getMExponent",
        "valM",
        "primeConesOfIdeal",
        "primeConesOfSubalgebra",
-       "coneToMatrix",
-       "positivity",
+       --"positivity",
        "coneToValuation",
        "OrderedQQn",
        "OrderedQQVector",
@@ -40,6 +39,10 @@ export{"valuation",
 
 OrderedQQn = new Type of Module
 OrderedQQVector = new Type of Vector
+
+--In the future, this object will be implemented at a deeper level.
+--A @TO "Module"@ object does not naturally contain a monomial order.
+--We aim to implement this like we see in the object @TO "Ring"@.
 
 --------------------------------------------------------------------------------
 -------------------------------- Valuation Type --------------------------------
@@ -207,7 +210,8 @@ monomialToOrderedQQVector (RingElement, OrderedQQn) := (monomial, orderedQQModul
 trivialValuation = valuation (x -> if x == 0 then infinity else 0)
 
 -- Returns the number of times that p divides x
-countPrimeFactor = (p, x) -> (
+countPrimeFactor = method()
+countPrimeFactor (ZZ, ZZ) := (p, x) -> (
     numFactors := 0;
     while x % p == 0 do (
         x = x // p;
@@ -322,7 +326,8 @@ internalTropicalVariety Ideal := opts -> I -> (
 )
 
 -- Searches through the cones to find the prime cones.
-primeConesOfIdeal = I -> (
+primeConesOfIdeal = method()
+primeConesOfIdeal Ideal := I -> (
     -- When the conflict with the Tropical package is resolved,
     -- the following code can be used
     -- F:=tropicalVariety(I, IsHomogeneous=>true,Prime=>true);
@@ -340,14 +345,16 @@ primeConesOfIdeal = I -> (
 
 -- Searches through the prime cones of the kernel of the
 -- presentation map.
-primeConesOfSubalgebra = A -> (
+primeConesOfSubalgebra = method()
+primeConesOfSubalgebra Subring := A -> (
     I := ker A#"presentationMap";
     primeConesOfIdeal I
 )
 
 -- Given a set of rays of a 2D cone,
 -- construct interior points of the cone that span it (as a vector space)
-coneToMatrix = coneRays -> (
+coneToMatrix = method()
+coneToMatrix Matrix := coneRays -> (
     independentConeRays := getMaxIndependent(coneRays);
     onevector := matrix {toList ((numcols independentConeRays):1)};
     coeffs := 1 + (transpose onevector * onevector);
@@ -356,7 +363,8 @@ coneToMatrix = coneRays -> (
 
 -- Construct a maximal set of independent columns of a matrix
 -- compute the pivot columns to obtain a maximal linearly independent subset of columns of M
-getMaxIndependent = M -> (
+getMaxIndependent = method()
+getMaxIndependent Matrix := M -> (
     R := reducedRowEchelonForm(sub(M, QQ));
     P := delete(infinity,apply(entries R,i->min(positions(i,j->j!=0))));
     M_P
@@ -365,7 +373,8 @@ getMaxIndependent = M -> (
 -- Scale the rows of a list of matrices
 -- Using a multiple of the lineality space
 -- of a tropical variety f
-positivity = (f, matL) -> (
+positivity = method()
+positivity (Fan, List) := (f, matL) -> (
     l := transpose linealitySpace(f);
     finalScaledMats := {};
     matList := for i from 0 to #matL-1 list entries matL_i;
@@ -416,7 +425,8 @@ coneToValuation (Matrix, Subring, Ring) := (coneRays, A, S) -> (
 
 -- construct the new valuation on the quotient by taking min of preimages
 -- This turns a quasivaluation into a valuation using construction in Kaveh-Manon
-valM = (T, valMTwiddle) -> (
+valM = method()
+valM (Ring, Valuation) := (T, valMTwiddle) -> (
     valMfunc := (g) -> (
     A := valMTwiddle.cache#"Subalgebra";
     S := valMTwiddle#source;
@@ -494,7 +504,8 @@ doc ///
              p-adic valuation using prime p
      Description
        Text
-           This valuation returns the number of times that $p$ divides the numerator
+           This function constructs a valuation which returns
+           the number of times that $p$ divides the numerator
            minus the number of times that $p$ divides the denominator.
        Example
            v = padicValuation 7;
@@ -527,7 +538,7 @@ doc ///
             the lowest term valuation
      Description
        Text
-           This valuation returns the exponent vector of the
+           This function construst a valuation which returns the exponent vector of the
            lead term of a polynomial with respect to the ring's term order.
            The valuation returns vectors in an @TT "ordered $\\QQ$-module"@,
            which respects the monomial order of the
@@ -558,26 +569,26 @@ doc ///
      Key
          valuation
          (valuation, Function)
-             (valuation, Function, Ring, Ring)
-             (valuation, Function, Ring, Subring)
-             (valuation, Function, Ring, LocalRing)
-             (valuation, Function, Ring, RingOfInvariants)
-             (valuation, Function, Ring, OrderedQQn)
-             (valuation, Function, Subring, Ring)
-             (valuation, Function, Subring, Subring)
-             (valuation, Function, Subring, LocalRing)
-             (valuation, Function, Subring, RingOfInvariants)
-             (valuation, Function, Subring, OrderedQQn)
-             (valuation, Function, LocalRing, Ring)
-             (valuation, Function, LocalRing, Subring)
-             (valuation, Function, LocalRing, LocalRing)
-             (valuation, Function, LocalRing, RingOfInvariants)
-             (valuation, Function, LocalRing, OrderedQQn)
-             (valuation, Function, RingOfInvariants, Ring)
-             (valuation, Function, RingOfInvariants, Subring)
-             (valuation, Function, RingOfInvariants, LocalRing)
-             (valuation, Function, RingOfInvariants, RingOfInvariants)
-             (valuation, Function, RingOfInvariants, OrderedQQn)
+         (valuation, Function, Ring, Ring)
+         (valuation, Function, Ring, Subring)
+         (valuation, Function, Ring, LocalRing)
+         (valuation, Function, Ring, RingOfInvariants)
+         (valuation, Function, Ring, OrderedQQn)
+         (valuation, Function, Subring, Ring)
+         (valuation, Function, Subring, Subring)
+         (valuation, Function, Subring, LocalRing)
+         (valuation, Function, Subring, RingOfInvariants)
+         (valuation, Function, Subring, OrderedQQn)
+         (valuation, Function, LocalRing, Ring)
+         (valuation, Function, LocalRing, Subring)
+         (valuation, Function, LocalRing, LocalRing)
+         (valuation, Function, LocalRing, RingOfInvariants)
+         (valuation, Function, LocalRing, OrderedQQn)
+         (valuation, Function, RingOfInvariants, Ring)
+         (valuation, Function, RingOfInvariants, Subring)
+         (valuation, Function, RingOfInvariants, LocalRing)
+         (valuation, Function, RingOfInvariants, RingOfInvariants)
+         (valuation, Function, RingOfInvariants, OrderedQQn)
      Headline
          User-defined valuation object
      Usage
@@ -600,7 +611,8 @@ doc ///
              properties of a valuation.
              It is not necessary to specify a source or target, but
              if they are provided, then the input is checked to
-             be in the source (or promotable to the source).
+             be in the source
+             (or either promotable to the source or in the fraction field of the source).
              For common use cases, it is suggested to use the
              provided valuations.
          Example
@@ -630,7 +642,8 @@ doc ///
             the lead term valuation
     Description
        Text
-           This valuation returns the exponent vector of the
+           This function constructs a valuation which
+           returns the negative exponent vector of the
            lead term of a polynomial with respect to the ring's term order.
            The valuation returns vectors in an @TT "ordered $\\QQ$-module"@,
            which respects the monomial order of the
@@ -668,16 +681,23 @@ doc ///
              local ring valuation using a local ring R
      Description
        Text
-           This valuation returns the largest power of the maximal ideal
+           This function constructs a valuation which
+           returns the largest power of the maximal ideal
                of R that contains the input to the valuation.
        Example
            R = QQ[x,y];
-               I = ideal(x,y);
-               S = R_I
-               localVal = localRingValuation(S)
-               localVal(1 + x + y)
-               localVal(x^4 + x^2*y^2 + x^7 + y^3)
-               localVal(x^2 + x*y + y^2)
+           I = ideal(x,y);
+           S = R_I
+           localVal = localRingValuation(S)
+           localVal(1 + x + y)
+           localVal(x^4 + x^2*y^2 + x^7 + y^3)
+           localVal(x^2 + x*y + y^2)
+       Text
+           This valuation may be applied to elements of the fraction field of R,
+           where the value of the valuation is the difference
+           between the valuations of the numerator and denominator.
+       Example
+           localVal(1/(x^2+x*y+y^3))
      SeeAlso
          valuation
          Valuation
@@ -687,6 +707,7 @@ doc ///
          "trivialValuation"
      ///
 
+     -*
 doc ///
      Key
          getMExponent
@@ -715,6 +736,7 @@ doc ///
      SeeAlso
         localRingValuation
      ///
+     *-
 
 doc ///
       Key
@@ -723,18 +745,18 @@ doc ///
           A package for constructing and using valuations.
       Description
         Text
-              A valuation is a function $v:R\rightarrow G\cup\{\infty\}$
-              where $R$ is a ring and $G$ is a linearly ordered group with
-              the following properties:
+          A valuation is a function $v:R\rightarrow G\cup\{\infty\}$
+          where $R$ is a ring and $G$ is a linearly ordered group with
+          the following properties:
         Text
           @UL {{"$v(ab)=v(a)+v(b)$,"},
           {"$v(a+b)\\geq\\min\\{v(a),v(b)\\}$, and"},
           {"$v(a)=\\infty$ iff $a=0$."}}@
         Text
           The @TT "Valuations"@ package provides uniform constructions of
-          common valuations and user-defined valuations.
+          common valuations and also offers user-defined valuations.
           A valuation acts like @ofClass Function@,
-          but contains extra information.
+          but may contain extra information.
         Example
           pval = padicValuation 3;
           pval(54)
@@ -777,6 +799,7 @@ doc ///
 doc ///
      Key
         "Ordered modules"
+        (symbol ==, OrderedQQn, OrderedQQn)
      Headline
          Overview of the ordered module $\QQ^n$
      Description
@@ -796,9 +819,17 @@ doc ///
            a > b
            a == c
        Text
-           In the future, this object will be implemented at a deeper level.
-           A @TO "Module"@ object does not naturally contain a monomial order.
-           We aim to implement this like we see in the object @TO "Ring"@.
+           Two ordered $\QQ^n$ modules are equal if they are
+           built from the same ring. Note that isomorphic rings with the
+           same term order may not be equal.
+       Example
+           M1 = orderedQQn(3, {Lex})
+           R = M1.cache.Ring
+           M2 = orderedQQn R
+           M1 == M2
+           S = QQ[x_1 .. x_3, MonomialOrder => {Lex}]
+           M3 = orderedQQn S
+           M1 == M3
      SeeAlso
          leadTermValuation
          lowestTermValuation
@@ -808,12 +839,23 @@ doc ///
 
 doc ///
      Key
-         "valM"
+         valM
+         (valM, Ring, Valuation)
      Headline
-         Add headline!
+         Construct a valuation from a (quasi-)valuation
+     Usage
+          val = valuation(R, v)
+     Inputs
+          R: Ring
+          v: Valuation
+     Outputs
+          val: Valuation
      Description
        Text
-           Add description!
+           Constructs a valuation from a (quasi-)valuation following the
+           approach in Kaveh and Manon, 2019.
+           In particular, the maximum quasi-valuation of all preimages of
+           the input is taken as the valuation.
        Example
             R = QQ[x_1, x_2, x_3];
             A = subring {
@@ -822,49 +864,29 @@ doc ///
                 x_1*x_2*x_3,
                 (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3)
                 };
-       Text
-            The primes cones of the tropical variety:
-       Example
-            C = primeConesOfSubalgebra A
-       Text
-            Turn them into weights.
-       Text
-            create weight valuations on the polynomial ring S
-       Example
-            v0 = coneToValuation(C#0, A);
-            v1 = coneToValuation(C#1, A);
-            v2 = coneToValuation(C#2, A);
-
-            use A#"presentationRing";
-            v0(p_0^2 + p_1*p_2 - p_3^3)
-            v1(p_0^2 + p_1*p_2 - p_3^3)
-            v2(p_0^2 + p_1*p_2 - p_3^3)
-       Text
-            create the induced valuation on the subring A
-       Example
-            vA0 = valM(R, v0);
-            vA1 = valM(R, v1);
-            vA2 = valM(R, v2);
-
+            C = primeConesOfSubalgebra A;
+            v = coneToValuation(C#0, A);
+            vA = valM(R, v)
             use R;
-            vA0(x_1^2 + x_2^2 + x_3^2)
-            vA1(x_1^2 + x_2^2 + x_3^2)
-            vA2(x_1^2 + x_2^2 + x_3^2)
-
-            vA0((x_1^2 - x_2^2)*(x_1^2 - x_3^2)*(x_2^2 - x_3^2))
-            vA1((x_1^2 - x_2^2)*(x_1^2 - x_3^2)*(x_2^2 - x_3^2))
-            vA2((x_1^2 - x_2^2)*(x_1^2 - x_3^2)*(x_2^2 - x_3^2))
-
-            vA0(0_R)
+            vA(x_1^2 + x_2^2 + x_3^2)
+            vA((x_1^2 - x_2^2)*(x_1^2 - x_3^2)*(x_2^2 - x_3^2))
+            vA(0_R)
        Text
-            Note, for elements not in A, the valuation returns nonsense
+            For elements not in A, the valuation returns unreliable results
             because the valuation does not come from a weight valuation
             on R
        Example
-            vA0(x_2)
-            vA0(x_2^2)
-            vA0(x_2^3)
+            vA(x_2)
+            vA(x_2^2)
+            vA(x_2^3)
      SeeAlso
+        coneToValuation
+        primeConesOfIdeal
+        primeConesOfSubalgebra
+     References
+            @HREF("https://epubs.siam.org/doi/10.1137/17M1160148", {"K. Khovanskii and C. Manon.  ",
+                "Khovanskii Bases, Higher Rank Valuations, and Tropical Geometry.",
+                EM "SIAM Journal on Applied Algebra and Geometry", ", 3(2), 2019."})@
 
 ///
 
@@ -874,11 +896,13 @@ doc ///
         (coneToValuation, Matrix, Subring)
         (coneToValuation, Matrix, Subring, Ring)
      Headline
-        Convert a prime cone of a tropical ideal to a valuation
+        Convert a prime cone of a tropical ideal to a (quasi-)valuation
      Description
        Text
             This function constructs a valuation from the prime cone of a tropical variety.
-            As an example, consider the subalgebra:
+            From a @TO Subring@ and the rays of a prime cone of the kernel of its @TO presentationRing@,
+            a (quasi-)valuation is constructed.  A quasivaluation satisfies $\nu(fg)\geq\min\{\nu(f),\nu(g)\},$
+            where the inequality replaces the equality.
        Example
             R = QQ[x_1, x_2, x_3];
             A = subring {
@@ -887,65 +911,39 @@ doc ///
                 x_1*x_2*x_3,
                 (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3)
                 };
-       Text
-            The primes cones of the tropical variety:
-       Example
             C = primeConesOfSubalgebra A
-       Text
-            Turn them into weights.
-       Text
-            create weight valuations on the polynomial ring S
-       Example
-            v0 = coneToValuation(C#0, A);
-            v1 = coneToValuation(C#1, A);
-            v2 = coneToValuation(C#2, A);
-
+            val = coneToValuation(C#0, A)
             use A#"presentationRing";
-            v0(p_0^2 + p_1*p_2 - p_3^3)
-            v1(p_0^2 + p_1*p_2 - p_3^3)
-            v2(p_0^2 + p_1*p_2 - p_3^3)
+            val(p_0^2 + p_1*p_2 - p_3^3)
      SeeAlso
-        "valM"
+        valM
+        Subring
+        presentationRing
 ///
 
 doc ///
      Key
-        primeConesOfIdeal
+       primeConesOfSubalgebra
+       primeConesOfIdeal
+       (primeConesOfSubalgebra,Subring)
+       (primeConesOfIdeal, Ideal)
      Headline
-        Finds the prime cones of the tropicalization of a given ideal.
+        Finds the prime cones of the tropicalization of a given subalgebra or ideal.
+     Usage
+        C = primeConesOfSubalgebra(S)
+        C = primeConesOfIdeal(I)
+     Inputs
+        S: Subring
+        I: Ideal
+     Outputs
+        C: List
+            containing the ray-generators of the prime cones.
      Description
        Text
          Let $I \subset k[x]$ be a prime ideal and let $C \subset \mathcal{T}(I)$ be an open cone in
          the tropicalization of $I$.  This function returns all such $C$ where the initial ideal
-         $\operatorname{in_{C}}(I)$ is a prime ideal.
-     SeeAlso
-       primeConesOfSubalgebra
-       coneToValuation
-///
-
-doc ///
-     Key
-        coneToMatrix
-     Headline
-        Finds vectors that span a 2-dimensional cone.
-     Description
-       Text
-         Given any two rays in a cone $C$, this function returns a matrix whose columns are
-         two interior points of $C$ that span $C$.
-     SeeAlso
-       primeConesOfIdeal
-       primeConesOfSubalgebra
-       coneToValuation
-///
-
-doc ///
-     Key
-       primeConesOfSubalgebra
-     Headline
-        Finds the prime cones of the tropicalization of a given subalgebra.
-     Description
-       Text
-            As an example, consider the subalgebra:
+         $\operatorname{in_{C}}(I)$ is a prime ideal.  When the input is a @TO Subring@ which
+         is a domain, then $I$ is the kernel of the presentation map of $S$.
        Example
             R = QQ[x_1, x_2, x_3];
             A = subring {
@@ -954,29 +952,19 @@ doc ///
                 x_1*x_2*x_3,
                 (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3)
                 };
-       Text
-            The primes cones of the tropical variety:
-       Example
-            C = primeConesOfSubalgebra A
+            primeConesOfSubalgebra A
+            I = ideal(x_1*x_2+x_2^2+x_3^2);
+            primeConesOfIdeal I
      SeeAlso
-       primeConesOfIdeal
        coneToValuation
+       valM
 ///
 
-doc ///
-     Key
-        getMaxIndependent
-     Headline
-        Finds the maximum number of linearly independent columns of a given matrix.
-     Description
-       Text
-          Given a matrix $M$, this function returns a matrix $M^{\prime}$ that is
-          composed of a maximal number of linearly indedpendent columns of the matrix $M$.s
-///
-
+-*
 doc ///
      Key
         positivity
+        (positivity,Fan,List)
      Headline
         Scale the rows of a list of matrices based on a tropical variety.
      Description
@@ -984,6 +972,7 @@ doc ///
          Given a list of matrices, this function scales each matrix by a positive
          vector in the lineality space of the a given tropical variety.
 ///
+*-
 
 doc ///
      Key
@@ -1031,12 +1020,12 @@ doc ///
            For an overview see @TO "Ordered modules"@.
            Let $R$ be @ofClass PolynomialRing@ with $n$ variables $x_1 \dots x_n$.
            Then the corresponding ordered $\QQ^n$ module has the following
-           ordering. Suppose that $v, w \in QQ^n$.
+           ordering. Suppose that $v, w \in \QQ^n$.
            Let $d \in \ZZ$ be a positive integer and $c \in \ZZ^n_{\ge 0}$
            be a vector such that $dv + c$ and $dw + c$ have non-negative
-           entries. Then we say $v < w$ if and only if $x^{dv + c} > x^{dw + c}$
-           in $R$. Note that this property does not depend on the choice of $d$
-           $c$ so we obtain a well-defined order on $\QQ^n$.
+           entries. Then $v < w$ if and only if $x^{dv + c} > x^{dw + c}$
+           in $R$. Note that this property does not depend on the choices of $c$ and
+           $d$, so we obtain a well-defined order on $\QQ^n$.
 
        Example
            R = QQ[x_1 .. x_3, MonomialOrder => Lex]
@@ -1046,10 +1035,10 @@ doc ///
            v < w
 
        Text
-           Instead of supplying @ofClass PolynomialRing@, we may supply directly
-           give the rank $n$ of the module along with a monomial order.
+           Instead of supplying @ofClass PolynomialRing@, we may supply
+           the rank $n$ of the module along with a monomial order.
            The constructor creates the ring $R$ with $n$ variables and the
-           given monomial order and uses this for the comparison operations.
+           given monomial order to construct the @TO "OrderedQQn"@ module
 
        Example
            N = orderedQQn(3, {Lex})
@@ -1058,7 +1047,7 @@ doc ///
            N == N'
 
        Text
-           In the above example, $N$ and $N'$ are the same module
+           $N$ and $N'$ are the same module
            because they are built from the same ring. See @TO (symbol ==, OrderedQQn, OrderedQQn)@.
 
      SeeAlso
@@ -1068,76 +1057,12 @@ doc ///
 
 doc ///
      Key
+         OrderedQQVector
+         "OrderedQQVector ? OrderedQQVector"
          "OrderedQQVector == InfiniteNumber"
          "InfiniteNumber == OrderedQQVector"
          "(symbol ==, OrderedQQVector, InfiniteNumber)"
          "(symbol ==, InfiniteNumber, OrderedQQVector)"
-     Headline
-         Ordered $\QQ^n$ vectors that are infinte
-     Description
-       Text
-           The image of $0$ under a valuation is $\infty$ or $-\infty$,
-           depending on the choice of min or max convention. So it may be
-           necessary to test whether an element of an ordered module $\QQ^n$
-           is equal to the valuation of $0$.
-       Example
-           M = orderedQQn(3, {Lex})
-           M_0 < infinity
-           M_0 == infinity
-     SeeAlso
-         "Ordered modules"
-         OrderedQQn
-         orderedQQn
-///
-
-doc ///
-     Key
-         (symbol ==, OrderedQQn, OrderedQQn)
-     Headline
-         Equality of ordered modules $\QQ^n$
-     Description
-       Text
-           Two ordered $\QQ^n$ modules are considered equal if they are
-           built from the same ring. Note that isomorphic rings with the
-           same term order may not be equal.
-       Example
-           M1 = orderedQQn(3, {Lex})
-           R = M1.cache.Ring
-           M2 = orderedQQn R
-           M1 == M2
-           S = QQ[x_1 .. x_3, MonomialOrder => {Lex}]
-           M3 = orderedQQn S
-           M1 == M3
-     SeeAlso
-         "Ordered modules"
-         OrderedQQn
-         orderedQQn
-///
-
-
-doc ///
-     Key
-         "OrderedQQVector ? OrderedQQVector"
-     Headline
-         Comparison of vectors of an ordered module $\QQ^n$
-     Description
-       Text
-           For an introduction to ordered modules see @TO "Ordered modules"@.
-           Any pair of vectors of a module of type @TO "OrderedQQn"@ may be
-           compared with "<", ">", and "==".
-       Example
-           M = orderedQQn(3, {GLex})
-           2*M_1 < M_0 + M_2
-           3*M_1 < M_0 + M_2
-     SeeAlso
-         "Ordered modules"
-         OrderedQQn
-         orderedQQn
-///
-
-doc ///
-     Key
-         OrderedQQVector
      Headline
          The class of all vectors of an ordered module $\QQ^n$
      Description
@@ -1148,8 +1073,24 @@ doc ///
        Example
            M = orderedQQn(3, {Lex})
            M_0 + 2 * M_1 + 3 * M_2
+       Text
+           Any pair of vectors of a module of type @TO "OrderedQQn"@ may be
+           compared with <, >, and ==.
+       Example
+           M = orderedQQn(3, {GLex})
+           2*M_1 < M_0 + M_2
+           3*M_1 < M_0 + M_2
+       Text
+           The image of $0$ under a valuation is $\infty$, so it may be
+           necessary to test whether an element of an ordered module $\QQ^n$
+           is equal to the valuation of $0$.
+       Example
+            M = orderedQQn(3, {Lex})
+            M_0 < infinity
+            M_0 == infinity
      SeeAlso
          "Ordered modules"
+         OrderedQQn
          orderedQQn
 ///
 
