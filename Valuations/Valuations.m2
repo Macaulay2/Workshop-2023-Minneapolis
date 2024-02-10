@@ -1146,9 +1146,32 @@ assert(val(x^2*y^2*z + x^7*y) > val(x*y*z^2 + y^3*z))
 ///
 
 -- Local ring valuation tests
+TEST///
+R = QQ[x,y,z];
+I = ideal (x,y);
+S = R_I;
+val = localRingValuation S;
+assert(val(x+y) == 1)
+assert(val(x+y+z) == 0)
+assert(val(1/(x+y)) == -1)
+///
 
---
-
+-- Kaveh-Manon tests
+TEST///
+R = QQ[x_1, x_2, x_3];
+A = subring {
+    x_1 + x_2 + x_3,
+    x_1*x_2 + x_1*x_3 + x_2*x_3,
+    x_1*x_2*x_3,
+    (x_1 - x_2)*(x_1 - x_3)*(x_2 - x_3)
+    };
+C = primeConesOfSubalgebra A;
+v = coneToValuation(C#0, A);
+vA = valM(R, v);
+use presentationRing A;
+assert(vA(A#"presentationMap" (p_1^3)) == vA(A#"presentationMap" (p_3^2)))
+assert(vA(A#"presentationMap" (p_0^3*p_2)) > vA(A#"presentationMap" (p_3^2)))
+///
 end--
 
 
