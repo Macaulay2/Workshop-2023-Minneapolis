@@ -296,9 +296,8 @@ primeConesOfSubalgebra = A -> (
 -- get two interior points of the cone that span it (as a vector space)
 coneToMatrix = coneRays -> (
     independentConeRays := getMaxIndependent(coneRays);
-    coeffs := matrix for i from 1 to numcols independentConeRays list for j from 1 to numcols independentConeRays list if i == j then 2 else 1;
-    print(coeffs);
-    print(independentConeRays);
+    onevector := matrix {toList ((numcols independentConeRays):1)};
+    coeffs := 1 + (transpose onevector * onevector);
     coeffs*(transpose independentConeRays)
     )
 
