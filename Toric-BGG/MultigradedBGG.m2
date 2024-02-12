@@ -13,7 +13,6 @@ newPackage("MultigradedBGG",
 	{Name => "Sasha	Zotine",    	     Email => "18az45@queensu.ca",     HomePage => "https://sites.google.com/view/szotine/home" }
     },
     PackageExports => {"NormalToricVarieties", "Complexes"},
-    Keywords => {todo},
     DebuggingMode => true
   )
 
@@ -286,6 +285,8 @@ dualRingToric PolynomialRing := opts -> S ->(
 	);       
     )
 
+-- Exported method for computing the multigraded BGG functor of a module over
+-- a polynomial ring.
 -- Input:   M a (multi)-graded S-module.
 --          L a list of degrees.
 -- Output:  The differential module RR(M) in degrees from L,
@@ -326,10 +327,11 @@ toricRR Module := M -> (
     toricRR(M,L)
     )
 
-toricLL = method();
+-- Exported method for computing the multigraded BGG functor of a module over the exterior algebra.
 --Input: N a (multi)-graded E-module.
 --Caveat: Assumes N is finitely generated.
 --Caveat 2:  arrows of toricLL(N) correspond to exterior multiplication (not contraction)
+toricLL = method();
 toricLL Module := N -> (
     E := ring N;
     if not isSkewCommutative E then error "ring N is not skew commutative";
@@ -353,54 +355,8 @@ toricLL Module := N -> (
 	complex apply(drop(homDegs,-1), i-> map(FF#i,FF#(i+1), (-1)^(homDegs#0)*differential_(inds#(i+1))^(inds#(i))))[-homDegs#0]
 	)
     )
-TEST ///
-S = ring hirzebruchSurface 3;
-E = dualRingToric S;
-C = toricLL(E^1)
-assert (isHomogeneous C)
-assert ((C.dd)^2 == 0)
---The following 5 assertions check that C is isomorphic to the 
---Koszul complex on x_0, ..., x_3 (up to a twist and shift)
-assert (HH_(0) C == 0)
-assert (HH_(-1) C == 0)
-assert (HH_(-2) C == 0)
-assert (HH_(-3) C == 0)
-assert (minors(1, C.dd_(-3)) == ideal vars ring C)
-N = coker vars E
-C = toricLL(N)
-assert(rank C_0 == 1)
-assert(C_-1 == 0)
-assert(C_1 == 0)
-///
 
-
--- cyclic but non-free module:
-TEST ///
-restart
-load "MultigradedBGG.m2"
-needsPackage "NormalToricVarieties"
-S = ring hirzebruchSurface 3;
-E = dualRingToric S;
-C = toricLL(coker matrix{{e_0, e_1}})
-assert(C == koszulComplex {x_2, x_3})
-///
-
-TEST ///
---non-cyclic module
-restart
-load "MultigradedBGG.m2"
-needsPackage "NormalToricVarieties"
-E = dualRingToric (ZZ/101[x_0, x_1, Degrees => {1, 2}]);
-N = module ideal(e_0, e_1);
-C = toricLL(N);
-S = ring C;
-f = map(S^{{3}}, S^{{1}} ++ S^{{2}}, matrix{{x_1, -x_0}});
-C' = complex({f})[-2];
-assert(C == C')
-///
-
-
-
+--todo
 stronglyLinearStrand = method();
 stronglyLinearStrand Module := M -> (
     S := ring M;
@@ -416,41 +372,6 @@ stronglyLinearStrand Module := M -> (
     N := ker mat_cols;
     toricLL N
 )
-
-
-
-TEST ///
-S = ring weightedProjectiveSpace {1,1,1,2,2};
-I = minors(2, matrix{{x_0, x_1, x_2^2, x_3}, {x_1, x_2, x_3, x_4}});
-M = Ext^3(module S/I, S^{{-7}});
-L = stronglyLinearStrand M
-betti L
-L.dd
-loadPackage "TateOnProducts"
-M = coker(L.dd_1)
-S = ring M
---todo: sasha will ask greg about loading packages in tests
-A = coker map(S^{-1} ++ S^{-1} ++ S^{-1}, S^{-2} ++ S^{-2} ++ S^{-2} ++ S^{-2} ++ S^{-3} ++ S^{-3}, matrix{{x_0, 0, x_1, 0, x_3, 0}, {0,x_0,-x_2,x_1,-x_4,x_3}, {-x_2,-x_1,0,-x_2,0,-x_4}})
-isIsomorphic(M, A)
-assert(HH_2 L == 0)
-assert(HH_1 L == 0)
---Aside: M is the canonical module of the coordinate ring of a copy of P^1 embedded in
---the weighted projective space P(1,1,1,2,2). 
-///
-
-TEST ///
-S = ring hirzebruchSurface 3;
-M = coker vars S;
-L = stronglyLinearStrand(M)--should give Koszul complex, and it does.
-assert(numcols basis HH_0 L == 1)
-assert(HH_1 L == 0)
-assert(HH_2 L == 0)
-assert(HH_3 L == 0)
-assert(HH_4 L == 0)
-M = coker matrix{{x_1, x_2^2}}
-L = stronglyLinearStrand(M)
-assert(L == koszulComplex {x_1})
-///
 
 end;
 
@@ -675,7 +596,116 @@ doc ///
 --- Toric BGG
 --------------------------------------------------
 
---todo: document dualRingToric, toricRR and toricLL
+doc ///
+   Key 
+    dualRingToric
+    (dualRingToric, PolynomialRing)
+    [(dualRingToric, PolynomialRing),Variable, SkewVariable]
+   Headline
+    computes the Koszul dual of a polynomial ring/exterior algebra
+   Usage
+    dualRingToric R
+   Inputs
+    R : PolynomialRing
+        either a standard polynomial ring, or an exterior algebra
+    Variable : Symbol
+    SkewVariable : Symbol
+   Outputs
+    : PolynomialRing
+      which is the Koszul dual of R
+   Description
+    Text
+      This method computes the Koszul dual of a polynomial ring or exterior algebra. In
+      particular, if $S = k[x_0, \ldots, x_n]$ is a $\mathbb{Z}^m$-graded ring for some $m$, 
+      and $\operatorname{deg}(x_i) = d_i$, then the output of dualRingToric is the 
+      $\mathbb{Z}^{m+1}$-graded exterior algebra on variables $e_0, \ldots, e_n$ with degrees 
+      $(-d_i, -1)$.
+    Example
+      R = ring(hirzebruchSurface(2, Variable => y))
+      E = dualRingToric(R, SkewVariable => f)
+    Text
+      On the other hand, if $E$ is a $\mathbb{Z}^{m+1}$-graded exterior algebra on $n+1$ 
+      variables $e_0, \ldots, e_n$ with $\operatorname{deg}(e_i) = (d_i, -1)$, then 
+      dualRingToric E is the $\mathbb{Z}^m$-graded polynomial ring $k[x_0, \ldots, x_n]$ with 
+      $\operatorname{deg}(x_i) = -d_i$.
+    Example
+      RY = dualRingToric E
+      degrees RY == degrees R
+    Text
+      This method preserves the coefficient ring of the input ring.
+    Example
+      S = ZZ/101[x,y,z, Degrees => {1,1,2}]
+      E' = dualRingToric S
+      coefficientRing E' == coefficientRing S
+///
+
+doc ///
+   Key 
+    toricRR
+    (toricRR, Module)
+    (toricRR, Module, List)
+   Headline
+    computes the BGG functor of a module over a multigraded polynomial ring
+   Usage
+    toricRR M
+    toricRR(M,L)
+   Inputs
+    M : Module
+        a module over a multigraded polynomial ring
+    L : List 
+        a list of multidegrees of the polynomial ring
+   Outputs
+    : DifferentialModule
+      which is the output of the BGG functor
+   Description
+    Text
+       todo
+    Example
+       a
+///
+
+doc ///
+   Key 
+    toricLL
+    (toricLL, Module)
+   Headline
+    computes the BGG functor of a module over a multigraded exterior algebra
+   Usage
+    toricLL N
+   Inputs
+    N : Module
+        a module over a multigraded exterior algebra
+   Outputs
+    : Complex
+      a complex of modules over the polynomial ring which is the output of the BGG functor
+   Description
+    Text
+      todo 
+    Example
+      R = ring(hirzebruchSurface(2, Variable => y))
+///
+
+doc ///
+   Key 
+    stronglyLinearStrand
+    (stronglyLinearStrand, Module)
+   Headline
+    todo
+   Usage
+    stronglyLinearStrand N
+   Inputs
+    N : Module
+        todo
+   Outputs
+    : Complex
+      a complex of modules over the polynomial ring which is the output of the BGG functor
+   Description
+    Text
+      todo 
+    Example
+      R = ring(hirzebruchSurface(2, Variable => y))
+///
+
 
 
 --- TESTS
@@ -820,4 +850,75 @@ M = coker random(S^2, S^{3:{-5}});
 D = toricRR M
 assert(degree D == {0,-1})
 assert(D.dd^2 == 0)
+///
+
+--Testing toricLL
+TEST ///
+S = ring hirzebruchSurface 3;
+E = dualRingToric S;
+C = toricLL(E^1)
+assert (isHomogeneous C)
+assert ((C.dd)^2 == 0)
+--The following 5 assertions check that C is isomorphic to the 
+--Koszul complex on x_0, ..., x_3 (up to a twist and shift)
+assert (HH_(0) C == 0)
+assert (HH_(-1) C == 0)
+assert (HH_(-2) C == 0)
+assert (HH_(-3) C == 0)
+assert (minors(1, C.dd_(-3)) == ideal vars ring C)
+N = coker vars E
+C = toricLL(N)
+assert(rank C_0 == 1)
+assert(C_-1 == 0)
+assert(C_1 == 0)
+///
+
+TEST ///
+S = ring hirzebruchSurface 3;
+E = dualRingToric S;
+-- cyclic but non-free module:
+C = toricLL(coker matrix{{e_0, e_1}})
+assert(C == koszulComplex {x_2, x_3})
+///
+
+TEST ///
+E = dualRingToric (ZZ/101[x_0, x_1, Degrees => {1, 2}]);
+--non-cyclic module
+N = module ideal(e_0, e_1);
+C = toricLL(N);
+S = ring C;
+f = map(S^{{3}}, S^{{1}} ++ S^{{2}}, matrix{{x_1, -x_0}});
+C' = complex({f})[-2];
+assert(C == C')
+///
+
+--Testing stronglyLinearStrand 
+TEST ///
+S = ring weightedProjectiveSpace {1,1,1,2,2};
+I = minors(2, matrix{{x_0, x_1, x_2^2, x_3}, {x_1, x_2, x_3, x_4}});
+M = Ext^3(module S/I, S^{{-7}});
+L = stronglyLinearStrand M;
+loadPackage "TateOnProducts"
+M = coker(L.dd_1)
+S = ring M
+A = coker map(S^{-1} ++ S^{-1} ++ S^{-1}, S^{-2} ++ S^{-2} ++ S^{-2} ++ S^{-2} ++ S^{-3} ++ S^{-3}, matrix{{x_0, 0, x_1, 0, x_3, 0}, {0,x_0,-x_2,x_1,-x_4,x_3}, {-x_2,-x_1,0,-x_2,0,-x_4}})
+assert(isIsomorphic(M, A))
+assert(HH_2 L == 0)
+assert(HH_1 L == 0)
+--Aside: M is the canonical module of the coordinate ring of a copy of P^1 embedded in
+--the weighted projective space P(1,1,1,2,2). 
+///
+
+TEST ///
+S = ring hirzebruchSurface 3;
+M = coker vars S;
+L = stronglyLinearStrand(M)--should give Koszul complex, and it does.
+assert(numcols basis HH_0 L == 1)
+assert(HH_1 L == 0)
+assert(HH_2 L == 0)
+assert(HH_3 L == 0)
+assert(HH_4 L == 0)
+M = coker matrix{{x_1, x_2^2}}
+L = stronglyLinearStrand(M)
+assert(L == koszulComplex {x_1})
 ///
