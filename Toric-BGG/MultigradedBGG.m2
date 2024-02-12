@@ -1,45 +1,40 @@
--*
 newPackage("MultigradedBGG",
     Version => "1.1",
     Date => "5 June 2023",
     Headline => "the multigraded BGG correspondence and differential modules",
     Authors => {
-	{Name => "Maya Banks",         	     Email => "mdbanks@wisc.edu",      HomePage => "https://sites.google.com/wisc.edu/mayabanks" }
-        {Name => "Michael K. Brown",         Email => "mkb0096@auburn.edu",    HomePage => "http://webhome.auburn.edu/~mkb0096/" }
-	{Name => "Daniel Erman",    	     Email => "erman@wisc.edu",        HomePage => "https://people.math.wisc.edu/~erman/" }
-	{Name => "Tara Gomes",	    	     Email => "gomes072@umn.edu",      HomePage => "Fill in" }
-	{Name => "Prashanth Sridhar",	     Email => "pzs0094@auburn.edu",    HomePage => "https://sites.google.com/view/prashanthsridhar/home" }
-	{Name => "Eduardo Torres Davila",    Email => "torre680@umn.edu",      HomePage => "https://etdavila10.github.io/" }
+	{Name => "Maya Banks",         	     Email => "mdbanks@wisc.edu",      HomePage => "https://sites.google.com/wisc.edu/mayabanks" },
+        {Name => "Michael K. Brown",         Email => "mkb0096@auburn.edu",    HomePage => "http://webhome.auburn.edu/~mkb0096/" },
+	{Name => "Daniel Erman",    	     Email => "erman@wisc.edu",        HomePage => "https://people.math.wisc.edu/~erman/" },
+	{Name => "Tara Gomes",	    	     Email => "gomes072@umn.edu",      HomePage => "Fill in" },
+	{Name => "Prashanth Sridhar",	     Email => "pzs0094@auburn.edu",    HomePage => "https://sites.google.com/view/prashanthsridhar/home"},
+	{Name => "Eduardo Torres Davila",    Email => "torre680@umn.edu",      HomePage => "https://etdavila10.github.io/" },
 	{Name => "Sasha	Zotine",    	     Email => "18az45@queensu.ca",     HomePage => "https://sites.google.com/view/szotine/home" }
     },
     PackageExports => {"NormalToricVarieties", "Complexes"},
     DebuggingMode => true
   )
 
-
-exports {
+export {
+    --methods
     "dualRingToric",
-    "toricRR"
-    "toricLL"
-    "stronglyLinearStrand"
-    "unfold"
+    "toricRR",
+    "toricLL",
+    "stronglyLinearStrand",
+    "unfold",
     "DifferentialModule",
     "differentialModule",
-    "unfold",
     "foldComplex",
     "resDM",    
     "minimizeDM",
-    "differential"
+    "differential",
+    --symbols
+    "SkewVariable"
     }
-
-*-
---todo: make this officially a package, so we'd remove this line.
-loadPackage "Complexes"
 
 --------------------------------------------------
 --- Differential Modules
 --------------------------------------------------
-
 DifferentialModule = new Type of Complex
 DifferentialModule.synonym = "differential module"
 
@@ -50,8 +45,6 @@ differentialModule Complex := C -> (
     --are the same matrix (say of degree d, if there 
     --is a grading), this matrix squares to 0, C_1 = C_0(-d), and C_{-1} = C_0(d).
   new DifferentialModule from C);
-
-
 differentialModule Matrix := phi -> (
     --check if the source and target are the same up to a twist
     if phi^2 != 0 then error "The differential does not square to zero.";
@@ -82,7 +75,6 @@ homology DifferentialModule := Module => opts -> (D -> HH_0 D);
 isFreeModule(DifferentialModule) := D ->(
     isFreeModule module D
     )
-
 
 unfold = method();
 --Input:  a differential module and a pair of integers low and high
@@ -244,22 +236,6 @@ foldComplex(Complex,ZZ) := DifferentialModule => (F,d)->(
 --- Toric BGG
 --------------------------------------------------
 
--- Non-exported method for contracting matrices.
--- Input:   A pair of matrices (M,N)
--- Output:  The effect of contracting M by N. 
-matrixContract = method()
-matrixContract (Matrix,Matrix) := (M,N) -> (
-    S := ring M;
-    if M==0 or N==0 then return map(S^(-degrees source N),S^(degrees source M),0);
-    if rank source M != rank target N then error("--rank of source M and target N differ");
-    mapmatrix := transpose matrix apply(rank target M, i -> apply(rank source N, j ->		
-            sum(rank source M, k -> contract(M_(i,k),N_(k,j)))
-	    )
-       	);
-    -- sasha: what the heck? why is there a null input? this doesn't cause errors but i feel like it might
-    transpose map(S^(-degrees source N), , mapmatrix)
-    )
-
 -- Exported method for dualizing an algebra.
 -- Input:   a polynomial ring OR an exterior algebra
 -- Output:  the Koszul dual exterior algebra, but with an additional 
@@ -294,11 +270,10 @@ dualRingToric PolynomialRing := opts -> S ->(
 --          and with the same differential in both spots.
 toricRR = method();
 toricRR(Module,List) := (N,L) ->(
-    M = coker presentation N;
+    M := coker presentation N;
     S := ring M;
     if not isCommutative S then error "--base ring is not commutative";
-    if not S.?exterior then S.exterior = dualRingToric(S);
-    E := S.exterior;
+    E := dualRingToric S;
     -- pick out the generators in the selected degree range.
     f0 := matrix {for d in unique L list gens image basis(d,M)};
     -- this is the degree of the anti-canonical bundle, which
@@ -313,7 +288,9 @@ toricRR(Module,List) := (N,L) ->(
     	newf0 := sub(f0,SE)*tr;
     	relationsMinSE := sub(relationsM,SE);
     	newf0 = newf0 % relationsMinSE;
-    	newg := matrixContract(transpose sub(f0,SE),newf0);
+    	newg := contract(transpose sub(f0,SE), newf0);
+	-- null input is to make the map have the correct degrees to be homogeneous.
+	newg = transpose map(source newg, , transpose newg);
     	g' := sub(newg,E);
 	del := map(E^f0degs,E^f0degs, -g', Degree => degree 1_S | {-1});
 	differentialModule(complex({del, del})[1])
@@ -328,15 +305,15 @@ toricRR Module := M -> (
     )
 
 -- Exported method for computing the multigraded BGG functor of a module over the exterior algebra.
---Input: N a (multi)-graded E-module.
---Caveat: Assumes N is finitely generated.
---Caveat 2:  arrows of toricLL(N) correspond to exterior multiplication (not contraction)
+-- Input: N a (multi)-graded E-module.
+-- Output: a complex of modules over the polynomial ring.
+-- Caveat: Assumes N is finitely generated.
+-- Caveat 2:  arrows of toricLL(N) correspond to exterior multiplication (not contraction)
 toricLL = method();
 toricLL Module := N -> (
     E := ring N;
     if not isSkewCommutative E then error "ring N is not skew commutative";
-    if not E.?symmetric then E.symmetric = dualRingToric E;
-    S := E.symmetric;
+    S := dualRingToric E;
     N = coker presentation N;
     bb := basis N;
     b := degrees source bb;
@@ -356,7 +333,8 @@ toricLL Module := N -> (
 	)
     )
 
---todo
+-- Exported method for computing a strongly linear strand for a module over a polynomial ring.
+-- Inp
 stronglyLinearStrand = method();
 stronglyLinearStrand Module := M -> (
     S := ring M;
@@ -373,10 +351,7 @@ stronglyLinearStrand Module := M -> (
     toricLL N
 )
 
-end;
 
-
--*
 beginDocumentation()
 
 --------------------------------------------------
@@ -385,25 +360,26 @@ beginDocumentation()
 
 doc ///
    Key 
-      DifferentialModules
+      MultigradedBGG
    Headline 
-      Package for Computing Free Resolutions of Differential Modules
+      Package for working with Multigraded BGG and Differential Modules
    Description
     Text
-      Blah blah blah      
+      todo    
 ///
 
 
 doc ///
    Key 
     differentialModule
-    (differentialModule, map)
+    (differentialModule, Matrix)
    Headline
     converts a square zero matrix into a differential module
    Usage
     differentialModule(f)
    Inputs
-    f: module map with the same source and target
+    f : Matrix
+        representing a module map with the same source and target
    Outputs
     : DifferentialModule 
    Description
@@ -464,12 +440,12 @@ doc ///
       (flag) differential module of degree d.
     Example
       R = QQ[x,y];
-      C = res ideal(x,y)
+      C = complex res ideal(x,y)
       D = foldComplex(C,0);
       D.dd_1
 ///
 
-
+-*
 doc ///
    Key 
     resDM
@@ -507,18 +483,20 @@ doc ///
       r = resDM(D,LengthLimit => 6)
       r.dd_1      
 ///
+*-
 
-
+--todo: since resKC has been combined with resDM, which of these doc nodes is needed? can we cut
+-- some of the above into this node?
 doc ///
    Key 
-    resKC
-    (resKC,DifferentialModule)
-    (resKC,DifferentialModule,ZZ)
+    resDM
+    (resDM,DifferentialModule)
+    (resDM,DifferentialModule,ZZ)
    Headline
     uses a killing cycles style construction to find a free resolution of a differential module
    Usage
-    resKC(D)
-    resKC(D,k)
+    resDM(D)
+    resDM(D,k)
    Inputs
     D: DifferentialModule
     k: ZZ
@@ -527,15 +505,15 @@ doc ///
    Description
     Text
       Given a differential module D it creates a free flag resolution of D, using a killing cycles
-      construction.  Because of issues with adding options, there are two chocies.  The defualt
-      resKC(D) runs the algorithm for the number of steps determined by the dimension of the ambient ring.
-      resKC(D,k) for k steps.
+      construction.  Because of issues with adding options, there are two chocies.  The default
+      resDM(D) runs the algorithm for the number of steps determined by the dimension of the ambient ring.
+      resDM(D,k) for k steps.
     Example
       R = QQ[x,y];
       M = R^1/ideal(x^2,y^2);
       phi = map(M,M,x*y, Degree=>2);
       D = differentialModule phi;
-      r = resKC(D)
+      r = resDM(D)
       r.dd_1
     Text
       The default algorithm runs for dim R + 1 steps, again because I couldn't figure out the options.
@@ -544,9 +522,9 @@ doc ///
       R = QQ[x]/(x^3);
       phi = map(R^1,R^1,x^2, Degree=>2);
       D = differentialModule phi;
-      r = resKC(D)
+      r = resDM(D)
       r.dd_1      
-      r = resKC(D,6)
+      r = resDM(D,6)
       r.dd_1      
 ///
 
@@ -586,7 +564,7 @@ doc ///
       M = R^1/ideal(x^2,y^2);
       phi = map(M,M,x*y, Degree=>2);
       D = differentialModule phi;
-      r = resKC(D)
+      r = resDM(D)
       r.dd_1
       mr = minimizeDM(r)
       mr.dd_1   
@@ -636,7 +614,7 @@ doc ///
     Example
       S = ZZ/101[x,y,z, Degrees => {1,1,2}]
       E' = dualRingToric S
-      coefficientRing E' == coefficientRing S
+      coefficientRing E' === coefficientRing S
 ///
 
 doc ///
@@ -922,3 +900,4 @@ M = coker matrix{{x_1, x_2^2}}
 L = stronglyLinearStrand(M)
 assert(L == koszulComplex {x_1})
 ///
+
