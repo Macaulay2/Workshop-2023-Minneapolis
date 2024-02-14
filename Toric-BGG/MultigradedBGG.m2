@@ -40,8 +40,8 @@ DifferentialModule.synonym = "differential module"
 
 differentialModule = method(TypicalValue => DifferentialModule)
 differentialModule Complex := C -> (
-    --add error if C is not of the following form:
-    --C_1 --> C_0 --> C_{-1}, where the two differentials
+    assert(C == naiveTruncation(C, -1, 1)) --checks if C is concentrated in homological degrees -1, 0, 1
+    --add check that the two differentials
     --are the same matrix (say of degree d, if there 
     --is a grading), this matrix squares to 0, C_1 = C_0(-d), and C_{-1} = C_0(d).
   new DifferentialModule from C);
@@ -334,7 +334,10 @@ toricLL Module := N -> (
     )
 
 -- Exported method for computing a strongly linear strand for a module over a polynomial ring.
--- Inp
+-- Input: M a (multi)-graded module over a polynomial ring
+-- Output: a Complex, the strongly linear strand of the minimal
+--     	   free resolution of M (in the sense of the paper "Linear strands  
+--    	   of multigraded free resolutions" by Brown-Erman).
 stronglyLinearStrand = method();
 stronglyLinearStrand Module := M -> (
     S := ring M;
@@ -385,7 +388,7 @@ doc ///
    Description
     Text
       Given a module $f: M\to M$ of degree a this creates a degree a differential module from
-      f represented as as 3-term chain complex in degree -1, 0, 1. If you want a nonzero, 
+      f represented as a 3-term chain complex in degree -1, 0, 1. If you want a nonzero, 
       you should specify the degree of the map explicitly.
       An error is returned if the source and target of f are not equal.
     Example
@@ -445,46 +448,6 @@ doc ///
       D.dd_1
 ///
 
--*
-doc ///
-   Key 
-    resDM
-    (resDM,DifferentialModule)
-   Headline
-    uses the Cartan-Eilenberg style construction to find a free resolution of a differential module
-   Usage
-    resDM(D)
-   Inputs
-    D: DifferentialModule
-   Outputs
-    : DifferentialModule
-   Description
-    Text
-      Given a differential module D it creates a free flag resolution of D, using a Cartan-Eilenberg
-      construction, up to the optional LengthLimit. So you should double
-      check that.
-    Example
-      R = QQ[x,y];
-      M = R^1/ideal(x^2,y^2);
-      phi = map(M,M,x*y, Degree=>2);
-      D = differentialModule phi;
-      r = resDM(D)
-      r.dd_1
-    Text
-      The default LengthLimit is 3 because I couldn't figure out how to change it. So if your 
-      ring has dimension greater than 3, or if it's not a regular, then you can increase the
-      LengthLimit to get more information.
-    Example
-      R = QQ[x]/(x^3);
-      phi = map(R^1,R^1,x^2,Degree=>2);
-      D = differentialModule phi;
-      r = resDM(D)
-      r.dd_1      
-      r = resDM(D,LengthLimit => 6)
-      r.dd_1      
-///
-*-
-
 --todo: since resKC has been combined with resDM, which of these doc nodes is needed? can we cut
 -- some of the above into this node?
 doc ///
@@ -493,7 +456,7 @@ doc ///
     (resDM,DifferentialModule)
     (resDM,DifferentialModule,ZZ)
    Headline
-    uses a killing cycles style construction to find a free resolution of a differential module
+    uses a "killing cycles"-style construction to find a free resolution of a differential module
    Usage
     resDM(D)
     resDM(D,k)
@@ -505,7 +468,7 @@ doc ///
    Description
     Text
       Given a differential module D it creates a free flag resolution of D, using a killing cycles
-      construction.  Because of issues with adding options, there are two chocies.  The default
+      construction.  Because of issues with adding options, there are two choices.  The default
       resDM(D) runs the algorithm for the number of steps determined by the dimension of the ambient ring.
       resDM(D,k) for k steps.
     Example
@@ -603,9 +566,9 @@ doc ///
       E = dualRingToric(R, SkewVariable => f)
     Text
       On the other hand, if $E$ is a $\mathbb{Z}^{m+1}$-graded exterior algebra on $n+1$ 
-      variables $e_0, \ldots, e_n$ with $\operatorname{deg}(e_i) = (d_i, -1)$, then 
+      variables $e_0, \ldots, e_n$ with $\operatorname{deg}(e_i) = (-d_i, -1)$, then 
       dualRingToric E is the $\mathbb{Z}^m$-graded polynomial ring $k[x_0, \ldots, x_n]$ with 
-      $\operatorname{deg}(x_i) = -d_i$.
+      $\operatorname{deg}(x_i) = d_i$.
     Example
       RY = dualRingToric E
       degrees RY == degrees R
@@ -623,7 +586,7 @@ doc ///
     (toricRR, Module)
     (toricRR, Module, List)
    Headline
-    computes the BGG functor of a module over a multigraded polynomial ring
+    computes the BGG functor of a module over a multigraded polynomial ring. 
    Usage
     toricRR M
     toricRR(M,L)
@@ -634,7 +597,8 @@ doc ///
         a list of multidegrees of the polynomial ring
    Outputs
     : DifferentialModule
-      which is the output of the BGG functor
+      a quotient of the differential module obtained by applying the multigraded BGG functor R 
+      to M. The size of this quotient is determined by the list L. 
    Description
     Text
        todo
@@ -668,21 +632,28 @@ doc ///
     stronglyLinearStrand
     (stronglyLinearStrand, Module)
    Headline
-    todo
+    computes the strongly linear strand of the minimal free resolution of a finitely generated 
+    multigraded module over a polynomial ring, provided the module is generated in a single degree
    Usage
     stronglyLinearStrand N
    Inputs
-    N : Module
-        todo
+    M : Module
+        a finitely generated module over a multigraded polynomial ring that is generated in a
+	single degree
    Outputs
     : Complex
-      a complex of modules over the polynomial ring which is the output of the BGG functor
+      the strongly linear strand of the minimal free resolution of M
    Description
     Text
-      todo 
+      The strongly linear strand is defined in the paper "Linear strands of multigraded free 
+      resolutions" by Brown-Erman. It is, roughly speaking,the largest subcomplex of the minimal 
+      free resolution of M that is linear, in the sense that its differentials are matrices of 
+      linear forms. The method we use for computing the strongly linear strand uses BGG, mirroring
+      Corollary 7.11 in Eisenbud's textbook "The geometry of syzygies".
     Example
       R = ring(hirzebruchSurface(2, Variable => y))
 ///
+
 
 
 
