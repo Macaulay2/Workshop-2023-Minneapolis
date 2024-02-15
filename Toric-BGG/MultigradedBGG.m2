@@ -251,14 +251,23 @@ dualRingToric PolynomialRing := opts -> S ->(
 	);       
     )
 
+-- Non-exported method for contracting a matrix by another.
+-- There is built-in functionality for this in M2, but this
+-- code does something subtly different that we can't quite
+-- figure out, so we'll leave it in.
 matrixContract = method()
 matrixContract (Matrix,Matrix) := (M,N) -> (
     S := ring M;
     if M==0 or N==0 then return map(S^(-degrees source N),S^(degrees source M),0);
-    assert(rank source M == rank target N); 
-    transpose map(S^(-degrees source N), , transpose matrix apply(rank target M,i->apply(rank source N,j->		
-           sum(rank source M,k->contract(M_(i,k),N_(k,j) ))
-	    )))
+    assert(rank source M == rank target N);
+    mapmatrix := transpose matrix apply(rank target M, i-> 
+	apply(rank source N, j->		
+           sum(rank source M, k -> contract(M_(i,k),N_(k,j)))
+	   )
+       );
+    -- this null input is intentional. 
+    -- it chooses the source to make the map homogeneous. 
+    transpose map(S^(-degrees source N), , mapmatrix)
     )
 
 
@@ -370,6 +379,116 @@ doc ///
       todo    
 ///
 
+doc ///
+   Key 
+      (degree, DifferentialModule)
+   Headline 
+      returns the degree of the differential
+   Usage
+      degree D
+   Inputs
+      D : DifferentialModule
+   Outputs
+        : List
+   Description
+      Text
+         This method returns the degree of the differential of a differential 
+	 module. Note that to
+      Example
+         R = QQ[x]/(x^3)
+         phi = map(R^1, R^1, x^2, Degree=>2)
+         D = differentialModule phi
+	 degree D == {2}
+///
+
+doc ///
+   Key 
+      (homology, DifferentialModule)
+   Headline 
+      computes the homology of a differential module
+   Usage
+      HH D
+   Inputs
+      D : DifferentialModule
+   Outputs
+        : Module
+   Description
+      Text
+         This computes the homology of a differential module. In particular,
+	 since we interpret differential modules as 3-term complexes, this
+	 returns the zeroth homology module.
+      Example
+         R = QQ[x,y]
+      	 M = R^1/ideal(x^2,y^2)
+      	 phi = map(M,M,x*y)
+      	 D = differentialModule phi
+	 HH D
+///
+
+doc ///
+   Key 
+      (image, DifferentialModule)
+   Headline 
+      computes the image of the differential of a differential module
+   Usage
+      image D
+   Inputs
+      D : DifferentialModule
+   Outputs
+        : Module
+   Description
+      Text
+         This method computes the image of the differential of $D$, as a
+	 submodule of $D$.
+      Example
+         R = QQ[x,y]
+      	 M = R^1/ideal(x^2,y^2)
+      	 phi = map(M,M,x*y, Degree => 2)
+      	 D = differentialModule phi
+	 D' = image D
+///
+
+doc ///
+   Key 
+      isFreeModule
+      (isFreeModule, DifferentialModule)
+   Headline 
+      Package for working with Multigraded BGG and Differential Modules
+   Description
+    Text
+      todo    
+///
+
+doc ///
+   Key 
+      (kernel, DifferentialModule)
+   Headline 
+      Package for working with Multigraded BGG and Differential Modules
+   Description
+    Text
+      todo    
+///
+
+doc ///
+   Key 
+      (module, DifferentialModule)
+   Headline 
+      Package for working with Multigraded BGG and Differential Modules
+   Description
+    Text
+      todo    
+///
+
+doc ///
+   Key 
+      (ring, DifferentialModule)
+   Headline 
+      Package for working with Multigraded BGG and Differential Modules
+   Description
+    Text
+      todo    
+///
+
 
 doc ///
    Key 
@@ -386,13 +505,14 @@ doc ///
     : DifferentialModule 
    Description
     Text
-      Given a module $f: M\to M$ of degree a this creates a degree a differential module from
-      f represented as a 3-term chain complex in degree -1, 0, 1. If you want a nonzero, 
-      you should specify the degree of the map explicitly.
-      An error is returned if the source and target of f are not equal.
+      Given a module map $f: M \rightarrow M$ of degree $a$ this creates a degree $a$ 
+      differential module from $f$ represented as a 3-term chain complex in homological 
+      degrees $-1, 0$, and $1$. If $a \neq 0$, then since the source and target of $f$
+      are required to be equal, we must specify the degree of the differential to be $a$ 
+      in order for the differential to be homogeneous.
     Example
       R = QQ[x]
-      phi = map(R^1/(x^2),R^1/(x^2),x, Degree=>1)
+      phi = map(R^1/(x^2),R^1/(x^2), x, Degree=>1)
       differentialModule(phi)
 ///
 
