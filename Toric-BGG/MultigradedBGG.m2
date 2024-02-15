@@ -251,6 +251,17 @@ dualRingToric PolynomialRing := opts -> S ->(
 	);       
     )
 
+matrixContract = method()
+matrixContract (Matrix,Matrix) := (M,N) -> (
+    S := ring M;
+    if M==0 or N==0 then return map(S^(-degrees source N),S^(degrees source M),0);
+    assert(rank source M == rank target N); 
+    transpose map(S^(-degrees source N), , transpose matrix apply(rank target M,i->apply(rank source N,j->		
+           sum(rank source M,k->contract(M_(i,k),N_(k,j) ))
+	    )))
+    )
+
+
 -- Exported method for computing the multigraded BGG functor of a module over
 -- a polynomial ring.
 -- Input:   M a finitely generated (multi)-graded S-module.
@@ -278,7 +289,7 @@ toricRR(Module,List) := (N,L) ->(
     	newf0 := sub(f0,SE)*tr;
     	relationsMinSE := sub(relationsM,SE);
     	newf0 = newf0 % relationsMinSE;
-    	newg := contract(transpose sub(f0,SE), newf0);
+    	newg := matrixContract(transpose sub(f0,SE), newf0);
 	-- null input is to make the map have the correct degrees to be homogeneous.
 	newg = transpose map(source newg, , transpose newg);
     	g' := sub(newg,E);
