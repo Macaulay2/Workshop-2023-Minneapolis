@@ -5,8 +5,7 @@ newPackage("MultigradedBGG",
     Authors => {
 	{Name => "Maya Banks",         	     Email => "mdbanks@wisc.edu",      HomePage => "https://sites.google.com/wisc.edu/mayabanks" },
         {Name => "Michael K. Brown",         Email => "mkb0096@auburn.edu",    HomePage => "http://webhome.auburn.edu/~mkb0096/" },
-	{Name => "Daniel Erman",    	     Email => "erman@wisc.edu",        HomePage => "https://people.math.wisc.edu/~erman/" },
-	{Name => "Tara Gomes",	    	     Email => "gomes072@umn.edu",      HomePage => "Fill in" },
+	{Name => "Tara Gomes",	    	     Email => "gomes072@umn.edu",      HomePage => "https://cse.umn.edu/math/tara-gomes" },
 	{Name => "Prashanth Sridhar",	     Email => "pzs0094@auburn.edu",    HomePage => "https://sites.google.com/view/prashanthsridhar/home"},
 	{Name => "Eduardo Torres Davila",    Email => "torre680@umn.edu",      HomePage => "https://etdavila10.github.io/" },
 	{Name => "Sasha	Zotine",    	     Email => "18az45@queensu.ca",     HomePage => "https://sites.google.com/view/szotine/home" }
@@ -40,7 +39,7 @@ DifferentialModule.synonym = "differential module"
 
 differentialModule = method(TypicalValue => DifferentialModule)
 differentialModule Complex := C -> (
-    assert(C == naiveTruncation(C, -1, 1)) --checks if C is concentrated in homological degrees -1, 0, 1
+    assert(C == naiveTruncation(C, -1, 1)); --checks if C is concentrated in homological degrees -1, 0, 1
     --add check that the two differentials
     --are the same matrix (say of degree d, if there 
     --is a grading), this matrix squares to 0, C_1 = C_0(-d), and C_{-1} = C_0(d).
@@ -117,15 +116,6 @@ resMinFlag(DifferentialModule, ZZ) := (D, k) -> (
         
 killingCyclesOneStep = method();
 killingCyclesOneStep(DifferentialModule) := (D)->(
---  commented out code was working but I'm trying to improve
---    G := res HH_0 D;
---    psi := map(D_0,G_0,(gens (HH_0 D)) %  (image D.dd_1));
---    d := degree D;
---    R := ring D;
---    newDiff := matrix{{D.dd_1,psi},{map(G_0**R^{d},D_1,0),map(G_0**R^{d},G_0,0)}};
---    assert (newDiff*(newDiff**R^{-d}) == 0);
---    differentialModule newDiff
---    )
     d := degree D;
     R := ring D;
     homMat := mingens image((gens HH_0 D) %  (image D.dd_1));
@@ -263,7 +253,7 @@ dualRingToric PolynomialRing := opts -> S ->(
 
 -- Exported method for computing the multigraded BGG functor of a module over
 -- a polynomial ring.
--- Input:   M a (multi)-graded S-module.
+-- Input:   M a finitely generated (multi)-graded S-module.
 --          L a list of degrees.
 -- Output:  The differential module RR(M) in degrees from L,
 --          presented as a complex in homological degrees -1, 0 ,1
@@ -305,10 +295,8 @@ toricRR Module := M -> (
     )
 
 -- Exported method for computing the multigraded BGG functor of a module over the exterior algebra.
--- Input: N a (multi)-graded E-module.
+-- Input: N a finitely generated (multi)-graded E-module.
 -- Output: a complex of modules over the polynomial ring.
--- Caveat: Assumes N is finitely generated.
--- Caveat 2:  arrows of toricLL(N) correspond to exterior multiplication (not contraction)
 toricLL = method();
 toricLL Module := N -> (
     E := ring N;
@@ -448,8 +436,7 @@ doc ///
       D.dd_1
 ///
 
---todo: since resKC has been combined with resDM, which of these doc nodes is needed? can we cut
--- some of the above into this node?
+
 doc ///
    Key 
     resDM
@@ -543,7 +530,7 @@ doc ///
     (dualRingToric, PolynomialRing)
     [(dualRingToric, PolynomialRing),Variable, SkewVariable]
    Headline
-    computes the Koszul dual of a polynomial ring/exterior algebra
+    computes the Koszul dual of a multigraded polynomial ring or exterior algebra
    Usage
     dualRingToric R
    Inputs
@@ -601,9 +588,27 @@ doc ///
       to M. The size of this quotient is determined by the list L. 
    Description
     Text
-       todo
+       Let $A$ be a finitely generated free abelian group. Given an $A$-graded polynomial ring $S$ 
+       with $A \oplus \mathbb{Z}$-graded Koszul dual exterior algebra E, the BGG functor
+       $\mathbf{R}$ sends an $S$-module $M$ to a free differential $E$-module with linear 
+       differential: see Section 3 of the paper accompanying this package for details. 
+       The free $E$-module underlying $\mathbf{R}(M)$ is $\bigoplus_{d \in A} M_d \otimes_k E^*(-d, 0)$,
+       where $E^*$ denotes the dual of $E$ over the ground field $k$. This module has rank given by the
+       dimension of $M$ as a $k$-vector space, which is typically infinite. Thus, this method usually only 
+       computes a finite rank quotient of $\mathbf{R}(M)$. Specifically: toricRR(M) is the quotient
+       of $\mathbf{R}(M)$ given by those summands $M_d \otimes_k E^*(-d, 0)$ such that
+       $d = e + a \operatorname{deg}(x_i)$, where $e$ is a generating degree of $M$, $a \in \{0,1\}$, 
+       and $0 \le i \le n$. There is also an optional input for a list L of degrees in $A$: 
+       toricRR(M, L) is the quotient $\bigoplus_{a \in L} M_d \otimes_k E^*(-d, 0)$ of $\mathbf{R}(M)$.     
     Example
-       a
+       S = ring weightedProjectiveSpace {1,1,2}
+       M = coker random(S^2, S^{3:{-5}});
+       toricRR M
+       T = ring hirzebruchSurface 3;
+       N = coker matrix{{x_0}}
+       L = {{0,0}, {1,0}}
+       toricRR(N, L)
+       
 ///
 
 doc ///
@@ -611,20 +616,25 @@ doc ///
     toricLL
     (toricLL, Module)
    Headline
-    computes the BGG functor of a module over a multigraded exterior algebra
+    computes the BGG functor of a module over the Koszul dual exterior algebra of a multigraded polynomial ring
    Usage
     toricLL N
    Inputs
     N : Module
-        a module over a multigraded exterior algebra
+        a module over the Koszul dual exterior algebra of a multigraded polynomial ring
    Outputs
     : Complex
-      a complex of modules over the polynomial ring which is the output of the BGG functor
+      a complex of modules over a multigraded polynomial ring, the result of applying the 
+      BGG functor L to N
    Description
     Text
-      todo 
+      Given a multigraded polynomial ring $S$ with Koszul dual exterior algebra E, the BGG functor
+      $\mathbf{L}$ sends an $E$-module to a linear complex of $S$-modules. 
     Example
-      R = ring(hirzebruchSurface(2, Variable => y))
+      S = ring hirzebruchSurface 3
+      E = dualRingToric S
+      C = toricLL(coker matrix{{e_0, e_1}})
+      C == koszulComplex {x_2, x_3}
 ///
 
 doc ///
@@ -632,26 +642,29 @@ doc ///
     stronglyLinearStrand
     (stronglyLinearStrand, Module)
    Headline
-    computes the strongly linear strand of the minimal free resolution of a finitely generated 
-    multigraded module over a polynomial ring, provided the module is generated in a single degree
+    computes the strongly linear strand of the minimal free resolution of a finitely generated graded module over a multigraded polynomial ring, provided the module is generated in a single degree.
    Usage
-    stronglyLinearStrand N
+    stronglyLinearStrand M
    Inputs
     M : Module
-        a finitely generated module over a multigraded polynomial ring that is generated in a
-	single degree
+        a finitely generated graded module over a multigraded polynomial ring that is generated 
+	in a single degree
    Outputs
     : Complex
       the strongly linear strand of the minimal free resolution of M
    Description
     Text
-      The strongly linear strand is defined in the paper "Linear strands of multigraded free 
-      resolutions" by Brown-Erman. It is, roughly speaking,the largest subcomplex of the minimal 
-      free resolution of M that is linear, in the sense that its differentials are matrices of 
-      linear forms. The method we use for computing the strongly linear strand uses BGG, mirroring
-      Corollary 7.11 in Eisenbud's textbook "The geometry of syzygies".
+      The strongly linear strand of the minimal free resolution of a multigraded module $M$ is defined 
+      in the paper "Linear strands of multigraded free resolutions" by Brown-Erman. It is, roughly
+      speaking,the largest subcomplex of the minimal free resolution of $M$ that is linear, in the 
+      sense that its differentials are matrices of linear forms. The method we use for computing 
+      the strongly linear strand uses BGG, mirroring Corollary 7.11 in Eisenbud's textbook
+      "The geometry of syzygies".
     Example
-      R = ring(hirzebruchSurface(2, Variable => y))
+      S = ZZ/101[x_1, x_2, x_3, Degrees => {1,1,2}]
+      M = coker matrix{{x_1, x_3 - x_2^2}}
+      L = stronglyLinearStrand(M)
+      L == koszulComplex {x_1}
 ///
 
 
@@ -786,7 +799,7 @@ L = {{0,0}, {1,0}, {-3, 1}, {0,1}, {2,0}};
 D = toricRR(M,L);
 assert(degree D == {0,0,-1})
 assert(D.dd^2 == 0)
---this takes several seconds, so we won't include it
+--this takes several seconds, so we don't include it
 --M = coker random(S^2, S^{3:{-3,-2}});
 --D = toricRR M
 --assert(degree D == {0,0,-1})
@@ -861,7 +874,7 @@ assert(HH_1 L == 0)
 TEST ///
 S = ring hirzebruchSurface 3;
 M = coker vars S;
-L = stronglyLinearStrand(M)--should give Koszul complex, and it does.
+L = stronglyLinearStrand(M)--should give the Koszul complex, and the following 5 assertions check that it does.
 assert(numcols basis HH_0 L == 1)
 assert(HH_1 L == 0)
 assert(HH_2 L == 0)
