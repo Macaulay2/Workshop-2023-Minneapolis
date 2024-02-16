@@ -25,6 +25,7 @@ export {
     "differentialModule",
     "foldComplex",
     "resDM",    
+    "resMinFlag",
     "minimizeDM",
     "differential",
     --symbols
@@ -39,28 +40,16 @@ DifferentialModule.synonym = "differential module"
 
 differentialModule = method(TypicalValue => DifferentialModule)
 differentialModule Complex := C -> (
-    assert(C == naiveTruncation(C, -1, 1)); --checks if C is concentrated in homological degrees -1, 0, 1
-    --add check that the two differentials
-    --are the same matrix (say of degree d, if there 
-    --is a grading), this matrix squares to 0, C_1 = C_0(-d), and C_{-1} = C_0(d).
-  new DifferentialModule from C);
+    if C != naiveTruncation(C, -1, 1)) then error "--complex needs to be concentrated in homological degrees -1, 0, and 1";
+    if C.dd_0 != C.dd_1 then error "--the two differentials of the complex need to be identical";
+    if C.dd_0^2 != 0 then error "--differential must square to zero";
+    new DifferentialModule from C);
+
 differentialModule Matrix := phi -> (
-    --check if the source and target are the same up to a twist
     if phi^2 != 0 then error "The differential does not square to zero.";
     R := ring phi;
     if target phi != source phi then error "source and target of map are not the same"; 
     new DifferentialModule from (complex({-phi,-phi})[1]));--the maps are negated to cancel out the sign introduced by the shift.
-
--*
-differentialModule Matrix := phi -> (
-    --check if the source and target are the same up to a twist
-    R := ring phi;
-    d := (degrees source phi)_0 - (degrees target phi)_0;
-    if target phi != source phi**R^{d} then error "source and target of map are not the same, up to a twist"; 
-    --if target phi != source phi then error "source and target of map are not the same"; 
-    new DifferentialModule from (chainComplex(phi**R^{d},phi)[1]));
-    --new DifferentialModule from (chainComplex(phi,phi)[1]));
- *-
 
 ring(DifferentialModule) := Ring => D -> D.ring;
 module DifferentialModule :=  (cacheValue symbol module)(D -> D_0);
@@ -71,10 +60,6 @@ kernel DifferentialModule := Module => opts -> (D -> kernel D.dd_0);
 image DifferentialModule := Module => (D -> image D.dd_1); 
 homology DifferentialModule := Module => opts -> (D -> HH_0 D);
 
-isFreeModule(DifferentialModule) := D ->(
-    isFreeModule module D
-    )
---todo: does unfold work? it looks like it doesn't do anything.
 unfold = method();
 --Input:  a differential module and a pair of integers low and high
 --Output:  the unfolded chain complex of the differential module, in homological degrees
@@ -366,6 +351,10 @@ stronglyLinearStrand Module := M -> (
 
 beginDocumentation()
 
+undocumented {
+    SkewVariable    
+    }
+
 --------------------------------------------------
 --- Differential Modules
 --------------------------------------------------
@@ -382,6 +371,32 @@ doc ///
 
 doc ///
    Key 
+      differential
+      (differential, DifferentialModule)
+   Headline 
+      returns the differential of a differential module
+   Usage
+      differential D
+   Inputs
+      D : DifferentialModule
+   Outputs
+        : Matrix
+   Description
+      Text
+         This method returns the differential of a differential 
+	 module. Since the source and target of the differential
+         are required to be equal, we must specify the degree of 
+	 the differential to be in order for the differential to 
+	 be homogeneous. This method returns that degree.
+      Example
+         R = QQ[x]/(x^3)
+         phi = map(R^1, R^1, x^2, Degree=>2)
+         D = differentialModule phi
+	 differential D
+///
+
+doc ///
+   Key 
       (degree, DifferentialModule)
    Headline 
       returns the degree of the differential
@@ -394,7 +409,9 @@ doc ///
    Description
       Text
          This method returns the degree of the differential of a differential 
-	 module. Note that to
+	 module. Since in this implementation, the differential is
+	 described using a map where the source and target are equal, the degree
+	 is used a
       Example
          R = QQ[x]/(x^3)
          phi = map(R^1, R^1, x^2, Degree=>2)
@@ -447,17 +464,6 @@ doc ///
       	 phi = map(M,M,x*y, Degree => 2)
       	 D = differentialModule phi
 	 D' = image D
-///
-
-doc ///
-   Key 
-      isFreeModule
-      (isFreeModule, DifferentialModule)
-   Headline 
-      Package for working with Multigraded BGG and Differential Modules
-   Description
-    Text
-      todo    
 ///
 
 doc ///
@@ -517,6 +523,32 @@ doc ///
       differentialModule(phi)
 ///
 
+doc ///
+   Key 
+    differentialModule
+    (differentialModule, Complex)
+   Headline
+    converts a complex into a differential module
+   Usage
+    differentialModule C
+   Inputs
+    C : Complex
+        a complex concentrated in homological degrees -1, 0, 1
+   Outputs
+    : DifferentialModule 
+   Description
+    Text
+      Given a complex of modules in homological degrees $-1, 0$, and $1$, with
+      the differentials being identical, this method produces the corresponding
+      DifferentialModule.
+    Example
+      S = QQ[x,y]
+      del = map(S^{-1,0,0,1},S^{-1,0,0,1},matrix{{0,y,x,-1},{0,0,0,x},{0,0,0,-y},{0,0,0,0}}, Degree=>2)
+      C = complex{-del, -del}[1]
+      D = differentialModule C
+      D.dd
+///
+
 
 doc ///
    Key 
@@ -543,6 +575,29 @@ doc ///
       unfold(D,-3,4)
 ///
 
+doc ///
+   Key 
+    resMinFlag
+    (resMinFlag, DifferentialModule, ZZ)
+   Headline
+    todo
+   Usage
+    foldComplex(C)
+   Inputs
+    C: Complex
+    d: ZZ
+   Outputs
+    : DifferentialModule
+   Description
+    Text
+      Given a chain complex C and integer d it creates the corresponding
+      (flag) differential module of degree d.
+    Example
+      R = QQ[x,y];
+      C = complex res ideal(x,y)
+      D = foldComplex(C,0);
+      D.dd_1
+///
 
 doc ///
    Key 
@@ -598,7 +653,7 @@ doc ///
       r = resDM(D)
       r.dd_1
     Text
-      The default algorithm runs for dim R + 1 steps, again because I couldn't figure out the options.
+      The default algorithm runs for dim R + 1 steps.
       Adding the number of steps as a second argument is like adding a LengthLimit.
     Example
       R = QQ[x]/(x^3);
@@ -618,9 +673,12 @@ doc ///
     The class of differential modules.
    Description
     Text
-      A differential module is just a module with a square zero endomorphism.  We represent this
-      via a 3-term complex with the module in positions -1, 0, and 1 and both maps being the
-      endomorphism.
+      A differential module is just a module with a square zero endomorphism. 
+      Given a module map $f: M \rightarrow M$ of degree $a$, we represent a 
+      differential module from $f$ as a 3-term chain complex in homological 
+      degrees $-1, 0$, and $1$. If $a \neq 0$, then since the source and target of $f$
+      are required to be equal, we must specify the degree of the differential to be $a$ 
+      in order for the differential to be homogeneous.
 ///
 
 
@@ -660,7 +718,6 @@ doc ///
    Key 
     dualRingToric
     (dualRingToric, PolynomialRing)
-    [(dualRingToric, PolynomialRing),Variable, SkewVariable]
    Headline
     computes the Koszul dual of a multigraded polynomial ring or exterior algebra
    Usage
@@ -821,6 +878,17 @@ TEST ///
     assert(isHomogeneous D.dd_0)
     assert(degree D=={2})
     assert(prune homology D==cokernel matrix{{x,y}})
+///
+
+TEST ///
+S = QQ[x,y]
+del = map(S^{-1,0,0,1},S^{-1,0,0,1},matrix{{0,y,x,-1},{0,0,0,x},{0,0,0,-y},{0,0,0,0}}, Degree=>2)
+C = complex{-del, -del}[1]
+D = differentialModule C
+assert(degree D == {2})
+assert(isHomogeneous D.dd_0)
+assert(D.dd_0^2 == 0)
+assert(del == D.dd_0)
 ///
 
 TEST ///
