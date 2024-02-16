@@ -40,16 +40,18 @@ DifferentialModule.synonym = "differential module"
 
 differentialModule = method(TypicalValue => DifferentialModule)
 differentialModule Complex := C -> (
-    if C != naiveTruncation(C, -1, 1)) then error "--complex needs to be concentrated in homological degrees -1, 0, and 1";
+    if C != naiveTruncation(C, -1, 1) then error "--complex needs to be concentrated in homological degrees -1, 0, and 1";
     if C.dd_0 != C.dd_1 then error "--the two differentials of the complex need to be identical";
     if C.dd_0^2 != 0 then error "--differential must square to zero";
-    new DifferentialModule from C);
+    new DifferentialModule from C
+    );
 
 differentialModule Matrix := phi -> (
     if phi^2 != 0 then error "The differential does not square to zero.";
     R := ring phi;
     if target phi != source phi then error "source and target of map are not the same"; 
-    new DifferentialModule from (complex({-phi,-phi})[1]));--the maps are negated to cancel out the sign introduced by the shift.
+    new DifferentialModule from (complex({-phi,-phi})[1])--the maps are negated to cancel out the sign introduced by the shift.
+    );
 
 ring(DifferentialModule) := Ring => D -> D.ring;
 module DifferentialModule :=  (cacheValue symbol module)(D -> D_0);
@@ -525,7 +527,6 @@ doc ///
 
 doc ///
    Key 
-    differentialModule
     (differentialModule, Complex)
    Headline
     converts a complex into a differential module
