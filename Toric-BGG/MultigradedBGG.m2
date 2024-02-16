@@ -64,7 +64,7 @@ differentialModule Matrix := phi -> (
 
 ring(DifferentialModule) := Ring => D -> D.ring;
 module DifferentialModule :=  (cacheValue symbol module)(D -> D_0);
-degree DifferentialModule := ZZ => (D -> degree D.dd_1); 
+degree DifferentialModule := List => (D -> degree D.dd_1); 
 differential = method();
 differential DifferentialModule := Matrix=> (D->D.dd_1);
 kernel DifferentialModule := Module => opts -> (D -> kernel D.dd_0); 
@@ -74,7 +74,7 @@ homology DifferentialModule := Module => opts -> (D -> HH_0 D);
 isFreeModule(DifferentialModule) := D ->(
     isFreeModule module D
     )
-
+--todo: does unfold work? it looks like it doesn't do anything.
 unfold = method();
 --Input:  a differential module and a pair of integers low and high
 --Output:  the unfolded chain complex of the differential module, in homological degrees
@@ -863,7 +863,7 @@ TEST ///
     phi = map(S^2, S^2, m, Degree=>2)
     D = differentialModule phi
     F = resDM D
-    del = map(S^{-1,0,0,1},S^{-1,0,0,1},matrix{{0,-y,-x,-1},{0,0,0,x},{0,0,0,-y},{0,0,0,0}}, Degree=>2)
+    del = map(S^{-1,0,0,1},S^{-1,0,0,1},matrix{{0,y,x,-1},{0,0,0,x},{0,0,0,-y},{0,0,0,0}}, Degree=>2)
     assert(F.dd_0^2==0)
     assert(isHomogeneous F.dd_0)
     assert(degree F=={2})
