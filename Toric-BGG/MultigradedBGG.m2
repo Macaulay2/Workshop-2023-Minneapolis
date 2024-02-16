@@ -373,7 +373,6 @@ doc ///
 	 computing the strongly linear strand of the minimal free resolution of a
 	 module over a multigraded polynomial ring, in the sense of the paper
 	 "Linear strands of multigraded free resolutions" by Brown-Erman.
-       
    SeeAlso
       DifferentialModule
       resDM
@@ -498,7 +497,7 @@ doc ///
    Key 
       (kernel, DifferentialModule)
    Headline 
-      Package for working with Multigraded BGG and Differential Modules
+      computes the kernel of the differential in a differential module.
    Description
       Text
          Computes the kernel of the differential in a differential module.
@@ -512,7 +511,7 @@ doc ///
    Key 
       (module, DifferentialModule)
    Headline 
-      Package for working with Multigraded BGG and Differential Modules
+      computes the underlying module of a differential module.
    Description
       Text
          Returns the underlying module of a differential module.
@@ -526,7 +525,7 @@ doc ///
    Key 
       (ring, DifferentialModule)
    Headline 
-      Package for working with Multigraded BGG and Differential Modules
+      returns the ring of a differential module.
    Description
       Text
          Returns the ring of a differential module. 
@@ -629,7 +628,7 @@ doc ///
       resMinFlag
       (resMinFlag, DifferentialModule, ZZ)
    Headline
-      Gives a minimal free flag resolution of a differential module of degree 0. 
+      gives a minimal free flag resolution of a differential module of degree 0 
    Usage
       resMinFlag(D, k)
    Inputs
@@ -1054,9 +1053,7 @@ TEST ///
     d1 = mutableMatrix F.dd_0
     d2 = mutableMatrix K.dd_0
     assert(d1 == columnSwap(rowSwap(d2, 1, 2), 1, 2))
-////
-
-
+///
 
 -- Testing foldComplex
 TEST ///
