@@ -113,13 +113,9 @@ killingCyclesOneStep(DifferentialModule) := (D)->(
     assert (newDiff*(newDiff) == 0);
     differentialModule newDiff
     )
---killing cycles resolution
---Input:  a free(?) differential module D and an integer k
---Output:  the killing cycles resolution of D after k steps.
--- NOTE:  until recently this produced the CONE over the resolution.
---        but I'm interested in the resolution itself so the last few lines change that
---Michael: changed the name of this method (and the next) to resDM, rather than resKC. The old
---resDM has been removed.
+
+--Input:  a differential module D and an integer k
+--Output: the first k steps of a free flag resolution of D.
 
 resDM = method();
 resDM(DifferentialModule,ZZ) := (D,k)->(
@@ -145,7 +141,8 @@ resDM(DifferentialModule) := (D)->(
     )
 
 --  Subroutines and routines to produce the minimal part of a matrix.
---  NEEDS TO BE A SQUARE MATRIX
+--  Input: a square matrix
+--  Output: a square matrix, the result of partially minimizing the input.
 minimizeDiffOnce = method();
 minimizeDiffOnce(Matrix,ZZ,ZZ) := (A,u,v) -> (
     a := rank target A;
@@ -166,7 +163,7 @@ units(Matrix) := A->(
     L
     )
 
---  Input: A SQUARE matrix
+--  Input: A square matrix
 --  Output: a minimization of it.
 minimizeDiff = method();
 minimizeDiff(Matrix) := A ->(
@@ -365,7 +362,18 @@ doc ///
       Package for working with Multigraded BGG and Differential Modules
    Description
       Text
-         todo
+         This package implements the multigraded BGG correspondence, as
+	 described, for instance, in Section 2.2 of the paper "Tate resolutions
+	 on toric varieties" by Brown-Erman. Applying the BGG functor to 
+	 a module over a multigraded polynomial ring gives a differential
+	 E-module, rather than a complex of E-modules; this package therefore
+	 also implements differential modules. Highlights of the package include
+	 methods for building free resolutions of differential modules;
+	 implementations of the multigraded BGG functors; and a method for
+	 computing the strongly linear strand of the minimal free resolution of a
+	 module over a multigraded polynomial ring, in the sense of the paper
+	 "Linear strands of multigraded free resolutions" by Brown-Erman.
+       
    SeeAlso
       DifferentialModule
       resDM
@@ -493,7 +501,7 @@ doc ///
       Package for working with Multigraded BGG and Differential Modules
    Description
       Text
-         todo
+         Computes the kernel of the differential in a differential module.
    SeeAlso
       (differential, DifferentialModule)
       (image, DifferentialModule)
@@ -507,7 +515,7 @@ doc ///
       Package for working with Multigraded BGG and Differential Modules
    Description
       Text
-         todo
+         Returns the underlying module of a differential module.
    SeeAlso
       (ring, DifferentialModule)
       (image, DifferentialModule)
@@ -521,7 +529,7 @@ doc ///
       Package for working with Multigraded BGG and Differential Modules
    Description
       Text
-         todo
+         Returns the ring of a differential module. 
    SeeAlso
       (module, DifferentialModule)
       (differential, DifferentialModule)
@@ -621,23 +629,28 @@ doc ///
       resMinFlag
       (resMinFlag, DifferentialModule, ZZ)
    Headline
-      todo
+      Gives a minimal free flag resolution of a differential module of degree 0. 
    Usage
-      foldComplex(C)
+      resMinFlag(D, k)
    Inputs
-      C: Complex
-      d: ZZ
+      D: DifferentialModule
+      k: ZZ
    Outputs
       : DifferentialModule
    Description
       Text
-         Given a chain complex C and integer d it creates the corresponding
-         (flag) differential module of degree d.
+         Let $R$ be a positively graded ring with $R_0$ a field. Given a differential module $D$ of degree 0 
+	 with finitely generated homology, this method gives a portion of the minimal free flag resolution of 
+	 $D$, using Algorithm 2.11 from the accompanying paper for this package, "The multigraded BGG correspondence
+	 in Macaulay2". As this resolution will often be infinite, the integer $k$ indicates how many steps of
+	 this algorithm will be applied. 
       Example
-         R = QQ[x,y];
-         C = complex res ideal(x,y)
-         D = foldComplex(C,0);
-         D.dd_1
+         R = ZZ/101[x, y];
+         k = coker vars R;
+	 f = map(k, k, 0);
+	 D = differentialModule(f);
+	 F = resMinFlag(D, 3);
+	 F.dd_0
    SeeAlso
       (differentialModule, Complex)
       unfold
@@ -1029,6 +1042,21 @@ TEST ///
     F = resDM D    
     assert(F.dd_0^2==0)
 ///
+
+--Testing resMinFlag
+TEST ///
+    R = ZZ/101[x, y];
+    k = coker vars R;
+    f = map(k, k, 0);
+    D = differentialModule(f);
+    F = resMinFlag(D, 3);
+    K = foldComplex(koszulComplex vars R, 0)
+    d1 = mutableMatrix F.dd_0
+    d2 = mutableMatrix K.dd_0
+    assert(d1 == columnSwap(rowSwap(d2, 1, 2), 1, 2))
+////
+
+
 
 -- Testing foldComplex
 TEST ///
