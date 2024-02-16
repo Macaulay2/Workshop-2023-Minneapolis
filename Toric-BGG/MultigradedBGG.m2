@@ -240,9 +240,6 @@ dualRingToric PolynomialRing := opts -> S ->(
     )
 
 -- Non-exported method for contracting a matrix by another.
--- There is built-in functionality for this in M2, but this
--- code does something subtly different that we can't quite
--- figure out, so we'll leave it in.
 matrixContract = method()
 matrixContract (Matrix,Matrix) := (M,N) -> (
     S := ring M;
@@ -367,8 +364,14 @@ doc ///
    Headline 
       Package for working with Multigraded BGG and Differential Modules
    Description
-    Text
-      todo    
+      Text
+         todo
+   SeeAlso
+      DifferentialModule
+      resDM
+      toricRR
+      toricLL
+      stronglyLinearStrand
 ///
 
 doc ///
@@ -395,6 +398,12 @@ doc ///
          phi = map(R^1, R^1, x^2, Degree=>2)
          D = differentialModule phi
 	 differential D
+   SeeAlso
+      (degree, DifferentialModule)
+      (image, DifferentialModule)
+      (kernel, DifferentialModule)
+      (homology, DifferentialModule)
+       
 ///
 
 doc ///
@@ -419,6 +428,8 @@ doc ///
          phi = map(R^1, R^1, x^2, Degree=>2)
          D = differentialModule phi
 	 degree D == {2}
+   SeeAlso
+      (differential, DifferentialModule)
 ///
 
 doc ///
@@ -443,6 +454,9 @@ doc ///
       	 phi = map(M,M,x*y)
       	 D = differentialModule phi
 	 HH D
+   SeeAlso
+      (image, DifferentialModule)
+      (kernel, DifferentialModule)
 ///
 
 doc ///
@@ -466,6 +480,10 @@ doc ///
       	 phi = map(M,M,x*y, Degree => 2)
       	 D = differentialModule phi
 	 D' = image D
+   SeeAlso
+      (differential, DifferentialModule)
+      (image, DifferentialModule)
+      (kernel, DifferentialModule)
 ///
 
 doc ///
@@ -474,8 +492,12 @@ doc ///
    Headline 
       Package for working with Multigraded BGG and Differential Modules
    Description
-    Text
-      todo    
+      Text
+         todo
+   SeeAlso
+      (differential, DifferentialModule)
+      (image, DifferentialModule)
+      (homology, DifferentialModule)
 ///
 
 doc ///
@@ -484,8 +506,12 @@ doc ///
    Headline 
       Package for working with Multigraded BGG and Differential Modules
    Description
-    Text
-      todo    
+      Text
+         todo
+   SeeAlso
+      (ring, DifferentialModule)
+      (image, DifferentialModule)
+      (differential, DifferentialModule)
 ///
 
 doc ///
@@ -494,221 +520,263 @@ doc ///
    Headline 
       Package for working with Multigraded BGG and Differential Modules
    Description
-    Text
-      todo    
+      Text
+         todo
+   SeeAlso
+      (module, DifferentialModule)
+      (differential, DifferentialModule)
 ///
 
 
 doc ///
    Key 
-    differentialModule
-    (differentialModule, Matrix)
+      differentialModule
+      (differentialModule, Matrix)
    Headline
-    converts a square zero matrix into a differential module
+      converts a square zero matrix into a differential module
    Usage
-    differentialModule(f)
+      differentialModule(f)cczx
    Inputs
-    f : Matrix
-        representing a module map with the same source and target
+      f : Matrix
+          representing a module map with the same source and target
    Outputs
-    : DifferentialModule 
+      : DifferentialModule 
    Description
-    Text
-      Given a module map $f: M \rightarrow M$ of degree $a$ this creates a degree $a$ 
-      differential module from $f$ represented as a 3-term chain complex in homological 
-      degrees $-1, 0$, and $1$. If $a \neq 0$, then since the source and target of $f$
-      are required to be equal, we must specify the degree of the differential to be $a$ 
-      in order for the differential to be homogeneous.
-    Example
-      R = QQ[x]
-      phi = map(R^1/(x^2),R^1/(x^2), x, Degree=>1)
-      differentialModule(phi)
+      Text
+         Given a module map $f: M \rightarrow M$ of degree $a$ this creates a degree $a$ 
+         differential module from $f$ represented as a 3-term chain complex in homological 
+         degrees $-1, 0$, and $1$. If $a \neq 0$, then since the source and target of $f$
+         are required to be equal, we must specify the degree of the differential to be $a$ 
+         in order for the differential to be homogeneous.
+      Example
+         R = QQ[x]
+         phi = map(R^1/(x^2),R^1/(x^2), x, Degree=>1)
+         differentialModule(phi)
+   SeeAlso
+      (differentialModule, Complex)
+      (differential, DifferentialModule)
 ///
 
 doc ///
    Key 
-    (differentialModule, Complex)
+      (differentialModule, Complex)
    Headline
-    converts a complex into a differential module
+      converts a complex into a differential module
    Usage
-    differentialModule C
+      differentialModule C
    Inputs
-    C : Complex
-        a complex concentrated in homological degrees -1, 0, 1
+      C : Complex
+          a complex concentrated in homological degrees -1, 0, 1
    Outputs
-    : DifferentialModule 
+      : DifferentialModule 
    Description
-    Text
-      Given a complex of modules in homological degrees $-1, 0$, and $1$, with
-      the differentials being identical, this method produces the corresponding
-      DifferentialModule.
-    Example
-      S = QQ[x,y]
-      del = map(S^{-1,0,0,1},S^{-1,0,0,1},matrix{{0,y,x,-1},{0,0,0,x},{0,0,0,-y},{0,0,0,0}}, Degree=>2)
-      C = complex{-del, -del}[1]
-      D = differentialModule C
-      D.dd
+      Text
+         Given a complex of modules in homological degrees $-1, 0$, and $1$, with
+         the differentials being identical, this method produces the corresponding
+         DifferentialModule.
+      Example
+         S = QQ[x,y]
+         del = map(S^{-1,0,0,1},S^{-1,0,0,1},matrix{{0,y,x,-1},{0,0,0,x},{0,0,0,-y},{0,0,0,0}}, Degree=>2)
+         C = complex{-del, -del}[1]
+         D = differentialModule C
+         D.dd
+   SeeAlso
+      (differentialModule, Complex)
+      (differential, DifferentialModule)
 ///
 
 
 doc ///
    Key 
-    unfold
-    (unfold,DifferentialModule,ZZ,ZZ)
+      unfold
+      (unfold,DifferentialModule,ZZ,ZZ)
    Headline
-    converts a differential module into a 1-periodic complex
+      converts a differential module into a 1-periodic complex
    Usage
-    unfold(D,a,b)
+      unfold(D,a,b)
    Inputs
-    D: DifferentialModule
-    a: ZZ
-    b: ZZ
+      D : DifferentialModule
+      a : ZZ
+      b : ZZ
    Outputs
-    : Complex
+      : Complex
    Description
-    Text
-      Given a differential module D and an integers a and b it produces a
-      chain complex with the module D in homological a through b and where
-      all maps are the differential of D.
-    Example
-      phi = matrix{{0,1},{0,0}};
-      D = differentialModule(phi);
-      unfold(D,-3,4)
+      Text
+         Given a differential module D and an integers a and b it produces a
+         chain complex with the module D in homological a through b and where
+         all maps are the differential of D.
+      Example
+         phi = matrix{{0,1},{0,0}};
+         D = differentialModule(phi);
+         unfold(D,-3,4)
+   SeeAlso
+      (differentialModule, Complex)
+      resMinFlag
+      resDM
+      foldComplex
 ///
 
 doc ///
    Key 
-    resMinFlag
-    (resMinFlag, DifferentialModule, ZZ)
+      resMinFlag
+      (resMinFlag, DifferentialModule, ZZ)
    Headline
-    todo
+      todo
    Usage
-    foldComplex(C)
+      foldComplex(C)
    Inputs
-    C: Complex
-    d: ZZ
+      C: Complex
+      d: ZZ
    Outputs
-    : DifferentialModule
+      : DifferentialModule
    Description
-    Text
-      Given a chain complex C and integer d it creates the corresponding
-      (flag) differential module of degree d.
-    Example
-      R = QQ[x,y];
-      C = complex res ideal(x,y)
-      D = foldComplex(C,0);
-      D.dd_1
+      Text
+         Given a chain complex C and integer d it creates the corresponding
+         (flag) differential module of degree d.
+      Example
+         R = QQ[x,y];
+         C = complex res ideal(x,y)
+         D = foldComplex(C,0);
+         D.dd_1
+   SeeAlso
+      (differentialModule, Complex)
+      unfold
+      resDM
+      foldComplex
+      minimizeDM
 ///
 
 doc ///
    Key 
-    foldComplex
-    (foldComplex,Complex,ZZ)
+      foldComplex
+      (foldComplex,Complex,ZZ)
    Headline
-    converts a chain complex into a differential module
+      converts a chain complex into a differential module
    Usage
-    foldComplex(C)
+      foldComplex(C)
    Inputs
-    C: Complex
-    d: ZZ
+      C : Complex
+      d : ZZ
    Outputs
-    : DifferentialModule
+      : DifferentialModule
    Description
-    Text
-      Given a chain complex C and integer d it creates the corresponding
-      (flag) differential module of degree d.
-    Example
-      R = QQ[x,y];
-      C = complex res ideal(x,y)
-      D = foldComplex(C,0);
-      D.dd_1
+      Text
+         Given a chain complex C and integer d it creates the corresponding
+         (flag) differential module of degree d.
+      Example
+         R = QQ[x,y];
+         C = complex res ideal(x,y)
+         D = foldComplex(C,0);
+         D.dd_1
+   SeeAlso
+      (differentialModule, Complex)
+      unfold
+      resDM
+      resMinFlag
 ///
 
 
 doc ///
    Key 
-    resDM
-    (resDM,DifferentialModule)
-    (resDM,DifferentialModule,ZZ)
+      resDM
+      (resDM,DifferentialModule)
+      (resDM,DifferentialModule,ZZ)
    Headline
-    uses a "killing cycles"-style construction to find a free resolution of a differential module
+      uses a "killing cycles"-style construction to find a free resolution of a differential module
    Usage
-    resDM(D)
-    resDM(D,k)
+      resDM(D)
+      resDM(D,k)
    Inputs
-    D: DifferentialModule
-    k: ZZ
+      D : DifferentialModule
+      k : ZZ
    Outputs
-    : DifferentialModule
+      : DifferentialModule
    Description
-    Text
-      Given a differential module D it creates a free flag resolution of D, using a killing cycles
-      construction.  Because of issues with adding options, there are two choices.  The default
-      resDM(D) runs the algorithm for the number of steps determined by the dimension of the ambient ring.
-      resDM(D,k) for k steps.
-    Example
-      R = QQ[x,y];
-      M = R^1/ideal(x^2,y^2);
-      phi = map(M,M,x*y, Degree=>2);
-      D = differentialModule phi;
-      r = resDM(D)
-      r.dd_1
-    Text
-      The default algorithm runs for dim R + 1 steps.
-      Adding the number of steps as a second argument is like adding a LengthLimit.
-    Example
-      R = QQ[x]/(x^3);
-      phi = map(R^1,R^1,x^2, Degree=>2);
-      D = differentialModule phi;
-      r = resDM(D)
-      r.dd_1      
-      r = resDM(D,6)
-      r.dd_1      
+      Text
+         Given a differential module D it creates a free flag resolution of D, using a killing cycles
+         construction.  Because of issues with adding options, there are two choices.  The default
+         resDM(D) runs the algorithm for the number of steps determined by the dimension of the ambient ring.
+         resDM(D,k) for k steps.
+      Example
+         R = QQ[x,y];
+         M = R^1/ideal(x^2,y^2);
+         phi = map(M,M,x*y, Degree=>2);
+         D = differentialModule phi;
+         r = resDM(D)
+         r.dd_1
+      Text
+         The default algorithm runs for dim R + 1 steps.
+         Adding the number of steps as a second argument is like adding a LengthLimit.
+      Example
+         R = QQ[x]/(x^3);
+         phi = map(R^1,R^1,x^2, Degree=>2);
+         D = differentialModule phi;
+         r = resDM(D)
+         r.dd_1      
+         r = resDM(D,6)
+         r.dd_1
+   SeeAlso
+      (differentialModule, Complex)
+      resMinFlag
+      unfold
+      foldComplex
+      minimizeDM
 ///
 
 
 doc ///
    Key 
-    DifferentialModule
+      DifferentialModule
    Headline
-    The class of differential modules.
+      The class of differential modules.
    Description
-    Text
-      A differential module is just a module with a square zero endomorphism. 
-      Given a module map $f: M \rightarrow M$ of degree $a$, we represent a 
-      differential module from $f$ as a 3-term chain complex in homological 
-      degrees $-1, 0$, and $1$. If $a \neq 0$, then since the source and target of $f$
-      are required to be equal, we must specify the degree of the differential to be $a$ 
-      in order for the differential to be homogeneous.
+      Text
+         A differential module is just a module with a square zero endomorphism. 
+         Given a module map $f: M \rightarrow M$ of degree $a$, we represent a 
+         differential module from $f$ as a 3-term chain complex in homological 
+         degrees $-1, 0$, and $1$. If $a \neq 0$, then since the source and target of $f$
+         are required to be equal, we must specify the degree of the differential to be $a$ 
+         in order for the differential to be homogeneous.
+   SeeAlso
+      MultigradedBGG
+      differentialModule
+      (differentialModule, Matrix)
+      (differentialModule, Complex)
 ///
 
 
 doc ///
    Key 
-    minimizeDM
-    (minimizeDM,DifferentialModule)
+      minimizeDM
+      (minimizeDM,DifferentialModule)
    Headline
-    minimizes a sqaure matrix or a differential module
+      minimizes a square matrix or a differential module
    Usage
-    minimizeDM(D)
+      minimizeDM(D)
    Inputs
-    D: DifferentialModule
+      D : DifferentialModule
    Outputs
-    : DifferentialModule
+      : DifferentialModule
    Description
-    Text
-      Given a differential module D this code breaks off trivial
-      blocks, producing a quasi-isomorphic differential module D' with a minimal
-      differential.
-    Example
-      R = QQ[x,y];
-      M = R^1/ideal(x^2,y^2);
-      phi = map(M,M,x*y, Degree=>2);
-      D = differentialModule phi;
-      r = resDM(D)
-      r.dd_1
-      mr = minimizeDM(r)
-      mr.dd_1   
+      Text
+         Given a differential module D this code breaks off trivial
+         blocks, producing a quasi-isomorphic differential module D' with a minimal
+         differential.
+      Example
+         R = QQ[x,y];
+         M = R^1/ideal(x^2,y^2);
+         phi = map(M,M,x*y, Degree=>2);
+         D = differentialModule phi;
+         r = resDM(D)
+         r.dd_1
+         mr = minimizeDM(r)
+         mr.dd_1
+   SeeAlso
+      (differentialModule, Complex)
+      resMinFlag
+      unfold
+      foldComplex
+      resDM
 ///
 
 --------------------------------------------------
@@ -717,144 +785,161 @@ doc ///
 
 doc ///
    Key 
-    dualRingToric
-    (dualRingToric, PolynomialRing)
+      dualRingToric
+      (dualRingToric, PolynomialRing)
+      [dualRingToric, Variable]
+      [dualRingToric, SkewVariable]
    Headline
-    computes the Koszul dual of a multigraded polynomial ring or exterior algebra
+      computes the Koszul dual of a multigraded polynomial ring or exterior algebra
    Usage
-    dualRingToric R
+      dualRingToric R
    Inputs
-    R : PolynomialRing
-        either a standard polynomial ring, or an exterior algebra
-    Variable : Symbol
-    SkewVariable : Symbol
+      R : PolynomialRing
+          either a standard polynomial ring, or an exterior algebra
+      Variable => Symbol
+      SkewVariable => Symbol
    Outputs
-    : PolynomialRing
-      which is the Koszul dual of R
+      : PolynomialRing
+        which is the Koszul dual of R
    Description
-    Text
-      This method computes the Koszul dual of a polynomial ring or exterior algebra. In
-      particular, if $S = k[x_0, \ldots, x_n]$ is a $\mathbb{Z}^m$-graded ring for some $m$, 
-      and $\operatorname{deg}(x_i) = d_i$, then the output of dualRingToric is the 
-      $\mathbb{Z}^{m+1}$-graded exterior algebra on variables $e_0, \ldots, e_n$ with degrees 
-      $(-d_i, -1)$.
-    Example
-      R = ring(hirzebruchSurface(2, Variable => y))
-      E = dualRingToric(R, SkewVariable => f)
-    Text
-      On the other hand, if $E$ is a $\mathbb{Z}^{m+1}$-graded exterior algebra on $n+1$ 
-      variables $e_0, \ldots, e_n$ with $\operatorname{deg}(e_i) = (-d_i, -1)$, then 
-      dualRingToric E is the $\mathbb{Z}^m$-graded polynomial ring $k[x_0, \ldots, x_n]$ with 
-      $\operatorname{deg}(x_i) = d_i$.
-    Example
-      RY = dualRingToric E
-      degrees RY == degrees R
-    Text
-      This method preserves the coefficient ring of the input ring.
-    Example
-      S = ZZ/101[x,y,z, Degrees => {1,1,2}]
-      E' = dualRingToric S
-      coefficientRing E' === coefficientRing S
+      Text
+         This method computes the Koszul dual of a polynomial ring or exterior algebra. In
+         particular, if $S = k[x_0, \ldots, x_n]$ is a $\mathbb{Z}^m$-graded ring for some $m$, 
+         and $\operatorname{deg}(x_i) = d_i$, then the output of dualRingToric is the 
+         $\mathbb{Z}^{m+1}$-graded exterior algebra on variables $e_0, \ldots, e_n$ with degrees 
+         $(-d_i, -1)$.
+      Example
+         R = ring(hirzebruchSurface(2, Variable => y))
+         E = dualRingToric(R, SkewVariable => f)
+      Text
+         On the other hand, if $E$ is a $\mathbb{Z}^{m+1}$-graded exterior algebra on $n+1$ 
+         variables $e_0, \ldots, e_n$ with $\operatorname{deg}(e_i) = (-d_i, -1)$, then 
+         dualRingToric E is the $\mathbb{Z}^m$-graded polynomial ring $k[x_0, \ldots, x_n]$ with 
+         $\operatorname{deg}(x_i) = d_i$.
+      Example
+         RY = dualRingToric E
+         degrees RY == degrees R
+      Text
+         This method preserves the coefficient ring of the input ring.
+      Example
+         S = ZZ/101[x,y,z, Degrees => {1,1,2}]
+         E' = dualRingToric S
+         coefficientRing E' === coefficientRing S
+   SeeAlso
+      toricRR
+      toricLL
+      stronglyLinearStrand
 ///
 
 doc ///
    Key 
-    toricRR
-    (toricRR, Module)
-    (toricRR, Module, List)
+      toricRR
+      (toricRR, Module)
+      (toricRR, Module, List)
    Headline
-    computes the BGG functor of a module over a multigraded polynomial ring. 
+      computes the BGG functor of a module over a multigraded polynomial ring. 
    Usage
-    toricRR M
-    toricRR(M,L)
+      toricRR M
+      toricRR(M,L)
    Inputs
-    M : Module
-        a module over a multigraded polynomial ring
-    L : List 
-        a list of multidegrees of the polynomial ring
+      M : Module
+          a module over a multigraded polynomial ring
+      L : List 
+          a list of multidegrees of the polynomial ring
    Outputs
-    : DifferentialModule
-      a quotient of the differential module obtained by applying the multigraded BGG functor R 
-      to M. The size of this quotient is determined by the list L. 
+      : DifferentialModule
+        a quotient of the differential module obtained by applying the multigraded BGG functor R 
+        to M. The size of this quotient is determined by the list L. 
    Description
-    Text
-       Let $A$ be a finitely generated free abelian group. Given an $A$-graded polynomial ring $S$ 
-       with $A \oplus \mathbb{Z}$-graded Koszul dual exterior algebra E, the BGG functor
-       $\mathbf{R}$ sends an $S$-module $M$ to a free differential $E$-module with linear 
-       differential: see Section 3 of the paper accompanying this package for details. 
-       The free $E$-module underlying $\mathbf{R}(M)$ is $\bigoplus_{d \in A} M_d \otimes_k E^*(-d, 0)$,
-       where $E^*$ denotes the dual of $E$ over the ground field $k$. This module has rank given by the
-       dimension of $M$ as a $k$-vector space, which is typically infinite. Thus, this method usually only 
-       computes a finite rank quotient of $\mathbf{R}(M)$. Specifically: toricRR(M) is the quotient
-       of $\mathbf{R}(M)$ given by those summands $M_d \otimes_k E^*(-d, 0)$ such that
-       $d = e + a \operatorname{deg}(x_i)$, where $e$ is a generating degree of $M$, $a \in \{0,1\}$, 
-       and $0 \le i \le n$. There is also an optional input for a list L of degrees in $A$: 
-       toricRR(M, L) is the quotient $\bigoplus_{a \in L} M_d \otimes_k E^*(-d, 0)$ of $\mathbf{R}(M)$.     
-    Example
-       S = ring weightedProjectiveSpace {1,1,2}
-       M = coker random(S^2, S^{3:{-5}});
-       toricRR M
-       T = ring hirzebruchSurface 3;
-       N = coker matrix{{x_0}}
-       L = {{0,0}, {1,0}}
-       toricRR(N, L)
-       
+      Text
+         Let $A$ be a finitely generated free abelian group. Given an $A$-graded polynomial ring $S$ 
+         with $A \oplus \mathbb{Z}$-graded Koszul dual exterior algebra E, the BGG functor
+       	 $\mathbf{R}$ sends an $S$-module $M$ to a free differential $E$-module with linear 
+       	 differential: see Section 3 of the paper accompanying this package for details. 
+       	 The free $E$-module underlying $\mathbf{R}(M)$ is $\bigoplus_{d \in A} M_d \otimes_k E^*(-d, 0)$,
+       	 where $E^*$ denotes the dual of $E$ over the ground field $k$. This module has rank given by the
+       	 dimension of $M$ as a $k$-vector space, which is typically infinite. Thus, this method usually only 
+       	 computes a finite rank quotient of $\mathbf{R}(M)$. Specifically: toricRR(M) is the quotient
+       	 of $\mathbf{R}(M)$ given by those summands $M_d \otimes_k E^*(-d, 0)$ such that
+       	 $d = e + a \operatorname{deg}(x_i)$, where $e$ is a generating degree of $M$, $a \in \{0,1\}$, 
+       	 and $0 \le i \le n$. There is also an optional input for a list L of degrees in $A$: 
+       	 toricRR(M, L) is the quotient $\bigoplus_{a \in L} M_d \otimes_k E^*(-d, 0)$ of $\mathbf{R}(M)$.     
+      Example
+         S = ring weightedProjectiveSpace {1,1,2}
+       	 M = coker random(S^2, S^{3:{-5}});
+       	 toricRR M
+       	 T = ring hirzebruchSurface 3;
+       	 N = coker matrix{{x_0}}
+       	 L = {{0,0}, {1,0}}
+       	 toricRR(N, L)
+   SeeAlso
+       dualRingToric
+       toricLL
+       stronglyLinearStrand
 ///
 
 doc ///
    Key 
-    toricLL
-    (toricLL, Module)
+      toricLL
+      (toricLL, Module)
    Headline
-    computes the BGG functor of a module over the Koszul dual exterior algebra of a multigraded polynomial ring
+      computes the BGG functor of a module over the Koszul dual exterior algebra of a multigraded polynomial ring
    Usage
-    toricLL N
+      toricLL N
    Inputs
-    N : Module
-        a module over the Koszul dual exterior algebra of a multigraded polynomial ring
+      N : Module
+          a module over the Koszul dual exterior algebra of a multigraded polynomial ring
    Outputs
-    : Complex
-      a complex of modules over a multigraded polynomial ring, the result of applying the 
-      BGG functor L to N
+      : Complex
+        a complex of modules over a multigraded polynomial ring, the result of applying the 
+        BGG functor L to N
    Description
-    Text
-      Given a multigraded polynomial ring $S$ with Koszul dual exterior algebra E, the BGG functor
-      $\mathbf{L}$ sends an $E$-module to a linear complex of $S$-modules. 
-    Example
-      S = ring hirzebruchSurface 3
-      E = dualRingToric S
-      C = toricLL(coker matrix{{e_0, e_1}})
-      C == koszulComplex {x_2, x_3}
+      Text
+         Given a multigraded polynomial ring $S$ with Koszul dual exterior algebra E, the BGG functor
+      	 $\mathbf{L}$ sends an $E$-module to a linear complex of $S$-modules. 
+      Example
+         S = ring hirzebruchSurface 3
+      	 E = dualRingToric S
+      	 C = toricLL(coker matrix{{e_0, e_1}})
+      	 C == koszulComplex {x_2, x_3}
+   SeeAlso
+      dualRingToric
+      toricRR
+      stronglyLinearStrand
 ///
 
 doc ///
    Key 
-    stronglyLinearStrand
-    (stronglyLinearStrand, Module)
+      stronglyLinearStrand
+      (stronglyLinearStrand, Module)
    Headline
-    computes the strongly linear strand of the minimal free resolution of a finitely generated graded module over a multigraded polynomial ring, provided the module is generated in a single degree.
+      computes the strongly linear strand of the minimal free resolution of a finitely generated graded module over a multigraded polynomial ring, provided the module is generated in a single degree.
    Usage
-    stronglyLinearStrand M
+      stronglyLinearStrand M
    Inputs
-    M : Module
-        a finitely generated graded module over a multigraded polynomial ring that is generated 
-	in a single degree
+      M : Module
+          a finitely generated graded module over a multigraded polynomial ring that is generated 
+	  in a single degree
    Outputs
-    : Complex
-      the strongly linear strand of the minimal free resolution of M
+      : Complex
+        the strongly linear strand of the minimal free resolution of M
    Description
-    Text
-      The strongly linear strand of the minimal free resolution of a multigraded module $M$ is defined 
-      in the paper "Linear strands of multigraded free resolutions" by Brown-Erman. It is, roughly
-      speaking,the largest subcomplex of the minimal free resolution of $M$ that is linear, in the 
-      sense that its differentials are matrices of linear forms. The method we use for computing 
-      the strongly linear strand uses BGG, mirroring Corollary 7.11 in Eisenbud's textbook
-      "The geometry of syzygies".
-    Example
-      S = ZZ/101[x_1, x_2, x_3, Degrees => {1,1,2}]
-      M = coker matrix{{x_1, x_3 - x_2^2}}
-      L = stronglyLinearStrand(M)
-      L == koszulComplex {x_1}
+      Text
+         The strongly linear strand of the minimal free resolution of a multigraded module $M$ is defined 
+      	 in the paper "Linear strands of multigraded free resolutions" by Brown-Erman. It is, roughly
+      	 speaking,the largest subcomplex of the minimal free resolution of $M$ that is linear, in the 
+      	 sense that its differentials are matrices of linear forms. The method we use for computing 
+      	 the strongly linear strand uses BGG, mirroring Corollary 7.11 in Eisenbud's textbook
+      	 "The geometry of syzygies".
+      Example
+         S = ZZ/101[x_1, x_2, x_3, Degrees => {1,1,2}]
+      	 M = coker matrix{{x_1, x_3 - x_2^2}}
+      	 L = stronglyLinearStrand(M)
+      	 L == koszulComplex {x_1}
+   SeeAlso
+      toricRR
+      toricLL
+      dualRingToric
 ///
 
 
@@ -865,9 +950,6 @@ doc ///
 --------------------------------------------------
 --- Differential Modules
 --------------------------------------------------
-
---Michael: I changed some signs in the differential modules methods that may affect these tests. Some signs
---may need to be flipped. 
 
 -- Constructor tests
 TEST /// 
