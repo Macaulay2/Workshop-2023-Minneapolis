@@ -89,6 +89,8 @@ minFlagOneStep(DifferentialModule) := (D) -> (
     differentialModule newDiff
 )
 
+--Input: a differential module D with degree 0, and an integer k
+--Output: the first k iterations of an algorithm that produces the minimal free flag resolution of D
 resMinFlag = method();
 resMinFlag(DifferentialModule, ZZ) := (D, k) -> (
     d := degree D;
@@ -115,7 +117,7 @@ killingCyclesOneStep(DifferentialModule) := (D)->(
     )
 
 --Input:  a differential module D and an integer k
---Output: the first k steps of a free flag resolution of D.
+--Output: the first k iterations of an algorithm that produces a free flag resolution of D.
 
 resDM = method();
 resDM(DifferentialModule,ZZ) := (D,k)->(
@@ -177,7 +179,7 @@ minimizeDiff(Matrix) := A ->(
     A
     )
 
---  Input:  A (finite, free) differential module
+--  Input:  A free differential module
 --  Output: A minimization of that DM.
 minimizeDM = method();
 minimizeDM(DifferentialModule) := r ->(
@@ -212,10 +214,12 @@ foldComplex(Complex,ZZ) := DifferentialModule => (F,d)->(
 --------------------------------------------------
 
 -- Exported method for dualizing an algebra.
--- Input:   a polynomial ring OR an exterior algebra
--- Output:  the Koszul dual exterior algebra, but with an additional 
---          ZZ-degree, the ``standard grading'' where elements of \bigwedge^k
---          have degree k.
+-- Input:   a polynomial ring or exterior algebra S
+-- Output:  the Koszul dual algebra. When S is a polynomial ring graded by a group A,
+--          the Koszul dual exterior algebra has an A x Z grading, where
+--          deg(e_i) = (-deg(x_i), -1). When S is an exterior algebra graded by A x Z, 
+--          the Koszul dual polynomial ring has an A grading where deg(x_i) = -\pi_A(deg(e_i)),
+--          where pi_A : A x Z --> A is the natural surjection.
 dualRingToric = method(Options => {
     	    Variable        => getSymbol "x",
 	    SkewVariable => getSymbol "e"});
@@ -257,9 +261,7 @@ matrixContract (Matrix,Matrix) := (M,N) -> (
 -- a polynomial ring.
 -- Input:   M a finitely generated (multi)-graded S-module.
 --          L a list of degrees.
--- Output:  The differential module RR(M) in degrees from L,
---          presented as a complex in homological degrees -1, 0 ,1
---          and with the same differential in both spots.
+-- Output:  The differential module RR(M) in degrees from L.
 toricRR = method();
 toricRR(Module,List) := (N,L) ->(
     M := coker presentation N;
@@ -396,10 +398,7 @@ doc ///
    Description
       Text
          This method returns the differential of a differential 
-	 module. Since the source and target of the differential
-         are required to be equal, we must specify the degree of 
-	 the differential to be in order for the differential to 
-	 be homogeneous. This method returns that degree.
+	 module.
       Example
          R = QQ[x]/(x^3)
          phi = map(R^1, R^1, x^2, Degree=>2)
@@ -427,9 +426,10 @@ doc ///
    Description
       Text
          This method returns the degree of the differential of a differential 
-	 module. Since in this implementation, the differential is
-	 described using a map where the source and target are equal, the degree
-	 is used a
+	 module. In more detail: since the source and target of the differential
+         are required to be equal, we must specify the degree of 
+	 the differential in order for the differential to 
+	 be homogeneous; this method returns that degree.
       Example
          R = QQ[x]/(x^3)
          phi = map(R^1, R^1, x^2, Degree=>2)
@@ -452,7 +452,7 @@ doc ///
         : Module
    Description
       Text
-         This computes the homology of a differential module. In particular,
+         This computes the homology of a differential module. More specifically:
 	 since we interpret differential modules as 3-term complexes, this
 	 returns the zeroth homology module.
       Example
@@ -609,8 +609,8 @@ doc ///
       : Complex
    Description
       Text
-         Given a differential module D and an integers a and b it produces a
-         chain complex with the module D in homological a through b and where
+         Given a differential module D and integers a and b, this method produces a
+         chain complex with the module D in homological degrees a through b, where
          all maps are the differential of D.
       Example
          phi = matrix{{0,1},{0,0}};
@@ -705,10 +705,10 @@ doc ///
       : DifferentialModule
    Description
       Text
-         Given a differential module D it creates a free flag resolution of D, using a killing cycles
-         construction.  Because of issues with adding options, there are two choices.  The default
-         resDM(D) runs the algorithm for the number of steps determined by the dimension of the ambient ring.
-         resDM(D,k) for k steps.
+         Given a differential module D, this method creates a free flag resolution of D, using Algorithm 2.7 from the accompanying 
+	 paper "The multigraded BGG correspondence in Macaulay2". The default resDM(D) runs the algorithm for the 
+	 number of steps determined by the dimension of the ambient ring. Alternatively, resDM(D,k) iterates k steps 
+	 of the algorithm.
       Example
          R = QQ[x,y];
          M = R^1/ideal(x^2,y^2);
@@ -771,7 +771,7 @@ doc ///
       : DifferentialModule
    Description
       Text
-         Given a differential module D this code breaks off trivial
+         Given a differential module D, this code breaks off trivial
          blocks, producing a quasi-isomorphic differential module D' with a minimal
          differential.
       Example
@@ -913,7 +913,6 @@ doc ///
          S = ring hirzebruchSurface 3
       	 E = dualRingToric S
       	 C = toricLL(coker matrix{{e_0, e_1}})
-      	 C == koszulComplex {x_2, x_3}
    SeeAlso
       dualRingToric
       toricRR
@@ -944,10 +943,10 @@ doc ///
       	 the strongly linear strand uses BGG, mirroring Corollary 7.11 in Eisenbud's textbook
       	 "The geometry of syzygies".
       Example
-         S = ZZ/101[x_1, x_2, x_3, Degrees => {1,1,2}]
-      	 M = coker matrix{{x_1, x_3 - x_2^2}}
+         S = ZZ/101[x_0, x_1, x_2, Degrees => {1,1,2}]
+      	 M = coker matrix{{x_0, x_2 - x_1^2}}
       	 L = stronglyLinearStrand(M)
-      	 L == koszulComplex {x_1}
+      	 L == koszulComplex {x_0}
    SeeAlso
       toricRR
       toricLL
@@ -1147,8 +1146,13 @@ TEST ///
 S = ring hirzebruchSurface 3;
 E = dualRingToric S;
 -- cyclic but non-free module:
-C = toricLL(coker matrix{{e_0, e_1}})
-assert(C == koszulComplex {x_2, x_3})
+C = toricLL(coker matrix{{e_0, e_1}})--this should be isomorphic (a shift of) the Koszul complex on x_2, x_3
+assert(isHomogeneous C)
+assert(C.dd_(-1) == map((ring C)^{{1, 1}}, (ring C)^{{1, 0}} ++ (ring C)^{{0, 1}}, matrix{{x_3, -x_2}}))
+assert(HH_(-1) C == 0)
+assert(HH_(0) C == 0)
+assert(C_(-3) == 0)
+assert(C_(1) == 0)
 ///
 
 TEST ///
@@ -1158,7 +1162,7 @@ N = module ideal(e_0, e_1);
 C = toricLL(N);
 S = ring C;
 f = map(S^{{3}}, S^{{1}} ++ S^{{2}}, matrix{{x_1, -x_0}});
-C' = complex({f})[-2];
+C' = complex({f})[2];
 assert(C == C')
 ///
 
