@@ -257,6 +257,30 @@ matrixContract (Matrix,Matrix) := (M,N) -> (
     )
 
 
+-- Non-exported method for redefining a degree list which makes the quotient
+-- operation in toricRR well-defined
+pickOutMonomials = method();
+pickOutMonomials (Ring, List) := (S, L) -> (
+    h := matrix {heft S};
+    D := max for l in L list (h * vector l)_0;
+    S' := (coefficientRing S)(monoid[gens S, Degrees => toList (#gens S:1)]);
+    fromS'toS := map(S,S', gens S);
+    i := -1;
+    stopflag := true;
+    newL := flatten while(stopflag and i < 15) list (
+	i = i + 1;
+	for m in first entries basis(i, S') list (
+	    deg := degree fromS'toS m;
+	    if (h * vector deg)_0 <= D then deg else continue
+	    )
+	);
+    unique flatten for a in L list (
+	for b in newL list (
+	    if member(a - b,newL) then a-b else continue
+	    )
+	)
+    )
+
 -- Exported method for computing the multigraded BGG functor of a module over
 -- a polynomial ring.
 -- Input:   M a finitely generated (multi)-graded S-module.
@@ -267,6 +291,9 @@ toricRR(Module,List) := (N,L) ->(
     M := coker presentation N;
     S := ring M;
     if not isCommutative S then error "--base ring is not commutative";
+    if heft S === null then error "--need a heft vector for polynomial ring";
+    -- we need to modify L so that the "quotient" differential is well-defined
+    L = pickOutMonomials(S,L);
     E := dualRingToric S;
     -- pick out the generators in the selected degree range.
     f0 := matrix {for d in unique L list gens image basis(d,M)};
@@ -874,16 +901,34 @@ doc ///
        	 computes a finite rank quotient of $\mathbf{R}(M)$. Specifically: toricRR(M) is the quotient
        	 of $\mathbf{R}(M)$ given by those summands $M_d \otimes_k E^*(-d, 0)$ such that
        	 $d = e + a \operatorname{deg}(x_i)$, where $e$ is a generating degree of $M$, $a \in \{0,1\}$, 
-       	 and $0 \le i \le n$. There is also an optional input for a list L of degrees in $A$: 
-       	 toricRR(M, L) is the quotient $\bigoplus_{a \in L} M_d \otimes_k E^*(-d, 0)$ of $\mathbf{R}(M)$.     
+       	 and $0 \le i \le n$.      
       Example
          S = ring weightedProjectiveSpace {1,1,2}
        	 M = coker random(S^2, S^{3:{-5}});
        	 toricRR M
        	 T = ring hirzebruchSurface 3;
-       	 N = coker matrix{{x_0}}
-       	 L = {{0,0}, {1,0}}
-       	 toricRR(N, L)
+       	 M' = coker matrix{{x_0}}
+       	 toricRR M'
+      Text
+         There is also an optional input for a list L of degrees in $A$: toricRR(M, L) is the quotient
+	 $\bigoplus_{a \in L} M_d \otimes_k E^*(-d, 0)$ of $\mathbf{R}(M)$.
+      Example
+         L = {{0,0}, {1,0}}
+	 toricRR(M',L)
+      Text
+         For some lists of degrees L, the denominator of the quotient is not a differential module. Hence,
+	 the method sometimes enlarges the list of degrees in order to have a well-defined quotient. We
+	 demonstrate that phenomenon with the following example.
+      Example
+         S = ring hirzebruchSurface 1
+	 L1 = {{0,0}, {1,0}, {0,1}}
+	 L2 = {{0,0}, {1,0}, {0,1}, {-1,1}};
+	 N1 = toricRR(S^1, L1);
+	 N2 = toricRR(S^1, L2);
+	 phi = map(ring N2, ring N1, gens ring N2)
+	 assert(phi N1.dd_0 - N2.dd_0 == 0)
+   Caveat
+       A heft vector is necessary for the computation to produce a well-defined differential module.
    SeeAlso
        dualRingToric
        toricLL
