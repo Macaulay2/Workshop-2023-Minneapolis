@@ -112,7 +112,7 @@ matrix BracketRing := o -> B -> transpose genericMatrix(ring B,numcols B, numrow
 
 -- class declaration for GCAlgebra
 GCAlgebra = new Type of AbstractGCRing
-gc = method(Options => {Strategy => GroebnerBasis,CoefficientRing => QQ})
+gc = method(Options => {Strategy => GroebnerBasis,CoefficientRing => QQ,Variables=>{}})
 -- constructor
 gc (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     n := # vectorSymbols;
@@ -121,11 +121,11 @@ gc (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
 	else if all(vectorSymbols, s -> instance(s, ZZ)) and n == # unique vectorSymbols then (a := symbol a; (RingElement, apply(vectorSymbols, s -> a_s)))
 	else error "incorrect input"
 	);
-    Bnd := bracketRing(toList vectorSymbols, d, o);
+    Bnd := bracketRing(toList vectorSymbols, d, Strategy => o.Strategy, CoefficientRing => o.CoefficientRing);
     n'Choose'd'plus1 := subsets(n,d+1);
-    R := (ring Bnd)[vectorVariables, SkewCommutative=>true];
+    R := (ring Bnd)[o.Variables][vectorVariables, SkewCommutative => true];
     S := R/(ideal apply(n'Choose'd'plus1, S -> product(S, s -> (vectorVariables#s)_R)));
-    new GCAlgebra from {bracketRing => Bnd, ring => S}
+    new GCAlgebra from {bracketRing => Bnd, ring => S, "num_pts" => #vectorSymbols}
     )
 
 bracketRing GCAlgebra := o -> Gnd -> Gnd#bracketRing
@@ -165,6 +165,13 @@ Array _ AbstractGCRing := (A, R) -> (
     new Bracket from {RingElement => (sgn A0) * B#table#rowSet, ring => R}
 )
 
+coefficients GCExpression := o -> a -> (
+    R1 := ring ring a;
+    R2 := coefficientRing R1;
+    R3 := coefficientRing R2;
+    if not isPolynomialRing R3 then error "expected GC ring with extra variables";
+    coefficients sub(a#RingElement, R3[gens R1, SkewCommutative=>true][gens R2])
+)
 
 bracketRing GCExpression := o -> b -> bracketRing ring b
 commonRing (GCExpression, GCExpression) := (b1, b2) -> (
@@ -232,7 +239,8 @@ isBottomDegree GCExpression := A -> (
 extensorSupportIndices = method()
 extensorSupportIndices GCExpression := A -> (
     assert(isExtensor A);
-    increment positions(first exponents A#RingElement, p -> p == 1)
+    vectorExponents := take(first exponents A#RingElement, {0, (ring A)#"num_pts" - 1});
+    increment positions(vectorExponents, p -> p == 1)
     );
 extensorToBracket = method()
 extensorToBracket GCExpression := A -> (
@@ -270,7 +278,7 @@ shuffleProduct = (A, B) -> (
 
 GCExpression _ BracketRing := (b, B) -> (
     assert(B === bracketRing b);
-    bBracket := if (isTopDegree b) then lift(extensorToBracket b, ring B) else if (isBottomDegree b) then lift(b#RingElement, ring B) else error "must be an extensor of step 0 or d";
+    bBracket := if (isTopDegree b) then sum(terms b, bterm -> lift(extensorToBracket bterm, ring B)) else if (isBottomDegree b) then lift(b#RingElement, ring B) else error "must be an extensor of step 0 or d";
     bBracket_B
     )
 
@@ -372,7 +380,6 @@ entries GCMatrix := M -> (
     L := entries  M#matrix;
     B := M#bracketRing;
     T := applyTable(L, t->t_B))
- 
 
 undocumented {AbstractGCRing, (net, GCAlgebra)}
 
