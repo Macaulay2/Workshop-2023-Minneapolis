@@ -45,7 +45,7 @@ AbstractGCRing Array := (G, A) -> (
 -- class declaration for BracketRing
 BracketRing = new Type of AbstractGCRing
 -- constructor
-bracketRing = method(Options => {Strategy => GroebnerBasis,CoefficientRing => QQ})
+bracketRing = method(Options => {Strategy => GroebnerBasis,CoefficientRing => QQ,Variables=>{}})
 bracketRing AbstractGCRing := G -> error "not implemented"
 bracketRing (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     n := length vectorSymbols;
@@ -53,13 +53,13 @@ bracketRing (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     x := symbol x;
     R := o.CoefficientRing[x_(1,1)..x_(n,d)];
     X := matrix for i from 1 to n list for j from 1 to d list x_(i,j);
-    n'choose'd := rsort(sort \ subsets(vectorSymbols, d)); -- important for "Tableux order"
-    n'choose'd'Indices := rsort(sort \ subsets(#vectorSymbols, d));
-    minorsX := apply(n'choose'd'Indices, R -> det X^R);
+    nBrackets := rsort(sort \ subsets(vectorSymbols, d)); -- important for "Tableux order"
+    bracketIndices := rsort(sort \ subsets(#vectorSymbols, d));
+    minorsX := apply(bracketIndices, R -> det X^R);
     y := symbol y; 
-    bracketVariables := apply(n'choose'd, S -> y_("["|fold(S, (a, b) -> toString(a)|toString(b))|"]"));
+    bracketVariables := apply(nBrackets, S -> y_("["|fold(S, (a, b) -> toString(a)|toString(b))|"]"));
     S := o.CoefficientRing[gens R, bracketVariables, MonomialOrder => {Eliminate(numgens R), GRevLex}]; -- important for "Tableaux order"
-    lookupTable := new HashTable from apply(binomial(n, d), i -> increment n'choose'd'Indices#i => (gens S)#(numgens R+i));
+    lookupTable := new HashTable from apply(binomial(n, d), i -> increment bracketIndices#i => (gens S)#(numgens R+i));
     I := ideal apply(minorsX, bracketVariables, (m, b) -> sub(m, S) - b_S);
     ret := new BracketRing from {numrows => n, numcols => d, ring => S, ideal => I, table => lookupTable, cache => new CacheTable from {}};
     if o#Strategy === GroebnerBasis then (
@@ -112,7 +112,7 @@ matrix BracketRing := o -> B -> transpose genericMatrix(ring B,numcols B, numrow
 
 -- class declaration for GCAlgebra
 GCAlgebra = new Type of AbstractGCRing
-gc = method(Options => {Strategy => GroebnerBasis,CoefficientRing => QQ,Variables=>{}})
+gc = method(Options => {Strategy => GroebnerBasis,CoefficientRing => QQ})
 -- constructor
 gc (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
     n := # vectorSymbols;
@@ -122,9 +122,9 @@ gc (VisibleList, ZZ) := o -> (vectorSymbols, d) -> (
 	else error "incorrect input"
 	);
     Bnd := bracketRing(toList vectorSymbols, d, Strategy => o.Strategy, CoefficientRing => o.CoefficientRing);
-    n'Choose'd'plus1 := subsets(n,d+1);
-    R := (ring Bnd)[o.Variables][vectorVariables, SkewCommutative => true];
-    S := R/(ideal apply(n'Choose'd'plus1, S -> product(S, s -> (vectorVariables#s)_R)));
+    nBrackets := subsets(n,d+1);
+    R := (ring Bnd)[vectorVariables, SkewCommutative => true];
+    S := R/(ideal apply(nBrackets, S -> product(S, s -> (vectorVariables#s)_R)));
     new GCAlgebra from {bracketRing => Bnd, ring => S, "num_pts" => #vectorSymbols}
     )
 
@@ -166,11 +166,20 @@ Array _ AbstractGCRing := (A, R) -> (
 )
 
 coefficients GCExpression := o -> a -> (
-    R1 := ring ring a;
+    G := ring a;
+    if instance(G, BracketRing) then (
+	R1 := ring G;
+	R2 := coefficientRing R1;
+	(m, c) := coefficients sub(a#RingElement, (coefficientRing R2)[gens R1][gens R2]);
+	(m, matrix(G, apply(flatten entries c, e -> {e_G})))
+	) else error "not implemented"
+-*
     R2 := coefficientRing R1;
     R3 := coefficientRing R2;
     if not isPolynomialRing R3 then error "expected GC ring with extra variables";
-    coefficients sub(a#RingElement, R3[gens R1, SkewCommutative=>true][gens R2])
+    (m, c) := flatten \ entries \ coefficients sub(a#RingElement, R3[gens R1, SkewCommutative=>true][gens R2]);
+    (m, c)
+    *-
 )
 
 bracketRing GCExpression := o -> b -> bracketRing ring b
@@ -199,7 +208,7 @@ GCExpression * GCExpression := (b1, b2) -> (
     b := b1#RingElement * b2#RingElement;
     bR := b_R;
     bRTerms := terms bR;
-    if (instance(R, GCAlgebra) and (all(bRTerms, isTopDegree) or all(bRTerms, isBottomDegree))) then sum(bRTerms, t -> t_(bracketRing R)) else bR
+    if (instance(R, GCAlgebra) and (all(bRTerms, t -> (isTopDegree t or isBottomDegree t)))) then sum(bRTerms, t -> t_(bracketRing R)) else bR
     )
 GCExpression - GCExpression := (b1, b2) -> (
     R := commonRing(b1, b2);
@@ -276,11 +285,18 @@ shuffleProduct = (A, B) -> (
 	)
     )
 
+GCExpression _ GCAlgebra := (b, G) -> (
+    if not instance(G, BracketRing) then ( -- else, see next function
+	if ring b === G then b else error "GCExpression belongs to a different ring"
+	)
+    )
+
 GCExpression _ BracketRing := (b, B) -> (
     assert(B === bracketRing b);
     bBracket := if (isTopDegree b) then sum(terms b, bterm -> lift(extensorToBracket bterm, ring B)) else if (isBottomDegree b) then lift(b#RingElement, ring B) else error "must be an extensor of step 0 or d";
     bBracket_B
     )
+
 
 GCExpression ^ GCExpression := (f, g) -> (
     G := ring f;
@@ -341,6 +357,10 @@ RingElement * GCMatrix := (r, M) -> (
 
 GCMatrix * RingElement := (M, r) -> (
     new GCMatrix from {matrix => (r * M#matrix), bracketRing => M#bracketRing})
+
+ring GCMatrix := M -> M#bracketRing
+
+GCMatrix _ Sequence := (M, twoIndices) -> ((M#matrix)_twoIndices)_(ring M)
 
 det GCMatrix := o -> M -> (det M#matrix)_(M#bracketRing)
 
