@@ -12,7 +12,6 @@ ell3 = (e*f)_G
 ell4 = (g*h)_G
 pt = (l*a + u * b)_G
 ell = ((pt * ell2) ^ ell3) * pt
-formula = ell * ell3
--- for some reason, "c" still has floating 1s...
+formula = ell * ell4
 (m, c) = coefficients formula
 disc = c_(2,0) * c_(0,0) - 4 * c_(1,0)
