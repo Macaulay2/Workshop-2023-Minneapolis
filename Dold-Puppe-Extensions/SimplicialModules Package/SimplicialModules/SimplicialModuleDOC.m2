@@ -3274,8 +3274,21 @@ doc ///
         Text
             If any of these identities fail, the function returns `false`. If all identities are satisfied, the function returns `true`.
         Example
-            Q = ZZ/101[x_1..x_3]
+            R = QQ[a..d];
+            f0 = matrix {{-b^2+a*c, b*c-a*d, -c^2+b*d}}
+            f1 = map(source f0,, {{d, c}, {c, b}, {b, a}})
+            C = simplicialModule(complex {f0, f1}, 3, Degeneracy => true)
+            isSimplicial C
+            dd^C
+            ss^C
+            dd^C*ss^C  --if C is simplicial, this should be all identity maps
+        Text
+            The zero simplicial module is well-defined.
+        Example
+            C = simplicialModule(R^0, 6, Degeneracy => true)
+            isSimplicial C
     SeeAlso
+        isWellDefined
 ///
 
 
@@ -3309,8 +3322,21 @@ doc ///
 	    since the @TO normalize@ command by default first checks if a simplicial module is obtained as a Dold-Kan image
 	    before attempting a more costly computation.
         Example
-            Q = ZZ/101[x_1..x_3]
+            R = ZZ/101[x_1..x_3];
+	    K = koszulComplex vars R
+	    S = simplicialModule(K,4, Degeneracy => true)
+	    S.?complex
+	    fS = forgetComplex S
+	    components fS_3
+	    ffS = forgetComplex(S, RememberSummands => false)
+	    components ffS_3
+	    Kn = normalize fS
+	    Knn = normalize ffS
+	    Kn.dd
+	    K == prune Kn
     SeeAlso
+        normalize
+	forgetDegeneracy
 ///
 
 
@@ -3331,12 +3357,19 @@ doc ///
             The simplicial module S, but with no degeneracy maps stored.
     Description
         Text
-            This function removes the data of degeneracy maps from a simplicial module `S`, effectively forgetting the degeneracy structure. It is useful when the user wants to ignore degeneracy maps for the purpose of speeding up computations or simplifying the simplicial object.
-        Text
-            If `S` already contains a complex (`S.complex`), the function returns a new simplicial module with the same complex, face maps (`S.dd.map`), and top degree (`S.topDegree`), effectively preserving the complex while removing degeneracy maps.
-            If `S` does not have a complex, the function returns a new simplicial module with the underlying module (`S.module`), face maps (`S.dd.map`), and top degree (`S.topDegree`).
+            This function removes the data of degeneracy maps from a simplicial module `S`.
+	    It is useful when the user wants to ignore degeneracy maps for the purpose of speeding up computations or simplifying the simplicial object.
         Example
-            Q = ZZ/101[x_1..x_3]
+	    Q = ZZ/101[a..d]
+	    K = koszulComplex vars Q
+	    S = simplicialModule(K, 6, Degeneracy => true)
+	    elapsedTime S**S
+	    fS = forgetDegeneracy S
+	    elapsedTime fS**fS --faster when degeneracy is ignored
+	Text
+	    The change in speed becomes much more noticeable as ranks get larger.
+    SeeAlso
+        forgetComplex
 ///
 
 

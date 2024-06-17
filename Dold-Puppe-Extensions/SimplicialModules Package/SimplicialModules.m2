@@ -4,7 +4,8 @@ newPackage(
      Version => "0.1",
      Date => "September 27, 2023",
      Authors => {
-	{Name => "Keller VandeBogert", Email => "kvandebo@nd.edu", HomePage => "todo"}},
+	{Name => "Keller VandeBogert", Email => "kvandebo@nd.edu", HomePage => "todo"},
+	{Name => "Michael DeBellevue", Email => "", HomePage => ""}},
      Headline => "methods for working in the category of simplicial modules",
      Keywords => {"Homological Algebra", "Algebraic Topology"},
      PackageExports => {"Complexes", "SchurFunctors"},
@@ -72,19 +73,7 @@ load "./SimplicialModules/SimplicialModuleDOC.m2"
 -- Tests
 -----------------------------------------------------------------------------
 
-TEST ///
-  Q = ZZ/101[x_1,x_2];
-  K1 = complex {matrix{{x_1}}};
-  K2 = complex {matrix{{x_2}}};
-  T1 = K1**K2
-  --T1.dd
-  T2 = prune simplicialTensor({K1,K2})
-  --T2.dd
-  phi1 = extend(T1,T2,id_(T1_0));
-  phi2 = extend(T2,T1,id_(T1_0));
-  --assert(phi1*phi2 == id_T1)
-  --assert(isNullHomotopic(phi2*phi1 - id_T2))
-///
+load "./SimplicialModules/SimplicialModuleTESTS1.m2"
 
 
 
