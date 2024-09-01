@@ -5,12 +5,12 @@ check "Brackets"
 
 restart
 needsPackage "Brackets"
-G = gc(toList(a..h),4,CoefficientRing=>QQ[l,u])
+G = gc(toList(a..h),4,CoefficientRing=>QQ[l,m])
 ell1 = (a*b)_G
 ell2 = (c*d)_G
 ell3 = (e*f)_G
 ell4 = (g*h)_G
-pt = (l*a + u * b)_G
+pt = (l*a + m * b)_G
 ell = ((pt * ell2) ^ ell3) * pt
 formula = ell * ell4
 (m, c) = coefficients formula
