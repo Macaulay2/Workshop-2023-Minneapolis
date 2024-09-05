@@ -197,7 +197,7 @@ twodimToricIrrationalPoincare = (degs2 := {{36,0}, {33,3}, {30,6}, {28,8}, {26,1
            x*z+a*z*w-u*w,z*w+x*u+(a-2)*u*w);
     S/I
        )
-
+--x2, xy, y2, yz, z2, zu, u2, uv, v2, vw, w2, xz − uw, xu + zw − 2 uw
 
 ---TO DO: create a function to identify non-Koszul examples (see Table 8)
 
@@ -207,14 +207,15 @@ beginDocumentation()
 
 doc ///
 Key
- "QuadraticIdealExamplesByRoos"
+ QuadraticIdealExamplesByRoos
 Headline
  Examples of Quadratic Ideals with Embedding Dimension Four by Jan-Erik Roos
 Description
   Text
     Quadratic ideals based on Main Theorem and Tables in "Homological properties of the homology algebra 
     of the Koszul complex of a local ring: Examples and questions" by Jan-Erik Roos, 
-    Journal of Algebra 465 (2016) 399-436.
+    Journal of Algebra 465 (2016) 399-436. Hi.
+    @HREF("https://doi.org/10.1016/j.jalgebra.2016.06.033", "DOI")@
 Subnodes
  "roosTable"
  "higherDepthTable"
@@ -231,14 +232,16 @@ Key
 Headline
  Creates hashtable of Jan-Erik Roos' examples of quadratic ideals
 Usage
- H = roosTable ()
+ H = roosTable 
 Outputs
  H: HashTable
 Description
   Text
     This is based on Main Theorem and Tables 3-7 in "Homological properties of the homology
     algebra of the Koszul complex of a local ring: Examples and questions" by Jan-Erik Roos, Journal of Algebra 
-    465 (2016) 399-436. The ideals in this table exemplify 83 known cases of bi-graded Poincar\'e series of 
+    465 (2016) 399-436. 
+    
+    The ideals in this table exemplify 83 known cases of bi-graded Poincar\'e series of 
     quadratic ideals of embedding dimension four in characteristic zero. The coefficient field is QQ.
   Example
     roosTable
@@ -250,7 +253,7 @@ Key
 Headline
  Creates hashtable of Jan-Erik Roos' examples of quadratic ideals with positive depth
 Usage
- H = higherDepthTable ()
+ H = higherDepthTable
 Outputs
  H: HashTable
 Description
@@ -267,7 +270,7 @@ Key
 Headline
  Creates hashtable of Jan-Erik Roos' examples of quadratic ideals with depth zero
 Usage
- H = depthZeroTable ()
+ H = depthZeroTable
 Outputs
  H: HashTable
 Description
@@ -313,6 +316,10 @@ Description
    summands come from the linear strand of the resolution,
    though they begin to appear exactly where the resolution
    ceases to be linear.
+
+   If a = 0, and the characteristic is p>0 then the non-linear syzygy happens at
+   step p+1; in characteristic 0 this example is koszul!
+   
    
   Example
    R = almostKoszul(ZZ/32003, 4)
@@ -332,7 +339,7 @@ Key
 Headline
  Creates hashtable of Jan-Erik Roos' quadratic "isotopes" 
 Usage
- H = depthZeroTable ()
+ H = roosIsotopes
 Outputs
  H: HashTable
 Description
@@ -352,7 +359,7 @@ Key
 Headline
  Produces the example of a one-dimensional toric ideal whose Poincar\'e series is irrational.
 Usage 
- I = onedimToricIrrationalPoincare ()
+ I = onedimToricIrrationalPoincare 
 Outputs
  I: Ideal
 Description
@@ -370,7 +377,7 @@ Key
 Headline
  Produces the example of a two-dimensional toric ideal whose Poincar\'e series is irrational.
 Usage 
- I = twodimToricIrrationalPoincare ()
+ I = twodimToricIrrationalPoincare
 Outputs
  I: Ideal
 Description
@@ -416,6 +423,11 @@ end--
 uninstallPackage "QuadraticIdealExamplesByRoos"
 restart
 installPackage "QuadraticIdealExamplesByRoos"
-
+viewHelp QuadraticIdealExamplesByRoos
 
 check QuadraticIdealExamplesByRoos
+H = roosTable
+H#80
+loadPackage "QuadraticIdealExamplesByRoos"
+R = almostKoszul(ZZ/5, 0)
+betti res (coker vars R, LengthLimit =>6)
