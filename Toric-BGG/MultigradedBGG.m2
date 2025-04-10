@@ -290,6 +290,7 @@ toricRR = method();
 toricRR(Module,List) := (N,L) ->(
     M := coker presentation N;
     S := ring M;
+    if #(degree (flatten entries vars S)_0) == 1 and class L_0 === ZZ then L = apply(L, i -> {i});
     if not isCommutative S then error "--base ring is not commutative";
     if heft S === null then error "--need a heft vector for polynomial ring";
     -- we need to modify L so that the "quotient" differential is well-defined
@@ -408,6 +409,11 @@ doc ///
       toricRR
       toricLL
       stronglyLinearStrand
+
+   References
+       [1] Linear strands of multigraded free resolutions (with Daniel Erman), Mathematische Annalen 390 (2024), 2707–2725 (https://arxiv.org/pdf/2202.00402v4)
+       [2] Tate resolutions on toric varieties (with Daniel Erman), Journal of the European Mathematical Society, published online (2024) (https://arxiv.org/pdf/2108.03345v3)
+
 ///
 
 doc ///
