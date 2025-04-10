@@ -575,7 +575,7 @@ doc ///
    Headline
       converts a square zero matrix into a differential module
    Usage
-      differentialModule(f)cczx
+      differentialModule(f)
    Inputs
       f : Matrix
           representing a module map with the same source and target
