@@ -934,7 +934,7 @@ doc ///
          X = weightedProjectiveSpace {1,1,2};
 	 S = ring X;
 	 M = coker matrix{{x_0, x_1}};
-	 D = toricRR(M, for i from 0 to 4 list i)
+	 D = toricRR(M, for i from 0 to 4 list {i})
 	 F = resDM(D, 3)
 	 F.dd_0
 	 kk = coker vars ring F_0;
