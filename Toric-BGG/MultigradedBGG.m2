@@ -1,6 +1,6 @@
 newPackage("MultigradedBGG",
-    Version => "1.1",
-    Date => "5 June 2023",
+    Version => "1.2",
+    Date => "11 April 2025",
     Headline => "the multigraded BGG correspondence and differential modules",
     Authors => {
 	{Name => "Maya Banks",         	     Email => "mdbanks@wisc.edu",      HomePage => "https://sites.google.com/wisc.edu/mayabanks" },
@@ -8,7 +8,7 @@ newPackage("MultigradedBGG",
 	{Name => "Tara Gomes",	    	     Email => "gomes072@umn.edu",      HomePage => "https://cse.umn.edu/math/tara-gomes" },
 	{Name => "Prashanth Sridhar",	     Email => "pzs0094@auburn.edu",    HomePage => "https://sites.google.com/view/prashanthsridhar/home"},
 	{Name => "Eduardo Torres Davila",    Email => "torre680@umn.edu",      HomePage => "https://etdavila10.github.io/" },
-	{Name => "Sasha	Zotine",    	     Email => "18az45@queensu.ca",     HomePage => "https://sites.google.com/view/szotine/home" }
+	{Name => "Sasha	Zotine",    	     Email => "zotinea@mcmaster.ca",   HomePage => "https://sites.google.com/view/szotine/home" }
     },
     PackageExports => {"NormalToricVarieties", "Complexes"},
     DebuggingMode => true
@@ -409,11 +409,10 @@ doc ///
       toricRR
       toricLL
       stronglyLinearStrand
-
    References
        Text
-       [1] Linear strands of multigraded free resolutions (with Daniel Erman), Mathematische Annalen 390 (2024), 2707–2725 (https://arxiv.org/pdf/2202.00402v4)
-       [2] Tate resolutions on toric varieties (with Daniel Erman), Journal of the European Mathematical Society, published online (2024) (https://arxiv.org/pdf/2108.03345v3)
+       [1] @HREF{"https://arxiv.org/pdf/2202.00402v4"}{Linear strands of multigraded free resolutions}@ (with Daniel Erman), Mathematische Annalen 390 (2024), 2707–2725
+       [2] @HREF{"https://arxiv.org/pdf/2108.03345v3"}{Tate resolutions on toric varieties}@ (with Daniel Erman), Journal of the European Mathematical Society, published online (2024)
 
 ///
 
