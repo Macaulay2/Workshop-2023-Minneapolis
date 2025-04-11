@@ -285,7 +285,6 @@ toricRR = method();
 toricRR(Module,List) := (N,L) ->(
     M := coker presentation N;
     S := ring M;
-    if #(degree (flatten entries vars S)_0) == 1 and class L_0 === ZZ then L = apply(L, i -> {i});
     if not isCommutative S then error "--base ring is not commutative";
     if heft S === null then error "--need a heft vector for polynomial ring";
     -- we need to modify L so that the "quotient" differential is well-defined
