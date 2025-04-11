@@ -71,7 +71,7 @@ unfold(DifferentialModule,ZZ,ZZ) := Complex => (D,low,high)->(
     d := degree D;
     R := ring D;
     phi := differential D;
-    complex apply(L,l-> phi)[-low]
+    (complex apply(L,l-> phi))[-low]
     )
 
 minFlagOneStep = method()
