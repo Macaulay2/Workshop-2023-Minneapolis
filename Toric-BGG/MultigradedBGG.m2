@@ -285,6 +285,9 @@ toricRR = method();
 toricRR(Module,List) := (N,L) ->(
     M := coker presentation N;
     S := ring M;
+    grade := #(degrees S)_0;
+    if L === {} then error "--expected non-empty list of degrees";
+    if any(L, l -> #l != grade) then error("--expected each multidegree to be of length " | grade); 
     if not isCommutative S then error "--base ring is not commutative";
     if heft S === null then error "--need a heft vector for polynomial ring";
     -- we need to modify L so that the "quotient" differential is well-defined
