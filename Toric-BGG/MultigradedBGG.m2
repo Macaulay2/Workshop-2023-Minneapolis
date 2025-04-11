@@ -11,7 +11,7 @@ newPackage("MultigradedBGG",
 	{Name => "Sasha	Zotine",    	     Email => "zotinea@mcmaster.ca",   HomePage => "https://sites.google.com/view/szotine/home" }
     },
     PackageExports => {"NormalToricVarieties", "Complexes"},
-    DebuggingMode => true
+    Keywords => {"Commutative Algebra"}
   )
 
 export {
@@ -71,7 +71,7 @@ unfold(DifferentialModule,ZZ,ZZ) := Complex => (D,low,high)->(
     d := degree D;
     R := ring D;
     phi := differential D;
-    chainComplex apply(L,l-> phi)[-low]
+    complex apply(L,l-> phi)[-low]
     )
 
 minFlagOneStep = method()
@@ -82,7 +82,7 @@ minFlagOneStep(DifferentialModule) := (D) -> (
     colList := select(rank source (mingens HH_0(D)), i -> degree (mingens HH_0(D))_i == minDegree);
     minDegHom := (mingens HH_0(D))_colList;
     homMat :=  mingens image((minDegHom) % (image D.dd_1));
-    G := res image homMat;
+    G := freeResolution image homMat;
     psi := map(D_0,G_0**R^{d},homMat, Degree=>d);
     newDiff := matrix{{D.dd_1,psi},{map(G_0**R^{d},D_1,0, Degree=>d), map(G_0**R^{d},G_0**R^{d},0, Degree=>d)}};
     assert (newDiff*(newDiff) == 0);
@@ -109,7 +109,7 @@ killingCyclesOneStep(DifferentialModule) := (D)->(
     d := degree D;
     R := ring D;
     homMat := mingens image((gens HH_0 D) %  (image D.dd_1));
-    G := res image homMat;
+    G := freeResolution(image homMat, LengthLimit => 1);
     psi := map(D_0,G_0**R^{d},homMat, Degree=>d);
     newDiff := matrix{{D.dd_1,psi},{map(G_0**R^{d},D_1,0, Degree=>d),map(G_0**R^{d},G_0**R^{d},0, Degree=>d)}}; 
     assert (newDiff*(newDiff) == 0);
@@ -194,17 +194,12 @@ minimizeDM(DifferentialModule) := r ->(
 ---
 
 --  Input:  a free complex F and a degree d
---  Output: the corresponding free differential module of degree da
+--  Output: the corresponding free differential module of degree d
 foldComplex = method();
 foldComplex(Complex,ZZ) := DifferentialModule => (F,d)->(
     R := ring F;
-    L := apply(length F+1,j->(
-	    --sasha: i removed the concatMatrices method since 'matrix {_}' just does the same thing
-	    transpose matrix {apply(length F+1,i->map(F_j,F_i, if i == j+1 then F.dd_i else 0))}
-	));
-    FDiff := transpose(matrix {L});
-    FMod := F_0;
-    scan(length F+1, i-> FMod = FMod ++ ((F_(i+1))**(R)^{(i+1)*d}));
+    FDiff := directSum apply(min F .. max F + 1, i -> F.dd_i);
+    FMod := directSum apply(min F .. max F, i -> F_i ** R^{i*d});
     degFDiff := map(FMod,FMod,FDiff, Degree=>d); 
     differentialModule(complex({-degFDiff,-degFDiff})[1]) 
     )
@@ -411,8 +406,8 @@ doc ///
       stronglyLinearStrand
    References
        Text
-       [1] @HREF{"https://arxiv.org/pdf/2202.00402v4"}{Linear strands of multigraded free resolutions}@ (with Daniel Erman), Mathematische Annalen 390 (2024), 2707–2725
-       [2] @HREF{"https://arxiv.org/pdf/2108.03345v3"}{Tate resolutions on toric varieties}@ (with Daniel Erman), Journal of the European Mathematical Society, published online (2024)
+       [1] @HREF{"https://arxiv.org/pdf/2202.00402v4","Linear strands of multigraded free resolutions"}@ (with Daniel Erman), Mathematische Annalen 390 (2024), 2707–2725
+       [2] @HREF{"https://arxiv.org/pdf/2108.03345v3","Tate resolutions on toric varieties"}@ (with Daniel Erman), Journal of the European Mathematical Society, published online (2024)
 
 ///
 
@@ -710,7 +705,7 @@ doc ///
          (flag) differential module of degree d.
       Example
          R = QQ[x,y];
-         C = complex res ideal(x,y)
+         C = freeResolution ideal(x,y)
          D = foldComplex(C,0);
          D.dd_1
    SeeAlso
