@@ -936,25 +936,18 @@ doc ///
 	 assert(phi N1.dd_0 - N2.dd_0 == 0)
       Text
 	 One can compute sheaf cohomology over weighted projective spaces using the multigraded BGG correspondence,
-	 Details can be found in Example 3.3 of the paper accompanying this package. 
+	 A detailed explanation can be found in Example 3.3 of the paper accompanying this package. 
       Example
          X = weightedProjectiveSpace {1,1,2}
 	 S = ring X
 	 M = coker matrix{{x_0, x_1}}
-	 D = toricRR(M, for i from 0 to 4 list i)--This is a finite portion of the (infinite rank) differential E-module R(M).
+	 D = toricRR(M, for i from 0 to 4 list i)
 	 F = resDM(D, 3)
-	 --This is a free resolution of the portion of R(M) chosen above. It contains a portion of the minimal free resolution of R(M), as well
-	 --as some extra summands arising from the additional homology created when truncating R(M). Caution: usually resDM does not
-	 --produce *minimal* free resolutions, but in this case the output happens to be minimal. 
-	 d = F.dd_0
+	 F.dd_0
 	 kk = coker vars ring F_0;
-	 --The following assertions check that we can compute sheaf cohomology for certain twists of the sheaf associated to M,
-	 --as explained in Example 3.3 of the paper accompanying this package.
 	 for j from 1 to 7 do (
 	     assert (sum flatten entries basis({-j,-1}, Hom(kk, F_0)) == rank HH^0(X, sheaf(M**S^{{-j}})))
 	     )
-	 --To get the cohomology of higher twists, one needs to resolve a larger window of R(M), as the following calculation illustrates:
-	 sum flatten entries basis({-8,-1}, Hom(kk, F_0)) == rank HH^0(X, sheaf(M**S^{{-8}})) 
    Caveat
        A heft vector is necessary for the computation to produce a well-defined differential module.
    SeeAlso
