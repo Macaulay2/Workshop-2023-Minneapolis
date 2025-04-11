@@ -938,16 +938,14 @@ doc ///
 	 One can compute sheaf cohomology over weighted projective spaces using the multigraded BGG correspondence,
 	 A detailed explanation can be found in Example 3.3 of the paper accompanying this package. 
       Example
-         X = weightedProjectiveSpace {1,1,2}
-	 S = ring X
-	 M = coker matrix{{x_0, x_1}}
+         X = weightedProjectiveSpace {1,1,2};
+	 S = ring X;
+	 M = coker matrix{{x_0, x_1}};
 	 D = toricRR(M, for i from 0 to 4 list i)
 	 F = resDM(D, 3)
 	 F.dd_0
 	 kk = coker vars ring F_0;
-	 for j from 1 to 7 do (
-	     assert (sum flatten entries basis({-j,-1}, Hom(kk, F_0)) == rank HH^0(X, sheaf(M**S^{{-j}})))
-	     )
+	 sum flatten entries basis({-2,-1}, Hom(kk, F_0)) == rank HH^0(X, sheaf(M**S^{{-2}}))
    Caveat
        A heft vector is necessary for the computation to produce a well-defined differential module.
    SeeAlso
