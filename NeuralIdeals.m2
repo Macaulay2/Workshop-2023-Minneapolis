@@ -209,18 +209,22 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
 	    --codeCoordinate = append(codeCoordinate,c); --creating a list of the coordinates of the codeword. could use for loop with list to do this
 	    --factors = append(factors,R_j  - c);
 	    --subs = append(subs,R_j => c); --don't need it below anymore
-	    );
+	    --);
 	currentGens := canonical;
-	M := {};
-	N := {};
-	L := {};
-	for gen in currentGens do (
-	    if sub(gen,substitutionMatrix) == 0 --replaced subs list with matrix made from coordinates
-	    then M = append(M,gen)
-	    else N = append(N,gen);
-	    );
-	for ngen in N do (
-	    for fac in factors do (
+	--M := {};
+	--N := {};
+	--L := {};
+	--for gen in currentGens do (
+	    --if sub(gen,substitutionMatrix) == 0 --replaced subs list with matrix made from coordinates
+	    --then M = append(M,gen)
+	    --else N = append(N,gen);
+	    --);
+	--have an error right now though
+	H := partition(gen -> sub(gen,substitutionMatrix)==0,currentGens); --instead of creating 2 lists and appending to them, create a hash table and make the two lists from the true and false parts
+	M := if H#?true then H#true else {};
+	N := if H#?false then H#false else {};
+	L := for ngen in N do (
+	    for fac in factors list (
 		goToNext := false;
 		g := ngen*fac;
 		if ngen%(fac - 1) == 0 then continue;
@@ -229,7 +233,7 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
 		    break;)
 		    );
 		if goToNext then continue;
-		L = append(L,g);
+		g
 		);
 	    );
 	canonical = join(M,L);
