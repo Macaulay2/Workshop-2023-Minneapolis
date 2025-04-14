@@ -60,6 +60,8 @@ neuralCode=method List := codeList -> (
     X
     )
 
+--add constructing a neural code
+
 --short way to get the dimension of a neural code 
 dim NeuralCode := C -> C.dimension
 
@@ -164,7 +166,8 @@ neuralIdeal(NeuralCode,Ring) := Ideal => (C,R) -> (
     	prod:=1;
     	for j to d-1 do
 	    prod=prod*(1-value((oppC#i)#j)-R_j);
-	prod);
+	prod
+	);
     ideal genList
     )
 
@@ -185,7 +188,7 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
     initCode := C.codeWords#0;
     canonical := {};
     for i to d-1 do (
-	canonical = append(canonical,R_i - value(initCode#i))
+	canonical = append(canonical,R_i - value(initCode#i)) --creates canon form for single codeword, idea: use for loop with list instead of append
 	);
     for i from 1 to #C.codeWords - 1 do (
 	current := C.codeWords#i;
@@ -194,7 +197,7 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
 	subs := {};
 	for j to #current - 1 do (
 	    c :=  value(current#j);
-	    codeCoordinate = append(codeCoordinate,c);
+	    codeCoordinate = append(codeCoordinate,c); --creating a list of the coordinates of the codeword. could use for loop with list to do this
 	    factors = append(factors,R_j  - c);
 	    subs = append(subs,R_j => c);
 	    );
