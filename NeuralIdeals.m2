@@ -186,10 +186,14 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
     d := dim C;
     if numgens R =!= d then error "Expected ring of the same dimension as the neuralCode";
     initCode := C.codeWords#0;
-    canonical := {};
-    for i to d-1 do (
-	canonical = append(canonical,R_i - value(initCode#i)) --creates canon form for single codeword, idea: use for loop with list instead of append
+    --canonical := {};
+    canonical := for i to d-1 list (
+	R_i-value(initCode#i) --creates canonical form for single codeword as a starting list
 	);
+    --for i to d-1 do (
+	--canonical = append(canonical,R_i - value(initCode#i)) --creates canon form for single codeword, idea: use for loop with list instead of append
+	--
+	--);
     for i from 1 to #C.codeWords - 1 do (
 	current := C.codeWords#i;
 	codeCoordinate := {};
