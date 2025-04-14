@@ -185,32 +185,37 @@ iterCanonicalForm = method();
 iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
     d := dim C;
     if numgens R =!= d then error "Expected ring of the same dimension as the neuralCode";
-    initCode := C.codeWords#0;
+    initialCodeWord := C.codeWords#0;
     --canonical := {};
     canonical := for i to d-1 list (
-	R_i-value(initCode#i) --creates canonical form for single codeword as a starting list
+	R_i-value(initialCodeWord#i) --creates canonical form for single codeword as a starting list without using append
 	);
     --for i to d-1 do (
-	--canonical = append(canonical,R_i - value(initCode#i)) --creates canon form for single codeword, idea: use for loop with list instead of append
+	--canonical = append(canonical,R_i - value(initCode#i)) --creates canon form for single codeword
 	--
 	--);
     for i from 1 to #C.codeWords - 1 do (
-	current := C.codeWords#i;
-	codeCoordinate := {};
-	factors := {};
-	subs := {};
-	for j to #current - 1 do (
-	    c :=  value(current#j);
-	    codeCoordinate = append(codeCoordinate,c); --creating a list of the coordinates of the codeword. could use for loop with list to do this
-	    factors = append(factors,R_j  - c);
-	    subs = append(subs,R_j => c);
+	currentCodeWord := C.codeWords#i;
+	--codeCoordinate := {};
+	--factors := {};
+	--subs := {};
+	codeCoordinates := for j to d-1 list(
+	    value(currentCodeWord#j)
+	    );
+	factors := apply(codeCoordinates,j->(R_j-codeCoordinates#j)); --or would doing vars R - codeCoordinates be better?
+	substitutionMatrix := matrix{codeCoordinates};
+	--for j to d - 1 do (
+	    --c :=  value(currentCodeWord#j);
+	    --codeCoordinate = append(codeCoordinate,c); --creating a list of the coordinates of the codeword. could use for loop with list to do this
+	    --factors = append(factors,R_j  - c);
+	    --subs = append(subs,R_j => c); --don't need it below anymore
 	    );
 	currentGens := canonical;
 	M := {};
 	N := {};
 	L := {};
 	for gen in currentGens do (
-	    if sub(gen,subs) == 0
+	    if sub(gen,substitutionMatrix) == 0 --replaced subs list with matrix made from coordinates
 	    then M = append(M,gen)
 	    else N = append(N,gen);
 	    );
