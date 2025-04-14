@@ -216,8 +216,8 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
 		g := ngen*fac;
 		if ngen%(fac - 1) == 0 then continue;
 		for mgen in M do (
-		    if g%mgen == 0 then goToNext = true;
-		    break;
+		    if g%mgen == 0 then (goToNext = true;
+		    break;)
 		    );
 		if goToNext then continue;
 		L = append(L,g);
