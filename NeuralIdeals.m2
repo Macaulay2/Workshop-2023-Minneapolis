@@ -224,20 +224,21 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
 	H := partition(gen -> substitutionMap(gen)==0,currentGens); --instead of creating 2 lists and appending to them, create a hash table and make the two lists from the true and false parts
 	keepList := if H#?true then H#true else {};
 	changeList := if H#?false then H#false else {};
-	newList := flatten (for ngen in changeList list (
-	    for fac in factors list (
-		if ngen%(fac-1) == 0 then continue;
-		goToNext := false;
-		g := ngen*fac;
-		for mgen in keepList do (
-		    if g%mgen == 0 then (goToNext = true;
-		    break;)
-		    );
-		if goToNext then continue;
-		g
-		);
+	newList := flatten (
+	    for elem in changeList list (
+		for comp in factors list (
+		    if elem%(comp-1) == 0 then continue;
+		    goToNext := false;
+		    g := elem*comp;
+		    for mgen in keepList do (
+		    	if g%mgen == 0 then (goToNext = true;
+		    	    break)
+		    	);
+		    if goToNext then continue;
+		    g
+		    )
+	    	)
 	    );
-	);
 	canonical = join(keepList,newList);
 	);
 --    C.cache#iCF = canonical;
