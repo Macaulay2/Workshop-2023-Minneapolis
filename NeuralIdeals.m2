@@ -211,20 +211,20 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
 	    --subs = append(subs,R_j => c); --don't need it below anymore
 	    --);
 	currentGens := canonical;
-	--M := {};
-	--N := {};
+	M := {};
+	N := {};
 	--L := {};
-	--for gen in currentGens do (
-	    --if sub(gen,substitutionMatrix) == 0 --replaced subs list with matrix made from coordinates
-	    --then M = append(M,gen)
-	    --else N = append(N,gen);
-	    --);
+	for gen in currentGens do (
+	    if sub(gen,substitutionMatrix) == 0 --replaced subs list with matrix made from coordinates
+	    then M = append(M,gen)
+	    else N = append(N,gen);
+	    );
 	--have an error right now though
-	H := partition(gen -> sub(gen,substitutionMatrix)==0,currentGens); --instead of creating 2 lists and appending to them, create a hash table and make the two lists from the true and false parts
-	M := if H#?true then H#true else {};
-	N := if H#?false then H#false else {};
-	L := for ngen in N do (
-	    for fac in factors list (
+	--H := partition(gen -> sub(gen,substitutionMatrix)==0,currentGens); --instead of creating 2 lists and appending to them, create a hash table and make the two lists from the true and false parts
+	--M := if H#?true then H#true else {};
+	--N := if H#?false then H#false else {};
+	L := for ngen in N list (
+	    for fac in factors list ( --maybe this needs to be a do?
 		goToNext := false;
 		g := ngen*fac;
 		if ngen%(fac - 1) == 0 then continue;
