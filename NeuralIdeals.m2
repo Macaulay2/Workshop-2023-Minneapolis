@@ -74,7 +74,6 @@ ring NeuralCode := C -> (
     R := (ZZ/2)(monoid[x_1..x_d])
     )
 
-
 --checks whether a NeuralCode is well-defined
 isWellDefined NeuralCode := Boolean => X -> (
     --check keys
@@ -202,8 +201,10 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
 	codeCoordinates := for j to d-1 list(
 	    value(currentCodeWord#j)
 	    );
+	--define a ring map(R,R,codeCoordinates) once, apply map to each polynomial instead of applying substitute a bunch of times later (Mahrud's advice)
 	factors := apply(codeCoordinates,j->(R_j-codeCoordinates#j)); --or would doing vars R - codeCoordinates be better?
-	substitutionMatrix := matrix{codeCoordinates};
+	substitutionMap := map(R,R,codeCoordinates);
+	--substitutionMatrix := matrix{codeCoordinates};
 	--for j to d - 1 do (
 	    --c :=  value(currentCodeWord#j);
 	    --codeCoordinate = append(codeCoordinate,c); --creating a list of the coordinates of the codeword. could use for loop with list to do this
@@ -211,24 +212,24 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
 	    --subs = append(subs,R_j => c); --don't need it below anymore
 	    --);
 	currentGens := canonical;
-	M := {};
-	N := {};
+	--M := {};
+	--N := {};
 	--L := {};
-	for gen in currentGens do (
-	    if sub(gen,substitutionMatrix) == 0 --replaced subs list with matrix made from coordinates
-	    then M = append(M,gen)
-	    else N = append(N,gen);
-	    );
-	--have an error right now though
-	--H := partition(gen -> sub(gen,substitutionMatrix)==0,currentGens); --instead of creating 2 lists and appending to them, create a hash table and make the two lists from the true and false parts
-	--M := if H#?true then H#true else {};
-	--N := if H#?false then H#false else {};
-	L := for ngen in N list (
+	--for gen in currentGens do (
+	    --if substitutionMap(gen)==0 --instead of doing sub a lot, which makes a new map each time, made the map above and am using it here
+	    ----if sub(gen,substitutionMatrix) == 0 --replaced subs list with matrix made from coordinates
+	    --then M = append(M,gen)
+	    --else N = append(N,gen);
+	    --);
+	H := partition(gen -> substitutionMap(gen)==0,currentGens); --instead of creating 2 lists and appending to them, create a hash table and make the two lists from the true and false parts
+	keepList := if H#?true then H#true else {};
+	changeList := if H#?false then H#false else {};
+	newList := for ngen in changeList list (
 	    for fac in factors list ( --maybe this needs to be a do?
 		goToNext := false;
 		g := ngen*fac;
 		if ngen%(fac - 1) == 0 then continue;
-		for mgen in M do (
+		for mgen in keepList do (
 		    if g%mgen == 0 then (goToNext = true;
 		    break;)
 		    );
@@ -236,7 +237,7 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
 		g
 		);
 	    );
-	canonical = join(M,L);
+	canonical = join(keepList,newList);
 	);
 --    C.cache#iCF = canonical;
     canonical
