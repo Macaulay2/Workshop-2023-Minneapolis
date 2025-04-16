@@ -24,13 +24,13 @@ export{--types
     "NeuralCode",
     --methods/functions
     "neuralCode",
-    "polarRing",
+    "polarizedRing",
     "neuralIdeal",
     "canonicalForm",
     "codeSupport",
     "canonicalCode",
     "isPseudomonomial",
-    "sigmaTau",
+    "receptiveFieldRelation",
     "polarizePseudomonomial",
     "polarizedCanonicalIdeal",
     "allCodeWords",
@@ -282,16 +282,15 @@ canonicalForm NeuralCode := List => opts -> C -> (
     canonicalForm(neuralIdeal(C),Factor => opts.Factor)
     )
 
---finds the support of a given neural code (every squarefree pseudomonomial that's 0 on it)
+--finds the support of a given neural code (list of sets of neurons that fire together)
 codeSupport = method();
 codeSupport NeuralCode := List => C -> (
-    fullSupport := {};
-    L := C.codeWords;
-    for c in L do (
-	cSupport := for i to #c-1 list (if value(c#i) == 0 then continue; i+1);
-	fullSupport = append(fullSupport, cSupport);
-	);
-    fullSupport
+    --fullSupport := {};
+    --L := C.codeWords;
+    fullSupport := for c in C.codeWords list (
+	cSupport := for i to #c-1 list (if value(c#i) == 0 then continue; i+1)
+	--fullSupport = append(fullSupport, cSupport);
+	)
     )
 
 --given a non-unit squarefree pseudomonomial ideal, preferably in canonical form, and outputs the corresponding NeuralCode
@@ -359,18 +358,22 @@ isPseudomonomial RingElement := Boolean => P -> (
 
 --input a pseudomonomial, return a list sigma of the x's that divide it
 --and tau of the 1-x's that divide it
-sigmaTau = method();
+receptiveFieldRelation = method();
 
-sigmaTau(RingElement) := List => P -> (
+--want to change to get rid of append, in progress
+receptiveFieldRelation(RingElement) := List => P -> (
     if isPseudomonomial(P) == false then error "Expected input to be a Pseudomonomial";
     R := ring P;
     d := numgens R;
-    sigma := {};
-    tau := {};
-    for i to d-1 do (
-	if P%R_i == 0 then sigma = append(sigma,i+1);
-	if P%(1-R_i) == 0 then tau = append(tau,i+1);
-	);
+    --sigma := {};
+    --tau := {};
+    H := partition(i -> (P%R_i==0,P%(1-R_i)==0),0..(d-1));
+    sigma := join(if H#?(true,true) then H#(true,true),if H#?(true,false) then H#(true,false)) --fix this
+    sigma := join(if H#?(false,true) then H#(false,true),if H#?(false,false) then H#(false,false)) --fix this
+    --for i to d-1 list (
+	--if P%R_i == 0 then sigma = append(sigma,i+1);
+	--if P%(1-R_i) == 0 then tau = append(tau,i+1);
+	--);
     {sigma,tau}
     )
 	
