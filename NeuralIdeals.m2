@@ -356,24 +356,17 @@ isPseudomonomial RingElement := Boolean => P -> (
 
 --------------------------------------
 
---input a pseudomonomial, return a list sigma of the x's that divide it
---and tau of the 1-x's that divide it
+--input a pseudomonomial, return the lists corresponding to the receptive field relation, i.e. {sigma,tau}
+--in other words {x's dividing pseudomonomial,(1-x)'s dividing pseudomonomial}
 receptiveFieldRelation = method();
 
---want to change to get rid of append, in progress
 receptiveFieldRelation(RingElement) := List => P -> (
     if isPseudomonomial(P) == false then error "Expected input to be a Pseudomonomial";
     R := ring P;
     d := numgens R;
-    --sigma := {};
-    --tau := {};
     H := partition(i -> (P%R_(i-1)==0,P%(1-R_(i-1))==0),toList(1..d));
-    sigma := flatten{if H#?(true,true) then H#(true,true) else {},if H#?(true,false) then H#(true,false) else {}}; --fix this
-    tau := flatten{if H#?(true,true) then H#(true,true) else {},if H#?(false,true) then H#(false,true) else {}}; --fix this
-    --for i to d-1 list (
-	--if P%R_i == 0 then sigma = append(sigma,i+1);
-	--if P%(1-R_i) == 0 then tau = append(tau,i+1);
-	--);
+    sigma := flatten{if H#?(true,true) then H#(true,true) else {},if H#?(true,false) then H#(true,false) else {}}; 
+    tau := flatten{if H#?(true,true) then H#(true,true) else {},if H#?(false,true) then H#(false,true) else {}}; 
     {sigma,tau}
     )
 	
