@@ -68,6 +68,7 @@ dim NeuralCode := C -> C.dimension
 --defines a ring for a given neural code, can set R=ring(NeuralCode) if you don't want to define one yourself
 --issue: if user is already using another ring, may be confused if they call ring C and it's not the ring they're already using
 --other issue: if you do this a second time, you'll get a new ring instead of the same one
+--could combine polarized ring with this by adding a polarized option?
 ring NeuralCode := C -> (
     d := dim C;
     x := getSymbol "x";
@@ -121,9 +122,9 @@ isWellDefined NeuralCode := Boolean => X -> (
     true);
 
 --given a neural code, this constructs a ring for polarizations of the neural ideal to live in
-polarRing = method();
+polarizedRing = method();
 
-polarRing(NeuralCode) := C -> (
+polarizedRing(NeuralCode) := C -> (
     d := dim C;
     x := getSymbol "x";
     y := getSymbol "y";
@@ -179,14 +180,14 @@ neuralIdeal NeuralCode := Ideal => C -> (
     )
 
 --not exported, used as an option for canonicalForm below it, iterative method from NeuralIdeals in SageMath paper
---may want to change this to avoid using append a lot
+--changed this to avoid using append a lot
 iterCanonicalForm = method();
 iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
     d := dim C;
     if numgens R =!= d then error "Expected ring of the same dimension as the neuralCode";
     initialCodeWord := C.codeWords#0;
     --canonical := {};
-    canonical := for i to d-1 list (
+    currentGens := for i to d-1 list (
 	R_i-value(initialCodeWord#i) --creates canonical form for single codeword as a starting list without using append
 	);
     --for i to d-1 do (
@@ -195,33 +196,12 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
 	--);
     for i from 1 to #C.codeWords - 1 do (
 	currentCodeWord := C.codeWords#i;
-	--codeCoordinate := {};
-	--factors := {};
-	--subs := {};
 	codeCoordinates := for j to d-1 list(
 	    value(currentCodeWord#j)
 	    );
-	--define a ring map(R,R,codeCoordinates) once, apply map to each polynomial instead of applying substitute a bunch of times later (Mahrud's advice)
 	factors := apply(0..(d-1),j->(R_j-codeCoordinates#j)); --or would doing vars R - codeCoordinates be better?
 	substitutionMap := map(R,R,codeCoordinates);
-	--substitutionMatrix := matrix{codeCoordinates};
-	--for j to d - 1 do (
-	    --c :=  value(currentCodeWord#j);
-	    --codeCoordinate = append(codeCoordinate,c); --creating a list of the coordinates of the codeword. could use for loop with list to do this
-	    --factors = append(factors,R_j  - c);
-	    --subs = append(subs,R_j => c); --don't need it below anymore
-	    --);
-	currentGens := canonical;
-	--M := {};
-	--N := {};
-	--L := {};
-	--for gen in currentGens do (
-	    --if substitutionMap(gen)==0 --instead of doing sub a lot, which makes a new map each time, made the map above and am using it here
-	    ----if sub(gen,substitutionMatrix) == 0 --replaced subs list with matrix made from coordinates
-	    --then M = append(M,gen)
-	    --else N = append(N,gen);
-	    --);
-	H := partition(gen -> substitutionMap(gen)==0,currentGens); --instead of creating 2 lists and appending to them, create a hash table and make the two lists from the true and false parts
+	H := partition(gen -> substitutionMap(gen)==0,currentGens);
 	keepList := if H#?true then H#true else {};
 	changeList := if H#?false then H#false else {};
 	newList := flatten (
@@ -239,12 +219,13 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
 		    )
 	    	)
 	    );
-	canonical = join(keepList,newList);
+	currentGens = join(keepList,newList);
 	);
---    C.cache#iCF = canonical;
-    canonical
+    --C.cache#iCF = current;
+    currentGens
     )
 
+--option to get canonical form if you don't list the ring
 iterCanonicalForm NeuralCode := List => C -> (
     d:=dim C;
     x:=getSymbol "x"; 
@@ -256,15 +237,14 @@ iterCanonicalForm NeuralCode := List => C -> (
 --inputs a squarefree pseudomonomial ideal or a neural code, 
 --outputs the canonical form of its neural ideal
 --can decide to display it factored (best if you're not using the result in future computations)
---if the input is a neural code, you can use the iterative method to compute the canonical form as an option
---iterative is likely faster
+--if the input is a neural code, by default it uses the faster iterative method to compute the canonical form, though you can turn this off and use the old primary decomposition method
 canonicalForm = method(
     Options => {
 	Factor => false,
-	Iterative => false
+	Iterative => true --made iterative the default
 	});
 
-canonicalForm Ideal := List => opts -> I -> (
+canonicalForm Ideal := List => opts -> I -> ( --can we use our newer algorithm here instead?
     decomp := primaryDecompositionPseudomonomial I;
     multipliedGens :=product(decomp, i->i);
     R := ring I;
@@ -292,6 +272,7 @@ canonicalForm(NeuralCode,Ring) := List => opts -> (C,R) -> (
     canonicalForm(neuralIdeal(C,R),Factor => opts.Factor)
     )
 
+--same but if you don't specify the ring
 canonicalForm NeuralCode := List => opts -> C -> (
     if opts.Iterative then (
 	if opts.Factor then apply(iterCanonicalForm(C),factor) else
