@@ -367,9 +367,9 @@ receptiveFieldRelation(RingElement) := List => P -> (
     d := numgens R;
     --sigma := {};
     --tau := {};
-    H := partition(i -> (P%R_i==0,P%(1-R_i)==0),0..(d-1));
-    sigma := join(if H#?(true,true) then H#(true,true),if H#?(true,false) then H#(true,false)) --fix this
-    sigma := join(if H#?(false,true) then H#(false,true),if H#?(false,false) then H#(false,false)) --fix this
+    H := partition(i -> (P%R_(i-1)==0,P%(1-R_(i-1))==0),toList(1..d));
+    sigma := flatten{if H#?(true,true) then H#(true,true) else {},if H#?(true,false) then H#(true,false) else {}}; --fix this
+    tau := flatten{if H#?(true,true) then H#(true,true) else {},if H#?(false,true) then H#(false,true) else {}}; --fix this
     --for i to d-1 list (
 	--if P%R_i == 0 then sigma = append(sigma,i+1);
 	--if P%(1-R_i) == 0 then tau = append(tau,i+1);
@@ -390,7 +390,7 @@ polarizePseudomonomial(RingElement,Ring) := RingElement => (P,S) -> (
     if (numgens S)%2 != 0 then error "Second ring must have an even number of generators";
     if 2*(numgens ring P) > numgens S then error "Target ring does not have enough generators for polarization";
     d := (numgens S)//2;
-    st := sigmaTau(P);
+    st := receptiveFieldRelation(P);
     sigma := st_0;
     tau := st_1;
     use S;
@@ -419,7 +419,7 @@ polarizedCanonicalIdeal(NeuralCode,Ring) := Ideal => (C,S) -> (
     )
 
 polarizedCanonicalIdeal(NeuralCode) := Ideal => C -> (
-    S := polarRing C;
+    S := polarizedRing C;
     polarizedCanonicalIdeal(C,S)
     )
 
