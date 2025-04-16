@@ -32,6 +32,7 @@ export{--types
     "isPseudomonomial",
     "receptiveFieldRelation",
     "polarizePseudomonomial",
+    "polarizedCanonicalForm"
     "polarizedCanonicalIdeal",
     "allCodeWords",
     "polarizedCanonicalResolution",
@@ -433,6 +434,7 @@ polarizedCanonicalIdeal(NeuralCode) := Ideal => C -> (
 
 --given a neural code, computes its canonical form, polarizes it, and computes a minimal resolution
 --can input the polarizedRing or not
+--note that the polarized canonical form is a set of minimal generators, so res will give a minimal resolution
 polarizedCanonicalResolution = method();
 
 polarizedCanonicalResolution(NeuralCode,Ring) := Resolution => (C,S) -> (
@@ -459,6 +461,15 @@ depolarizationMap(Ring,Ring) := (R,S) -> ( ----Target ring followed by source ri
     change := for i to d-1 list 1+R_i;
     depolarizationList := maintain|change;
     dePolMap := map(R,S,depolarizationList)
+    )
+
+--uses the depolarization map to create the canonical resolution of a neural code
+--in progress, because don't know how to depolarize a chain complex
+canonicalResolution = method();
+
+canonicalResolution(NeuralCode,Ring,Ring) := (C,R,S) -> (
+    polarRes := polarizedCanonicalResolution(C,S);
+    
     )
     
 beginDocumentation()
