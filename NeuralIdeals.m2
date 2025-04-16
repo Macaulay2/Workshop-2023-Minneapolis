@@ -32,11 +32,12 @@ export{--types
     "isPseudomonomial",
     "receptiveFieldRelation",
     "polarizePseudomonomial",
-    "polarizedCanonicalForm"
+    "polarizedCanonicalForm",
     "polarizedCanonicalIdeal",
     "allCodeWords",
     "polarizedCanonicalResolution",
     "depolarizationMap",
+    "canonicalResolution",
     --Symbols
     "codeWords",
     "Factor",
@@ -464,12 +465,21 @@ depolarizationMap(Ring,Ring) := (R,S) -> ( ----Target ring followed by source ri
     )
 
 --uses the depolarization map to create the canonical resolution of a neural code
---in progress, because don't know how to depolarize a chain complex
+--issue: want to be able to give the ring R so that can use it outside this function too, view it as a polynomial ring rather than a quotient ring
+--issue: current it turns x's into y-1's, which is the opposite of what I want
 canonicalResolution = method();
 
-canonicalResolution(NeuralCode,Ring,Ring) := (C,R,S) -> (
+canonicalResolution(NeuralCode,Ring) := (C,S) -> (
     polarRes := polarizedCanonicalResolution(C,S);
-    
+    d := dim C;
+    quotientIdeal := ideal(for i to d-1 list (S_i+S_(d+i)-1));
+    R := S/quotientIdeal;
+    polarRes ** R
+    )
+
+canonicalResolution(NeuralCode) := C -> (
+    S := polarizedRing(C);
+    canonicalResolution(C,S)
     )
     
 beginDocumentation()
