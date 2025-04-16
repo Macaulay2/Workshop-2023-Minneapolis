@@ -202,7 +202,7 @@ iterCanonicalForm(NeuralCode,Ring) := List => (C,R) -> (
 	    value(currentCodeWord#j)
 	    );
 	--define a ring map(R,R,codeCoordinates) once, apply map to each polynomial instead of applying substitute a bunch of times later (Mahrud's advice)
-	factors := apply(codeCoordinates,j->(R_j-codeCoordinates#j)); --or would doing vars R - codeCoordinates be better?
+	factors := apply(0..(d-1),j->(R_j-codeCoordinates#j)); --or would doing vars R - codeCoordinates be better?
 	substitutionMap := map(R,R,codeCoordinates);
 	--substitutionMatrix := matrix{codeCoordinates};
 	--for j to d - 1 do (
