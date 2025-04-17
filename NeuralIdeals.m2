@@ -244,11 +244,12 @@ iterCanonicalForm NeuralCode := List => C -> (
 canonicalForm = method(
     Options => {
 	Factor => false,
-	Iterative => true --made iterative the default
+	Iterative => true --made iterative the default,
+	SharedIndex => false
 	});
 
 --original algorithm for the canonical form of a pseudomonomial ideal
-canonicalForm Ideal := List => opts -> I -> ( --can we use our newer algorithm here instead?
+primaryDecompositionCanonicalForm Ideal := List => opts -> I -> ( 
     decomp := primaryDecompositionPseudomonomial I;
     multipliedGens :=product(decomp, i->i);
     R := ring I;
@@ -320,11 +321,21 @@ removeGens List := List => almostGens -> (
 	)
     )
 
-
 sharedIndexCanonicalForm Ideal := List => opts -> I -> (
     removeGens(almostCanonicalForm(I))
     )
+---------
 
+--exported function to compute the canonical form of a neural ideal
+canonicalForm(Ideal,Ring) := List => opts -> (I,R) -> (
+    
+    )
+
+canonicalForm(Ideal) := List => opts -> I -> (
+    
+    )
+
+--exported function to compute the canonical form of a neural code
 canonicalForm(NeuralCode,Ring) := List => opts -> (C,R) -> (
     if opts.Iterative then (
 	if opts.Factor then apply(iterCanonicalForm(C),factor) else
