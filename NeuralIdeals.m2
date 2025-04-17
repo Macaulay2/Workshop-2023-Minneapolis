@@ -469,17 +469,25 @@ depolarizationMap(Ring,Ring) := (R,S) -> ( ----Target ring followed by source ri
 --issue: current it turns x's into y-1's, which is the opposite of what I want
 canonicalResolution = method();
 
-canonicalResolution(NeuralCode,Ring) := (C,S) -> (
+canonicalResolution(NeuralCode,Ring,Ring) := (C,R,S) -> (
     polarRes := polarizedCanonicalResolution(C,S);
-    d := dim C;
-    quotientIdeal := ideal(for i to d-1 list (S_i+S_(d+i)-1));
-    R := S/quotientIdeal;
-    polarRes ** R
+    depolarMap := depolarizationMap(R,S);
+    depolarMap(polarRes)
+    --d := dim C;
+    --quotientIdeal := ideal(for i to d-1 list (S_i+S_(d+i)-1));
+    --R := S/quotientIdeal;
+    --polarRes ** R
+    )
+
+canonicalResolution(NeuralCode,Ring) := (C,R) -> (
+    S := polarizedRing(C);
+    canonicalResolution(C,R,S)
     )
 
 canonicalResolution(NeuralCode) := C -> (
     S := polarizedRing(C);
-    canonicalResolution(C,S)
+    R := ring C;
+    canonicalResolution(C,R,S)
     )
     
 beginDocumentation()
