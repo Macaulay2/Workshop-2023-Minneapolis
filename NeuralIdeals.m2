@@ -38,6 +38,7 @@ export{--types
     "polarizedCanonicalResolution",
     "depolarizationMap",
     "canonicalResolution",
+    "isCanonical",
     --Symbols
     "codeWords",
     "Factor",
@@ -407,13 +408,13 @@ polarizePseudomonomial RingElement := RingElement => P -> (
 --given a neural code, produces the polarized canonical form in S
 polarizedCanonicalForm = method();
 
-polarizedCanonicalForm(NeuralCode,Ring) := Ideal => (C,S) -> (
+polarizedCanonicalForm(NeuralCode,Ring) := List => (C,S) -> (
     L := canonicalForm(C);
     polarL := for P in L list polarizePseudomonomial(P,S);
     polarL
     )
 
-polarizedCanonicalForm(NeuralCode) := Ideal => C -> (
+polarizedCanonicalForm(NeuralCode) := List => C -> (
     S := polarizedRing C;
     polarizedCanonicalForm(C,S)
     )
@@ -430,6 +431,29 @@ polarizedCanonicalIdeal(NeuralCode) := Ideal => C -> (
     S := polarizedRing C;
     ideal(polarizedCanonicalForm(C,S))
     )
+
+--given a pseudomonomial (or squarefree monomial) ideal, determines whether it's in canonical form
+--issue: will computing the canonical form respect order such that this will work?
+isCanonical := method(
+    Options => {
+	Polarized => false
+	}
+    );
+
+isCanonical (Ideal,Ring) := Boolean => (I,R) -> (
+    if opts.Polarized then (
+	polarizedCanonicalForm(I,R) == first entries gens I
+	)
+    else (
+	canonicalForm(I,R) == first entries gens I
+	)
+    )
+
+isCanonical Ideal := Boolean => I -> (
+    R := ring I;
+    isCanonical(I,R)
+    )
+
 
 -------------------------------------------------
 
@@ -464,9 +488,7 @@ depolarizationMap(Ring,Ring) := (R,S) -> ( ----Target ring followed by source ri
     dePolMap := map(R,S,depolarizationList)
     )
 
---uses the depolarization map to create the canonical resolution of a neural code
---issue: want to be able to give the ring R so that can use it outside this function too, view it as a polynomial ring rather than a quotient ring
---issue: current it turns x's into y-1's, which is the opposite of what I want
+--uses the depolarization map and polarizedCanonicalResolution to create the canonical resolution of a neural code
 canonicalResolution = method();
 
 canonicalResolution(NeuralCode,Ring,Ring) := (C,R,S) -> (
