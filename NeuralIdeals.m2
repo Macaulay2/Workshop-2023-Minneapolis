@@ -28,7 +28,7 @@ export{--types
     "neuralIdeal",
     "canonicalForm",
     "codeSupport",
-    "canonicalCode",
+    "neuralIdealToCode",
     "isPseudomonomial",
     "receptiveFieldRelation",
     "polarizePseudomonomial",
@@ -247,6 +247,7 @@ canonicalForm = method(
 	Iterative => true --made iterative the default
 	});
 
+--original algorithm for the canonical form of a pseudomonomial ideal
 canonicalForm Ideal := List => opts -> I -> ( --can we use our newer algorithm here instead?
     decomp := primaryDecompositionPseudomonomial I;
     multipliedGens :=product(decomp, i->i);
@@ -264,6 +265,64 @@ canonicalForm Ideal := List => opts -> I -> ( --can we use our newer algorithm h
 	if isDivisible then continue; 
 	if opts.Factor then factor(i) else i
 	)
+    )
+
+--functions needed to implement Geller-R.G. algorithm for canonical form
+isSharedIndex (RingElement,RingElement,ZZ) := Boolean => (g,h,i) -> (
+    R:=ring g
+    if R =!= ring h then error "Expected two elements from the same ring";
+    if i+1 > dim R then error "Expected index at most the dimension of the ring";
+    if i+1 < 1 then error "Expected index at least 1";
+    (g*h)%(R_(i+1)*(1-R_(i+1)))==0
+    )
+
+isUniqueSharedIndex (RingElement,RingElement,ZZ) := Boolean => (g,h,i) -> (
+    if isSharedIndex(g,h,i)==true then (
+	onlySharedIndex := true;
+	for j from when to n when onlySharedIndex==true do (
+	    if j == i then continue;
+	    if isSharedIndex(g,h,j) then (
+		onlySharedIndex = false;
+		break
+		);
+	    );
+	onlySharedIndex
+	)
+    else false
+    )
+
+newGens (RingElement,RingElement,ZZ) := List => (listGens,i) -> (
+    unique flatten (for g in listGens list (
+	for h in listGens list (
+	    if h==g then continue;
+	    if isUniqueSharedIndex(g,h,i) then lcm(g,h)//(R_(i+1)*(1-R_(i+1)))
+	    )
+	)
+    ) )
+
+almostCanonicalForm Ideal := List => I -> (
+    R := ring I;
+    d := numgens R;
+    listGensI := first entries gens I;
+    for i from 1 to d do (
+	listGensI=join(listGensI,newGens(listGensI,i))
+	);
+    unique listGens I
+    )
+
+removeGens List := List => almostGens -> (
+    for i in almostGens list (
+	isDivisible := false;
+	for j in almostGens do (
+	    if i%j==0 and i =!= j then (isDivisible=true; break));
+	if isDivisible then continue;
+	i
+	)
+    )
+
+
+sharedIndexCanonicalForm Ideal := List => opts -> I -> (
+    removeGens(almostCanonicalForm(I))
     )
 
 canonicalForm(NeuralCode,Ring) := List => opts -> (C,R) -> (
@@ -297,9 +356,9 @@ codeSupport NeuralCode := List => C -> (
     )
 
 --given a non-unit squarefree pseudomonomial ideal, preferably in canonical form, and outputs the corresponding NeuralCode
-canonicalCode = method();
+neuralIdealToCode = method();
 
-canonicalCode List := NeuralCode => L -> (
+neuralIdealToCode List := NeuralCode => L -> (
     R := ring L#0;
     d := numgens R;
     --checks that entries in list are squarefree pseudomonomials
@@ -434,6 +493,7 @@ polarizedCanonicalIdeal(NeuralCode) := Ideal => C -> (
 
 --given a pseudomonomial (or squarefree monomial) ideal, determines whether it's in canonical form
 --issue: will computing the canonical form respect order such that this will work?
+--issue: would be nice to have this be faster than computing the canonical form, but currently it takes just as long
 isCanonical := method(
     Options => {
 	Polarized => false
