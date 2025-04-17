@@ -249,7 +249,7 @@ canonicalForm = method(
 	});
 
 --original algorithm for the canonical form of a pseudomonomial ideal
-primaryDecompositionCanonicalForm Ideal := List => opts -> I -> ( 
+primaryDecompositionAlmostCanonicalForm Ideal := List => I -> ( 
     decomp := primaryDecompositionPseudomonomial I;
     multipliedGens :=product(decomp, i->i);
     R := ring I;
@@ -258,14 +258,14 @@ primaryDecompositionCanonicalForm Ideal := List => opts -> I -> (
     booleanR := R/booleanIdeal;
     reducedGens := apply(first entries gens multipliedGens,i->sub(i,booleanR));
     noZeroGens := delete(sub(0,booleanR),reducedGens);
-    almostGens := unique apply(noZeroGens,i->(sub(i,R)));
-    actualGens := for i in almostGens list (
-	isDivisible := false;
-	for j in almostGens do (
-	    if i%j==0 and i =!= j then (isDivisible=true; break));
-	if isDivisible then continue; 
-	if opts.Factor then factor(i) else i
-	)
+    almostGens := unique apply(noZeroGens,i->(sub(i,R)))
+    --actualGens := for i in almostGens list (
+	--isDivisible := false;
+	--for j in almostGens do (
+	    --if i%j==0 and i =!= j then (isDivisible=true; break));
+	--if isDivisible then continue; 
+	--i
+	--)
     )
 
 --functions needed to implement Geller-R.G. algorithm for canonical form
@@ -301,6 +301,7 @@ newGens (RingElement,RingElement,ZZ) := List => (listGens,i) -> (
 	)
     ) )
 
+--produces the almost canonical form of an ideal I using the shared index method of Geller-R.G.
 almostCanonicalForm Ideal := List => I -> (
     R := ring I;
     d := numgens R;
@@ -311,6 +312,7 @@ almostCanonicalForm Ideal := List => I -> (
     unique listGens I
     )
 
+--removes generators divisible by another generator to get from almost canonical form to canonical form
 removeGens List := List => almostGens -> (
     for i in almostGens list (
 	isDivisible := false;
@@ -321,18 +323,22 @@ removeGens List := List => almostGens -> (
 	)
     )
 
-sharedIndexCanonicalForm Ideal := List => opts -> I -> (
+sharedIndexCanonicalForm Ideal := List => opts I -> (
     removeGens(almostCanonicalForm(I))
     )
+
 ---------
 
 --exported function to compute the canonical form of a neural ideal
-canonicalForm(Ideal,Ring) := List => opts -> (I,R) -> (
-    
-    )
-
-canonicalForm(Ideal) := List => opts -> I -> (
-    
+canonicalForm(Ideal) := List => opts -> (I,R) -> (
+    if opts.SharedIndex then (
+	if opts.Factor then apply(removeGens(almostCanonicalForm(I)),factor) else
+	removeGens(almostCanonicalForm(I))
+	)
+    else (
+	if opts.Factor then apply(removeGens(primaryDecompositionAlmostCanonicalForm(I)),factor) else
+	removeGens(primaryDecompositionAlmostCanonicalForm(I))
+	)
     )
 
 --exported function to compute the canonical form of a neural code
