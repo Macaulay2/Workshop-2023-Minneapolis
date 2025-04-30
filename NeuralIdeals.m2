@@ -42,12 +42,16 @@ export{--types
     --Symbols
     "codeWords",
     "Factor",
-    "Iterative"}
+    "Iterative",
+    "SharedIndex",
+    "Polarized"}
 
 protect codeWords
 protect dimension
 protect Factor
 protect Iterative
+protect SharedIndex
+protect Polarized
 
 NeuralCode = new Type of HashTable
 NeuralCode.synonym = "neural code"
@@ -237,18 +241,11 @@ iterCanonicalForm NeuralCode := List => C -> (
     )
 
 
---inputs a squarefree pseudomonomial ideal or a neural code, 
---outputs the canonical form of its neural ideal
---can decide to display it factored (best if you're not using the result in future computations)
---if the input is a neural code, by default it uses the faster iterative method to compute the canonical form, though you can turn this off and use the old primary decomposition method
-canonicalForm = method(
-    Options => {
-	Factor => false,
-	Iterative => true --made iterative the default,
-	SharedIndex => false
-	});
 
 --original algorithm for the canonical form of a pseudomonomial ideal
+primaryDecompositionAlmostCanonicalForm = method()
+
+
 primaryDecompositionAlmostCanonicalForm Ideal := List => I -> ( 
     decomp := primaryDecompositionPseudomonomial I;
     multipliedGens :=product(decomp, i->i);
@@ -269,20 +266,25 @@ primaryDecompositionAlmostCanonicalForm Ideal := List => I -> (
     )
 
 --functions needed to implement Geller-R.G. algorithm for canonical form
-isSharedIndex (RingElement,RingElement,ZZ) := Boolean => (g,h,i) -> (
-    R:=ring g
-    if R =!= ring h then error "Expected two elements from the same ring";
-    if i+1 > dim R then error "Expected index at most the dimension of the ring";
-    if i+1 < 1 then error "Expected index at least 1";
-    (g*h)%(R_(i+1)*(1-R_(i+1)))==0
+isSharedIndex = method()
+
+isSharedIndex (RingElement,RingElement,ZZ,Ring) := Boolean => (g,h,i,R) -> (
+--    R:=ring g;
+--    if ring g =!= ring h then error "Expected two elements from the same ring";
+    if i > dim R then error "Expected index at most the dimension of the ring";
+    if i < 1 then error "Expected index at least 1";
+    (g*h)%(R_(i-1)*(1-R_(i-1)))==0
     )
 
-isUniqueSharedIndex (RingElement,RingElement,ZZ) := Boolean => (g,h,i) -> (
-    if isSharedIndex(g,h,i)==true then (
+isUniqueSharedIndex = method()
+
+isUniqueSharedIndex (RingElement,RingElement,ZZ,Ring) := Boolean => (g,h,i,R) -> (
+    n := numgens R;
+    if isSharedIndex(g,h,i,R)==true then (
 	onlySharedIndex := true;
-	for j from when to n when onlySharedIndex==true do (
+	for j from 1 to n when onlySharedIndex==true do (
 	    if j == i then continue;
-	    if isSharedIndex(g,h,j) then (
+	    if isSharedIndex(g,h,j,R) then (
 		onlySharedIndex = false;
 		break
 		);
@@ -292,27 +294,37 @@ isUniqueSharedIndex (RingElement,RingElement,ZZ) := Boolean => (g,h,i) -> (
     else false
     )
 
-newGens (RingElement,RingElement,ZZ) := List => (listGens,i) -> (
+newGens = method()
+
+newGens (List,ZZ,Ring) := List => (listGens,i,R) -> ( 
     unique flatten (for g in listGens list (
 	for h in listGens list (
 	    if h==g then continue;
-	    if isUniqueSharedIndex(g,h,i) then lcm(g,h)//(R_(i+1)*(1-R_(i+1)))
+	    if isUniqueSharedIndex(g,h,i,R) then lcm(g,h)//(R_(i-1)*(1-R_(i-1)))
 	    )
 	)
     ) )
 
+--newGens (List,ZZ) := List => (listGens,i) -> (
+--    R := ring(listGens#0);
+--    newGens(listGens,i,R)
+--    )
+
 --produces the almost canonical form of an ideal I using the shared index method of Geller-R.G.
-almostCanonicalForm Ideal := List => I -> (
-    R := ring I;
-    d := numgens R;
+almostCanonicalForm = method()
+
+almostCanonicalForm (Ideal,Ring) := List => (I,R) -> (
+    n := numgens R;
     listGensI := first entries gens I;
-    for i from 1 to d do (
-	listGensI=join(listGensI,newGens(listGensI,i))
+    for i from 1 to n do (
+	listGensI=join(listGensI,newGens(listGensI,i,R))
 	);
-    unique listGens I
+    unique listGensI
     )
 
 --removes generators divisible by another generator to get from almost canonical form to canonical form
+removeGens = method()
+
 removeGens List := List => almostGens -> (
     for i in almostGens list (
 	isDivisible := false;
@@ -323,22 +335,45 @@ removeGens List := List => almostGens -> (
 	)
     )
 
-sharedIndexCanonicalForm Ideal := List => opts I -> (
-    removeGens(almostCanonicalForm(I))
+sharedIndexCanonicalForm = method()
+
+sharedIndexCanonicalForm (Ideal,Ring) := List => (I,R) -> (
+    removeGens(almostCanonicalForm(I,R))
     )
+
+--sharedIndexCanonicalForm Ideal := List => opts -> I -> (
+--    R := ring I;
+--    sharedIndexCanonicalForm(I,R)
+--    )
 
 ---------
 
 --exported function to compute the canonical form of a neural ideal
-canonicalForm(Ideal) := List => opts -> (I,R) -> (
+--inputs a squarefree pseudomonomial ideal or a neural code, 
+--outputs the canonical form of its neural ideal
+--can decide to display it factored (best if you're not using the result in future computations)
+--if the input is a neural code, by default it uses the faster iterative method to compute the canonical form, though you can turn this off and use the old primary decomposition method
+canonicalForm = method(
+    Options => {
+	Factor => false,
+	Iterative => true, --made iterative the default,
+	SharedIndex => false
+	})
+
+canonicalForm(Ideal,Ring) := List => opts -> (I,R) -> (
     if opts.SharedIndex then (
-	if opts.Factor then apply(removeGens(almostCanonicalForm(I)),factor) else
-	removeGens(almostCanonicalForm(I))
+	if opts.Factor then apply(sharedIndexCanonicalForm(I,R),factor) else
+	sharedIndexCanonicalForm(I,R)
 	)
     else (
 	if opts.Factor then apply(removeGens(primaryDecompositionAlmostCanonicalForm(I)),factor) else
 	removeGens(primaryDecompositionAlmostCanonicalForm(I))
 	)
+    )
+
+canonicalForm(Ideal) := List => opts -> I -> (
+    R :=ring I;
+    canonicalForm(I,R)
     )
 
 --exported function to compute the canonical form of a neural code
@@ -517,7 +552,7 @@ isCanonical := method(
 	}
     );
 
-isCanonical (Ideal,Ring) := Boolean => (I,R) -> (
+isCanonical (Ideal,Ring) := Boolean => opts -> (I,R) -> (
     if opts.Polarized then (
 	polarizedCanonicalForm(I,R) == first entries gens I
 	)
@@ -526,7 +561,7 @@ isCanonical (Ideal,Ring) := Boolean => (I,R) -> (
 	)
     )
 
-isCanonical Ideal := Boolean => I -> (
+isCanonical Ideal := Boolean => opts -> I -> (
     R := ring I;
     isCanonical(I,R)
     )
@@ -615,7 +650,7 @@ document{
 
 --document isWellDefined neuralCode?
 
---document polarRing(NeuralCode)
+--document polarizedRing(NeuralCode)
 
 --document allCodeWords(ZZ)
 
@@ -672,28 +707,28 @@ document{
 --document codeSupport(neuralCode)
 
 document{
-  Key => {canonicalCode, (canonicalCode,List)},
-  Headline => "Canonical Code",
+  Key => {neuralIdealToCode, (neuralIdealToCode,List)},
+  Headline => "Neural Ideal To Code",
   TEX "A method which computes the neural code corresponding to a list of pseudomonomial generators (generally expected to be in canonical form).",
-  Usage => "canonicalCode(List)",
+  Usage => "neuralIdealToCode(List)",
   Inputs => {"List of squarefree pseudomonomials in a single polynomial ring which do not generate the unit ideal"},
   Outputs => {"The corresponding neural code"},
   TEX "We compute an example",
   EXAMPLE lines ///
   R=ZZ/2[x_1,x_2];
   L={x_1*x_2};
-  canonicalCode(L)
+  neuralIdealToCode(L)
   ///,
   EXAMPLE lines ///
   R=ZZ/2[x_1..x_3];
   M=ideal(x_1*x_2,x_3*(1-x_1),x_2*x_3);
-  canonicalCode(M)
+  neuralIdealToCode(M)
   ///,
 }
 
 --document isPseudomonomial(RingElement) by Veliz-Cuba
 
---document sigmaTau(RingElement)
+--document receptiveFieldRelation(RingElement)
 
 --document polarizePseudomonomial (still working on inputs
 
@@ -733,7 +768,7 @@ TEST ///
 TEST ///
     R=ZZ/2[x_1,x_2];
     L={x_1*x_2};
-    assert(canonicalCode(L)==neuralCode("00","10","01"))
+    assert(neuralIdealToCode(L)==neuralCode("00","10","01"))
 ///
 
 --need tests for code support, allCodeWords, isPseudomonomial, sigmaTau, polarizePseudomonomial, polarizedCanonicalResolution, depolarizationMap
