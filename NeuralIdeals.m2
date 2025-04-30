@@ -473,7 +473,7 @@ isPseudomonomial RingElement := Boolean => P -> (
 receptiveFieldRelation = method();
 
 receptiveFieldRelation(RingElement) := List => P -> (
-    if isPseudomonomial(P) == false then error "Expected input to be a Pseudomonomial";
+    if isPseudomonomial(P) == false then error "Expected input to be a squarefree pseudomonomial";
     R := ring P;
     d := numgens R;
     H := partition(i -> (P%R_(i-1)==0,P%(1-R_(i-1))==0),toList(1..d));
@@ -492,7 +492,7 @@ polarizePseudomonomial = method();
 
 polarizePseudomonomial(RingElement,Ring) := RingElement => (P,S) -> (
     if not isPseudomonomial(P) then error "Expected input to be a Pseudomonomial";
-    if (numgens S)%2 != 0 then error "Second ring must have an even number of generators";
+    if (numgens S)%2 != 0 then error "Ring must have an even number of generators";
     if 2*(numgens ring P) > numgens S then error "Target ring does not have enough generators for polarization";
     d := (numgens S)//2;
     st := receptiveFieldRelation(P);
@@ -631,7 +631,7 @@ document{
   Caveat => "In progress"
   }
 
---document NeuralCode ?
+--document "NeuralCode"?
 
 document{
   Key => {neuralCode},
@@ -647,7 +647,7 @@ document{
   }
 
 document{
-    Key -> {polarizedRing},
+    Key => {polarizedRing},
     Headline => "Polarized Ring",
     TEX "Gives the ring of the polarized form of the neural ideal.",
     Usage => "polarizedRing(neuralCode(code))",
@@ -680,11 +680,11 @@ document{
 
 --make sure to talk about Factor and Iterative
 document{
-  Key => {canonicalForm, (canonicalForm,Ideal),(canonicalForm,NeuralCode,Ring),(canonicalForm,NeuralCode),[canonicalForm,Factor],[canonicalForm,Iterative]},
+  Key => {canonicalForm, (canonicalForm,Ideal,Ring),(canonicalForm,Ideal),(canonicalForm,NeuralCode,Ring),(canonicalForm,NeuralCode),[canonicalForm,Factor],[canonicalForm,SharedIndex],[canonicalForm,Iterative]},
   Headline => "Canonical Form",
-  TEX "A method which computes the canonical form of a given squarefree pseudomonomial ideal or neural code. If entering a neural code, you can also specify the ring where the elements of the canonical form will live. The option factor factors the elements of the list. The option Iterative=> true will compute the canonical form of a neural code using the newer method from NeuralIdeals in SageMath.",
-  Usage => "canonicalForm(Ideal) or canonicalForm(NeuralCode,Ring) or canonicalForm(NeuralCode) or canonicalForm(NeuralCode,Ring,Iterative=true) or canonicalForm(NeuralCode,Iterative=true)",
-  Inputs => {"Squarefree pseudomonomial ideal or NeuralCode (recommend specifying a ring for the latter), Iterative or not (if entering a neural code)"},
+  TEX "A method which computes the canonical form of a given squarefree pseudomonomial ideal or neural code. If entering a neural code, it is recommended that you also specify the ring where the elements of the canonical form will live. The option Factor returns the canonical form with every element factored. If starting from an Ideal, the default option SharedIndex=>false will compute the canonical form by the method of The Neural Ring. If SharedIndex=>true is specified, the canonical form will be computed using the method of Geller and R.G. instead. If starting from a NeuralCode, the default option Iterative=> true will compute the canonical form of a neural code using the newer method from Neural Ideals in SageMath, but you can use the older method from The Neural Ring by selecting Iterative=>false.",
+  Usage => "canonicalForm(Ideal,Ring) or canonicalForm(Ideal) or canonicalForm(Ideal,Ring,SharedIndex=>true) or canonicalForm(Ideal,SharedIndex=>true) or canonicalForm(Ideal,Ring,Factor=>true) or canonicalForm(Ideal,Factor=>true) or canonicalForm(NeuralCode,Ring) or canonicalForm(NeuralCode) or canonicalForm(NeuralCode,Ring,Iterative=>false) or canonicalForm(NeuralCode,Iterative=>false) or canonicalForm(NeuralCode,Ring,Factor=>true) or canonicalForm(NeuralCode,Factor=>true)",
+  Inputs => {"Squarefree pseudomonomial ideal or NeuralCode (recommend specifying a ring for the latter)"},
   Outputs => {"The canonical form as a list of elements of the ring of the ideal, the specified ring, or ZZ/2[x_1..x_d] where d is the dimension of the neural code."},
   TEX "We compute an example",
   EXAMPLE lines ///
@@ -699,26 +699,43 @@ document{
   ///,
   EXAMPLE lines ///
   R=ZZ/2[x_1..x_3];
+  I=ideal(x_1*x_3,x_2*(1-x_1));
+  canonicalForm(I,SharedIndex=>true)
+  ///,
+  EXAMPLE lines ///
+  R=ZZ/2[x_1..x_3];
   C=neuralCode({"000","001"},R);
   canonicalForm(C)
   ///,
   EXAMPLE lines ///
   R=ZZ/2[x_1..x_3];
   C=neuralCode("000","001");
-  canonicalForm(C,R,Iterative=>true)
+  canonicalForm(C,R,Iterative=>false)
   ///,
 }
 
---document codeSupport(neuralCode)
+document{
+    Key => {codeSupport, (codeSupport,NeuralCode)},
+    Headline => "Support of a NeuralCode",
+    TEX "A method which returns a list of the sets of neurons that fire together.",
+    Usage => "codeSupport(NeuralCode)",
+    Inputs => {"a NeuralCode"},
+    Outputs => {"a List of lists of neurons that fire together."},
+    TEX "We compute an example",
+    EXAMPLE lines ///
+    C=neuralCode("000","100","101","001","101");
+    codeSupport(C)
+    ///
+    }
 
 document{
   Key => {neuralIdealToCode, (neuralIdealToCode,List)},
   Headline => "Neural Ideal To Code",
-  TEX "A method which computes the neural code corresponding to a list of pseudomonomial generators (generally expected to be in canonical form).",
+  TEX "A method that computes the neural code corresponding to a list of pseudomonomial generators (generally expected to be in canonical form).",
   Usage => "neuralIdealToCode(List)",
   Inputs => {"List of squarefree pseudomonomials in a single polynomial ring which do not generate the unit ideal"},
   Outputs => {"The corresponding neural code"},
-  TEX "We compute an example",
+  TEX "We compute some examples",
   EXAMPLE lines ///
   R=ZZ/2[x_1,x_2];
   L={x_1*x_2};
@@ -731,11 +748,60 @@ document{
   ///,
 }
 
---document isPseudomonomial(RingElement) by Veliz-Cuba
+document{
+    Key => {isPseudomonomial,(isPseudomonomial,RingElement)},
+    Headline => "isPseudomonomial",
+    TEX "A method which determines whether an element of a polynomial ring is a squarefree pseudomonomial. This function was written by Alan Veliz-Cuba for a package on primary decomposition of squarefree pseudomonomial ideals.",
+    Usage => "isPseudomonomial(RingElement)",
+    Inputs => {"An element of a polynomial ring"},
+    Outputs => {"Boolean"},
+    TEX "We compute some examples",
+    EXAMPLE lines ///
+    R=ZZ/2[x_1..x_3];
+    f=x_1*(1-x_2);
+    isPseudomonomial(f)
+    ///
+    EXAMPLE lines ///
+    R=ZZ/2[x_1..x_3];
+    f=1;
+    isPseudomonomial(f)
+    ///
+    EXAMPLE lines ///
+    R=ZZ/2[x_1..x_3];
+    f=x_1^2
+    ///
+    }
 
---document receptiveFieldRelation(RingElement)
+document{
+    Key => {receptiveFieldRelation,(receptiveFieldRelation,RingElement)},
+    Headline => "Receptive field relation corresponding to a pseudomonomial",
+    TEX "A method which returns the receptive field relation corresponding to a pseudomonomial.",
+    Usage => "receptiveFieldRelation(RingElement)",
+    Inputs => {"A squarefree pseudomonomial"},
+    Outputs => {"A list containing two lists, such that the intersection of the firing fields corresponding to the elements of the first list is contained in the union of the firing fields corresponding to the elements of the second list."},
+    TEX "We compute an example",
+    EXAMPLE lines ///
+    R=ZZ/2[x_1..x_3];
+    f=x_1*(1-x_2)*(1-x_3);
+    receptiveFieldRelation(f)
+    ///
+    }
 
---document polarizePseudomonomial (still working on inputs
+document{
+    Key => {polarizePseudomonomial,(polarizePseudomonomial,RingElement,Ring),(polarizePseudomonomial,RingElement)},
+    Headline => "Polarize a pseudomonomial",
+    TEX "A method which takes a pseudomonomial in a polynomial ring and replaces every instance of (1-var) with a new variable. It is recommended that you specify the ring in which the new monomial will live, see examples below.",
+    Usage => "polarizePseudomonomial(RingElement,Ring) or polarizePseudomonomial(RingElement)",
+    Inputs => {"A squarefree pseudomonomial, or a squarefree pseudomonomial and the ring the polarization will live in"},
+    Outputs => {"A squarefree monomial in a larger polynomial ring."},
+    TEX "We compute an example",
+    EXAMPLE lines ///
+    R=ZZ/2[x_1..x_3];
+    f=x_1*(1-x_2);
+    S=ZZ/2[x_1..x_3,y_1..y_3];
+    polarizePseudomonomial(f,S)
+    ///
+    }
 
 --document polarizedCanonicalResolution
 --Key => {polarizedCanonicalResolution, (polarizedCanonicalResolution,NeuralCode,Ring,Ring), (polarizedCanonicalResolution,NeuralCode,Ring), (polarizedCanonicalForm,NeuralCode)}
