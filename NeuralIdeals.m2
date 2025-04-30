@@ -932,7 +932,7 @@ document{
     EXAMPLE lines ///
     R=ZZ/2[x_1..x_3];
     S=ZZ/2[x_1..x_3,y_1..y_3];
-    depolarizationMap(S,R)
+    depolarizationMap(R,S)
     ///
     }
 
@@ -948,7 +948,7 @@ document{
     C=neuralCode("00","10","01");
     S=ZZ/2[x_1..x_3,y_1..y_3];
     R=ZZ/2[x_1..x_3];
-    canonicalResolution(C,S,R)
+    canonicalResolution(C,R,S)
     ///,
     EXAMPLE lines ///
     C=neuralCode("00","10","01");
