@@ -300,7 +300,7 @@ newGens (List,ZZ,Ring) := List => (listGens,i,R) -> (
     unique flatten (for g in listGens list (
 	for h in listGens list (
 	    if h==g then continue;
-	    if isUniqueSharedIndex(g,h,i,R) then lcm(g,h)//(R_(i-1)*(1-R_(i-1)))
+	    if isUniqueSharedIndex(g,h,i,R) then lcm(g,h)//(R_(i-1)*(1-R_(i-1))) else continue
 	    )
 	)
     ) )
