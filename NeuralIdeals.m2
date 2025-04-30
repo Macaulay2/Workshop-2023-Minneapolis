@@ -34,7 +34,6 @@ export{--types
     "polarizePseudomonomial",
     "polarizedCanonicalForm",
     "polarizedCanonicalIdeal",
-    "allCodeWords",
     "polarizedCanonicalResolution",
     "depolarizationMap",
     "canonicalResolution",
@@ -66,8 +65,6 @@ neuralCode=method List := codeList -> (
 	};
     X
     )
-
---add constructing a neural code
 
 --short way to get the dimension of a neural code 
 dim NeuralCode := C -> C.dimension
@@ -139,6 +136,7 @@ polarizedRing(NeuralCode) := C -> (
     )
 
 --gives a list of all code words on a given number of neurons
+--used internally in the neuralIdeal function
 allCodeWords = method();
 allCodeWords ZZ := List => d ->(
     L1 := apply(d+1,i->(
@@ -148,8 +146,8 @@ allCodeWords ZZ := List => d ->(
     apply(L2, i-> concatenate(apply(i,j->toString j)))
     )
 
---not exported
 --given a neural code, gives the list of code words not in it
+--used internally in the neuralIdeal function
 neuralCodeComplement = method();
 neuralCodeComplement NeuralCode := List => C ->(
     d := dim C;
@@ -640,24 +638,31 @@ document{
   Headline => "Creates a NeuralCode",
   TEX "Turns a list of binary strings of the same length into a NeuralCode type.",
   Usage => "neuralCode(code)",
-  Inputs => {"Binary strings of the same length like 000"},
-  Outputs => {"The neural code consisting of the given codes."},
+  Inputs => {"Binary strings of the same length like 000 and 101"},
+  Outputs => {"The neural code consisting of the given codewords."},
   TEX "We demonstrate how to enter a neural code as a list of binary strings of the same length.",
   EXAMPLE lines ///
   neuralCode("000","001","101")
   ///
   }
 
---document isWellDefined neuralCode?
-
---document polarizedRing(NeuralCode)
-
---document allCodeWords(ZZ)
+document{
+    Key -> {polarizedRing},
+    Headline => "Polarized Ring",
+    TEX "Gives the ring of the polarized form of the neural ideal.",
+    Usage => "polarizedRing(neuralCode(code))",
+    Inputs => {"A NeuralCode"},
+    Outputs => {"A polynomial ring over ZZ/2 in 2n variables, where n is the number of neurons."},
+    TEX "We give an example",
+    EXAMPLE lines ///
+    polarizedRing(neuralCode("000","001","101")
+    ///
+    }
 
 document{
   Key => {neuralIdeal, (neuralIdeal,NeuralCode),(neuralIdeal,NeuralCode,Ring)},
   Headline => "Neural ideal.",
-  TEX "A method which computes the neural ideal for a given neural code (not necessarily in canonical form).",
+  TEX "A method which computes the neural ideal for a given neural code (not necessarily in canonical form) by the method of Curto, Itskov, et al in The Neural Ring.",
   Usage => "neuralIdeal(neuralCode(code)) or neuralIdeal(neuralCode(code),Ring)",
   Inputs => {"neuralCode or neuralCode,Ring"},
   Outputs => {"The neural ideal corresponding to the given neural code, in the given Ring or in ZZ/2[x_1..x_d] where d is the dimension of the neural code"},
