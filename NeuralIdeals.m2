@@ -122,6 +122,8 @@ ring NeuralCode := C -> C.cache.ring
 
 --short way to get the polarized ring of a neural code
 
+polarizedRing = method()
+
 polarizedRing NeuralCode := C -> C.cache.polarizedRing
 
 --defines a ring for a given neural code, can set R=ring(NeuralCode) if you don't want to define one yourself
@@ -233,8 +235,9 @@ neuralCodeComplement NeuralCode := List => C ->(
     d := dim C;
     L1 := allCodeWords(d);
     L:=C.codeWords;
-    for i in L do L1=delete(i,L1);
-    L1
+    sort(toList(set(L1)-set(L))) --may not need to sort
+    --for i in L do L1=delete(i,L1);
+    --L1
     )    
 
 --input: a NeuralCode, outputs a neural ideal by the method of The Neural Ring, not necessarily in canonical form
@@ -248,12 +251,18 @@ neuralIdeal NeuralCode := Ideal => C -> (
 --    if coefficientRing R =!= ZZ/2 then error "Expected coefficientRing of ring to be ZZ/2";
 --    if not instance(R,PolynomialRing) then error "Expected ring to be a PolynomialRing";
     oppC:=neuralCodeComplement C;
-    genList:=for i to #oppC-1 list (
-    	prod:=1;
-    	for j to d-1 do
-	    prod=prod*(1-value((oppC#i)#j)-R_j);
-	prod
+    genList := for a in oppC list (
+	prodList := for j to d-1 list (
+	    if a#j == "1" then R_j else (1-R_j)
+	    );
+	product(prodList)
 	);
+    --genList:=for i to #oppC-1 list (
+    	--prod:=1;
+    	--for j to d-1 do
+	    --prod=prod*(1-value((oppC#i)#j)-R_j);
+	--prod
+	--);
     ideal genList
     )
 
@@ -287,9 +296,9 @@ iterCanonicalForm NeuralCode := List => C -> (
 	    );
 	factors := apply(0..(d-1),j->(R_j-codeCoordinates#j)); --or would doing vars R - codeCoordinates be better?
 	substitutionMap := map(R,R,codeCoordinates);
-	H := partition(gen -> substitutionMap(gen)==0,currentGens);
-	keepList := if H#?true then H#true else {};
-	changeList := if H#?false then H#false else {};
+	H := partition(gen -> substitutionMap(gen)==0,currentGens,{true,false});
+	keepList := H#true;
+	changeList := H#false;
 	newList := flatten (
 	    for elem in changeList list (
 		for comp in factors list (
@@ -548,9 +557,9 @@ receptiveFieldRelation(RingElement) := List => P -> (
     if isPseudomonomial(P) == false then error "Expected input to be a squarefree pseudomonomial";
     R := ring P;
     d := numgens R;
-    H := partition(i -> (P%R_(i-1)==0,P%(1-R_(i-1))==0),toList(1..d));
-    sigma := flatten{if H#?(true,true) then H#(true,true) else {},if H#?(true,false) then H#(true,false) else {}}; 
-    tau := flatten{if H#?(true,true) then H#(true,true) else {},if H#?(false,true) then H#(false,true) else {}}; 
+    H := partition(i -> (P%R_(i-1)==0,P%(1-R_(i-1))==0),toList(1..d),{(true,true),(true,false),(false,true)});
+    sigma := flatten{H#(true,true),H#(true,false)}; 
+    tau := flatten{H#(true,true),H#(false,true)}; 
     {sigma,tau}
     )
 	
