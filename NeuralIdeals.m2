@@ -615,10 +615,11 @@ polarizedCanonicalForm(Ideal,Ring) := List => (I,S) -> (
     )
 
 --need to be able to create the polarized ring of an ideal for this to work
-polarizedCanonicalForm(Ideal) := List => I -> (
-    S :=polarizedRing(I);
-    polarizedCanonicalForm(I,S)
-    )
+--see if can fix later
+--polarizedCanonicalForm(Ideal) := List => I -> (
+--    S :=polarizedRing(I);
+--    polarizedCanonicalForm(I,S)
+--    )
 
 --add code that if an ideal is already polarized, can still get the canonical form
 
@@ -640,10 +641,11 @@ polarizedCanonicalIdeal(Ideal,Ring) := Ideal => (I,S) -> (
     ideal(polarizedCanonicalForm(I,S))
     )
 
-polarizedCanonicalIdeal(Ideal) := Ideal => I -> (
-    S := polarizedRing I;
-    ideal(polarizedCanonicalForm(I,S))
-    )
+--also need a polarizedRing of an ideal for this to work
+--polarizedCanonicalIdeal(Ideal) := Ideal => I -> (
+--    S := polarizedRing I;
+--    ideal(polarizedCanonicalForm(I,S))
+--    )
 
 --given a pseudomonomial (or squarefree monomial) ideal, determines whether it's in canonical form
 --issue: will computing the canonical form respect order such that this will work?
@@ -654,19 +656,19 @@ isCanonical = method(
 	}
     );
 
-isCanonical (Ideal,Ring) := Boolean => opts -> (I,R) -> (
+isCanonical Ideal := Boolean => opts -> I -> (
     if opts.Polarized then (
-	polarizedCanonicalForm(I,R) == first entries gens I
+	polarizedCanonicalForm(I) == first entries gens I
 	)
     else (
-	canonicalForm(I,R) == first entries gens I
+	canonicalForm(I) == first entries gens I
 	)
     )
 
-isCanonical Ideal := Boolean => opts -> I -> (
-    R := ring I;
-    isCanonical(I,R)
-    )
+--isCanonical Ideal := Boolean => opts -> I -> (
+--    R := ring I;
+--    isCanonical(I,R)
+--    )
 
 
 -------------------------------------------------
@@ -676,18 +678,24 @@ isCanonical Ideal := Boolean => opts -> I -> (
 --note that the polarized canonical form is a set of minimal generators, so res will give a minimal resolution
 polarizedCanonicalResolution = method();
 
-polarizedCanonicalResolution(NeuralCode,Ring) := Resolution => (C,S) -> (
+polarizedCanonicalResolution (NeuralCode) := Resolution => C -> (
+    S := polarizedRing C;
     L := polarizedCanonicalIdeal(C,S);
     res L
     )
 
-polarizedCanonicalResolution(NeuralCode) := Resolution => C -> (
-    d := dim C;
-    x := getSymbol "x";
-    y := getSymbol "y";
-    S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
-    polarizedCanonicalResolution(C,S)
-    )
+--polarizedCanonicalResolution (NeuralCode,Ring) := Resolution => (C,S) -> (
+--    L := polarizedCanonicalIdeal(C,S);
+--    res L
+--    )
+
+--polarizedCanonicalResolution(NeuralCode) := Resolution => C -> (
+--    d := dim C;
+--    x := getSymbol "x";
+--    y := getSymbol "y";
+--    S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d]);
+--    polarizedCanonicalResolution(C,S)
+--    )
 
 --sets up a depolarization map from the polarized ring to a polynomial ring in half the variables
 depolarizationMap = method();
@@ -705,26 +713,32 @@ depolarizationMap(Ring,Ring) := (R,S) -> ( ----Target ring followed by source ri
 --uses the depolarization map and polarizedCanonicalResolution to create the canonical resolution of a neural code
 canonicalResolution = method();
 
-canonicalResolution(NeuralCode,Ring,Ring) := (C,R,S) -> (
-    polarRes := polarizedCanonicalResolution(C,S);
-    depolarMap := depolarizationMap(R,S);
+canonicalResolution NeuralCode := Resolution => C -> (
+    polarRes := polarizedCanonicalResolution(C);
+    depolarMap := depolarizationMap(ring C,polarizedRing C);
     depolarMap(polarRes)
+    )
+
+--canonicalResolution (NeuralCode,Ring,Ring) := (C,R,S) -> (
+--    polarRes := polarizedCanonicalResolution(C,S);
+--    depolarMap := depolarizationMap(R,S);
+--    depolarMap(polarRes)
     --d := dim C;
     --quotientIdeal := ideal(for i to d-1 list (S_i+S_(d+i)-1));
     --R := S/quotientIdeal;
     --polarRes ** R
-    )
+--    )
 
-canonicalResolution(NeuralCode,Ring) := (C,R) -> (
-    S := polarizedRing(C);
-    canonicalResolution(C,R,S)
-    )
+--canonicalResolution(NeuralCode,Ring) := (C,R) -> (
+--    S := polarizedRing(C);
+--    canonicalResolution(C,R,S)
+--    )
 
-canonicalResolution(NeuralCode) := C -> (
-    S := polarizedRing(C);
-    R := ring C;
-    canonicalResolution(C,R,S)
-    )
+--canonicalResolution(NeuralCode) := C -> (
+--    S := polarizedRing(C);
+--    R := ring C;
+--    canonicalResolution(C,R,S)
+--    )
     
 beginDocumentation()
 
