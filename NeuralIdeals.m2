@@ -336,12 +336,15 @@ primaryDecompositionAlmostCanonicalForm = method()
 
 primaryDecompositionAlmostCanonicalForm Ideal := List => I -> ( 
     decomp := primaryDecompositionPseudomonomial I;
-    multipliedGens :=product(decomp, i->i);
+    multipliedGens :=product(decomp);
     R := ring I;
     d := numgens R;
-    booleanIdeal := ideal(apply(d,i->(R_i*(1-R_i))));
+    booleanIdeal := ideal(apply(gens R,g -> g*(1-g)));
+    --booleanIdeal := ideal(apply(d,i->(R_i*(1-R_i))));
     booleanR := R/booleanIdeal;
-    reducedGens := apply(first entries gens multipliedGens,i->sub(i,booleanR));
+    reducedGens := promote(multipliedGens,booleanR);
+    --here
+    --reducedGens := apply(first entries gens multipliedGens,i->sub(i,booleanR));
     noZeroGens := delete(sub(0,booleanR),reducedGens);
     almostGens := unique apply(noZeroGens,i->(sub(i,R)))
     --actualGens := for i in almostGens list (
