@@ -52,9 +52,6 @@ protect dimension
 --protect SharedIndex
 --protect Polarized
 
-NeuralCode = new Type of HashTable
-NeuralCode.synonym = "neural code"
-
 --creates a ring with n or 2n variables
 createRing = method()
 
@@ -78,6 +75,10 @@ createPolarizedRing(ZZ,String,String) := Ring => (n,z,w) -> (
 createPolarizedRing(ZZ) := Ring => n -> (
     createPolarizedRing(n,"x","y")
     )
+
+--type that will store the data of a neural code
+NeuralCode = new Type of HashTable
+NeuralCode.synonym = "neural code"
 
 --constructs a neural code object from a list of codewords given as binary strings of the same length
 neuralCode = method()
@@ -117,24 +118,12 @@ neuralCode List := NeuralCode => codeList -> (
 dim NeuralCode := C -> C.dimension
 
 --short way to get the ring of a neural code
-
 ring NeuralCode := C -> C.cache.ring
 
 --short way to get the polarized ring of a neural code
-
 polarizedRing = method()
 
-polarizedRing NeuralCode := C -> C.cache.polarizedRing
-
---defines a ring for a given neural code, can set R=ring(NeuralCode) if you don't want to define one yourself
---issue: if user is already using another ring, may be confused if they call ring C and it's not the ring they're already using
---other issue: if you do this a second time, you'll get a new ring instead of the same one
---could combine polarized ring with this by adding a polarized option?
---ring NeuralCode := C -> (
---    d := dim C;
---    x := getSymbol "x";
---    R := (ZZ/2)(monoid[x_1..x_d])
---    )
+polarizedRing NeuralCode := Ring => C -> C.cache.polarizedRing
 
 --checks whether a NeuralCode is well-defined
 isWellDefined NeuralCode := Boolean => X -> (
@@ -209,14 +198,6 @@ isWellDefined NeuralCode := Boolean => X -> (
 --    polarizedRing(C,"x","y")
 --    )
 
---polarizedRing(Ideal) := Ring => I -> (
---    R := ring I;
---    d := numgens R;
---    x := getSymbol "x";
---    y := getSymbol "y";
---    S := (ZZ/2)(monoid[x_1..x_d,y_1..y_d])
---    )
-
 --gives a list of all code words on a given number of neurons
 --used internally in the neuralIdeal function
 allCodeWords = method();
@@ -240,16 +221,11 @@ neuralCodeComplement NeuralCode := List => C ->(
     --L1
     )    
 
---input: a NeuralCode, outputs a neural ideal by the method of The Neural Ring, not necessarily in canonical form
+--gives the neural ideal of a neural code by the method of Curto, Itskov, et al
 neuralIdeal = method();
 
---if specify the ring, will return an ideal in that ring (recommended)
 neuralIdeal NeuralCode := Ideal => C -> (
     R := ring C;
---    d:=dim C;
---    if numgens R =!= d then error "Expected ring of the same dimension as the neuralCode";
---    if coefficientRing R =!= ZZ/2 then error "Expected coefficientRing of ring to be ZZ/2";
---    if not instance(R,PolynomialRing) then error "Expected ring to be a PolynomialRing";
     oppC:=neuralCodeComplement C;
     genList := for a in oppC list (
 	prodList := for j to d-1 list (
@@ -266,29 +242,16 @@ neuralIdeal NeuralCode := Ideal => C -> (
     ideal genList
     )
 
---if don't specify the ring, it will create one but you won't be able to use it externally
---neuralIdeal NeuralCode := Ideal => C -> (
---    d:=dim C;
---    R := createRing(d,"x");
---    neuralIdeal(C,R)
---    )
+--computes the canonical form of a neural code by the iterative method of Petersen, Youngs, et al
+--used internally as the default option for canonicalForm(NeuralCode)
+iterCanonicalForm = method()
 
---not exported, used as an option for canonicalForm below it, iterative method from NeuralIdeals in SageMath paper
---changed this to avoid using append a lot
-iterCanonicalForm = method();
 iterCanonicalForm NeuralCode := List => C -> (
     R := ring C;
---    d := dim C;
---    if numgens R =!= d then error "Expected ring of the same dimension as the neuralCode";
     initialCodeWord := C.codeWords#0;
-    --canonical := {};
     currentGens := for i to d-1 list (
 	R_i-value(initialCodeWord#i) --creates canonical form for single codeword as a starting list without using append
 	);
-    --for i to d-1 do (
-	--canonical = append(canonical,R_i - value(initCode#i)) --creates canon form for single codeword
-	--
-	--);
     for i from 1 to #C.codeWords - 1 do (
 	currentCodeWord := C.codeWords#i;
 	codeCoordinates := for j to d-1 list(
@@ -316,23 +279,12 @@ iterCanonicalForm NeuralCode := List => C -> (
 	    );
 	currentGens = join(keepList,newList);
 	);
-    --C.cache#iCF = current;
     currentGens
     )
 
---option to get canonical form if you don't list the ring
---iterCanonicalForm NeuralCode := List => C -> (
---    d:=dim C;
---    x:=getSymbol "x"; 
---    R:=(ZZ/2)(monoid[x_1..x_d]); 
---    iterCanonicalForm(C,R)
---    )
-
-
-
---original algorithm for the canonical form of a pseudomonomial ideal
+--original algorithm for the canonical form of a pseudomonomial ideal from Curto, Itskov et al
+--does everything but remove gens divisible by another gen
 primaryDecompositionAlmostCanonicalForm = method()
-
 
 primaryDecompositionAlmostCanonicalForm Ideal := List => I -> ( 
     decomp := primaryDecompositionPseudomonomial I;
@@ -348,13 +300,6 @@ primaryDecompositionAlmostCanonicalForm Ideal := List => I -> (
     --noZeroGens := delete(sub(0,booleanR),reducedGens);
     almostGens := unique first entries lift(noZeroGens,R)
     --almostGens := unique apply(noZeroGens,i->(sub(i,R)))
-    --actualGens := for i in almostGens list (
-	--isDivisible := false;
-	--for j in almostGens do (
-	    --if i%j==0 and i =!= j then (isDivisible=true; break));
-	--if isDivisible then continue; 
-	--i
-	--)
     )
 
 --functions needed to implement Geller-R.G. algorithm for canonical form
@@ -398,11 +343,6 @@ newGens (List,ZZ,Ring) := List => (listGens,i,R) -> (
 	)
     ) )
 
---newGens (List,ZZ) := List => (listGens,i) -> (
---    R := ring(listGens#0);
---    newGens(listGens,i,R)
---    )
-
 --produces the almost canonical form of an ideal I using the shared index method of Geller-R.G.
 almostCanonicalForm = method()
 
@@ -435,18 +375,12 @@ sharedIndexCanonicalForm Ideal := List => I -> (
     removeGens(almostCanonicalForm(I))
     )
 
---sharedIndexCanonicalForm Ideal := List => opts -> I -> (
---    R := ring I;
---    sharedIndexCanonicalForm(I,R)
---    )
-
 ---------
 
---exported function to compute the canonical form of a neural ideal
---inputs a squarefree pseudomonomial ideal or a neural code, 
---outputs the canonical form of its neural ideal
---can decide to display it factored (best if you're not using the result in future computations)
---if the input is a neural code, by default it uses the faster iterative method to compute the canonical form, though you can turn this off and use the old primary decomposition method
+--exported function to compute the canonical form of a neural ideal or neural code
+--can decide to display it factored
+--default method for a neural code is the iterative method
+--default method for an ideal is the primary decomposition method
 canonicalForm = method(
     Options => {
 	Factor => false,
@@ -455,6 +389,7 @@ canonicalForm = method(
 	})
 
 canonicalForm Ideal := List => opts -> I -> (
+    if not isSquarefreePseudomonomialIdeal(I) then error "Expected a squarefree pseudomonomial ideal.";
     if opts.SharedIndex then (
 	canon := sharedIndexCanonicalForm(I);
 	if opts.Factor then apply(canon,factor) else canonForm
@@ -464,13 +399,8 @@ canonicalForm Ideal := List => opts -> I -> (
 	if opts.Factor then apply(canonP,factor) else canonPForm
 	)
     )
+--TO DO: throw error if ideal is not pseudomonomial
 
---canonicalForm(Ideal) := List => opts -> I -> (
---    R :=ring I;
---    canonicalForm(I,R)
---    )
-
---exported function to compute the canonical form of a neural code
 canonicalForm NeuralCode := List => opts -> C -> (
     if opts.Iterative then (
 	C.cache.canonicalForm = iterCanonicalForm(C);
@@ -485,18 +415,15 @@ canonicalForm NeuralCode := List => opts -> C -> (
 --finds the support of a given neural code (list of sets of neurons that fire together)
 codeSupport = method();
 codeSupport NeuralCode := List => C -> (
-    --fullSupport := {};
-    --L := C.codeWords;
     fullSupport := for c in C.codeWords list (
 	cSupport := for i to #c-1 list (if value(c#i) == 0 then continue; i+1)
-	--fullSupport = append(fullSupport, cSupport);
 	)
     )
 
---given a non-unit squarefree pseudomonomial ideal, preferably in canonical form, and outputs the corresponding NeuralCode
-neuralIdealToCode = method();
+--outputs the neural code of a list of pseudomonomials, usually the canonical form of a neural ideal
+canonicalFormToCode = method();
 
-neuralIdealToCode List := NeuralCode => L -> (
+canonicalFormToCode List := NeuralCode => L -> (
     R := ring L#0;
     d := numgens R;
     --checks that entries in list are squarefree pseudomonomials
@@ -610,15 +537,15 @@ polarizePseudomonomial RingElement := RingElement => P -> (
     )
 
 --polarizes the elements of a list into a particular polynomial ring
---applied to polarize canonical forms by work of Gunturkun, Jeffries, and Sun
-polarizeList = method();
+--applied internally to polarize canonical forms by work of Gunturkun, Jeffries, and Sun
+polarizeList = method()
 
 polarizeList(List,Ring) := List => (L,S) -> (
     for P in L list polarizePseudomonomial(P,S)
     )
 
 --given a neural code, produces the polarized canonical form in S
-polarizedCanonicalForm = method();
+polarizedCanonicalForm = method()
 
 polarizedCanonicalForm NeuralCode := List => C -> (
     S := polarizedRing C;
@@ -681,11 +608,7 @@ isCanonical Ideal := Boolean => opts -> I -> (
 	canonicalForm(I) == first entries gens I
 	)
     )
-
---isCanonical Ideal := Boolean => opts -> I -> (
---    R := ring I;
---    isCanonical(I,R)
---    )
+--make this cache the canonical form too? or use cached one if it exists?
 
 
 -------------------------------------------------
@@ -766,19 +689,36 @@ document{
   Caveat => "In progress"
   }
 
---document "NeuralCode"?
+document{
+    Key => {NeuralCode},
+    Headline => "NeuralCode -- type of a neural code",
+    Description => "Stores the data of a neural code, specifically its code words, dimension, ring, and polarized ring."
+    }
 
 document{
   Key => {neuralCode},
-  Headline => "Creates a NeuralCode",
-  TEX "Turns a list of binary strings of the same length into a NeuralCode type.",
-  Usage => "neuralCode(code)",
-  Inputs => {"Binary strings of the same length like 000 and 101"},
-  Outputs => {"The neural code consisting of the given codewords."},
-  TEX "We demonstrate how to enter a neural code as a list of binary strings of the same length.",
+  Headline => "neuralCode -- creates a NeuralCode object",
+  Usage => "neuralCode(L) or neuralCode(L,s,t) or neuralCode(L,R,S)",
+  Inputs => {"L, a list of binary strings of the same length like 000 and 101","s and t, strings to names the variables in the ring of C and the polarized ring of C","R and S, the ring of C and polarized ring of C"},
+  Outputs => {"a NeuralCode"},
+  Description => "Create a NeuralCode from a list of binary strings. By default, Macaulay2 will choose the ring and polarized ring of the code, but these can be specified by giving strings for the variable names or inputting rings.",
   EXAMPLE lines ///
-  neuralCode("000","001","101")
-  ///
+  C=neuralCode({"000","001","101"});
+  ring C
+  polarizedRing C
+  ///,
+  EXAMPLE lines ///
+  C=neuralCode({"00","10"},"z","w");
+  ring C
+  polarizedRing C
+  ///,
+  EXAMPLE lines ///
+  R=ZZ/2[x_1,x_2];
+  S=ZZ/2[x_1,x_2,y_1,y_2];
+  C=neuralCode({"00","10","11"},R,S);
+  ring C
+  polarized ring C
+  ///  
   }
 
 document{
