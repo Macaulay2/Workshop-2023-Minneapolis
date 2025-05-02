@@ -343,10 +343,11 @@ primaryDecompositionAlmostCanonicalForm Ideal := List => I -> (
     --booleanIdeal := ideal(apply(d,i->(R_i*(1-R_i))));
     booleanR := R/booleanIdeal;
     reducedGens := promote(multipliedGens,booleanR);
-    --here
+    noZeroGens := compress gens reducedGens;
     --reducedGens := apply(first entries gens multipliedGens,i->sub(i,booleanR));
-    noZeroGens := delete(sub(0,booleanR),reducedGens);
-    almostGens := unique apply(noZeroGens,i->(sub(i,R)))
+    --noZeroGens := delete(sub(0,booleanR),reducedGens);
+    almostGens := unique first entries lift(noZeroGens,R)
+    --almostGens := unique apply(noZeroGens,i->(sub(i,R)))
     --actualGens := for i in almostGens list (
 	--isDivisible := false;
 	--for j in almostGens do (
@@ -364,16 +365,17 @@ isSharedIndex (RingElement,RingElement,ZZ,Ring) := Boolean => (g,h,i,R) -> (
 --    if ring g =!= ring h then error "Expected two elements from the same ring";
     if i > dim R then error "Expected index at most the dimension of the ring";
     if i < 1 then error "Expected index at least 1";
-    (g*h)%(R_(i-1)*(1-R_(i-1)))==0
+    x:=R_(i-1);
+    (g*h)%(x*(1-x))==0
     )
 
 isUniqueSharedIndex = method()
 
 isUniqueSharedIndex (RingElement,RingElement,ZZ,Ring) := Boolean => (g,h,i,R) -> (
     n := numgens R;
-    if isSharedIndex(g,h,i,R)==true then (
+    if isSharedIndex(g,h,i,R) then (
 	onlySharedIndex := true;
-	for j from 1 to n when onlySharedIndex==true do (
+	for j from 1 to n when onlySharedIndex do (
 	    if j == i then continue;
 	    if isSharedIndex(g,h,j,R) then (
 		onlySharedIndex = false;
@@ -454,12 +456,12 @@ canonicalForm = method(
 
 canonicalForm Ideal := List => opts -> I -> (
     if opts.SharedIndex then (
-	if opts.Factor then apply(sharedIndexCanonicalForm(I),factor) else
-	sharedIndexCanonicalForm(I)
+	canon := sharedIndexCanonicalForm(I);
+	if opts.Factor then apply(canon,factor) else canonForm
 	)
     else (
-	if opts.Factor then apply(removeGens(primaryDecompositionAlmostCanonicalForm(I)),factor) else
-	removeGens(primaryDecompositionAlmostCanonicalForm(I))
+	canonP := removeGens(primaryDecompositionAlmostCanonicalForm(I));
+	if opts.Factor then apply(canonP,factor) else canonPForm
 	)
     )
 
@@ -471,11 +473,13 @@ canonicalForm Ideal := List => opts -> I -> (
 --exported function to compute the canonical form of a neural code
 canonicalForm NeuralCode := List => opts -> C -> (
     if opts.Iterative then (
-	if opts.Factor then apply(iterCanonicalForm(C),factor) else
-	iterCanonicalForm(C)
+	C.cache.canonicalForm = iterCanonicalForm(C);
+	if opts.Factor then apply(C.cache.canonicalForm,factor) else
+	C.cache.canonicalForm
 	)
     else
-    canonicalForm(neuralIdeal(C),Factor => opts.Factor)
+    C.cache.canonicalForm = canonicalForm(neuralIdeal(C));
+    if opts.Factor then apply(C.cache.canonicalForm,factor) else C.cache.canonicalForm
     )
 
 --finds the support of a given neural code (list of sets of neurons that fire together)
@@ -618,7 +622,8 @@ polarizedCanonicalForm = method();
 
 polarizedCanonicalForm NeuralCode := List => C -> (
     S := polarizedRing C;
-    polarizeList(canonicalForm(C),S)
+    C.cache.polarizedCanonicalForm = polarizeList(canonicalForm(C),S);
+    C.cache.polarizedCanonicalForm
     )
 
 polarizedCanonicalForm(Ideal,Ring) := List => (I,S) -> (
