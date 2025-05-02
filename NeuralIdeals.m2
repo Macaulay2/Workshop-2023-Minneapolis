@@ -692,7 +692,7 @@ document{
 document{
     Key => {NeuralCode},
     Headline => "NeuralCode -- type of a neural code",
-    Description => "Stores the data of a neural code, specifically its code words, dimension, ring, and polarized ring."
+    TEX "Stores the data of a neural code, specifically its code words, dimension, ring, and polarized ring."
     }
 
 document{
@@ -701,96 +701,77 @@ document{
   Usage => "neuralCode(L) or neuralCode(L,s,t) or neuralCode(L,R,S)",
   Inputs => {"L, a list of binary strings of the same length like 000 and 101","s and t, strings to names the variables in the ring of C and the polarized ring of C","R and S, the ring of C and polarized ring of C"},
   Outputs => {"a NeuralCode"},
-  Description => "Create a NeuralCode from a list of binary strings. By default, Macaulay2 will choose the ring and polarized ring of the code, but these can be specified by giving strings for the variable names or inputting rings.",
+  TEX "Create a NeuralCode from a list of binary strings. By default, Macaulay2 will choose the ring and polarized ring of the code, but these can be specified by giving strings for the variable names or inputting rings.",
   EXAMPLE lines ///
   C=neuralCode({"000","001","101"});
+  dim C
   ring C
   polarizedRing C
   ///,
   EXAMPLE lines ///
-  C=neuralCode({"00","10"},"z","w");
-  ring C
-  polarizedRing C
+  D=neuralCode({"00","10"},"z","w");
+  ring D
+  polarizedRing D
   ///,
   EXAMPLE lines ///
   R=ZZ/2[x_1,x_2];
   S=ZZ/2[x_1,x_2,y_1,y_2];
-  C=neuralCode({"00","10","11"},R,S);
-  ring C
-  polarized ring C
+  E=neuralCode({"00","10","11"},R,S);
+  ring E
+  polarized ring E
   ///  
   }
 
 document{
     Key => {polarizedRing},
-    Headline => "Polarized Ring",
-    TEX "Gives the ring of the polarized form of the neural ideal.",
-    Usage => "polarizedRing(neuralCode(code))",
-    Inputs => {"A NeuralCode or ideal in a polynomial ring (typically a neural ideal)"},
-    Outputs => {"A polynomial ring over ZZ/2 in 2n variables, where n is the number of neurons."},
-    TEX "We give some examples",
+    Headline => "polarizedRing -- returns the polarized ring of a NeuralCode",
+    Usage => "polarizedRing(C)",
+    Inputs => {"C, a NeuralCode"},
+    Outputs => {"a ring, the polarized ring of the neural code"},
+    TEX "Return the polarized ring of a neural code, i.e. a ring with 2n variables, where n is the dimension of the neural code.",
     EXAMPLE lines ///
-    polarizedRing(neuralCode("000","001","101")
+    C=neuralCode({"000","001","101"});
+    polarizedRing(C)
     ///,
     EXAMPLE lines ///
-    R=ZZ/2[x_1..x_3];
-    I=ideal(x_1*x_2,x_1*x_3);
-    polarizedRing(I)
+    D=neuralCode({"00","10","11"},"z","w");
+    polarizedRing(D)
     ///
     }
 
 document{
-  Key => {neuralIdeal, (neuralIdeal,NeuralCode),(neuralIdeal,NeuralCode,Ring)},
-  Headline => "Neural ideal.",
-  TEX "A method which computes the neural ideal for a given neural code (not necessarily in canonical form) by the method of Curto, Itskov, et al in The Neural Ring.",
-  Usage => "neuralIdeal(neuralCode(code)) or neuralIdeal(neuralCode(code),Ring)",
-  Inputs => {"neuralCode or neuralCode,Ring"},
-  Outputs => {"The neural ideal corresponding to the given neural code, in the given Ring or in ZZ/2[x_1..x_d] where d is the dimension of the neural code"},
-  TEX "We compute an example",
+  Key => {neuralIdeal, (neuralIdeal,NeuralCode)},
+  Headline => "neuralIdeal -- computes the neural ideal of a neural code.",
+  Usage => "neuralIdeal(C)",
+  Inputs => {"C, a NeuralCode"},
+  Outputs => {"an ideal, the neural ideal of C in ring C"},
+  TEX "This method computes the neural ideal using the method of Curto, Itskov, et al. The returned ideal is not in general in canonical form.",
   EXAMPLE lines ///
   C=neuralCode("000","001");
-  neuralIdeal(C)
-  ///,
-  EXAMPLE lines ///
-  C=neuralCode("000","001");
-  R=ZZ/2[x_1..x_3];
-  neuralIdeal(C,R)
+  ring C
+  I=neuralIdeal(C)
+  ring I
   ///,
 }
 
---make sure to talk about Factor and Iterative
 document{
-  Key => {canonicalForm, (canonicalForm,Ideal,Ring),(canonicalForm,Ideal),(canonicalForm,NeuralCode,Ring),(canonicalForm,NeuralCode),[canonicalForm,Factor],[canonicalForm,SharedIndex],[canonicalForm,Iterative]},
-  Headline => "Canonical Form",
-  TEX "A method which computes the canonical form of a given squarefree pseudomonomial ideal or neural code. If entering a neural code, it is recommended that you also specify the ring where the elements of the canonical form will live. The option Factor returns the canonical form with every element factored. If starting from an Ideal, the default option SharedIndex=>false will compute the canonical form by the method of The Neural Ring. If SharedIndex=>true is specified, the canonical form will be computed using the method of Geller and R.G. instead. If starting from a NeuralCode, the default option Iterative=> true will compute the canonical form of a neural code using the newer method from Neural Ideals in SageMath, but you can use the older method from The Neural Ring by selecting Iterative=>false.",
-  Usage => "canonicalForm(Ideal,Ring) or canonicalForm(Ideal) or canonicalForm(Ideal,Ring,SharedIndex=>true) or canonicalForm(Ideal,SharedIndex=>true) or canonicalForm(Ideal,Ring,Factor=>true) or canonicalForm(Ideal,Factor=>true) or canonicalForm(NeuralCode,Ring) or canonicalForm(NeuralCode) or canonicalForm(NeuralCode,Ring,Iterative=>false) or canonicalForm(NeuralCode,Iterative=>false) or canonicalForm(NeuralCode,Ring,Factor=>true) or canonicalForm(NeuralCode,Factor=>true)",
-  Inputs => {"Squarefree pseudomonomial ideal or NeuralCode (recommend specifying a ring for the latter)"},
-  Outputs => {"The canonical form as a list of elements of the ring of the ideal, the specified ring, or ZZ/2[x_1..x_d] where d is the dimension of the neural code."},
-  TEX "We compute an example",
+  Key => {canonicalForm, (canonicalForm,Ideal),(canonicalForm,NeuralCode)},
+  Headline => "canonicalForm -- computes the canonical form of a neural ideal",
+  Usage => "canonicalForm(I) or canonicalForm(C)",
+  Inputs => {"I, a squarefree pseudomonomial ideal, or C, a NeuralCode"},
+  Outputs => {"a List of pseudomonomials in ring(I) (resp. ring(C))"},
+  TEX {"Optional Inputs =>", "Factored => ...,default value false, factors the pseudomonomials","SharedIndex => ...,default value false, when true uses the shared index method of Geller and R.G. to compute the canonical form instead of the primary decomposition method of Curto, Itskov, et al","Iterative => ...,default value true, when true computes the canonical form of a neural code using the iterative method of Petersen, Youngs, et al instead of computing the neural ideal and then using the primary decomposition method as in Curto, Itskov, et al"},
+  TEX "Computes the canonical form of a neural ideal or a neural code, with several options for how to compute it and how to display it.",
   EXAMPLE lines ///
   R=ZZ/2[x_1..x_3];
   I=ideal(x_1*x_3,x_2*(1-x_1));
   canonicalForm(I)
-  ///,
-    EXAMPLE lines ///
-  R=ZZ/2[x_1..x_3];
-  I=ideal(x_1*x_3,x_2*(1-x_1));
   canonicalForm(I,Factored=>true)
   ///,
   EXAMPLE lines ///
   R=ZZ/2[x_1..x_3];
-  I=ideal(x_1*x_3,x_2*(1-x_1));
-  canonicalForm(I,SharedIndex=>true)
-  ///,
-  EXAMPLE lines ///
-  R=ZZ/2[x_1..x_3];
-  C=neuralCode({"000","001"},R);
+  C=neuralCode({"000","001"});
   canonicalForm(C)
-  ///,
-  EXAMPLE lines ///
-  R=ZZ/2[x_1..x_3];
-  C=neuralCode("000","001");
-  canonicalForm(C,R,Iterative=>false)
   ///,
 }
 
