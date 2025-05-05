@@ -231,6 +231,7 @@ neuralCodeComplement NeuralCode := List => C ->(
 neuralIdeal = method();
 
 neuralIdeal NeuralCode := Ideal => C -> (
+    d := dim C;
     R := ring C;
     oppC:=neuralCodeComplement C;
     genList := for a in oppC list (
@@ -398,11 +399,11 @@ canonicalForm Ideal := List => opts -> I -> (
     if not isSquarefreePseudomonomialIdeal(I) then error "Expected a squarefree pseudomonomial ideal.";
     if opts.SharedIndex then (
 	canon := sharedIndexCanonicalForm(I);
-	if opts.Factor then apply(canon,factor) else canonForm
+	if opts.Factor then apply(canon,factor) else canon
 	)
     else (
 	canonP := removeGens(primaryDecompositionAlmostCanonicalForm(I));
-	if opts.Factor then apply(canonP,factor) else canonPForm
+	if opts.Factor then apply(canonP,factor) else canonP
 	)
     )
 --TO DO: throw error if ideal is not pseudomonomial
@@ -538,7 +539,7 @@ polarizePseudomonomial(RingElement,Ring) := RingElement => (P,S) -> (
 polarizePseudomonomial RingElement := RingElement => P -> (
     R := ring P;
     d := numgens R;
-    S := createPolarizedRing(d,x,y);
+    S := createPolarizedRing(d,"x","y");
     polarizePseudomonomial(P,S)
     )
 
@@ -866,7 +867,7 @@ document{
     }
 
 document{
-    Key => {polarizedCanonicalForm,(polarizedCanonicalForm,NeuralCode,Ring),(polarizedCanonicalForm,NeuralCode),(polarizedCanonicalForm,Ideal,Ring)},
+    Key => {polarizedCanonicalForm,(polarizedCanonicalForm,NeuralCode),(polarizedCanonicalForm,Ideal,Ring)},
     Headline => "polarizedCanonicalForm -- computes the polarized canonical form",
     Usage => "polarizedCanonicalForm(C,S) or polarizedCanonicalForm(C) or polarizedCanonicalForm(I,S)",
     Inputs => {"C,a neural code or I, an ideal", "S, a ring where the polarization will live"},
@@ -906,7 +907,7 @@ document{
     }
 
 document{
-    Key => {isCanonical,(isCanonical,Ideal,Ring),(isCanonical,Ideal)},
+    Key => {isCanonical,(isCanonical,Ideal)},
     Headline => "isCanonical -- determines whether a neural ideal is in canonical form",
     Usage => "isCanonical(I)",
     Inputs => {"I, a neural ideal"},
