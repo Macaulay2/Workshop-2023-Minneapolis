@@ -110,6 +110,12 @@ neuralCode (List,String,String) := NeuralCode => (codeList,z,w) -> (
     neuralCode(codeList,R,S)
     )
 
+neuralCode (List,Ring) := NeuralCode => (codeList,R) -> (
+    d := #(codeList#0);
+    S:= createPolarizedRing(d,"x","y");
+    neuralCode(codeList,R,S)
+    )
+
 neuralCode List := NeuralCode => codeList -> (
     neuralCode(codeList,"x","y")
     )
@@ -698,8 +704,8 @@ document{
 document{
   Key => {neuralCode},
   Headline => "neuralCode -- creates a NeuralCode object",
-  Usage => "neuralCode(L) or neuralCode(L,s,t) or neuralCode(L,R,S)",
-  Inputs => {"L, a list of binary strings of the same length like 000 and 101","s and t, strings to names the variables in the ring of C and the polarized ring of C","R and S, the ring of C and polarized ring of C"},
+  Usage => "neuralCode(L) or neuralCode(L,s,t) or neuralCode(L,R,S) or neuralCode(L,R)",
+  Inputs => {"L, a list of binary strings of the same length like 000 and 101","s and t, strings to names the variables in the ring of C and the polarized ring of C","R and S, the ring of C and polarized ring of C, or R, the ring of C"},
   Outputs => {"a NeuralCode"},
   TEX "Create a NeuralCode from a list of binary strings. By default, Macaulay2 will choose the ring and polarized ring of the code, but these can be specified by giving strings for the variable names or inputting rings.",
   EXAMPLE lines ///
@@ -777,12 +783,11 @@ document{
 
 document{
     Key => {codeSupport, (codeSupport,NeuralCode)},
-    Headline => "Support of a NeuralCode",
-    TEX "A method which returns a list of the sets of neurons that fire together.",
-    Usage => "codeSupport(NeuralCode)",
-    Inputs => {"a NeuralCode"},
-    Outputs => {"a List of lists of neurons that fire together."},
-    TEX "We compute an example",
+    Headline => "codeSupport -- lists which neurons fire together",
+    Usage => "codeSupport(C)",
+    Inputs => {"C, a NeuralCode"},
+    Outputs => {"a List of lists of neurons."},
+    TEX "Given a NeuralCode, this returns a list of the sets of neurons that fire together.",
     EXAMPLE lines ///
     C=neuralCode("000","100","101","001","101");
     codeSupport(C)
@@ -790,13 +795,12 @@ document{
     }
 
 document{
-  Key => {neuralIdealToCode, (neuralIdealToCode,List)},
-  Headline => "Neural Ideal To Code",
-  TEX "A method that computes the neural code corresponding to a list of pseudomonomial generators (generally expected to be in canonical form).",
-  Usage => "neuralIdealToCode(List)",
-  Inputs => {"List of squarefree pseudomonomials in a single polynomial ring which do not generate the unit ideal"},
-  Outputs => {"The corresponding neural code"},
-  TEX "We compute some examples",
+  Key => {canonicalFormToCode, (canonicalFormToCode,List)},
+  Headline => "canonicalFormToCode -- returns the neural code of a canonical form",
+  Usage => "neuralIdealToCode(L)",
+  Inputs => {"L, a list of pseudomonomials that do not generate the unit ideal, probably the canonical form of a neural code"},
+  Outputs => {"a NeuralCode"},
+  TEX "Given a list of pseudomonomials, this returns the corresponding NeuralCode. The authors expect this to be mostly used on the canonical form.",
   EXAMPLE lines ///
   R=ZZ/2[x_1,x_2];
   L={x_1*x_2};
@@ -811,12 +815,11 @@ document{
 
 document{
     Key => {isPseudomonomial,(isPseudomonomial,RingElement)},
-    Headline => "isPseudomonomial",
-    TEX "A method which determines whether an element of a polynomial ring is a squarefree pseudomonomial. This function was written by Alan Veliz-Cuba for a package on primary decomposition of squarefree pseudomonomial ideals.",
-    Usage => "isPseudomonomial(RingElement)",
-    Inputs => {"An element of a polynomial ring"},
+    Headline => "isPseudomonomial --determines whether a polynomial is a squarefree pseudomonomial",
+    Usage => "isPseudomonomial(f)",
+    Inputs => {"f, an element of a polynomial ring"},
     Outputs => {"Boolean"},
-    TEX "We compute some examples",
+    TEX "A method which determines whether an element of a polynomial ring is a squarefree pseudomonomial. This function was written by Alan Veliz-Cuba for a package on primary decomposition of squarefree pseudomonomial ideals.",
     EXAMPLE lines ///
     R=ZZ/2[x_1..x_3];
     f=x_1*(1-x_2);
