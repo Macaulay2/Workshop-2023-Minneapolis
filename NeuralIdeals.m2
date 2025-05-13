@@ -29,7 +29,7 @@ export{--types
     "canonicalForm",
     "codeSupport",
     "canonicalFormToCode",
-    "isPseudomonomial",
+    --"isPseudomonomial",
     "receptiveFieldRelation",
     "polarizePseudomonomial",
     "polarizedCanonicalForm",
@@ -115,6 +115,8 @@ neuralCode (List,Ring) := NeuralCode => (codeList,R) -> (
 neuralCode List := NeuralCode => codeList -> (
     neuralCode(codeList,"x","y")
     )
+
+
 
 --short way to get the dimension of a neural code 
 dim NeuralCode := C -> C.dimension
@@ -389,6 +391,10 @@ codeSupport NeuralCode := List => C -> (
 	)
     )
 
+--given a list of pseudomonomials, produces the corresponding neural code
+
+
+--here!!!
 --outputs the neural code of a list of pseudomonomials, usually the canonical form of a neural ideal
 canonicalFormToCode = method();
 
@@ -422,32 +428,33 @@ canonicalFormToCode List := NeuralCode => L -> (
 -- Polynomial P in bitwise form
 -- Output:
 -- true or false
-isPseudomonomial = method();
-isPseudomonomial RingElement := Boolean => P -> ( 
-    -- check if polynomial is a unit or zero
-    if P == 0 then return false;
-    if isUnit P then return true;
-    -- factor polynomial P and initialize the support list
-    factoredP := factor P;
-    allSupport := {};
-    -- test if some factor is not of the form (xi-a) where a=0 or 1
-    for i to #factoredP-1 do ( 
-        -- evaluate ith factor
-        base := value factoredP#i; 
-        -- if factor is not a unit but is a constant -> not a square free pseudomonomial
-        if isUnit base then continue;
-        if isConstant base then return false;
-        -- find if factor is equal to xi or xi-1
-        suppi := support base;
-        if #suppi >= 2 then return false;
-        if suppi_0 =!= base and suppi_0-1 =!= base then return false;
-        allSupport = append(allSupport,suppi_0);
-    );
-    -- find if there are factors xi, xi-1 simultaneously -> not a square free pseudomonomial
-    #(support P) == #allSupport
-    -- if #(support P) != #allSupport then return false;
-    -- true
-)
+--isPseudomonomial = method();
+
+--isPseudomonomial RingElement := Boolean => P -> ( 
+--    -- check if polynomial is a unit or zero
+--    if P == 0 then return false;
+--    if isUnit P then return true;
+--    -- factor polynomial P and initialize the support list
+--    factoredP := factor P;
+--    allSupport := {};
+--    -- test if some factor is not of the form (xi-a) where a=0 or 1
+--    for i to #factoredP-1 do ( 
+--        -- evaluate ith factor
+--        base := value factoredP#i; 
+--        -- if factor is not a unit but is a constant -> not a square free pseudomonomial
+--        if isUnit base then continue;
+--        if isConstant base then return false;
+--        -- find if factor is equal to xi or xi-1
+--        suppi := support base;
+--        if #suppi >= 2 then return false;
+--        if suppi_0 =!= base and suppi_0-1 =!= base then return false;
+--        allSupport = append(allSupport,suppi_0);
+--    );
+--    -- find if there are factors xi, xi-1 simultaneously -> not a square free pseudomonomial
+--    #(support P) == #allSupport
+--    -- if #(support P) != #allSupport then return false;
+--    -- true
+--)
 
 --------------------------------------
 
@@ -790,28 +797,6 @@ document{
   ///
 }
 
-document{
-    Key => {isPseudomonomial,(isPseudomonomial,RingElement)},
-    Headline => "determines whether a polynomial is a squarefree pseudomonomial",
-    Usage => "isPseudomonomial(f)",
-    Inputs => {"f, an element of a polynomial ring"},
-    Outputs => {"Boolean"},
-    TEX "A method which determines whether an element of a polynomial ring is a squarefree pseudomonomial. This function was written by Alan Veliz-Cuba for a package on primary decomposition of squarefree pseudomonomial ideals.",
-    EXAMPLE lines ///
-    R=ZZ/2[x_1..x_3];
-    f=x_1*(1-x_2);
-    isPseudomonomial(f)
-    ///,
-    EXAMPLE lines ///
-    R=ZZ/2[x_1..x_3];
-    f=1_R;
-    isPseudomonomial(f)
-    ///,
-    EXAMPLE lines ///
-    R=ZZ/2[x_1..x_3];
-    f=x_1^2
-    ///
-    }
 
 document{
     Key => {receptiveFieldRelation,(receptiveFieldRelation,RingElement)},
