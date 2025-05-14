@@ -362,12 +362,14 @@ canonicalForm = method(Options => true)
 
 canonicalForm Ideal := List => { Factor => false, SharedIndex => false } >> opts -> I -> I.cache.canonicalForm ??= (
     if not isSquarefreePseudomonomialIdeal(I) then error "Expected a squarefree pseudomonomial ideal.";
-    if opts.SharedIndex then (
-	canon := sharedIndexCanonicalForm(I);
+    canon := if opts.SharedIndex then sharedIndexCanonicalForm(I)
+    else removeGens(primaryDecompositionAlmostCanonicalForm(I));
+    --here!!!
+
 	if opts.Factor then apply(canon,factor) else canon
 	)
     else (
-	canonP := removeGens(primaryDecompositionAlmostCanonicalForm(I));
+	canonP := ;
 	if opts.Factor then apply(canonP,factor) else canonP
 	)
     )
@@ -378,9 +380,9 @@ canonicalForm NeuralCode := List => { Factor => false, Iterative => true } >> op
 	if opts.Factor then apply(D,factor) else
 	D
 	)
-    else
+    else (
     E := canonicalForm(neuralIdeal(C));
-    if opts.Factor then apply(E,factor) else E
+    if opts.Factor then apply(E,factor) else E )
     )
 
 --finds the support of a given neural code (list of sets of neurons that fire together)
