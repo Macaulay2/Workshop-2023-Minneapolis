@@ -364,25 +364,13 @@ canonicalForm Ideal := List => { Factor => false, SharedIndex => false } >> opts
     if not isSquarefreePseudomonomialIdeal(I) then error "Expected a squarefree pseudomonomial ideal.";
     canon := if opts.SharedIndex then sharedIndexCanonicalForm(I)
     else removeGens(primaryDecompositionAlmostCanonicalForm(I));
-    --here!!!
-
-	if opts.Factor then apply(canon,factor) else canon
-	)
-    else (
-	canonP := ;
-	if opts.Factor then apply(canonP,factor) else canonP
-	)
+    if opts.Factor then apply(canon,factor) else canon
     )
 
 canonicalForm NeuralCode := List => { Factor => false, Iterative => true } >> opts -> C -> C.cache.canonicalForm ??= (
-    if opts.Iterative then (
-	D := iterCanonicalForm(C);
-	if opts.Factor then apply(D,factor) else
-	D
-	)
-    else (
-    E := canonicalForm(neuralIdeal(C));
-    if opts.Factor then apply(E,factor) else E )
+    canon := if opts.Iterative then iterCanonicalForm(C)
+    else canonicalForm(neuralIdeal(C));
+    if opts.Factor then apply(canon,factor) else canon
     )
 
 --finds the support of a given neural code (list of sets of neurons that fire together)
@@ -423,40 +411,6 @@ canonicalFormToCode List := NeuralCode => L -> (
 	);
     neuralCode codeList
     )
-
-----The following function is an internal function from the PseudomonomialPrimaryDecomposition package by Alan Veliz-Cuba
--- determines if a polynomial is square free pseudomonomial
--- Input:
--- Polynomial P in bitwise form
--- Output:
--- true or false
---isPseudomonomial = method();
-
---isPseudomonomial RingElement := Boolean => P -> ( 
---    -- check if polynomial is a unit or zero
---    if P == 0 then return false;
---    if isUnit P then return true;
---    -- factor polynomial P and initialize the support list
---    factoredP := factor P;
---    allSupport := {};
---    -- test if some factor is not of the form (xi-a) where a=0 or 1
---    for i to #factoredP-1 do ( 
---        -- evaluate ith factor
---        base := value factoredP#i; 
---        -- if factor is not a unit but is a constant -> not a square free pseudomonomial
---        if isUnit base then continue;
---        if isConstant base then return false;
---        -- find if factor is equal to xi or xi-1
---        suppi := support base;
---        if #suppi >= 2 then return false;
---        if suppi_0 =!= base and suppi_0-1 =!= base then return false;
---        allSupport = append(allSupport,suppi_0);
---    );
---    -- find if there are factors xi, xi-1 simultaneously -> not a square free pseudomonomial
---    #(support P) == #allSupport
---    -- if #(support P) != #allSupport then return false;
---    -- true
---)
 
 --------------------------------------
 
@@ -526,11 +480,13 @@ polarizedCanonicalForm NeuralCode := List => C -> C.cache.polarizedCanonicalForm
     polarizeList(canonicalForm(C),S)
     )
 
+--polarized canonical form of a non-polarized ideal
 polarizedCanonicalForm(Ideal,Ring) := List => (I,S) -> I.cache.polarizedCanonicalForm ??= (
     L := canonicalForm(I);
     polarizeList(L,S)
     )
 
+--editing this one to get the canonical form of a polarized ideal
 polarizedCanonicalForm(Ideal) := List => I -> I.cache.polarizedCanonicalForm ??= (
     L := canonicalForm(I);
     polarizeList(L)
