@@ -472,6 +472,61 @@ polarizeList(List) := List => L -> (
     polarizeList(L,S)
     )
 
+--functions needed to implement Geller-R.G. algorithm for canonical form in the polarized setting
+polarSharedIndex = method()
+
+polarSharedIndex (RingElement,RingElement,ZZ,Ring) := Boolean => (g,h,i,S) -> (
+    d := (numgens S)//2
+    if i > d then error "Expected index at most the number of neurons";
+    if i < 1 then error "Expected index at least 1";
+    x:=R_(i-1);
+    y:=R_(i+d-1
+    (g*h)%(x*y)==0
+    )
+
+polarUniqueSharedIndex = method()
+
+polarUniqueSharedIndex (RingElement,RingElement,ZZ,Ring) := Boolean => (g,h,i,S) -> (
+    d := (numgens S)//2;
+    if isSharedIndex(g,h,i,S) then (
+	onlySharedIndex := true;
+	for j from 1 to n when onlySharedIndex do (
+	    if j == i then continue;
+	    if isSharedIndex(g,h,j,S) then (
+		onlySharedIndex = false;
+		break
+		);
+	    );
+	onlySharedIndex
+	)
+    else false
+    )
+
+polarNewGens = method()
+
+polarNewGens (List,ZZ,Ring) := List => (listGens,i,S) -> (
+    d := (numgens S)//2;
+    unique flatten (for g in listGens list (
+	for h in listGens list (
+	    if h==g then continue;
+	    if isUniqueSharedIndex(g,h,i,S) then lcm(g,h)//(R_(i-1)*R_(i+d-1)) else continue
+	    )
+	)
+    ) )
+
+--produces the almost canonical form of an ideal I using the shared index method of Geller-R.G.
+polarAlmostCanonicalForm = method()
+
+polarAlmostCanonicalForm Ideal := List => I -> (
+    S := ring I;
+    n := (numgens S)//2;
+    listGensI := first entries gens I;
+    for i from 1 to n do (
+	listGensI=join(listGensI,newGens(listGensI,i,S))
+	);
+    unique listGensI
+    )
+
 --given a neural code, produces the polarized canonical form in S
 polarizedCanonicalForm = method()
 
@@ -488,8 +543,7 @@ polarizedCanonicalForm(Ideal,Ring) := List => (I,S) -> I.cache.polarizedCanonica
 
 --editing this one to get the canonical form of a polarized ideal
 polarizedCanonicalForm(Ideal) := List => I -> I.cache.polarizedCanonicalForm ??= (
-    L := canonicalForm(I);
-    polarizeList(L)
+    removeGens(polarAlmostCanonicalForm(I))
     )
 
 
