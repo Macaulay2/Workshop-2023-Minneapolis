@@ -41,7 +41,8 @@ export{--types
     "Factor",
     "Iterative",
     "SharedIndex",
-    "Polarized"}
+    "Polarized",
+    "Polar"}
 
 --protect codeWords
 protect dimension
@@ -91,7 +92,7 @@ NeuralCode.synonym = "neural code"
 
 --constructs a neural code object from a list of codewords given as binary strings of the same length
 --alternatively constructs a neural code from an ideal, polarized or not
-neuralCode = method()
+neuralCode = method(Options => true)
 
 --can supply both the ring and the polarized ring
 neuralCode (List,Ring,Ring) := NeuralCode => (codeList,R,S) -> (
@@ -127,34 +128,46 @@ neuralCode List := NeuralCode => codeList -> (
     )
 
 --given a list of pseudomonomials or squarefree monomial, produces the corresponding neural code
-neuralCode Ideal := NeuralCode =>  { Polarized => false } >> opts -> I -> (
-    R := ring I;
-    d := if opts.Polarized then ((numgens R)//2) else (numgens R);
-    --checks that entries in list are squarefree pseudomonomials
-    if (not opts.Polarized and not isSquarefreePseudomonomialIdeal(I)) then error "Expected a squarefree pseudomonomial ideal.";
-    if (opts.Polarized and not isSquareFree(monomialIdeal(I))) then error "Expected squarefree monomial ideal.";
-    --checks that generators don't generate the unit ideal
-    if I==ideal(1_R) then error "Expected generators of a non-unit ideal.";
-    L := first entries gens I;
-    allCodes := allCodeWords(d);
-    codeList := for i in allCodes list (
-	validCode := true;
-	for j in L do (
-	    M:=matrix{apply(d,k->sub(value(i#k),R))};
-	    if sub(j,M) != 0 then (
-		validCode = false;
-		break
+neuralCode Ideal := NeuralCode =>  { Polar => false } >> opts -> I -> I.cache.neuralCode ??=  (
+    R :=ring I;
+    d := if opts.Polar then ((numgens R)//2) else numgens R;
+    if I==ideal(1_R) then neuralCode(allCodeWords(d)) else (
+	if opts.Polar then (
+	    if not isSquareFree(monomialIdeal(I)) then error "Expected squarefree monomial ideal.";
+	    L := first entries gens I;
+	    allCodes := allCodeWords(d);
+	    codeList := for i in allCodes list (
+		validCode := true;
+		for j in L do (
+		    M:=matrix{
+			flatten{apply(d,k->sub(value(i#k),R)),apply(d,k->sub(1-value(i#k),R))}};
+		    if sub(j,M) != 0 then (
+			validCode = false;
+			break);
+		    );
+		if not validCode then continue else i
 		);
-	    );
-	if not validCode then continue else i
-	);
-    if opts.Polarized then (depol:=(ZZ/2)(monoid[R_0..R_(d-1)]);
-	neuralCode(codeList,depol,R)
-	)
-    else (neuralCode(codeList,R))
+	     depol:=(ZZ/2)(monoid[R_0..R_(d-1)]);
+	     neuralCode(codeList,depol,R)
+	     )
+	 else (
+	     if not isSquarefreePseudomonomialIdeal(I) then error "Expected a squarefree pseudomonomial ideal.";
+	     L2 := first entries gens I;
+	     allCodes2 := allCodeWords(d);
+	     codeList2 := for i in allCodes2 list (
+		 validCode := true;
+		 for j in L2 do (
+		     M:=matrix{apply(d,k->sub(value(i#k),R))};
+		     if sub(j,M) != 0 then (
+			 validCode = false;
+			 break);
+		     );
+		 if not validCode then continue else i
+		 );
+	     neuralCode(codeList2,R)
+	     )
+	 )
     )
-
-
 
 --short way to get the dimension of a neural code 
 dim NeuralCode := C -> C.dimension
@@ -633,7 +646,7 @@ document{
       (neuralCode,List,String,String),
       (neuralCode,List,Ring),
       (neuralCode,Ideal),
-      [(neuralCode,Ideal),Polarized]},
+      [(neuralCode,Ideal),Polar]},
   Headline => "creates a NeuralCode object",
   Usage => "neuralCode(L) or neuralCode(L,s,t) or neuralCode(L,R,S) or neuralCode(L,R) or neuralCode(I)",
   Inputs => {"L, a list of binary strings of the same length like 000 and 101",
