@@ -90,6 +90,7 @@ NeuralCode = new Type of HashTable
 NeuralCode.synonym = "neural code"
 
 --constructs a neural code object from a list of codewords given as binary strings of the same length
+--alternatively constructs a neural code from an ideal, polarized or not
 neuralCode = method()
 
 --can supply both the ring and the polarized ring
@@ -125,16 +126,15 @@ neuralCode List := NeuralCode => codeList -> (
     neuralCode(codeList,"x","y")
     )
 
---given a list of pseudomonomials, produces the corresponding neural code
+--given a list of pseudomonomials or squarefree monomial, produces the corresponding neural code
 neuralCode Ideal := NeuralCode =>  { Polarized => false } >> opts -> I -> (
     R := ring I;
     d := if opts.Polarized then ((numgens R)//2) else (numgens R);
     --checks that entries in list are squarefree pseudomonomials
-    --if not isSquarefreePseudomonomialIdeal(ideal(L)) then error "Expected elements that generate a squarefree pseudomonomial ideal.";
+    if (not opts.Polarized and not isSquarefreePseudomonomialIdeal(I)) then error "Expected a squarefree pseudomonomial ideal.";
+    if (opts.Polarized and not isSquareFree(monomialIdeal(I))) then error "Expected squarefree monomial ideal.";
     --checks that generators don't generate the unit ideal
-    --if ideal(L)==sub(ideal(1),R) then error "Expected generators of a non-unit ideal.";
-    --checks that all elements in list are in the same ring
-    --for ell in L do (if ring ell =!= R then error "Expected elements of the same ring.");
+    if I==ideal(1_R) then error "Expected generators of a non-unit ideal.";
     L := first entries gens I;
     allCodes := allCodeWords(d);
     codeList := for i in allCodes list (
