@@ -28,8 +28,6 @@ export{--types
     "neuralIdeal",
     "canonicalForm",
     "codeSupport",
-    "canonicalFormToCode",
-    --"isPseudomonomial",
     "receptiveFieldRelation",
     "polarizePseudomonomial",
     "polarizedCanonicalForm",
@@ -76,6 +74,17 @@ createPolarizedRing(ZZ) := Ring => n -> (
     createPolarizedRing(n,"x","y")
     )
 
+--gives a list of all code words on a given number of neurons
+--used internally in the neuralCode and neuralIdeal functions
+allCodeWords = method();
+allCodeWords ZZ := List => d ->(
+    L1 := apply(d+1,i->(
+	    apply(i,i->1)|apply(d-i,j->0)
+	    ));
+    L2 := unique flatten apply(L1,i->permutations i);
+    apply(L2, i-> concatenate(apply(i,j->toString j)))
+    )
+
 --type that will store the data of a neural code
 NeuralCode = new Type of HashTable
 NeuralCode.synonym = "neural code"
@@ -114,6 +123,35 @@ neuralCode (List,Ring) := NeuralCode => (codeList,R) -> (
 --or none and it will create the rings for you
 neuralCode List := NeuralCode => codeList -> (
     neuralCode(codeList,"x","y")
+    )
+
+--given a list of pseudomonomials, produces the corresponding neural code
+neuralCode Ideal := NeuralCode =>  { Polarized => false } >> opts -> I -> (
+    R := ring I;
+    d := if opts.Polarized then ((numgens R)//2) else (numgens R);
+    --checks that entries in list are squarefree pseudomonomials
+    --if not isSquarefreePseudomonomialIdeal(ideal(L)) then error "Expected elements that generate a squarefree pseudomonomial ideal.";
+    --checks that generators don't generate the unit ideal
+    --if ideal(L)==sub(ideal(1),R) then error "Expected generators of a non-unit ideal.";
+    --checks that all elements in list are in the same ring
+    --for ell in L do (if ring ell =!= R then error "Expected elements of the same ring.");
+    L := first entries gens I;
+    allCodes := allCodeWords(d);
+    codeList := for i in allCodes list (
+	validCode := true;
+	for j in L do (
+	    M:=matrix{apply(d,k->sub(value(i#k),R))};
+	    if sub(j,M) != 0 then (
+		validCode = false;
+		break
+		);
+	    );
+	if not validCode then continue else i
+	);
+    if opts.Polarized then (depol:=(ZZ/2)(monoid[R_0..R_(d-1)]);
+	neuralCode(codeList,depol,R)
+	)
+    else (neuralCode(codeList,R))
     )
 
 
@@ -184,17 +222,6 @@ isWellDefined NeuralCode := Boolean => X -> (
 	return false
 	);
     true);
-
---gives a list of all code words on a given number of neurons
---used internally in the neuralIdeal function
-allCodeWords = method();
-allCodeWords ZZ := List => d ->(
-    L1 := apply(d+1,i->(
-	    apply(i,i->1)|apply(d-i,j->0)
-	    ));
-    L2 := unique flatten apply(L1,i->permutations i);
-    apply(L2, i-> concatenate(apply(i,j->toString j)))
-    )
 
 --given a neural code, gives the list of code words not in it
 --used internally in the neuralIdeal function
@@ -381,36 +408,7 @@ codeSupport NeuralCode := List => C -> (
 	)
     )
 
---given a list of pseudomonomials, produces the corresponding neural code
 
-
---here!!!
---outputs the neural code of a list of pseudomonomials, usually the canonical form of a neural ideal
-canonicalFormToCode = method();
-
-canonicalFormToCode List := NeuralCode => L -> (
-    R := ring L#0;
-    d := numgens R;
-    --checks that entries in list are squarefree pseudomonomials
-    if not isSquarefreePseudomonomialIdeal(ideal(L)) then error "Expected elements that generate a squarefree pseudomonomial ideal.";
-    --checks that generators don't generate the unit ideal
-    if ideal(L)==sub(ideal(1),R) then error "Expected generators of a non-unit ideal.";
-    --checks that all elements in list are in the same ring
-    for ell in L do (if ring ell =!= R then error "Expected elements of the same ring.");
-    allCodes := allCodeWords(d);
-    codeList := for i in allCodes list (
-	validCode := true;
-	for j in L do (
-	    M:=matrix{apply(d,k->sub(value(i#k),R))};
-	    if sub(j,M) != 0 then (
-		validCode = false;
-		break
-		);
-	    );
-	if not validCode then continue else i
-	);
-    neuralCode codeList
-    )
 
 --------------------------------------
 
@@ -476,11 +474,11 @@ polarizeList(List) := List => L -> (
 polarSharedIndex = method()
 
 polarSharedIndex (RingElement,RingElement,ZZ,Ring) := Boolean => (g,h,i,S) -> (
-    d := (numgens S)//2
+    d := (numgens S)//2;
     if i > d then error "Expected index at most the number of neurons";
     if i < 1 then error "Expected index at least 1";
-    x:=R_(i-1);
-    y:=R_(i+d-1
+    x:=S_(i-1);
+    y:=S_(i+d-1);
     (g*h)%(x*y)==0
     )
 
@@ -488,11 +486,11 @@ polarUniqueSharedIndex = method()
 
 polarUniqueSharedIndex (RingElement,RingElement,ZZ,Ring) := Boolean => (g,h,i,S) -> (
     d := (numgens S)//2;
-    if isSharedIndex(g,h,i,S) then (
+    if polarSharedIndex(g,h,i,S) then (
 	onlySharedIndex := true;
-	for j from 1 to n when onlySharedIndex do (
+	for j from 1 to d when onlySharedIndex do (
 	    if j == i then continue;
-	    if isSharedIndex(g,h,j,S) then (
+	    if polarSharedIndex(g,h,j,S) then (
 		onlySharedIndex = false;
 		break
 		);
@@ -509,7 +507,7 @@ polarNewGens (List,ZZ,Ring) := List => (listGens,i,S) -> (
     unique flatten (for g in listGens list (
 	for h in listGens list (
 	    if h==g then continue;
-	    if isUniqueSharedIndex(g,h,i,S) then lcm(g,h)//(R_(i-1)*R_(i+d-1)) else continue
+	    if polarUniqueSharedIndex(g,h,i,S) then lcm(g,h)//(S_(i-1)*S_(i+d-1)) else continue
 	    )
 	)
     ) )
@@ -519,10 +517,10 @@ polarAlmostCanonicalForm = method()
 
 polarAlmostCanonicalForm Ideal := List => I -> (
     S := ring I;
-    n := (numgens S)//2;
+    d := (numgens S)//2;
     listGensI := first entries gens I;
-    for i from 1 to n do (
-	listGensI=join(listGensI,newGens(listGensI,i,S))
+    for i from 1 to d do (
+	listGensI=join(listGensI,polarNewGens(listGensI,i,S))
 	);
     unique listGensI
     )
@@ -541,7 +539,7 @@ polarizedCanonicalForm(Ideal,Ring) := List => (I,S) -> I.cache.polarizedCanonica
     polarizeList(L,S)
     )
 
---editing this one to get the canonical form of a polarized ideal
+--canonical form of a polarized ideal
 polarizedCanonicalForm(Ideal) := List => I -> I.cache.polarizedCanonicalForm ??= (
     removeGens(polarAlmostCanonicalForm(I))
     )
@@ -633,12 +631,17 @@ document{
       (neuralCode,List),
       (neuralCode,List,Ring,Ring),
       (neuralCode,List,String,String),
-      (neuralCode,List,Ring)},
+      (neuralCode,List,Ring),
+      (neuralCode,Ideal),
+      [(neuralCode,Ideal),Polarized]},
   Headline => "creates a NeuralCode object",
-  Usage => "neuralCode(L) or neuralCode(L,s,t) or neuralCode(L,R,S) or neuralCode(L,R)",
-  Inputs => {"L, a list of binary strings of the same length like 000 and 101","s and t, strings to names the variables in the ring of C and the polarized ring of C","R and S, the ring of C and polarized ring of C, or R, the ring of C"},
+  Usage => "neuralCode(L) or neuralCode(L,s,t) or neuralCode(L,R,S) or neuralCode(L,R) or neuralCode(I)",
+  Inputs => {"L, a list of binary strings of the same length like 000 and 101",
+      "s and t, strings to names the variables in the ring of C and the polarized ring of C",
+      "R and S, the ring of C and polarized ring of C, or R, the ring of C",
+      "I, an squarefree pseudomonomial ideal or squarefree monomial ideal"},
   Outputs => {"a NeuralCode"},
-  TEX "Create a NeuralCode from a list of binary strings. By default, Macaulay2 will choose the ring and polarized ring of the code, but these can be specified by giving strings for the variable names or inputting rings.",
+  TEX "Create a NeuralCode from a list of binary strings or an ideal. By default, Macaulay2 will choose the ring and polarized ring of the code, but these can be specified by giving strings for the variable names or inputting rings.",
   EXAMPLE lines ///
   C=neuralCode({"000","001","101"});
   dim C
@@ -656,7 +659,12 @@ document{
   E=neuralCode({"00","10","11"},R,S);
   ring E
   polarizedRing E
-  ///  
+  ///,
+  EXAMPLE lines ///
+  R=ZZ/2[x_1,x_2];
+  I=ideal(x_1*x_2);
+  neuralCode(I)
+  ///
   }
 
 document{
@@ -794,20 +802,6 @@ document{
     codeSupport(C)
     ///
     }
-
-document{
-  Key => {canonicalFormToCode, (canonicalFormToCode,List)},
-  Headline => "returns the neural code of a canonical form",
-  Usage => "neuralIdealToCode(L)",
-  Inputs => {"L, a list of pseudomonomials that do not generate the unit ideal, probably the canonical form of a neural code"},
-  Outputs => {"a NeuralCode"},
-  TEX "Given a list of pseudomonomials, this returns the corresponding NeuralCode. The authors expect this to be mostly used on the canonical form.",
-  EXAMPLE lines ///
-  R=ZZ/2[x_1,x_2];
-  L={x_1*x_2};
-  canonicalFormToCode(L)
-  ///
-}
 
 
 document{
@@ -983,8 +977,8 @@ TEST ///
 -- **TEST3**
 TEST ///
     R=ZZ/2[x_1,x_2];
-    L={x_1*x_2};
-    assert(canonicalFormToCode(L)==neuralCode({"00","10","01"}))
+    L=ideal(x_1*x_2);
+    assert(neuralCode(L)==neuralCode({"00","10","01"}))
 ///
 
 -- **TEST4**
