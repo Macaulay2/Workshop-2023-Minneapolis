@@ -1005,12 +1005,20 @@ TEST ///
 
 -- **TEST5**
 TEST ///
+    S=ZZ/2[x_1..x_3,y_1..y_3];
+    I=ideal(x_1*x_2,x_3*y_1);
+    J={x_1*x_2,x_3*y_1,x_2*x_3};
+    assert (polarizedCanonicalForm(I)==J)
+///
+
+-- **TEST6**
+TEST ///
     C=neuralCode({"00","10","11"});
     P=polarizedCanonicalResolution(C);
     assert (P.dd_1==matrix{{x_2*y_1}})
 ///
 
--- **TEST6**
+-- **TEST7**
 TEST ///
     C=neuralCode({"00","10","11"});
     P=canonicalResolution(C);
@@ -1018,7 +1026,7 @@ TEST ///
     assert (P.dd_1==matrix{{x_1*x_2+x_2}})
 ///
 
--- **Test7**
+-- **TEST8**
 TEST ///
     R=ZZ/2[x_1..x_3];
     I=ideal(x_2*x_3,x_2*(1-x_1));
