@@ -132,42 +132,63 @@ neuralCode Ideal := NeuralCode =>  { Polar => false } >> opts -> I -> I.cache.ne
     R :=ring I;
     d := if opts.Polar then ((numgens R)//2) else numgens R;
     if I==ideal(1_R) then neuralCode(allCodeWords(d)) else (
-	if opts.Polar then (
-	    if not isSquareFree(monomialIdeal(I)) then error "Expected squarefree monomial ideal.";
-	    L := first entries gens I;
-	    allCodes := allCodeWords(d);
-	    codeList := for i in allCodes list (
-		validCode := true;
-		for j in L do (
-		    M:=matrix{
-			flatten{apply(d,k->sub(value(i#k),R)),apply(d,k->sub(1-value(i#k),R))}};
-		    if sub(j,M) != 0 then (
-			validCode = false;
-			break);
-		    );
-		if not validCode then continue else i
-		);
-	     depol:=(ZZ/2)(monoid[R_0..R_(d-1)]);
-	     neuralCode(codeList,depol,R)
-	     )
-	 else (
-	     if not isSquarefreePseudomonomialIdeal(I) then error "Expected a squarefree pseudomonomial ideal.";
-	     L2 := first entries gens I;
-	     allCodes2 := allCodeWords(d);
-	     codeList2 := for i in allCodes2 list (
-		 validCode := true;
-		 for j in L2 do (
-		     M:=matrix{apply(d,k->sub(value(i#k),R))};
-		     if sub(j,M) != 0 then (
-			 validCode = false;
-			 break);
-		     );
-		 if not validCode then continue else i
-		 );
-	     neuralCode(codeList2,R)
-	     )
-	 )
-    )
+	--if opts.Polar then (if not isSquareFree(monomialIdeal(I)) then error "Expected squarefree monomial ideal.") else (
+	    --if not isSquarefreePseudomonomialIdeal(I) then error "Expected a squarefree pseudomonomial ideal."
+	    --);
+	--L := first entries gens I;
+	--allCodes := allCodeWords(d);
+	--codeList := for i in allCodes list (
+	    --validCode := true;
+	    --for j in L do (
+		--M := if opts.Polar then (matrix{flatten{apply(d,k->sub(value(i#k),R)),apply(d,k->sub(1-value(i#k),R))}}) else (
+			--matrix{apply(d,k->sub(value(i#k),R))}
+			--);
+		--if sub(j,M) != 0 then (validCode = false; break);
+		--);
+	   -- if not validCode then continue else i
+		--);
+	depol:=if opts.Polar then (ZZ/2)(monoid[R_0..R_(d-1)]) else R;
+	if opts.Polar then neuralCode(allCodeWords(d),depol,R) else neuralCode(allCodeWords(d),depol)
+	--neuralCode(codeList,depol,R) else neuralCode(codeList,depol)
+	    )
+	)
+	
+--	if opts.Polar then (
+--	    --if not isSquareFree(monomialIdeal(I)) then error "Expected squarefree monomial ideal.";
+--	    L := first entries gens I;
+--	    allCodes := allCodeWords(d);
+--	    codeList := for i in allCodes list (
+--		validCode := true;
+--		for j in L do (
+--		    M:=matrix{
+--			flatten{apply(d,k->sub(value(i#k),R)),apply(d,k->sub(1-value(i#k),R))}};
+--		    if sub(j,M) != 0 then (
+--			validCode = false;
+--			break);
+--		    );
+--		if not validCode then continue else i
+--		);
+--	     depol:=(ZZ/2)(monoid[R_0..R_(d-1)]);
+--	     neuralCode(codeList,depol,R)
+--	     )
+--	 else (
+--	     --if not isSquarefreePseudomonomialIdeal(I) then error "Expected a squarefree pseudomonomial ideal.";
+--	     L2 := first entries gens I;
+--	     allCodes2 := allCodeWords(d);
+--	     codeList2 := for i in allCodes2 list (
+--		 validCode := true;
+--		 for j in L2 do (
+--		     M:=matrix{apply(d,k->sub(value(i#k),R))};
+--		     if sub(j,M) != 0 then (
+--			 validCode = false;
+--			 break);
+--		     );
+--		 if not validCode then continue else i
+--		 );
+--	     neuralCode(codeList2,R)
+--	     )
+--	 )
+--    )
 
 --short way to get the dimension of a neural code 
 dim NeuralCode := C -> C.dimension
