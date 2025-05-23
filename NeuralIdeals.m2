@@ -147,7 +147,7 @@ neuralCode Ideal := NeuralCode =>  { Polar => false } >> opts -> I -> I.cache.ne
 		--);
 	   -- if not validCode then continue else i
 		--);
-	depol:=if opts.Polar then (ZZ/2)(monoid[R_0..R_(d-1)]) else R;
+	depol:=if opts.Polar then (ZZ/2)[first entries submatrix(vars R,{0..(d-1)})] else R;
 	if opts.Polar then neuralCode(allCodeWords(d),depol,R) else neuralCode(allCodeWords(d),depol)
 	--neuralCode(codeList,depol,R) else neuralCode(codeList,depol)
 	    )
