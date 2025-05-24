@@ -51,7 +51,7 @@ protect dimension
 --protect SharedIndex
 --protect Polarized
 
---creates a ring with n or 2n variables
+--creates a ring with n or 2n variables to be the (resp. polarized) ring of a neural code
 createRing = method()
 
 createRing(ZZ,String) := Ring => (n,z) -> (
