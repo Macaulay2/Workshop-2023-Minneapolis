@@ -100,7 +100,7 @@ neuralCode (List,Ring,Ring) := NeuralCode => (codeList,R,S) -> (
     X:=new NeuralCode from {
 	symbol codeWords => codeList,
 	symbol dimension => d,
-	symbol cache => new CacheTable,
+	symbol cache => new CacheTable
 	};
     X.cache.ring = R;
     X.cache.polarizedRing = S;
@@ -127,11 +127,17 @@ neuralCode List := NeuralCode => codeList -> (
     neuralCode(codeList,"x","y")
     )
 
+--neuralCode Ideal := NeuralCode => { Polar => false } >> opts -> I -> (
+--    R := ring I;
+--    d := if opts.Polar then ((numgens R)//2) else numgens R;
+--    neuralCode(allCodeWords(d))
+--    )
+
 --given a list of pseudomonomials or squarefree monomial, produces the corresponding neural code
-neuralCode Ideal := NeuralCode =>  { Polar => false } >> opts -> I -> I.cache.neuralCode ??=  (
-    R :=ring I;
-    d := if opts.Polar then ((numgens R)//2) else numgens R;
-    if I==ideal(1_R) then neuralCode(allCodeWords(d)) else (
+--neuralCode Ideal := NeuralCode =>  { Polar => false } >> opts -> I -> I.cache.neuralCode ??=  (
+    --R :=ring I;
+    --d := if opts.Polar then ((numgens R)//2) else numgens R;
+    --if I==ideal(1_R) then neuralCode(allCodeWords(d)) else (
 	--if opts.Polar then (if not isSquareFree(monomialIdeal(I)) then error "Expected squarefree monomial ideal.") else (
 	    --if not isSquarefreePseudomonomialIdeal(I) then error "Expected a squarefree pseudomonomial ideal."
 	    --);
@@ -147,11 +153,11 @@ neuralCode Ideal := NeuralCode =>  { Polar => false } >> opts -> I -> I.cache.ne
 		--);
 	   -- if not validCode then continue else i
 		--);
-	depol:=if opts.Polar then (ZZ/2)[first entries submatrix(vars R,{0..(d-1)})] else R;
-	if opts.Polar then neuralCode(allCodeWords(d),depol,R) else neuralCode(allCodeWords(d),depol)
+	--depol:=if opts.Polar then (ZZ/2)[first entries submatrix(vars R,{0..(d-1)})] else R;
+	--if opts.Polar then neuralCode(allCodeWords(d),depol,R) else neuralCode(allCodeWords(d),depol)
 	--neuralCode(codeList,depol,R) else neuralCode(codeList,depol)
-	    )
-	)
+	    --)
+	--)
 	
 --	if opts.Polar then (
 --	    --if not isSquareFree(monomialIdeal(I)) then error "Expected squarefree monomial ideal.";
@@ -665,9 +671,7 @@ document{
       (neuralCode,List),
       (neuralCode,List,Ring,Ring),
       (neuralCode,List,String,String),
-      (neuralCode,List,Ring),
-      (neuralCode,Ideal),
-      [(neuralCode,Ideal),Polar]},
+      (neuralCode,List,Ring)},
   Headline => "creates a NeuralCode object",
   Usage => "neuralCode(L) or neuralCode(L,s,t) or neuralCode(L,R,S) or neuralCode(L,R) or neuralCode(I)",
   Inputs => {"L, a list of binary strings of the same length like 000 and 101",
@@ -694,11 +698,6 @@ document{
   ring E
   polarizedRing E
   ///,
-  EXAMPLE lines ///
-  R=ZZ/2[x_1,x_2];
-  I=ideal(x_1*x_2);
-  neuralCode(I)
-  ///
   }
 
 document{
