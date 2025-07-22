@@ -1,7 +1,7 @@
 newPackage(
 "NeuralIdeals",
-Version => "0.1",
-Date => "June 5, 2023",
+Version => "1.0",
+Date => "July 22, 2025",
 Authors => {{Name => "Hugh Geller"},{Name => "Rebecca R.G."}},
 Headline => "canonical forms of neural ideals",
 Keywords => {"Coding Theory", "Combinatorial Commutative Algebra", "Commutative Algebra"},
@@ -17,6 +17,7 @@ Reload => false
 --************************************************************************************************************
 --***Acknowledgements:                                                                                     ***
 --***Special thanks to Juliette Bruce for contributing the original code for allCodeWords and neuralCodeComplement.***
+--***In addition, Mahrud Sayrafi and Mike Stillman made many helpful suggestions to the second author while they were in residence at the Fields Institute.***
 --************************************************************************************************************
 --************************************************************************************************************
 
