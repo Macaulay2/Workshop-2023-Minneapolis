@@ -400,14 +400,12 @@ canonicalForm = method(Options => true)
 
 canonicalForm Ideal := List => { Factor => false, SharedIndex => false } >> opts -> I -> I.cache.canonicalForm ??= (
     if not isSquarefreePseudomonomialIdeal(I) then error "Expected a squarefree pseudomonomial ideal.";
-    canon := if opts.SharedIndex then sharedIndexCanonicalForm(I)
-    else removeGens(primaryDecompositionAlmostCanonicalForm(I));
+    canon := if opts.SharedIndex then sharedIndexCanonicalForm(I) else removeGens(primaryDecompositionAlmostCanonicalForm(I));
     if opts.Factor then apply(canon,factor) else canon
     )
 
 canonicalForm NeuralCode := List => { Factor => false, Iterative => true } >> opts -> C -> C.cache.canonicalForm ??= (
-    canon := if opts.Iterative then iterCanonicalForm(C)
-    else canonicalForm(neuralIdeal(C));
+    canon := if opts.Iterative then iterCanonicalForm(C) else canonicalForm(neuralIdeal(C));
     if opts.Factor then apply(canon,factor) else canon
     )
 
@@ -482,6 +480,19 @@ polarizeList(List) := List => L -> (
     )
 
 --functions needed to implement Geller-R.G. algorithm for canonical form in the polarized setting
+polarSquarefree = method()
+
+polarSquarefree (RingElement,Ring) := Boolean => (g,S) -> (
+    d:= (numgens S)//2;
+    squarefree := true;
+    for i to d-1 do (
+	x:=S_i;
+	y:=S_(i+d);
+	squarefree = (g%(x*y) != 0)
+	);
+    squarefree
+    )
+
 polarSharedIndex = method()
 
 polarSharedIndex (RingElement,RingElement,ZZ,Ring) := Boolean => (g,h,i,S) -> (
@@ -530,10 +541,13 @@ polarAlmostCanonicalForm Ideal := List => I -> (
     S := ring I;
     d := (numgens S)//2;
     listGensI := first entries gens I;
-    for i from 1 to d do (
-	listGensI=join(listGensI,polarNewGens(listGensI,i,S))
+    prunedList := for ell in listGensI list (
+	if polarSquarefree(ell,S) then ell else continue
 	);
-    unique listGensI
+    for i from 1 to d do (
+	prunedList=join(prunedList,polarNewGens(prunedList,i,S))
+	);
+    unique prunedList
     )
 
 --given a neural code, produces the polarized canonical form in S
