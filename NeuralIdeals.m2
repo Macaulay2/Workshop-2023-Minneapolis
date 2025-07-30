@@ -488,7 +488,9 @@ polarSquarefree (RingElement,Ring) := Boolean => (g,S) -> (
     for i to d-1 do (
 	x:=S_i;
 	y:=S_(i+d);
-	squarefree = (g%(x*y) != 0)
+	if g%(x*y)==0 then (
+	    squarefree=false;
+	    break);
 	);
     squarefree
     )
