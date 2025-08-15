@@ -398,7 +398,7 @@ sharedIndexCanonicalForm Ideal := List => I -> (
 --default method for an ideal is the primary decomposition method
 canonicalForm = method(Options => true)
 
-canonicalForm Ideal := List => { Factor => false, SharedIndex => false } >> opts -> I -> I.cache.canonicalForm ??= (
+canonicalForm Ideal := List => { Factor => false, SharedIndex => true } >> opts -> I -> I.cache.canonicalForm ??= (
     if not isSquarefreePseudomonomialIdeal(I) then error "Expected a squarefree pseudomonomial ideal.";
     canon := if opts.SharedIndex then sharedIndexCanonicalForm(I) else removeGens(primaryDecompositionAlmostCanonicalForm(I));
     if opts.Factor then apply(canon,factor) else canon
