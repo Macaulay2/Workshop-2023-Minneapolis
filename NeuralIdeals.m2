@@ -991,7 +991,7 @@ TEST ///
     assert((cI==cC) and (cI==L) and (cCNonIter==cC) and (cIPrimaryDecomp==cC)
 ///
     
--- **TEST3**
+-- **TEST3** --issue is this one, no method for checking if neuralCodes are equal
 TEST ///
     R=ZZ/2[x_1,x_2];
     L=ideal(x_1*x_2);
@@ -1003,11 +1003,11 @@ TEST ///
     C=neuralCode({"00","10","11"});
     P=polarizedCanonicalForm(C);
     S=polarizedRing C;
-    L={x_1*y_2};
+    L={x_2*y_1};
     assert (P==L)
 ///
 
--- **TEST5**
+-- **TEST5** 
 TEST ///
     S=ZZ/2[x_1..x_3,y_1..y_3];
     I=ideal(x_1*x_2,x_3*y_1);
