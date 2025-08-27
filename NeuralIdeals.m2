@@ -40,7 +40,6 @@ export{--types
     "canonicalResolution",
     --Symbols
     "codeWords",
-    "Factor",
     "Iterative",
     "SharedIndex",
     "Polarized",
@@ -398,15 +397,13 @@ sharedIndexCanonicalForm Ideal := List => I -> (
 --default method for an ideal is the primary decomposition method
 canonicalForm = method(Options => true)
 
-canonicalForm Ideal := List => { Factor => false, SharedIndex => true } >> opts -> I -> I.cache.canonicalForm ??= (
+canonicalForm Ideal := List => {SharedIndex => true } >> opts -> I -> I.cache.canonicalForm ??= (
     if not isSquarefreePseudomonomialIdeal(I) then error "Expected a squarefree pseudomonomial ideal.";
-    canon := if opts.SharedIndex then sharedIndexCanonicalForm(I) else removeGens(primaryDecompositionAlmostCanonicalForm(I));
-    if opts.Factor then apply(canon,factor) else canon
+    canon := if opts.SharedIndex then sharedIndexCanonicalForm(I) else removeGens(primaryDecompositionAlmostCanonicalForm(I))
     )
 
-canonicalForm NeuralCode := List => { Factor => false, Iterative => true } >> opts -> C -> C.cache.canonicalForm ??= (
-    canon := if opts.Iterative then iterCanonicalForm(C) else canonicalForm(neuralIdeal(C));
-    if opts.Factor then apply(canon,factor) else canon
+canonicalForm NeuralCode := List => {Iterative => true } >> opts -> C -> C.cache.canonicalForm ??= (
+    canon := if opts.Iterative then iterCanonicalForm(C) else canonicalForm(neuralIdeal(C))
     )
 
 --finds the support of a given neural code (list of sets of neurons that fire together)
@@ -775,20 +772,17 @@ document{
      (canonicalForm,Ideal),
      (canonicalForm,NeuralCode),
      [(canonicalForm, Ideal), SharedIndex],
-     [(canonicalForm,NeuralCode), Iterative],
-     [(canonicalForm,Ideal),Factor],
-     [(canonicalForm,NeuralCode),Factor]},
+     [(canonicalForm,NeuralCode), Iterative]},
   Headline => "computes the canonical form of a neural ideal",
   Usage => "canonicalForm(I) or canonicalForm(C)",
   Inputs => {"I, a squarefree pseudomonomial ideal, or C, a NeuralCode"},
   Outputs => {"a List of pseudomonomials in ring(I) (resp. ring(C))"},
-  TEX {"Optional Inputs =>", "Factored => ..., default value false, factors the pseudomonomials","SharedIndex => ...,default value false, when true uses the shared index method of Geller and R.G. to compute the canonical form instead of the primary decomposition method of Curto, Itskov, et al","Iterative => ...,default value true, when true computes the canonical form of a neural code using the iterative method of Petersen, Youngs, et al instead of computing the neural ideal and then using the primary decomposition method as in Curto, Itskov, et al"},
-  TEX "Computes the canonical form of a neural ideal or a neural code, with several options for how to compute it and how to display it.",
+  TEX {"Optional Inputs =>","SharedIndex => ...,default value true, when true uses the shared index method of Geller and R.G. to compute the canonical form instead of the primary decomposition method of Curto, Itskov, et al","Iterative => ...,default value true, when true computes the canonical form of a neural code using the iterative method of Petersen, Youngs, et al instead of computing the neural ideal and then its canonical form"},
+  TEX "Computes the canonical form of a neural ideal or a neural code, with several options for how to compute it.",
   EXAMPLE lines ///
   R=ZZ/2[x_1..x_3];
   I=ideal(x_1*x_3,x_2*(1-x_1));
   canonicalForm(I)
-  canonicalForm(I,Factor=>true)
   R=ZZ/2[x_1..x_3];
   C=neuralCode({"000","001"});
   canonicalForm(C)
@@ -797,29 +791,20 @@ document{
 
 document{
     Key => {SharedIndex},
-    Headline => "an optional method for computing the canonical form",
+    Headline => "the default method for computing the canonical form of a neural ideal",
     Usage => "canonicalForm(I,SharedIndex=>true)",
     Inputs => {"I, a squarefree pseudomonomial ideal"},
     Outputs => {"a List of pseudomonomials in ring(I)"},
-    TEX {"Computes the canonical form of a squarefree pseudomonomial ideal by the shared index method of Geller and R.G."}
+    TEX {"By default, the canonical form of a squarefree pseudomonomial ideal is computed by the shared index method of Geller and R.G., but if set to false this instead computes the canonical form using the primary decomposition method of Curto, Itskov, et al."}
     }
 
 document{
     Key => {Iterative},
-    Headline => "an optional method for computing the canonical form",
+    Headline => "the default method for computing the canonical form of a neural code",
     Usage => "canonicalForm(C,Iterative=>false)",
     Inputs => {"C, a NeuralCode"},
     Outputs => {"a List of pseudomonomials in ring(C)"},
     TEX {"By default, the canonical form of a neural code is computed using the iterative method of Petersen, Youngs, et al. If set to false, this instead computes the neural ideal and then its canonical form using the primary decomposition method of Curto, Itskov, et al."}
-    }
-
-document{
-    Key => {Factor},
-    Headline => "display the factored canonical form",
-    Usage => "canonicalForm(I,Factor=>true) or canonicalForm(C,Factor=>true)",
-    Inputs => {"I, a squarefree pseudomonomial ideal or C, a NeuralCode"},
-    Outputs => {"a List of pseudomonomials in ring(I) (resp. ring(C))"},
-    TEX {"Displays the canonical form with all elements factored."}
     }
 
 document{
