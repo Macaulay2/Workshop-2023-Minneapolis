@@ -988,7 +988,7 @@ TEST ///
     cIPrimaryDecomp=canonicalForm(I,SharedIndex=>false);
     R=ring C;
     L={x_2};
-    assert((cI==cC) and (cI==L) and (cCNonIter==cC) and (cIPrimaryDecomp==cC)
+    assert((cI==cC) and (cI==L) and (cCNonIter==cC) and (cIPrimaryDecomp==cC))
 ///
     
 -- **TEST3**
