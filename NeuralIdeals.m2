@@ -991,11 +991,11 @@ TEST ///
     assert((cI==cC) and (cI==L) and (cCNonIter==cC) and (cIPrimaryDecomp==cC)
 ///
     
--- **TEST3** --issue is this one, no method for checking if neuralCodes are equal
+-- **TEST3**
 TEST ///
     R=ZZ/2[x_1,x_2];
     L=ideal(x_1*x_2);
-    assert(neuralCode(L)==neuralCode({"00","10","01"}))
+    assert((neuralCode(L)).codeWords=={"00","10","01"})
 ///
 
 -- **TEST4**
