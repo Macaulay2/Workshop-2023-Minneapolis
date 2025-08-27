@@ -985,10 +985,10 @@ TEST ///
     cI=canonicalForm(I);
     cC=canonicalForm(C);
     cCNonIter=canonicalForm(C,Iterative=>false);
-    cISharedIndex=canonicalForm(I,SharedIndex=>true);
+    cIPrimaryDecomp=canonicalForm(I,SharedIndex=>false);
     R=ring C;
     L={x_2};
-    assert((cI==cC) and (cI==L) and (cCNonIter==cC) and (cISharedIndex==cC)
+    assert((cI==cC) and (cI==L) and (cCNonIter==cC) and (cIPrimaryDecomp==cC)
 ///
     
 -- **TEST3**
