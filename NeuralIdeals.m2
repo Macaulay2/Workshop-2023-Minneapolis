@@ -852,7 +852,7 @@ document{
     }
 
 document{
-    Key => {polarizeList,(polarizeList,List,Ring),(polarizePseudomonomial,List)},
+    Key => {polarizeList,(polarizeList,List,Ring),(polarizeList,List)},
     Headline => "polarizes a list of ring elements",
     Usage => "polarizeList(L,S) or polarizeList(L)",
     Inputs => {"L, a list of squarefree pseudomonomials in a polynomial ring R", "S, a ring with twice as many variables as R, where the polarization will live"},
