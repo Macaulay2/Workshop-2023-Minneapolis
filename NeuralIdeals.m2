@@ -32,6 +32,7 @@ export{--types
     "codeSupport",
     "receptiveFieldRelation",
     "polarizePseudomonomial",
+    "polarizeList",
     "polarizedCanonicalForm",
     "polarizedCanonicalIdeal",
     "isCanonical",
@@ -847,6 +848,21 @@ document{
     f=x_1*(1-x_2);
     S=ZZ/2[x_1..x_3,y_1..y_3];
     polarizePseudomonomial(f,S)
+    ///
+    }
+
+document{
+    Key => {polarizeList,(polarizeList,List,Ring),(polarizePseudomonomial,List)},
+    Headline => "polarizes a list of ring elements",
+    Usage => "polarizeList(L,S) or polarizeList(L)",
+    Inputs => {"L, a list of squarefree pseudomonomials in a polynomial ring R", "S, a ring with twice as many variables as R, where the polarization will live"},
+    Outputs => {"a list of squarefree monomials (in S if S is given)"},
+    TEX "A method which takes a list of pseudomonomials in a polynomial ring and replaces every instance of (1-var) with a new variable. It is recommended that you specify the ring in which the new monomial will live, see examples below.",
+    EXAMPLE lines ///
+    R=ZZ/2[x_1..x_3];
+    L={x_1*(1-x_2),x_2*(1-x_3)};
+    S=ZZ/2[x_1..x_3,y_1..y_3];
+    polarizeLisst(f,S)
     ///
     }
 
