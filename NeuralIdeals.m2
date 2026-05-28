@@ -17,7 +17,7 @@ Reload => false
 --************************************************************************************************************
 --***Acknowledgements:                                                                                     ***
 --***Special thanks to Juliette Bruce for contributing the original code for allCodeWords and neuralCodeComplement.***
---***In addition, Mahrud Sayrafi and Mike Stillman made many helpful suggestions to the second author while they were in residence at the Fields Institute.***
+--***In addition, Mahrud Sayrafi and Mike Stillman made many helpful suggestions to the second author while they were in residence at the Fields Institute, and Sean Grate provided a number of helpful tips when the package was submitted, including a new version of allCodeWords.***
 --************************************************************************************************************
 --************************************************************************************************************
 
@@ -96,6 +96,7 @@ neuralCode = method(Options => true) --add Options=>true once there is a neuralC
 --can supply both the ring and the polarized ring
 neuralCode (List,Ring,Ring) := NeuralCode => {} >> opts -> (codeList,R,S) -> (
     d := #(codeList#0);
+    --new code here
     X:=new NeuralCode from {
 	symbol codeWords => codeList,
 	symbol dimension => d,
@@ -133,7 +134,7 @@ neuralCode Ideal := NeuralCode => { Polarized => false } >> opts -> I -> I.cache
 	dP := ((numgens R)//2);
 	if I==ideal(1_R) then neuralCode(allCodeWords(dP)) else (
 	    LP := first entries gens I;
-	    allCodesP := allCodeWords(dP);
+	    allCodesP := allCodeWords dP;
 	    codeListP := for i in allCodesP list (
 		validCodeP := true;
 		for j in LP do (
@@ -149,7 +150,7 @@ neuralCode Ideal := NeuralCode => { Polarized => false } >> opts -> I -> I.cache
 	d := numgens R;
 	if I==ideal(1_R) then neuralCode(allCodeWords(d)) else (
 	    L := first entries gens I;
-	    allCodes := allCodeWords(d);
+	    allCodes := allCodeWords d;
 	    codeList := for i in allCodes list (
 		validCode := true;
 		for j in L do (
@@ -176,6 +177,7 @@ polarizedRing = method()
 polarizedRing NeuralCode := Ring => C -> C.cache.polarizedRing
 
 --checks whether a NeuralCode is well-defined
+--currently only returning false
 isWellDefined NeuralCode := Boolean => X -> (
     --check keys
     K:=keys X;
@@ -193,46 +195,29 @@ isWellDefined NeuralCode := Boolean => X -> (
 	);
     -- check types
     if not instance(X.codeWords, List) then (
-	--if debugLevel >0 then
-	--<< "-- expected 'codes' to be a list" <<endl;
-	printerr "expected 'codes' to be a list";
+	if debugLevel > 0 then printerr "expected 'codes' to be a list";
 	return false
 	);
     if X.codeWords === {} or not all (X.codeWords, r->instance(r,String)) then (
-	printerr "expected 'codes' to be a nonempty list of strings";
-	--if debugLevel >0 then
-	--<< "-- expected 'codes' to be a nonempty list of strings" <<endl;
+	if debugLevel > 0 then printerr "expected 'codes' to be a nonempty list of strings";
 	return false
 	);
     if not all (X.codeWords, r->all(r,i->(value(i)==0 or value(i)==1))) then (
-	printerr "expected 'codes' to be a list of strings of 0's and 1's";
-	--if debugLevel >0 then
-	--<< "-- expected 'codes' to be a list of strings of 0's and 1's" << endl;
+	if debugLevel > 0 then printerr "expected 'codes' to be a list of strings of 0's and 1's";
 	return false
 	);
     codeList := codeWords X;
     d:= # (codeList#0);
     if not all (X.codeWords, r-> #r === d) then (
-	printerr "expected 'codes' to be a list of equal length strings";
-	--if debugLevel > 0 then
-	--<< "-- expected 'codes' to be a list of equal length strings" << endl;
+	if debugLevel > 0 then printerr "expected 'codes' to be a list of equal length strings";
 	return false
 	);
-    --if codeList == {} then (
-	--if debugLevel > 0 then
-	--<< "--expected 'codes' to be a nonempty list" <<endl;
---	return false
-	--);
     if dim X != numgens ring X then (
-	printerr "expected dimension of ring to equal length of code words";
-	--if debugLevel >0 then
-	--<< "-- expected dimension of ring to equal length of code words" << endl;
+	if debugLevel > 0 then printerr "expected dimension of ring to equal length of code words";
 	return false
 	);
     if numgens polarizedRing X != 2*(numgens ring X) then (
-	printerr "expected dimension of polarized ring to be twice dimension of first ring";
-	--if debugLevel >0 then
-	--<< "--expected dimension of polarized ring to be twice dimension of first ring" << endl;
+	if debugLevel > 0 then printerr "expected dimension of polarized ring to be twice dimension of first ring";
 	return false
 	);
     true);
@@ -262,7 +247,7 @@ neuralIdeal NeuralCode := Ideal => C -> (
 	prodList := for j to d-1 list (
 	    if a#j == "1" then R_j else (1-R_j)
 	    );
-	product(prodList)
+	product prodList
 	);
     ideal genList
     )
@@ -281,11 +266,11 @@ iterCanonicalForm NeuralCode := List => C -> (
     for i from 1 to #C.codeWords - 1 do (
 	currentCodeWord := C.codeWords#i;
 	codeCoordinates := for j to d-1 list(
-	    value(currentCodeWord#j)
+	    value currentCodeWord#j
 	    );
 	factors := apply(0..(d-1),j->(R_j-codeCoordinates#j)); --or would doing vars R - codeCoordinates be better?
 	substitutionMap := map(R,R,codeCoordinates);
-	H := partition(gen -> substitutionMap(gen)==0,currentGens,{true,false});
+	H := partition(gen -> substitutionMap gen==0,currentGens,{true,false});
 	keepList := H#true;
 	changeList := H#false;
 	newList := flatten (
@@ -314,7 +299,7 @@ primaryDecompositionAlmostCanonicalForm = method()
 
 primaryDecompositionAlmostCanonicalForm Ideal := List => I -> ( 
     decomp := primaryDecompositionPseudomonomial I;
-    multipliedGens :=product(decomp);
+    multipliedGens :=product decomp;
     R := ring I;
     d := numgens R;
     booleanIdeal := ideal(apply(gens R,g -> g*(1-g)));
@@ -394,7 +379,7 @@ removeGens List := List => almostGens -> (
 sharedIndexCanonicalForm = method()
 
 sharedIndexCanonicalForm Ideal := List => I -> (
-    removeGens(almostCanonicalForm(I))
+    removeGens almostCanonicalForm(I) 
     )
 
 ---------
@@ -406,19 +391,19 @@ sharedIndexCanonicalForm Ideal := List => I -> (
 canonicalForm = method(Options => true)
 
 canonicalForm Ideal := List => {SharedIndex => true } >> opts -> I -> I.cache.canonicalForm ??= (
-    if not isSquarefreePseudomonomialIdeal(I) then error "expected a squarefree pseudomonomial ideal";
-    canon := if opts.SharedIndex then sharedIndexCanonicalForm(I) else removeGens(primaryDecompositionAlmostCanonicalForm(I))
+    if not isSquarefreePseudomonomialIdeal I then error "expected a squarefree pseudomonomial ideal";
+    canon := if opts.SharedIndex then sharedIndexCanonicalForm I else removeGens(primaryDecompositionAlmostCanonicalForm(I))
     )
 
 canonicalForm NeuralCode := List => {Iterative => true } >> opts -> C -> C.cache.canonicalForm ??= (
-    canon := if opts.Iterative then iterCanonicalForm(C) else canonicalForm(neuralIdeal(C))
+    canon := if opts.Iterative then iterCanonicalForm C else canonicalForm(neuralIdeal(C))
     )
 
 --finds the support of a given neural code (list of sets of neurons that fire together)
 codeSupport = method();
 codeSupport NeuralCode := List => C -> (
     fullSupport := for c in C.codeWords list (
-	cSupport := for i to #c-1 list (if value(c#i) == 0 then continue; i+1)
+	cSupport := for i to #c-1 list (if value c#i == 0 then continue; i+1)
 	)
     )
 
@@ -448,11 +433,11 @@ polarizePseudomonomial = method();
 
 
 polarizePseudomonomial(RingElement,Ring) := RingElement => (P,S) -> (
-    if not isPseudomonomial(P) then error "expected input to be a Pseudomonomial";
+    if not isPseudomonomial P then error "expected input to be a Pseudomonomial";
     if (numgens S)%2 != 0 then error "ring must have an even number of generators";
     if 2*(numgens ring P) > numgens S then error "target ring does not have enough generators for polarization";
     d := (numgens S)//2;
-    st := receptiveFieldRelation(P);
+    st := receptiveFieldRelation P;
     sigma := st_0;
     tau := st_1;
     use S;
@@ -562,18 +547,18 @@ polarizedCanonicalForm = method()
 
 polarizedCanonicalForm NeuralCode := List => C -> C.cache.polarizedCanonicalForm ??= (
     S := polarizedRing C;
-    polarizeList(canonicalForm(C),S)
+    polarizeList(canonicalForm C,S)
     )
 
 --polarized canonical form of a non-polarized ideal
 polarizedCanonicalForm(Ideal,Ring) := List => (I,S) -> I.cache.polarizedCanonicalForm ??= (
-    L := canonicalForm(I);
+    L := canonicalForm I;
     polarizeList(L,S)
     )
 
 --canonical form of a polarized ideal
 polarizedCanonicalForm(Ideal) := List => I -> I.cache.polarizedCanonicalForm ??= (
-    removeGens(polarAlmostCanonicalForm(I))
+    removeGens polarAlmostCanonicalForm I
     )
 
 
@@ -581,15 +566,15 @@ polarizedCanonicalForm(Ideal) := List => I -> I.cache.polarizedCanonicalForm ??=
 polarizedCanonicalIdeal = method()
 
 polarizedCanonicalIdeal(NeuralCode) := Ideal => C -> (
-    ideal(polarizedCanonicalForm(C))
+    ideal polarizedCanonicalForm C
     )
 
 polarizedCanonicalIdeal(Ideal,Ring) := Ideal => (I,S) -> (
-    ideal(polarizedCanonicalForm(I,S))
+    ideal polarizedCanonicalForm(I,S)
     )
 
 polarizedCanonicalIdeal(Ideal) := Ideal => I -> (
-    ideal(polarizedCanonicalForm(I))
+    ideal polarizedCanonicalForm I
     )
 
 --given a pseudomonomial (or squarefree monomial) ideal, determines whether it's in canonical form
@@ -602,10 +587,10 @@ isCanonical = method(
 
 isCanonical Ideal := Boolean => opts -> I -> I.cache.isCanonical ??= (
     if opts.Polarized then (
-	set polarizedCanonicalForm(I) === set I_*
+	set polarizedCanonicalForm I === set I_*
 	)
     else (
-	set canonicalForm(I) === set I_*
+	set canonicalForm I === set I_*
 	)
     )
 
@@ -617,7 +602,7 @@ isCanonical Ideal := Boolean => opts -> I -> I.cache.isCanonical ??= (
 polarizedCanonicalResolution = method();
 
 polarizedCanonicalResolution (NeuralCode) := Resolution => C -> (
-    L := polarizedCanonicalIdeal(C);
+    L := polarizedCanonicalIdeal C;
     res L
     )
 
@@ -638,7 +623,7 @@ depolarizationMap(Ring,Ring) := (R,S) -> ( ----Target ring followed by source ri
 canonicalResolution = method();
 
 canonicalResolution NeuralCode := Resolution => C -> (
-    polarRes := polarizedCanonicalResolution(C);
+    polarRes := polarizedCanonicalResolution C;
     depolarMap := depolarizationMap(ring C,polarizedRing C);
     depolarMap(polarRes)
     )
