@@ -329,9 +329,9 @@ isSharedIndex = method()
 
 isSharedIndex (RingElement,RingElement,ZZ,Ring) := Boolean => (g,h,i,R) -> (
 --    R:=ring g;
---    if ring g =!= ring h then error "Expected two elements from the same ring";
-    if i > dim R then error "Expected index at most the dimension of the ring";
-    if i < 1 then error "Expected index at least 1";
+--    if ring g =!= ring h then error "expected two elements from the same ring";
+    if i > dim R then error "expected index at most the dimension of the ring";
+    if i < 1 then error "expected index at least 1";
     x:=R_(i-1);
     (g*h)%(x*(1-x))==0
     )
@@ -406,7 +406,7 @@ sharedIndexCanonicalForm Ideal := List => I -> (
 canonicalForm = method(Options => true)
 
 canonicalForm Ideal := List => {SharedIndex => true } >> opts -> I -> I.cache.canonicalForm ??= (
-    if not isSquarefreePseudomonomialIdeal(I) then error "Expected a squarefree pseudomonomial ideal.";
+    if not isSquarefreePseudomonomialIdeal(I) then error "expected a squarefree pseudomonomial ideal";
     canon := if opts.SharedIndex then sharedIndexCanonicalForm(I) else removeGens(primaryDecompositionAlmostCanonicalForm(I))
     )
 
@@ -431,7 +431,7 @@ codeSupport NeuralCode := List => C -> (
 receptiveFieldRelation = method();
 
 receptiveFieldRelation(RingElement) := List => P -> (
-    if isPseudomonomial(P) == false then error "Expected input to be a squarefree pseudomonomial";
+    if isPseudomonomial(P) == false then error "expected input to be a squarefree pseudomonomial";
     R := ring P;
     d := numgens R;
     H := partition(i -> (P%R_(i-1)==0,P%(1-R_(i-1))==0),toList(1..d),{(true,true),(true,false),(false,true)});
@@ -448,9 +448,9 @@ polarizePseudomonomial = method();
 
 
 polarizePseudomonomial(RingElement,Ring) := RingElement => (P,S) -> (
-    if not isPseudomonomial(P) then error "Expected input to be a Pseudomonomial";
-    if (numgens S)%2 != 0 then error "Ring must have an even number of generators";
-    if 2*(numgens ring P) > numgens S then error "Target ring does not have enough generators for polarization";
+    if not isPseudomonomial(P) then error "expected input to be a Pseudomonomial";
+    if (numgens S)%2 != 0 then error "ring must have an even number of generators";
+    if 2*(numgens ring P) > numgens S then error "target ring does not have enough generators for polarization";
     d := (numgens S)//2;
     st := receptiveFieldRelation(P);
     sigma := st_0;
@@ -504,8 +504,8 @@ polarSharedIndex = method()
 
 polarSharedIndex (RingElement,RingElement,ZZ,Ring) := Boolean => (g,h,i,S) -> (
     d := (numgens S)//2;
-    if i > d then error "Expected index at most the number of neurons";
-    if i < 1 then error "Expected index at least 1";
+    if i > d then error "expected index at most the number of neurons";
+    if i < 1 then error "expected index at least 1";
     x:=S_(i-1);
     y:=S_(i+d-1);
     (g*h)%(x*y)==0
@@ -625,8 +625,8 @@ polarizedCanonicalResolution (NeuralCode) := Resolution => C -> (
 depolarizationMap = method();
 
 depolarizationMap(Ring,Ring) := (R,S) -> ( ----Target ring followed by source ring
-    if 2*(numgens R) < numgens S then error "Target ring must have at least half the number of generators of the source";
-    if (numgens S)%2 != 0 then error "Source ring must have an even number of generators";
+    if 2*(numgens R) < numgens S then error "target ring must have at least half the number of generators of the source";
+    if (numgens S)%2 != 0 then error "source ring must have an even number of generators";
     d := (numgens S)//2;
     maintain := for i to d-1 list R_i;
     change := for i to d-1 list 1+R_i;
