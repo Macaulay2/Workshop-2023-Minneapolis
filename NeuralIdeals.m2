@@ -2,7 +2,7 @@ newPackage(
 "NeuralIdeals",
 Version => "1.0",
 Date => "July 22, 2025",
-Authors => {{Name => "Hugh Geller"},{Name => "Rebecca R.G."}},
+Authors => {{Name => "Hugh Geller", Email => "geller.hugh@gmail.com", HomePage => "hughgeller.com"},{Name => "Rebecca R.G.", Email => "rrebhuhn@gmu.edu", HomePage => "https://sites.google.com/site/rebeccargmath/"}},
 Headline => "canonical forms of neural ideals",
 Keywords => {"Coding Theory", "Combinatorial Commutative Algebra", "Commutative Algebra"},
 DebuggingMode => false,
@@ -81,11 +81,8 @@ createPolarizedRing(ZZ) := Ring => n -> (
 --used internally in the neuralCode and neuralIdeal functions
 allCodeWords = method();
 allCodeWords ZZ := List => d ->(
-    L1 := apply(d+1,i->(
-	    apply(i,i->1)|apply(d-i,j->0)
-	    ));
-    L2 := unique flatten apply(L1,i->permutations i);
-    apply(L2, i-> concatenate(apply(i,j->toString j)))
+    range := reverse (0 ..< d);
+    apply(1 << d, i -> concatenate apply(range, j -> toString((i >> j) & 1)))
     )
 
 --type that will store the data of a neural code
@@ -196,25 +193,29 @@ isWellDefined NeuralCode := Boolean => X -> (
 	);
     -- check types
     if not instance(X.codeWords, List) then (
-	if debugLevel >0 then
-	<< "-- expected 'codes' to be a list" <<endl;
+	--if debugLevel >0 then
+	--<< "-- expected 'codes' to be a list" <<endl;
+	printerr "expected 'codes' to be a list";
 	return false
 	);
     if X.codeWords === {} or not all (X.codeWords, r->instance(r,String)) then (
-	if debugLevel >0 then
-	<< "-- expected 'codes' to be a nonempty list of strings" <<endl;
+	printerr "expected 'codes' to be a nonempty list of strings";
+	--if debugLevel >0 then
+	--<< "-- expected 'codes' to be a nonempty list of strings" <<endl;
 	return false
 	);
     if not all (X.codeWords, r->all(r,i->(value(i)==0 or value(i)==1))) then (
-	if debugLevel >0 then
-	<< "-- expected 'codes' to be a list of strings of 0's and 1's" << endl;
+	printerr "expected 'codes' to be a list of strings of 0's and 1's";
+	--if debugLevel >0 then
+	--<< "-- expected 'codes' to be a list of strings of 0's and 1's" << endl;
 	return false
 	);
     codeList := codeWords X;
     d:= # (codeList#0);
     if not all (X.codeWords, r-> #r === d) then (
-	if debugLevel > 0 then
-	<< "-- expected 'codes' to be a list of equal length strings" << endl;
+	printerr "expected 'codes' to be a list of equal length strings";
+	--if debugLevel > 0 then
+	--<< "-- expected 'codes' to be a list of equal length strings" << endl;
 	return false
 	);
     --if codeList == {} then (
@@ -223,23 +224,29 @@ isWellDefined NeuralCode := Boolean => X -> (
 --	return false
 	--);
     if dim X != numgens ring X then (
-	if debugLevel >0 then
-	<< "-- expected dimension of ring to equal length of code words" << endl;
+	printerr "expected dimension of ring to equal length of code words";
+	--if debugLevel >0 then
+	--<< "-- expected dimension of ring to equal length of code words" << endl;
 	return false
 	);
     if numgens polarizedRing X != 2*(numgens ring X) then (
-	if debugLevel >0 then
-	<< "--expected dimension of polarized ring to be twice dimension of first ring" << endl;
+	printerr "expected dimension of polarized ring to be twice dimension of first ring";
+	--if debugLevel >0 then
+	--<< "--expected dimension of polarized ring to be twice dimension of first ring" << endl;
 	return false
 	);
     true);
+
+--determines if two neural codes are equal
+NeuralCode == NeuralCode := Boolean => (C,D) ->
+         dim C === dim D and set(C.codeWords)-D.codeWords===set{} and set(D.codeWords)-C.codeWords===set{};
 
 --given a neural code, gives the list of code words not in it
 --used internally in the neuralIdeal function
 neuralCodeComplement = method();
 neuralCodeComplement NeuralCode := List => C ->(
     d := dim C;
-    L1 := allCodeWords(d);
+    L1 := allCodeWords d;
     L:=C.codeWords;
     sort(toList(set(L1)-set(L))) --may not need to sort
     )    
@@ -364,7 +371,7 @@ almostCanonicalForm = method()
 almostCanonicalForm Ideal := List => I -> (
     R := ring I;
     n := numgens R;
-    listGensI := first entries gens I;
+    listGensI := I_*;
     for i from 1 to n do (
 	listGensI=join(listGensI,newGens(listGensI,i,R))
 	);
@@ -540,7 +547,7 @@ polarAlmostCanonicalForm = method()
 polarAlmostCanonicalForm Ideal := List => I -> (
     S := ring I;
     d := (numgens S)//2;
-    listGensI := first entries gens I;
+    listGensI := I_*;
     prunedList := for ell in listGensI list (
 	if polarSquarefree(ell,S) then ell else continue
 	);
@@ -595,10 +602,10 @@ isCanonical = method(
 
 isCanonical Ideal := Boolean => opts -> I -> I.cache.isCanonical ??= (
     if opts.Polarized then (
-	set polarizedCanonicalForm(I) === set first entries gens I
+	set polarizedCanonicalForm(I) === set I_*
 	)
     else (
-	set canonicalForm(I) === set first entries gens I
+	set canonicalForm(I) === set I_*
 	)
     )
 
@@ -736,6 +743,15 @@ document{
     }
 
 document{
+    Key=> {symbol==,(symbol==,NeuralCode,NeuralCode)},
+    Headline => "determines whether two NeuralCodes are equal",
+    Usage => "C == D",
+    Inputs => {"C and D, two NeuralCodes"},
+    Outputs => {"Boolean"},
+    TEX "Determines whether two NeuralCodes are equal by comparing their dimension and list of codewords. This function does not look at the ring and polarized ring of the neural codes."
+    }
+
+document{
     Key => {polarizedRing, (polarizedRing,NeuralCode)},
     Headline => "returns the polarized ring of a NeuralCode",
     Usage => "polarizedRing(C)",
@@ -862,7 +878,7 @@ document{
     R=ZZ/2[x_1..x_3];
     L={x_1*(1-x_2),x_2*(1-x_3)};
     S=ZZ/2[x_1..x_3,y_1..y_3];
-    polarizeLisst(f,S)
+    polarizeList(L,S)
     ///
     }
 
