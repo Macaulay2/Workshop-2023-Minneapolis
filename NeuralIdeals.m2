@@ -96,7 +96,7 @@ neuralCode = method(Options => true) --add Options=>true once there is a neuralC
 --can supply both the ring and the polarized ring
 neuralCode (List,Ring,Ring) := NeuralCode => {} >> opts -> (codeList,R,S) -> (
     d := #(codeList#0);
-    --new code here
+    if not all (codeList, r-> #r === d) then error "expected code words to be of equal length";
     X:=new NeuralCode from {
 	symbol codeWords => codeList,
 	symbol dimension => d,
@@ -177,7 +177,6 @@ polarizedRing = method()
 polarizedRing NeuralCode := Ring => C -> C.cache.polarizedRing
 
 --checks whether a NeuralCode is well-defined
---currently only returning false
 isWellDefined NeuralCode := Boolean => X -> (
     --check keys
     K:=keys X;
